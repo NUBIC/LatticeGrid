@@ -1,0 +1,45 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+one:
+  id: 1
+  username: "1"
+  last_name: "Anderson"
+  first_name: "Wayne"
+  middle_name: "F"
+  pubmed_search_name: null
+  pubmed_limit_to_institution: false
+  num_first_pubs_last_five_years: 0
+  num_last_pubs_last_five_years: 1
+  total_pubs_last_five_years: 1
+  num_intraprogam_collaborators_last_five_years: 1
+  num_extraprogram_collaborators_last_five_years: 0
+  nu_employee_id: null
+  last_pubmed_search: null
+  title: null
+  mailcode: null
+  address1: null
+  address2: null
+  city: null
+  state: null
+  postal_code: null
+  country: null
+  business_phone: null
+  home_phone: null
+  lab_phone: null
+  fax: null
+  pager: null
+  email: "wf-anderson@northwestern.edu"
+  ssn: null
+  sex: null
+  birth_date: null
+  nu_start_date: null
+  start_date: null
+  end_date: null
+  weekly_hours_min: 35
+  last_successful_login: null
+  last_login_failure: null
+  consecutive_login_failures: 0
+  password: null
+  password_changed_at: null
+  password_changed_id: null
+  password_changed_ip: null
+  

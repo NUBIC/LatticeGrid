@@ -1,0 +1,32 @@
+
+<div id="admin">
+<h2>CCSG Reporting options</h2>
+
+	<div id="program_stats">
+		<p>Produce publication statistics for each program. Please note that this report can take several minutes to generate!</p>
+		<h2><%= link_to "Generate Program Statistics", program_stats_programs_path %></h2>
+		<p>&nbsp;</p>
+	<div id="list_by_program">
+	<p>List by program all articles published between the following dates:</p>
+		<% form_for :date_range, :url => list_programs_programs_path, :html => { :method => :get, :class => "p" }  do |form| %> 
+		  <%= form.text_field(:start_date, :size => 20) %> to
+		  <%= form.text_field(:end_date, :size => 20) %> 
+		  <%= submit_tag 'List Publications' %>
+		<% end %> 
+		<br/>
+	</div>
+	<p/>
+	<div id="list_one_program">
+		<p>Use the below form for printing:  List for one program all articles published between the following dates:</p>
+		<% form_for :date_range, :url => {:controller => :programs, :action => :abstracts_during_period}, :html => { :method => :post, :class => "p" }  do |form| %> 
+
+	  	<p><%= collection_select 'program', 'id', @programs, :id, :program_title  %> select program </p>
+		  <%= form.text_field(:start_date, :size => 20) %> to
+		  <%= form.text_field(:end_date, :size => 20) %> 
+		  <%= submit_tag 'List Publications' %>
+		<% end %> 
+
+		
+	</div>
+	<p/>
+</div>

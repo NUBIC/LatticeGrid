@@ -1,0 +1,14 @@
+<div id="listing"> 
+	<p>This graph shows the number of publications in common between each member of the program. <span class="intra_program">Investigators with intra-programmatic co-publications are highlighted in this color</span> and <span class="no_intra_program">investigators without intra-programmatic co-publications are highlighted in this color</span>. Mouse over a specific member to get the total publication count during the last five years and the number of intra-programmatic and inter-programmatic collaborations during that time. To better visualize the relationships you can alt-click and drag any of the members.</p>
+	<div id="ProgramGraph"></div>
+	<% investigator_id = 1 %>
+	<% params[:id] = 1 if params[:id].blank? %>
+	<script type="text/javascript">
+		var activity = new FusionCharts("<%=  image_path('../flash/DragNode.swf') %>", "ProgramGraph", "1000", "700", "0", "1");
+		activity.setDataURL('<%= image_path("../program_nodes/"+params[:id]) %>');
+		activity.render("ProgramGraph");
+	</script>
+	
+<br />
+
+</div>

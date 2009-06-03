@@ -1,0 +1,12 @@
+<% @include_mesh=true if @include_mesh.nil? %>
+<h1><% if ! @investigator.blank? and ! params[:id].blank? %>
+	   <span class="small"><%= link_to('Graph Interactions', show_member_graph_path(params[:id])) %></span>
+	<% end %></h1>
+	<%= render( :partial => "shared/abstract_listing", :locals => { :abstracts => @abstracts, :do_pagination => @do_pagination, :heading => @heading  }) %>
+
+	<% if @include_mesh %>
+	<h3><%= "MeSH cloud from publications for the year #{@year}" %></h3>
+	<div id="tag_cloud">
+		<%= render :partial => "shared/tag_cloud", :locals => { :tags => @tags } %>
+	</div>
+	<% end %>

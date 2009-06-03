@@ -1,0 +1,9 @@
+<% include_mesh=true if include_mesh.nil? %>
+<%= render :partial=>"shared/investigator_listing" %> 
+
+<% if include_mesh %>
+<h3><%= "MeSH cloud from publications in the department <i>#{@program.program_title}</i>}" %></h3>
+<div id="tag_cloud">
+	<%= render :partial => "shared/tag_cloud", :locals => { :tags => @tags } %>
+</div>
+<% end %>

@@ -1,0 +1,24 @@
+<h1><%= @heading %></h1>
+
+<p>The following publications are sorted by year and author. Click on the investigator listed to the right of the reference to find other publications by that investigator. Click on the title for a publication to see the abstract. </p>
+
+<div id="listing">
+  
+  <% for program in @programs %>
+	<table cellpadding="2" cellspacing="0" width="900" class="borderless"> 
+	<tr valign="bottom" colspan="3">
+	<td class="list-title-center">
+		<%= program.program_title %><br/>
+	</td>
+	</tr>
+	</table>
+	
+	<%= "<div id='list_#{program.id}'></div>" %>
+	<script language="javascript">
+	<%= remote_function(:url => {:controller => :programs, :action => :list_abstracts_during_period_rjs, :id => program.id, :start_date => @start_date, :end_date => @end_date }, :before => "Element.show('spinner')", 
+	:complete => "Element.hide('spinner')" ) %> 
+	</script>
+  <% end %>
+
+<br/>
+</div>

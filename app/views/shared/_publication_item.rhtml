@@ -1,0 +1,11 @@
+<td class="list-left"> 
+	<%= highlightInvestigator(publication)  %>
+	<%= link_to publication.title, abstract_path(publication) %>
+	<i><%= publication.journal_abbreviation %></i> 	
+	(<%= publication.year %>)
+	<% if publication.pages.length > 0 %>
+		<%= h(publication.volume) %>:<%= h(publication.pages) %>.
+	<% else %>
+	 <i>In process.</i>
+	<% end %>
+</td> 

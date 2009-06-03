@@ -1,0 +1,49 @@
+<% @include_mesh=true if @include_mesh.nil? %>
+<% @include_graph_link=true if @include_graph_link.nil? %>
+<% @show_paginator=true if @show_paginator.nil? %>
+
+<% @include_investigators=false if @include_investigators.nil? %>
+<% @include_pubmed_id = false if @include_pubmed_id.nil? %>
+<% @include_collab_marker = false if @include_collab_marker.nil? %>
+
+<table class="borderless">
+<tr valign="top">
+	<td width="800px">
+		<%= render :partial => "shared/abstract_listing", :locals => { :abstracts => @abstracts, :do_pagination => @do_pagination, :heading => "#{@investigator.name} publications (#{@total_entries})", :show_paginator => @show_paginator, :include_investigators => @include_investigators, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker  } %>
+		
+	</td>
+	<td>
+		<h3> <%= @investigator.name %> <a href='' title="citations per year"> <%= sparkline_tag( abstracts_per_year(@all_abstracts, @year_array.sort), :type => 'bar') if ! @all_abstracts.nil? && @all_abstracts.length > 10 %></a>
+		</h3>
+		
+		<h3><span > <%= link_to('Graph Interactions', show_member_graph_path(params[:id]) ) %></span></h3>
+		<% if @investigator.num_intraprogam_collaborators_last_five_years > 0 || @investigator.num_extraprogram_collaborators_last_five_years > 0 %>
+		<h3>Co-Authors:</h3> 
+		<div id="collaborators">
+		<%= link_to_collaborators(Investigator.co_authors(@investigator.id), "<br/>") %>
+		</div>
+		<% end %>
+		<% similarInvestigators=Investigator.similar_investigators(@investigator.id) %>
+			<% if similarInvestigators.length > 0 %>
+		<h3>Similar Investigators:</h3> 
+		<div id="collaborators">
+		<%= link_to_collaborators(similarInvestigators, "<br/>") %>
+		<% if similarInvestigators.length >= 15 %>
+			<p>...more investigators</p>
+		<% end %>
+		</div>
+		<% end %>
+		<br/>
+		<% if @include_mesh %>
+		<h3>Keywords (MeSH):</h3>
+		<div id="tag_cloud_side"></div>
+		<script language="javascript">
+		<%= remote_function(:url => {:controller => :investigators, :action => :tag_cloud_side, :id => @investigator.id }, :before => "Element.show('spinner')", 
+		:complete => "Element.hide('spinner')" ) %> 
+		</script>
+		<br/>
+		<% end %>
+		<br/>
+	</td>
+</tr>
+</table>

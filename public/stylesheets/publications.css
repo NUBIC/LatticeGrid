@@ -1,0 +1,717 @@
+/* Global styles */
+
+body { 
+	font-family : Verdana, Arial, sans-serif;
+	font-size : 8pt;
+	color : black;
+	background-color: #dfdfdf; 
+	line-height: 16px;
+	margin-top: 0px; 
+	margin-left:10px; 
+}
+
+p, ol, ul, td {
+	font-family: Arial, Helvetica, Geneva, Sans-serif;
+	font-size: 12px;
+	line-height: 18px;
+}
+
+p {
+    padding: 0px 0px 4px 0px;
+    margin:  0px 0px 4px 0px;
+	color : black;
+	font-size : 8pt;
+	font-family : Verdana,  Arial,  sans-serif;
+}
+
+ul {
+    margin-left: 0px;
+    padding-left: 15px;
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+ul.squareBullets {
+    list-style-type: square;
+}
+
+ol li {
+    padding-bottom: 15px;
+}
+
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+
+a { color: #000; }
+a:visited { color: #666; }
+a:hover { color: #fff; background-color:#888; }
+
+.fieldWithErrors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+
+#errorExplanation {
+  width: 400px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #c00;
+  color: #fff;
+}
+
+#errorExplanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: square;
+}
+
+div.uploadStatus {
+  margin: 5px;
+}
+
+div.progressBar {
+  margin: 5px;
+}
+
+div.progressBar div.border {
+  background-color: #fff;
+  border: 1px solid grey;
+  width: 100%;
+}
+
+div.progressBar div.background {
+  background-color: #333;
+  height: 18px;
+  width: 0%;
+}
+
+
+
+/* Styles for admin/list */
+
+table {
+	border: 1px indigo solid;
+}
+
+td,th {
+	padding-top: 0.25em;
+	padding-bottom: 0.25em;
+}
+table.borderless {
+	border: 0px;
+}
+
+table.fullsize {
+	width: 970px;
+}
+
+td.list-left, th.list-left {
+	padding-left: 1em;
+}
+
+td.list-right {
+	padding-right: 1em;
+	text-align: right;
+}
+
+th {
+	padding-bottom: 0px;
+}
+
+td.list-title-left {
+	padding-left: 1em;
+	color:        #244;
+	font-weight:  bold;
+}
+
+td.list-title-center {
+	text-align: center;
+}
+td.list-title-right {
+	padding-right: 1em;
+	text-align: right;
+}
+
+#listing .list-title {
+	color:        #244;
+	font-weight:  bold;
+}
+
+#listing .list-title-center {
+	color:        #244;
+	font-weight:  bold;
+	text-align: center;
+}
+
+#listing .list-title-right {
+	color:        #244;
+	font-weight:  bold;
+	padding-right: 1em;
+	text-align: right;
+}
+
+#listing .list-image {
+	width:        60px;
+	height:       70px;
+}
+
+
+#listing .list-actions {
+	font-size:    x-small;
+	text-align:   right;
+	padding-left: 1em;
+}
+
+#listing .list-line-even {
+	background:   aliceblue;
+	padding-bottom: 1em;
+}
+
+#listing .list-line-odd {
+	background:   lightyellow;
+	padding-bottom: 1em;
+}
+
+/* Styles for main page */
+
+/* --- HEADER --- */
+#banner {
+	border-bottom: 1px solid #1c1079;
+	margin-left:auto;
+	margin-right:auto;
+	width:1158px;
+	height:120px;
+/*	background: url(/cancer/images/pageheader.jpg) ; # this doesn't work with rails very nicely */
+	vertical-align:bottom;
+    text-align: center;
+	font-size:12px;
+	display: block;}
+
+#banner a span {
+	visibility: hidden;
+}
+
+
+#banner img {
+	float: left;
+}
+
+#columns {
+	background: #141;
+}
+
+/* START:notice */
+#notice {
+	border: 2px solid red;
+	padding: 1em;
+	padding-bottom: 2em;
+	margin: 0px;
+	background-color: lightyellow;
+	font: bold smaller sans-serif;
+}
+
+div.notice {
+	margin: 0px;
+	padding: 4px;
+	padding-left: 30px;
+	color: green ;
+	background-color: lightyellow;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size:   14px;
+	line-height: 24px;
+}
+
+/* END:notice */
+
+/* --- main --- */
+#main {
+	border: 1px #1c1079 solid;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px;
+	width: 1160px;
+	height:auto;
+	vertical-align: top;
+	background-color: #FFFFFF;
+}
+
+#maincontent {
+	float: right;  
+	margin-top: 0px;
+	margin-right: 0px;
+    width: 1010px ;
+	height:auto;
+	vertical-align: top;
+	background-color: #FFFFFF;
+}
+
+#side {
+	float: left;  
+	margin-top: 0px;
+	margin-left: 0px;
+	padding: 5px;
+	vertical-align: top;
+	width: 140px;
+	height: 790px;
+	color: #000;
+	background-color: #709fc7;
+}
+
+#sideinfo {
+	margin-top: 2px;
+	font-size: 13px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFF;
+}
+
+/* from the Catalyst site */
+#sidebar {
+	width:170px;
+	border:1px solid #cccccc;
+	background-image:url(images/sidebarBack.gif);
+	background-repeat:no-repeat;
+	text-align:left;
+	padding:10px 0px;
+}
+#contentMain {
+	padding:0 0 0 10px;
+}
+#callout {
+	width:130px;
+	border:1px solid #cccccc;
+	background-image:url(images/calloutBack.gif);
+	background-repeat:no-repeat;
+	padding:10px;
+}
+#callout p {
+	margin:10px 0;
+}
+/* end of Catalyst css info */
+
+
+#publication_year {
+	margin-top: 5px;
+	margin-left: 10px;
+	padding-top: 5px;
+	padding-left: 5px;
+	padding-right: 0px;
+	padding-bottom: 10px;
+}
+
+#publication_program {
+	margin-top: 5px;
+	margin-left: 10px;
+	padding-top: 5px;
+	padding-left: 5px;
+	padding-right: 0px;
+	padding-bottom: 10px;
+}
+
+div.map p {
+	display: block;
+	font-size: 12px;
+	margin-top: 2px;
+	margin-right: -5px;
+	margin-bottom: 2px;
+	margin-left: 7px;
+	padding: 0px;
+	text-indent: 0;
+	text-align: left;
+	background: #aa7;
+	color: white;
+	border-bottom: none;		/* Remove rule under H2 */
+	list-style: none 		/* Remove triangle from H2 */
+}
+
+div.map p a {
+	color: yellow;
+	font-size: small;
+	text-decoration: none;
+	padding: 1px 20px 0px 20px;
+	
+}
+
+div.map p a:hover {
+	background-color: #662;
+}
+
+div.map p.currentyear, div.map li.currentyear {
+	background-color: #339;
+}
+
+div.map p.currentyear a {
+	color: white;
+}
+div.map p.currentyear a:hover {
+	background: #662;
+}
+
+#title {
+  margin: 0px;
+  padding: 5px;
+  padding-left: 20px;
+  padding-bottom: 10px;
+  font:  180% sans-serif;
+  color: #226;
+  background-color: lightyellow;
+}
+
+#titlesmaller {
+  margin: 0px;
+  padding: 5px;
+  padding-left: 20px;
+  padding-bottom: 10px;
+  font:  80% sans-serif;
+  color: #226;
+  background-color: lightyellow;
+}
+
+#title a {
+  padding: 5px;
+  color: #226;
+  text-decoration:none;
+  background: none;
+}
+
+#title a:hover {
+  background: yellow;
+}
+
+#search {
+  padding: 3px;
+  padding-left: 115px;
+  margin: 0px;
+    color: #fff;
+    font-size: 12px;
+    background-color: #339;
+}
+
+#niceline {
+  padding-left: 50px;
+  height: 8px;
+  margin: 0px;
+    color: #fff;
+    font-size: 11px;
+    background-color: #709fc7;
+}
+
+#content {
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 5px;
+  overflow:hidden;
+}
+
+#collaborators {
+  padding:1px;
+  margin:0px;
+  line-height: 15px;
+  padding-left: 15px;
+  padding-right: 5px;
+  overflow:hidden;
+}
+
+#collaborators a {
+	text-decoration: none;
+	color: #229;
+}
+#collaborators a:visited { color: #88C; }
+#collaborators a:hover { color: #fff; background-color:#888; }
+
+
+#ProgramGraph, #MemberGraph {
+	margin-left: -8px;
+}
+
+#abstractcontent {
+	margin-left: 30px;
+	padding: 15px;
+	padding-left: 15px;
+	padding-right: 5px;
+	margin-right: 30px;
+ 	height:auto;
+	vertical-align: top;
+	background-color: #FFFFFF;
+}
+
+#endnotecontent {
+	margin-left: 30px;
+	margin-top:   3px;
+	padding: 3px;
+	padding-left: 15px;
+	padding-right: 15px;
+	margin-right: 30px;
+	vertical-align: top;
+	background-color: #FFFFFF;
+}
+
+#endnotecontent br {
+	margin: 0px;
+	padding: 3px;
+}
+
+#last_load_date {
+	float: right;  
+	margin-top: -15px;
+	margin-right: 10px;
+	padding: 3px;
+}
+
+h1, h2, .h2, h3, .h3 {
+    font-family: Arial, Helvetica, Geneva, Sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+	color: #226;
+    line-height: 140%;
+    padding-bottom: 0px;
+    margin-bottom: 2px;
+    margin-top: 8px;
+    padding-top: 0px;
+}
+
+h1, .h1 {
+  font-size: 18px;
+  border-bottom: 3px;
+}
+
+h2, .h2 {
+  font-size: 15px;
+}
+
+small, .small {
+  font-size:  75%;
+  line-height: 10px;
+  color: #226;
+}
+
+#abstract, #import, #mesh {
+	border-top: 1px indigo solid;
+ 	margin-top: 15px;
+}
+
+#linkout {
+	border: 1px indigo solid;
+	padding: 3px;
+	padding-left: 10px;
+ 	margin-top: 15px;
+}
+
+span.intra_program, a.intra_program {
+	background-color: #AFD8F8;
+	text-decoration: none;
+}
+span.inter_program, a.inter_program {
+	background-color: #FFCC33;
+	text-decoration: none;
+}
+
+span.no_intra_program, a.no_intra_program {
+	background-color: #FF99FF;
+	text-decoration: none;
+}
+
+
+
+span.first_author, a.first_author {
+	color: #660066;
+	background-color: #CCAF9F;
+	text-decoration: none;
+}
+span.last_author, a.last_author {
+	color: #002EB8;
+	background-color: khaki;
+	text-decoration: none;
+}
+span.author, a.author {
+	color: #353;
+	background-color: peachpuff;
+	text-decoration: none;
+}
+.author:hover, .first_author:hover, .last_author:hover {
+	background: #AAA;
+}
+
+/*** special tags ***/
+	
+div.autoclear:after {
+    display: block ;
+    content: ' ';
+    clear: both ;
+    height: 0 ;
+    visibility: hidden ;
+}
+
+/* in place edit tags */
+
+.inplaceeditor-form input[type="text"] { 
+width: 260px; 
+} 
+
+.inplaceeditor-form textarea { 
+width: 400px; 
+} 
+
+/* form tags */
+
+input, select, textarea {
+    font-family: Arial, Helvetica, Geneva, Sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    color: #000;
+    padding: 0px;
+    margin-top: 2px ;
+}
+
+input[disabled], select[disabled] {
+    color: gray ;
+}
+
+select {
+    vertical-align: middle;
+}
+
+img
+{
+    border: 0px;
+}
+
+form {
+    margin: 1px ;
+	display: inline;
+}
+
+/*** for DIGG style pagination  ***/
+.pagination {
+    padding: 3px;
+    margin: 3px;
+  }
+  .pagination a {
+    padding: 2px 5px 2px 5px;
+    margin: 2px;
+    border: 1px solid #aaaadd;
+    text-decoration: none;
+    color: #000099;
+  }
+ .pagination a:hover, .pagination a:active {
+    border: 1px solid #000099;
+    color: #ddd;
+  }
+   .pagination span.current {
+    padding: 2px 5px 2px 5px;
+    margin: 2px;
+    border: 1px solid #000099;
+    font-weight: bold;
+    background-color: #000099;
+    color: #FFF;
+  }
+  .pagination span.disabled {
+    padding: 2px 5px 2px 5px;
+    margin: 2px;
+    border: 1px solid #eee;
+    color: #ddd;
+  }
+
+/* cloud tag styles */
+
+#tag_cloud {
+	border: 1px indigo solid;
+	padding: 10px;
+	margin-bottom: 15px;
+	padding-top: 15px;
+	padding-left: 15px;
+ 	height:auto;
+	vertical-align: top;
+	background-color: lightyellow;
+}
+
+#tag_cloud_side {
+	padding: 2px;
+	padding-left: 4px;
+	margin: 0px;
+	margin-left: 10px;
+	margin-bottom: 2px;
+ 	height:auto;
+	vertical-align: top;
+	background-color: lightyellow;
+}
+
+.side1 {font-size: 0.8em;}
+.side2 {font-size: 0.9em;}
+.side3 {font-size: 1.0em;}
+.side4 {font-size: 1.1em;}
+.side5 {font-size: 1.2em;}
+.side6 {font-size: 1.4em;}
+
+.nube1 {font-size: 1.0em;}
+.nube2 {font-size: 1.2em;}
+.nube3 {font-size: 1.4em;}
+.nube4 {font-size: 1.6em;}
+.nube5 {font-size: 1.8em;}
+.nube6 {font-size: 2em;}
+
+.tagcloud1 {font-size: 0.8em;}
+.tagcloud2 {font-size: 0.9em;}
+.tagcloud3 {font-size: 1.0em;}
+.tagcloud4 {font-size: 1.2em;}
+.tagcloud5 {font-size: 1.4em;}
+
+/* For three column "tables" */
+#railContainer {
+  background-color:#0ff;
+  float:left;
+  width:100%;    
+  border-left:150px solid #0f0;
+  border-right:200px solid #f00;
+  margin-left:-150px;
+  margin-right:-200px;
+  display:inline; /* So IE plays nice */
+}
+#leftRail {
+  float:left;
+  width:150px;
+  margin-left:-150px;
+  position:relative;
+}
+#centerRail {
+  float:left;
+  width:100%;
+  margin-right:-100%;
+}
+#rightRail {
+  float:right;
+  width:200px;
+  margin-right:-200px;
+  position:relative;
+}
+
+/* the html:
+
+<div id="container">
+  <div id="centerRail">Center Column Content</div>
+  <div id="leftRail">Left<br /> Sidebar</div>
+  <div id="rightRail">Right Sidebar</div>
+</div>
+
+*/

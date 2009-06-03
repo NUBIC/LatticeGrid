@@ -1,0 +1,24 @@
+<% @include_mesh=true if @include_mesh.nil? %>
+<% @include_graph_link=true if @include_graph_link.nil? %>
+<% @show_paginator=true if @show_paginator.nil? %>
+
+<% @include_investigators=false if @include_investigators.nil? %>
+<% @include_pubmed_id = false if @include_pubmed_id.nil? %>
+<% @include_collab_marker = false if @include_collab_marker.nil? %>
+
+
+<h1><%= @program.program_title %> Overview <a href='' title="citations per year"> <%= sparkline_tag( abstracts_per_year(@all_abstracts, @year_array.sort), :type => 'bar') if ! @all_abstracts.nil? && @all_abstracts.length > 10 %></a></h1>
+<% if @include_graph_link %>
+<h2><%= link_to( 'Graph co-Publications of Program Members', show_program_graph_path(@program.id)) %></h2>
+<% end %>
+
+<% if @include_mesh %>
+<h2><%= "MeSH cloud for the program <i>#{@program.program_title}</i>" %></h2>
+<div id="tag_cloud">
+	<%= render :partial => "shared/tag_cloud", :locals => { :tags => @tags } %>
+</div>
+<% end %>
+
+<%= render :partial => "shared/abstract_listing", :locals => { :abstracts => @abstracts, :do_pagination => @do_pagination, :heading => @heading, :show_paginator => @show_paginator, :include_investigators => @include_investigators, :investigators_in_program => @investigators_in_program, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker  } %>
+
+<%= link_to 'Show All Programs', index_programs_path %>

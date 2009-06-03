@@ -1,0 +1,51 @@
+
+<div id="listing">
+  <table cellpadding="2" cellspacing="0" lass="borderless"> 
+	<% cnt = 0 %>
+	<tr valign="bottom" colspan="3">
+		<td class="list-title-left">
+			#
+		</td>
+		<td class="list-title-left">
+			netid
+		</td>
+		<td class="list-title-left">
+			Last name
+		</td>
+		<td class="list-title-left">
+			First name
+		</td>
+		<td class="list-title-left">
+			email
+		</td>
+		<td class="list-title-left">
+			Programs
+		</td>
+	</tr>
+  <% for investigator in @investigators %>
+	<tr valign="bottom" colspan="3">
+		<td class="list-left">
+			<% cnt+=1 %>
+			<%= cnt %>
+		</td>
+		<td class="list-left">
+			<%= investigator.username %>
+		</td>
+		<td class="list-left">
+			<%= investigator.last_name %>
+		</td>
+		<td class="list-left">
+			<%= investigator.first_name %>
+		</td>
+		<td class="list-left">
+			<%= investigator.email %>
+		</td>
+		<td class="list-left">
+			<%= investigator.programs.collect{|x| x.program_abbrev}.join(", ") %>
+		</td>
+	</tr>
+  <% end %>
+  </table>
+
+<br/>
+</div>

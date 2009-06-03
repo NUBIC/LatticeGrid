@@ -1,0 +1,14 @@
+<div id="member"> 
+	<p>This graph shows the interaction graph for a cancer center member based on number of co-authored publications with other cancer center members.  Mouse over a specific member to get the total publication count during the last five years and the number of <span class="intra_program">intra-programmatic</span> and <span class="inter_program">inter-programmatic</span> collaborations during that time. To better visualize the relationships you can alt-click and drag any of the members.</p>
+	<div id="MemberGraph"></div>
+
+	<% params[:id] = 'str' if params[:id].blank? %>
+	<script type="text/javascript">
+		var activity = new FusionCharts("<%= image_path('../flash/DragNode.swf') %>", "MemberGraph", "1000", "700", "0", "1");
+		activity.setDataURL('<%= image_path("../member_nodes/"+params[:id]) %>');
+		activity.render("MemberGraph");
+	</script>
+	
+<br />
+
+</div>

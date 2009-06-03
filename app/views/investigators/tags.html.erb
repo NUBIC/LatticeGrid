@@ -1,0 +1,8 @@
+<h3>Keywords (MeSH):</h3>
+<div id="tag_cloud"></div>
+<script language="javascript">
+<%= remote_function(:url => {:controller => :investigators, :action => :tag_cloud, :id => @investigator.id }, :before => "Element.show('spinner')", 
+:complete => "Element.hide('spinner')" ) %> 
+</script>
+<br/>
+<% end %>

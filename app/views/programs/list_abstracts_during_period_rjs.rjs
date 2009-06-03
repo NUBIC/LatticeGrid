@@ -1,0 +1,4 @@
+program_id=params[:id]
+page.replace_html("list_"+program_id,'loading...') 
+page.replace_html("list_"+program_id, :partial => "shared/abstract_listing_table", :locals => { :abstracts => @abstracts }) 
+

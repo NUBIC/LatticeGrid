@@ -1,0 +1,244 @@
+# useful plugins
+
+# documentation: http://cardboardrocket.com/pages/paginating_find
+#no longer using this (5/5/2008)
+#script/plugin install http://svn.cardboardrocket.com/paginating_find
+
+# documentation: http://bparanj.blogspot.com/2007/09/how-to-use-will-paginate-20-rails.html
+# documentation: http://errtheblog.com/posts/56-im-paginating-again
+# replaced with mislav-will-paginate gem
+#script/plugin install svn://errtheblog.com/svn/plugins/will_paginate
+
+#ldap stuff
+# may need to register this site: http://rubyforge.org/projects/net-ldap/ 
+
+sudo gem install ruby-net-ldap
+
+# sparklines
+sudo gem install sparklines
+sudo gem install sparklines_generator
+# may need to do this too:
+sudo gem install rmagick
+
+ruby script/generate sparklines
+# for sparklines, add to bottom of config/environment.rb
+require 'sparklines'
+
+# in the controller where you want to use a sparkline:
+
+#class MyController < ApplicationController
+helper :sparklines
+
+# call in any view for that controller:
+
+<%= sparkline_tag [10,20,30], :type => 'pie' %>
+
+#csv parser
+sudo gem install fastercsv
+
+
+#simple date select plugin
+script/plugin install svn://code.jeremyevans.net/rails/plugins/simple_date_select
+
+# acts_as_taggable
+script/plugin install http://svn.viney.net.nz/things/rails/plugins/acts_as_taggable_on_steroids
+
+--PostgreSQL commands
+
+-- add this line to pg_hba.conf so you can connect to it on the local machine without a password, if you so desire
+
+local  all    cancerpublications   trust
+
+-- now login to postgres using psql
+
+psql postgres
+
+-- create the user (role)
+-- for a little bit of security, create a role. user is an alias for role that also specifies that the role is permitted to login
+
+CREATE USER cancerpublications with createdb;
+
+#if you need to add the createdb role to user, do it like this:
+ALTER USER cancerpublications with createdb;
+
+-- you can also specify a user and password:
+
+CREATE USER nucatspublications WITH PASSWORD 'jw8s0F4';
+-- or if the user has already been created:
+ALTER USER nucatspublications WITH PASSWORD 'jw8s0F4';
+
+
+-- or add a end date to the user:
+
+CREATE ROLE nucatspublications WITH LOGIN PASSWORD 'jw8s0F4' VALID UNTIL '2008-01-01';
+
+
+-- now switch to the new user
+
+\connect - cancerpublications
+
+
+-- now create the database
+
+create database cancerpublications_development;
+create database cancerpublications_test;
+create database cancerpublications_production;
+
+# You can also use the shell script but this requires looser security, specifying access, or reassigning ownership of the database
+
+createdb cancerpublications_development
+createdb cancerpublications_test
+
+-- and specify privileges if you did not create the database using the new user. Skip this step if you used the new user
+
+GRANT SELECT, INSERT, UPDATE ON TABLE schema_info TO nucatspublications;
+
+-- sequences
+
+GRANT SELECT, UPDATE ON  allele_types_id_seq, animal_model_publications_id_seq, animal_models_id_seq, model_types_id_seq, mutation_methods_id_seq, pi_contacts_id_seq,  tumor_types_id_seq TO animalmodels;
+
+
+
+# create rails app
+rails -d postgresql cancerpublications
+cd nucatspublications
+bbedit config/database.yml
+
+#make sure you have a section that looks like:
+
+development:
+  adapter: postgresql
+  database: cancerpublications_development
+  username: cancerpublications
+
+test:
+  adapter: postgresql
+  database: cancerpublications_test
+  username: cancerpublications
+
+
+# create the controller
+	script/generate controller abstracts
+	script/generate controller graphs
+	script/generate controller programs
+	script/generate controller investigators
+
+# create Models
+# now create a model
+
+	script/generate model abstract
+	script/generate model investigator
+	script/generate model investigator_abstract
+	script/generate model program
+	script/generate model program_abstract
+	script/generate model investigator_program
+	script/generate model proposal
+	script/generate model investigator_proposal
+	script/generate model study
+	script/generate model investigator_study
+	script/generate model investigator_relationship
+
+# for graphing the connections
+	script/generate controller graph
+	script/generate model graph
+
+
+# edit the db/migrate script
+
+bbedit db/migrate/001_create_abstracts.rb
+bbedit db/migrate/002_create_investigators.rb
+bbedit db/migrate/003_create_investigator_abstracts.rb
+bbedit db/migrate/004_create_programs.rb
+bbedit db/migrate/005_create_investigator_programs.rb
+
+# create the scaffolds
+	script/generate scaffold abstract
+
+# after changing the table create script to create the necessary features, try it with rake:
+# test that the models can be generated and moved
+    rake db:migrate
+
+# reverse the migration
+   rake db:migrate VERSION=0
+# repeat
+    rake db:migrate
+
+# do it in production:
+rake environment RAILS_ENV=production db:migrate
+
+# do it in test:
+rake environment RAILS_ENV=test db:migrate
+
+# install additional investigators using ldap
+
+rake getLDAP uid_list=aqw,wakibbe
+#RUN TESTS
+
+ruby test/unit/abstract_test.rb
+
+# clean all usernames by removing any periods
+rake cleanInvestigatorsUsername
+
+# load data using the insertAbstracts rake task
+rake insertAbstracts
+rake RAILS_ENV=production insertAbstracts
+
+#insert all abstracts (10 years)
+rake insertAllAbstracts
+rake RAILS_ENV=production insertAllAbstracts
+
+#update member associations based on loaded publications
+rake associateAbstractsWithInvestigators
+rake RAILS_ENV=production associateAbstractsWithInvestigators
+
+# update publication information like first and last authors
+rake updateAbstractInvestigators
+
+#update publication information for each investigator, include collaboration information
+rake updateInvestigatorInformation
+
+#create tags from MeSH data for each abstract
+rake tagAbstractsWithMeshTerms
+
+#create tags from MeSH data for each investigator
+# runs in 25 minutes
+tagInvestigatorsWithMeshTerms
+
+#update publication information for each program
+rake updateProgramAbstractInformation
+
+#all the expected tasks are run using this build command
+# runs these tasks: :insertAbstracts, :associateAbstractsWithInvestigators, :updateAbstractInvestigators, :updateInvestigatorInformation, :tagAbstractsWithMeshTerms, :updateProgramAbstractInformation
+rake nightlyBuild
+rake RAILS_ENV=production nightlyBuild
+
+# something to do weekly is:
+
+vacuumdb -fz cancerpublications_development
+
+#all the mesh associations are run with this command
+rake monthlyBuild
+rake RAILS_ENV=production monthlyBuild
+
+
+# see file generateGraphs.sh for how to generat connection graphs for cancer center member publications
+
+#start web server
+    script/server
+
+# clear logs
+rake log:clear
+
+# passenger restart
+touch tmp/restart.txt
+
+# some quality control sql to run
+
+select count(*) from abstracts where year is null;
+select count(*) from abstracts where publication_date is null;
+select count(*) from abstracts where electronic_publication_date is null;
+select count(*), year from abstracts  group by year order by year;
+select count(*), year from abstracts where publication_date is null group by year order by year;
+select count(*), year from abstracts where electronic_publication_date is null group by year order by year;
+select count(*), year from abstracts where electronic_publication_date > publication_date  group by year order by year;
+

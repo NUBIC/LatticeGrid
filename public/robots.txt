@@ -1,0 +1,12 @@
+# See http://www.robotstxt.org/wc/norobots.html for documentation on how to use the robots.txt file
+User-Agent: *
+Disallow: /cancer
+Disallow: /abstracts/show
+Disallow: /abstracts/endnote
+Disallow: /abstracts/full_list
+Disallow: /abstracts/tag
+Disallow: /abstracts/tag_cloud
+Disallow: /abstracts/search
+Disallow: /graphs
+Disallow: /investigators/full_show
+Disallow: /programs/full_show

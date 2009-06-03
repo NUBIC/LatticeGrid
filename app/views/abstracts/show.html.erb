@@ -1,0 +1,47 @@
+<div id="abstractcontent">
+<div id="publication">
+	<div id="authors">
+	<% if @publication.full_authors.length > 10 %>
+		<%= highlightInvestigator(@publication, @publication.full_authors) %>
+	<% else %>
+		<%= highlightInvestigator(@publication) %>
+	<% end %>
+	</div>
+	<div id="title">
+		<%= @publication.title %>
+	</div>
+	<div id="journal">
+	<i><%= @publication.journal %></i> 	
+	(<%= @publication.year %>)
+	<% if @publication.pages.length > 0 %>
+		<%= h(@publication.volume) %>:<%= h(@publication.pages) %>.
+	<% else %>
+	 <i>In process.</i>
+	<% end %>
+	</div>
+	<div id="abstract">
+		<b>Abstract</b><br/>
+		<%= @publication.abstract %>
+	</div>
+	<div id="mesh">
+		<b>MeSH terms</b><br/>
+		<% @publication.tag_list.each do |tag| %>
+		   <%= link_to tag, tag_abstract_path(tag), :class => 'nube2' %>
+		<% end %>
+	</div>
+	<div id="import">
+		<b>Note</b><br/>
+		Automated medline import. Electronic deposit: <%= @publication.deposited_date %>.Electronic publication: <%= @publication.electronic_publication_date %>. Publication Date: <%= @publication.publication_date %>. Publication status: <%= @publication.publication_status %>. Status: <%= @publication.status %>. <br/>
+	</div>
+	<div id="linkout">
+		<%= link_to 'Go to PubMed entry', @publication.url  %>
+	</div>
+	<div id="linkout">
+		<%= link_to 'View citation formatted for EndNote', endnote_abstract_path(@publication)  %>
+	</div>
+</div>
+
+
+<%= link_to 'Back', year_list_abstract_path(@year) %>
+
+</div>

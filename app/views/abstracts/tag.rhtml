@@ -1,0 +1,9 @@
+<% include_mesh=true if include_mesh.nil? %>
+<%= render :partial => "shared/abstract_listing", :locals => { :abstracts => @abstracts, :do_pagination => @do_pagination, :heading => @heading  } %>
+
+<% if include_mesh %>
+<h3><%= "MeSH cloud from publications including the MeSH term <i>#{params[:id]}</i>" %></h3>
+<div id="tag_cloud">
+	<%= render :partial => "shared/tag_cloud", :locals => { :tags => @tags } %>
+</div>
+<% end %>

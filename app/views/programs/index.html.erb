@@ -1,0 +1,47 @@
+
+<h1><%= @heading %></h1>
+
+The following is a list of the number of publications and investigators in each program. Click on the graph image to generate a graph of interactions based on co-publications. Click on the name of the program to see more information including publication for the program. Click on the number of members to see a listing of the members. Click on a MeSH term to see a listing of all publications that include that MeSH term.<br/>
+
+<div id="listing">
+  
+<table cellpadding="2" cellspacing="0" width="100%" class="borderless"> 
+<tr valign="bottom" colspan="3">
+	<td class="list-title-left">
+		Program
+	</td>
+	<td class="list-title-center">
+		Members<br/>
+	</td>
+	<td class="list-title-center">
+		Total publications<br/>
+	</td>
+	<td class="list-title-left">
+		Mesh terms<br/>
+	</td>
+</tr>
+
+<% for program in @programs %>
+	<tr valign="bottom" colspan="3">
+		<td>
+			<%= link_to( image_tag("base.gif"), show_program_graph_path(program.id), :title => "Graph member collaborations through co-authored publications ") %> 
+			<%= link_to( program.program_title, program, :title => "List publications by program members") %>
+		</td>
+		<td class="list-title-center">
+			<%= link_to( program.investigator_programs.collect(&:investigator_id).uniq.length, show_investigators_program_path(program.id), :title=>"List investigators in program") %><br/>
+		</td>
+		<td class="list-title-center">
+			<%= program.program_abstracts.length %><br/>
+		</td>
+		<td class="list-title-left">
+		<% tag_cloud program.abstracts.tag_counts(:limit => 6, :order => "count desc" ), %w(tagcloud1 tagcloud2 tagcloud3 tagcloud4) do |tag, css_class| %>
+		   <%= link_to tag.name, tag_abstract_path(tag.name), :class => css_class, :title => "Total of #{tag.count} tags" %>
+		<% end %>
+		<%= link_to "...more...", program %>
+		</td>
+	</tr>
+<% end %>
+</table>
+<br/>
+
+</div>

@@ -1,0 +1,48 @@
+<h1><%= @heading %></i></h1>
+
+The following is a list of the total publications, number of publications with intra-programmatic sharing, and inter-programmatic sharing, broken down by program. <br/>
+
+<div id="listing">
+  
+<table cellpadding="2" cellspacing="0" width="900" class="borderless"> 
+<tr valign="bottom" colspan="3">
+	<td class="list-title-left">
+		Program
+	</td>
+	<td class="list-title-center">
+		Investigators<br/>
+	</td>
+	<td class="list-title-center">
+		Total publications<br/>
+	</td>
+	<td class="list-title-center">
+		Intra-program<br/>
+	</td>
+	<td class="list-title-center">
+		Inter-program<br/>
+	</td>
+</tr>
+
+<% for program in @programs %>
+	<tr valign="bottom" colspan="3">
+		<td>
+			<%= program.program_title %><br/>
+		</td>
+		<td class="list-title-center">
+			<%= program.investigators.length %><br/>
+		</td>
+		<td class="list-title-center">
+			<%= program.abstracts.length %><br/>
+		</td>
+		<td class="list-title-center">
+			<%= (program.pi_intra_abstracts.length) %> (<%= program.abstracts.length > 0 ? (100*(program.pi_intra_abstracts.length)/program.abstracts.length) : 0 %>%)<br/>
+		</td>
+		<td class="list-title-center">
+			<%= program.pi_inter_abstracts.length %> (<%= program.abstracts.length > 0 ? (100*program.pi_inter_abstracts.length/program.abstracts.length) : 0 %>%) <br/>
+		</td>
+	</tr>
+<% end %>
+</table>
+<br/>
+
+</div>

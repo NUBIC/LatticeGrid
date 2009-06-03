@@ -1,0 +1,56 @@
+member_nodes = assignInvestigatorPositions(@investigator)
+xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showFormBtn=>'0', :xAxisMinValue=>'0', :xAxisMaxValue=>'100', 
+  :yAxisMinValue=>'0', :yAxisMaxValue=>'100', :is3D=>'1', :animation=>'1', :palette=>'2', :formAction=>'/graphs/list', :formMethod=>'POST',  :enableLink=>'1'  ) do
+    # clickURL works: :clickURL => url_for(:controller=>'abstracts',:action=>'program_listing', :program_id => params[:program_id])
+    xml.dataSet(:seriesName => "Investigator") do
+      cnt=0
+      investigator = @investigator
+        #x,y = calculatePosition(member_nodes.internal.length,cnt)
+       # cnt+=1
+        xml.set(:x=>50, :y=>50, :width=>'120', :height=>'40', :name=>investigator.first_name+' '+investigator.last_name+"\n"+investigator.abstracts.length.to_s+' publications', 
+          :id=>investigator.id,
+          :link => investigator_path(investigator.username),
+          :color => '99CCFF',
+          :tooltext => 'Publications  '+investigator.abstracts.length.to_s+';
+  intra-programmatic collaborations:'+investigator.internal_collaborators.length.to_s+'; 
+  inter-programmatic collaborations:'+investigator.external_collaborators.length.to_s)
+    end
+    xml.dataSet(:seriesName => "Collaborators") do
+      cnt=0
+      collaborator_total = member_nodes.collect{|x| x.object_id}.uniq.length
+      member_nodes.each do |key_id, investigator|
+        x,y = calculatePosition(collaborator_total, cnt)
+        cnt+=1
+        color = 'FFCC33'
+        color = '99CCFF' if investigator.isInternal == true
+        xml.set(:x=>x, :y=>y, :width=>'80', :height=>'30', :name=>investigator.first_name+' '+investigator.last_name, 
+          :id=>investigator.id,
+          :link => show_member_graph_path(investigator.username),
+          :color => color,
+          :onClick => 'http://www.basic.northwestern.edu/',
+          :clickURL => 'http://www.basic.northwestern.edu/',
+          :tooltext => 'Publications  '+investigator.abstracts.length.to_s+';')
+      end
+    end
+  xml.connectors(:stdThickness => "5", :color=>'FFCC33', :arrowAtStart=>'0', :arrowAtEnd=>'0' ) do
+    investigator = @investigator
+    investigator.internal_collaborators.keys.each do |collaborator|
+     xml.connector(:strength=>investigator.internal_collaborators[collaborator].length.to_f/10, 
+      :label=>investigator.internal_collaborators[collaborator].length, 
+      :from=>investigator.id, :to=>collaborator, 
+      :color=>'FFCC66', 
+      :arrowAtStart=>'0', :arrowAtEnd=>'0',
+      :tooltext => 'connections:'+investigator.internal_collaborators[collaborator].length.to_s,
+      :link => show_member_graph_path(investigator.username) )
+    end
+    investigator.external_collaborators.keys.each do |collaborator|
+     xml.connector(:strength=>investigator.external_collaborators[collaborator].length.to_f/10, 
+      :label=>investigator.external_collaborators[collaborator].length, 
+      :from=>investigator.id, :to=>collaborator, 
+      :color=>'FFCC33', 
+      :arrowAtStart=>'0', :arrowAtEnd=>'0',
+      :tooltext => 'connections:'+investigator.external_collaborators[collaborator].length.to_s,
+      :link => investigator_path(investigator.username) )
+    end
+  end
+end
