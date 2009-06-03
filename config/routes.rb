@@ -12,8 +12,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'ccsg', :controller => 'abstracts', :action => 'ccsg', :conditions => { :method => :get }
   map.abstract_search 'abstracts/search/:page', :controller => 'abstracts', :action => 'search', :method => [:get, :post]
   map.tag_cloud 'tag_cloud ', :controller => 'abstracts', :action => 'tag_cloud', :conditions => { :method => :get }
-  map.connect 'program_nodes/:id', :controller => 'graphs', :action => 'program_nodes' #need this for some of the flash xml calls
-  map.connect 'member_nodes/:id', :controller => 'graphs', :action => 'member_nodes' #need this for some of the flash xml calls
+  map.program_nodes 'program_nodes/:id', :controller => 'graphs', :action => 'program_nodes' #need this for some of the flash xml calls
+  map.member_nodes 'member_nodes/:id', :controller => 'graphs', :action => 'member_nodes' #need this for some of the flash xml calls
   map.connect ':controller/:id/:action/:page'
   map.connect ':controller/:id/:action'  #need this for some of the rjs calls and the sparklines
 

@@ -57,9 +57,9 @@ namespace :cache do
     my_env = 'home' if public_path =~ /Users/ 
     host = case 
       when my_env == 'home': 'localhost:3000'
-      when my_env == 'development': 'rails-dev.bioinformatics.northwestern.edu/cancer'
+      when my_env == 'development': 'rails-dev.bioinformatics.northwestern.edu'
       when my_env == 'production': 'pubs.cancer.northwestern.edu'
-      else 'rails-dev.bioinformatics.northwestern.edu/cancer'
+      else 'rails-dev.bioinformatics.northwestern.edu'
     end 
     default_url_options[:host] = host
   end
@@ -106,7 +106,7 @@ namespace :cache do
       run_curl show_member_graph_url( inv.username)  
       #url_for :controller => 'graphs', :action => 'show_member', :id => inv.username
       #run_curl url_for :controller => 'graphs', :action => 'member_nodes', :id => inv.username
-      run_curl public_path('/member_nodes/'+inv.username)
+      run_curl member_nodes_url(inv.username)
     
     end
   end
@@ -114,8 +114,8 @@ namespace :cache do
   def program_graphs
     @Programs.each do |prog|
        #run_curl url_for :controller => 'graphs', :action => 'show_program', :id => prog.id
-       run_curl show_program_graph_path(prog.id)
-       run_curl public_path('/program_nodes/'+prog.id)
+       run_curl show_program_graph_url(prog.id)
+       run_curl program_nodes_url(prog.id)
     end
   end
 
