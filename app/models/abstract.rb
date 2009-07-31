@@ -9,6 +9,27 @@ class Abstract < ActiveRecord::Base
   validates_uniqueness_of :pubmed
   acts_as_taggable  # for MeSH terms
 
+  def self.annual_data( year)
+    conditions="year = #{year}" if !year.blank?
+    find(:all,
+        :order => "authors ASC",
+  		  :conditions => conditions||"" )
+  end
+  
+  def self.missing_publications(year, found_journals)
+    abbreviations = found_journals.collect{|x| x.journal_abbreviation.downcase}
+    conditions = ""
+    conditions = " AND abstracts.year = #{year}" if ! year.blank?
+    # sortby should be one of impact_factor DESC, count_all DESC, journals.journal_abbreviation
+    find(:all, 
+      :select => "count(*) as count_all, journal, journal_abbreviation",
+  		:conditions => ["lower(journal_abbreviation) NOT IN (:abbreviations) #{conditions}", 
+   		      {:abbreviations => abbreviations }],
+      :group => "journal, journal_abbreviation", 
+      :order => "count_all DESC" )
+  end
+
+  
     
   def self.display_data( year=2008, page=1)
     paginate(:page => page,

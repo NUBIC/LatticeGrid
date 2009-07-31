@@ -2,6 +2,10 @@
 module ApplicationHelper
   include TagsHelper
 
+  def capitalize_words(string) 
+    string.downcase.gsub(/\b\w/) { $&.upcase } 
+  end 
+
   def abstracts_per_year(abstracts, year_array)
     years=Array.new(year_array.length, 0)
     first_year = year_array[0]
@@ -36,14 +40,14 @@ module ApplicationHelper
 
   def link_to_collaborators(collaborators, delimiter=", ")
     collaborators.collect{|investigator| link_to( investigator.name, 
-      investigator_path(investigator.username), # can't use this form for usernames including non-ascii characters
+      show_investigator_path(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
         :title => " #{investigator.total_pubs_last_five_years} pubs, "+(investigator.num_intraprogam_collaborators_last_five_years+investigator.num_extraprogram_collaborators_last_five_years).to_s+" collaborators")}.join(delimiter)
   end
   
   def link_to_investigator(citation, investigator, tag=nil) 
     tag=investigator.last_name if tag.blank?
     link_to tag, 
-      investigator_path(investigator.username), # can't use this form for usernames including non-ascii characters
+      show_investigator_path(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
       :class => setInvestigatorClass(citation,investigator),
       :title => "Go to #{tag}: #{investigator.total_pubs_last_five_years} pubs, "+(investigator.num_intraprogam_collaborators_last_five_years+investigator.num_extraprogram_collaborators_last_five_years).to_s+" collaborators"
   end

@@ -1,0 +1,40 @@
+<h2>High Impact Factor Journals Listing</h2>
+<p>Journal rankings for the most recent ranking period (<%= @high_impact[0].score_year %>) are listed.</p>
+<p>Please keep this information in mind when interpreting Impact Factors - the size of the field and patterns of publication are very important. See this Wikipedia article for more information: 
+<a href="http://en.wikipedia.org/wiki/Impact_factor">About Impact Factors</a>. The Article Influence Score might be a better way to rank the publications. See this Wikipedia article for more information: <a href="http://en.wikipedia.org/wiki/Eigenfactor">About Eigenfactor and Article Influence Score</a>.
+</p>
+<div id="listing">
+<table cellpadding="2" cellspacing="0"> 
+  <tr valign="bottom" class="list-heading">
+	  <th align="right"># &nbsp; </th>
+	  <th align="left">Journal &nbsp; </th>
+	  <th align="left">ISSN &nbsp; </th>
+	  <th align="left">Total Cites (<%= @high_impact[0].score_year %>) &nbsp; </th>
+	  <th align="left">Total Articles (<%= @high_impact[0].score_year %>) &nbsp; </th>
+	  <th align="left">Impact Factor &nbsp; </th>
+	  <th align="left">Impact Factor (5 year) &nbsp; </th>
+	  <th align="left">Immediacy Index &nbsp; </th>
+	  <th align="left">Eigenfactor &nbsp; </th>
+	  <th align="left">Influence Score &nbsp; </th>
+  </tr>
+
+<% cnt = 0 %>
+<% for journal in @high_impact %>
+	<% cnt+=1%>
+  <tr valign="middle" class="<%= cycle('list-line-odd', 'list-line-even') %>"> 
+	<td class="list-right"><%= cnt %></td>
+	<td><%=capitalize_words journal.journal_abbreviation %></td>
+	<td class="list-right"><%= journal.issn %></td>
+	<td class="list-right"><%= journal.total_cites %></td>
+	<td class="list-right"><%= journal.total_articles %></td>
+	<td class="list-right"><%= journal.impact_factor %></td>
+	<td class="list-right"><%= journal.impact_factor_five_year %></td>
+	<td class="list-right"><%= journal.immediacy_index %></td>
+	<td class="list-right"><%= journal.eigenfactor_score %></td>
+	<td class="list-right"><%= journal.article_influence_score %></td>
+  </tr>
+<% end %>
+</table>
+
+</div>
+

@@ -9,11 +9,11 @@
 
 <h1><%= @program.program_title %> Overview <a href='' title="citations per year"> <%= sparkline_tag( abstracts_per_year(@all_abstracts, @year_array.sort), :type => 'bar') if ! @all_abstracts.nil? && @all_abstracts.length > 10 %></a></h1>
 <% if @include_graph_link %>
-<h2><%= link_to( 'Graph co-Publications of Program Members', show_program_graph_path(@program.id)) %></h2>
+<h2><%= link_to( "Graph co-Publications by faculty members in <i>#{@program.program_title}</i>", show_program_graph_path(@program.id)) %></h2>
 <% end %>
 
 <% if @include_mesh %>
-<h2><%= "MeSH cloud for the program <i>#{@program.program_title}</i>" %></h2>
+<h2><%= "MeSH cloud from publications by faculty members in <i>#{@program.program_title}</i>" %></h2>
 <div id="tag_cloud">
 	<%= render :partial => "shared/tag_cloud", :locals => { :tags => @tags } %>
 </div>

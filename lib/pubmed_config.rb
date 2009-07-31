@@ -15,6 +15,7 @@
 @number_years = 1
 @publication_years = @number_years
 @institutional_limit_search_string = '( "Northwestern University"[affil] OR "Feinberg School"[affil] OR "Robert H. Lurie Comprehensive Cancer Center"[affil] OR "Northwestern Healthcare"[affil] OR "Children''s Memorial"[affil] OR "Northwestern Memorial"[affil] OR "Northwestern Medical"[affil])'
+@last_names_to_limit = ["Brown","Chen","Liu","Lu","Lee","Smith","Wang"]
 
 
 @total_taggings_count=0

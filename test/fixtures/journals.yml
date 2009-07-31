@@ -1,0 +1,27 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  journal_name: MyString
+  journal_abbreviation: MyString
+  ISSN: MyString
+  score_year: 1
+  total_cites: 1
+  impact_factor: 1.5
+  impact_factor_five_year: 1.5
+  immediacy_index: 1.5
+  total_articles: 1
+  eigenfactor_score: 1.5
+  article_influence_score: 1.5
+
+two:
+  journal_name: MyString
+  journal_abbreviation: MyString
+  ISSN: MyString
+  score_year: 1
+  total_cites: 1
+  impact_factor: 1.5
+  impact_factor_five_year: 1.5
+  immediacy_index: 1.5
+  total_articles: 1
+  eigenfactor_score: 1.5
+  article_influence_score: 1.5

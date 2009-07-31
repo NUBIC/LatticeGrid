@@ -1,6 +1,6 @@
 
 <div id="admin">
-<h2>CCSG Reporting options</h2>
+<h2>Reporting options</h2>
 
 	<div id="program_stats">
 		<p>Produce publication statistics for each program. Please note that this report can take several minutes to generate!</p>
@@ -15,7 +15,7 @@
 		<% end %> 
 		<br/>
 	</div>
-	<p/>
+	<p></p>
 	<div id="list_one_program">
 		<p>Use the below form for printing:  List for one program all articles published between the following dates:</p>
 		<% form_for :date_range, :url => {:controller => :programs, :action => :abstracts_during_period}, :html => { :method => :post, :class => "p" }  do |form| %> 
@@ -25,8 +25,15 @@
 		  <%= form.text_field(:end_date, :size => 20) %> 
 		  <%= submit_tag 'List Publications' %>
 		<% end %> 
-
-		
 	</div>
-	<p/>
+	<p></p>
+
+	<div id="impact_factor">
+		<h2>Impact Factor and Eigenvalues Analysis</h2>
+		<h2><%= link_to "List High Impact Journals", high_impact_url %></h2>
+		<h2>Click on the year to run the analysis</h2>
+		<% @year_array.each do |year| %>
+			<h3><%= link_to year, impact_factor_url(year, '') %></h3>
+		<% end %>
+	</div>
 </div>

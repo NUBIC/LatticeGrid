@@ -5,7 +5,7 @@ class AbstractsControllerTest < ActionController::TestCase
 
   test "should get index" do
     get :index
-    assert_redirected_to year_list_abstract_path(:id => '2009', :page => '1')
+    assert_redirected_to abstracts_by_year_path(:id => '2009', :page => '1')
 #    assert_not_nil assigns(:abstracts)
   end
 
@@ -17,7 +17,7 @@ class AbstractsControllerTest < ActionController::TestCase
 
   def test_index
     get :index
-    assert_redirected_to year_list_abstract_path(:id => '2009', :page => '1')
+    assert_redirected_to abstracts_by_year_path(:id => '2009', :page => '1')
 #    assert_template 'year_list'
   end
 

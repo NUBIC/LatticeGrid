@@ -20,10 +20,10 @@ Click on the investigator to find all publications attributed to that investigat
   <tr valign="middle" class="<%= cycle('list-line-odd', 'list-line-even') %>"> 
 	<td class="list-left">
 		<%= link_to( image_tag("base.gif"), show_member_graph_path(investigator.username), :title => "Graph member collaborations through co-publications ") %> 
-		<%= link_to( investigator.first_name + "&nbsp;" + investigator.last_name, investigator_path(investigator.username)) %>&nbsp;<br/>
+		<%= link_to( investigator.first_name + "&nbsp;" + investigator.last_name, show_investigator_path(:id=>investigator.username, :page=>1)) %>&nbsp;<br/>
 	</td>
 	<td class="list-left">
-		<%= link_to( investigator.total_pubs_last_five_years, investigator_path(investigator.username), :title => "Total: #{investigator.total_pubs_last_five_years}; First Author: #{investigator.num_first_pubs_last_five_years}; Last Author: #{investigator.num_last_pubs_last_five_years}")  %>&nbsp;<br/>
+		<%= link_to( investigator.total_pubs_last_five_years, show_investigator_path(:id=>investigator.username, :page=>1), :title => "Total: #{investigator.total_pubs_last_five_years}; First Author: #{investigator.num_first_pubs_last_five_years}; Last Author: #{investigator.num_last_pubs_last_five_years}")  %>&nbsp;<br/>
 	</td>
 	<td class="list-left">
 		<%= link_to_collaborators(Investigator.collaborators(investigator.id)) %><br/>

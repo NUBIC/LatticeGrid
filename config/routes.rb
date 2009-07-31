@@ -1,17 +1,25 @@
 ActionController::Routing::Routes.draw do |map|
   map.connect 'abstracts/admin', :controller => 'abstracts', :action => 'ccsg', :conditions => { :method => :get } #legacy url. delete after 12/1/09
+  map.show_investigator 'investigators/:id/show/:page', {:controller => "investigators",:action => "show", :conditions => { :method => :get }  }
+  map.abstracts_by_year 'abstracts/:id/year_list/:page', {:controller => "abstracts",:action => "year_list", :conditions => { :method => :get } }
   map.index_programs 'programs/index', :controller => 'programs', :action => 'index'  #handle the route for programs_path to make sure it is cached properly
   map.resources :programs, :only => [:index, :show], :collection => { :program_stats => :get, :list_programs => :get }, 
-    :member => {:show_investigators => :get, :full_show => :get, :show_program => :get, :list_abstracts_during_period_rjs => :post}
-   map.resources :investigators, :only => [:index, :show]
+    :member => {:full_show => :get, :show_investigators => :get, :list_abstracts_during_period_rjs => :post}
+   map.resources :investigators, :only => [:index, :show], :member => {:full_show => :get}, :collection => { :list_all => :get }
+   
   map.resources :abstracts, :only => [:index, :show], :collection => { :search => [:get, :post], :ccsg => :get, :tag_cloud => :get },
-    :member => {:year_list => :get, :full_year_list => :get, :endnote => :get, :tag => :get, :full_tag => :get, }
+    :member => {:full_year_list => :get, :endnote => :get, :tag => :get, :full_tag => :get, }
   map.resources :graphs, :only => [:none], :member => {:show_member => :get, :show_program => :get}
 
   map.connect 'programs/abstracts_during_period/:id', :controller => 'programs', :action => 'abstracts_during_period'
   map.connect 'ccsg', :controller => 'abstracts', :action => 'ccsg', :conditions => { :method => :get }
+  map.connect 'admin', :controller => 'abstracts', :action => 'ccsg', :conditions => { :method => :get }
   map.abstract_search 'abstracts/search/:page', :controller => 'abstracts', :action => 'search', :method => [:get, :post]
-  map.tag_cloud 'tag_cloud ', :controller => 'abstracts', :action => 'tag_cloud', :conditions => { :method => :get }
+  map.tag_cloud 'tag_cloud', :controller => 'abstracts', :action => 'tag_cloud', :conditions => { :method => :get }
+  map.impact_factor 'impact_factor/:year/:sortby', :controller => 'abstracts', :action => 'impact_factor', :conditions => { :method => :get }
+  map.connect 'impact_factor/:year', :controller => 'abstracts', :action => 'impact_factor', :sortby=>'', :conditions => { :method => :get }
+  map.connect 'impact_factor', :controller => 'abstracts', :action => 'impact_factor', :conditions => { :method => :get }
+  map.high_impact 'high_impact', :controller => 'abstracts', :action => 'high_impact', :conditions => { :method => :get }
   map.program_nodes 'program_nodes/:id', :controller => 'graphs', :action => 'program_nodes' #need this for some of the flash xml calls
   map.member_nodes 'member_nodes/:id', :controller => 'graphs', :action => 'member_nodes' #need this for some of the flash xml calls
   map.connect ':controller/:id/:action/:page'

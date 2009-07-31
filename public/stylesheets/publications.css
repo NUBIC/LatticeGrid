@@ -1,13 +1,15 @@
 /* Global styles */
 
-body { 
+html, body { 
 	font-family : Verdana, Arial, sans-serif;
-	font-size : 8pt;
 	color : black;
-	background-color: #dfdfdf; 
+	font-size: 12px;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	height: 100%;
 	line-height: 16px;
-	margin-top: 0px; 
-	margin-left:10px; 
+	min-width: 800px;
+	background: #dfdfdf; 
 }
 
 p, ol, ul, td {
@@ -24,31 +26,82 @@ p {
 	font-family : Verdana,  Arial,  sans-serif;
 }
 
-ul {
-    margin-left: 0px;
-    padding-left: 15px;
-    padding-top: 0px;
-    margin-top: 0px;
-}
-
-ul.squareBullets {
-    list-style-type: square;
-}
-
-ol li {
-    padding-bottom: 15px;
+p, ul, ol { 
+	color: #000000;
+	margin-top: .6em;
+	margin-bottom: .6em;
+	font-size: .75em;
 }
 
 
-pre {
+.debug_dump {
   background-color: #eee;
   padding: 10px;
   font-size: 11px;
 }
 
+h1, h2, .h2, h3, .h3 {
+    font-family: Arial, Helvetica, Geneva, Sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+	color: #226;
+    line-height: 140%;
+    padding-bottom: 0px;
+    margin-bottom: 2px;
+    margin-top: 8px;
+    padding-top: 0px;
+}
+
+h1, .h1 {
+  font-size: 18px;
+  border-bottom: 3px;
+}
+
+h2, .h2 {
+  font-size: 15px;
+	margin-bottom: .6em;
+	margin-top: 0;
+}
+
+h3 { 
+	color: #3399CC;
+	font-size: 1.0em;
+	margin-bottom: .6em;
+	margin-top: 0;
+}
+
+small, .small {
+  font-size:  75%;
+  line-height: 10px;
+  color: #226;
+}
+
 a { color: #000; }
 a:visited { color: #666; }
 a:hover { color: #fff; background-color:#888; }
+
+#nci-logo {
+	float: left;
+	margin: 50px 0px 0px 10px;
+	display:inline;
+} 
+
+/****************************************
+ * footer 
+ ****************************************/ 
+ 
+#footer-row {
+	float: left;
+	width: 995px;
+	padding: 8px 0px 8px 165px;
+	font-size: .9em;
+	border-top-style: solid;
+	border-top-width: 1px;
+	border-color: #cccccc;
+	background: #ffffff;
+}
+
+/* publications css */
 
 .fieldWithErrors {
   padding: 2px;
@@ -85,27 +138,6 @@ a:hover { color: #fff; background-color:#888; }
   font-size: 12px;
   list-style: square;
 }
-
-div.uploadStatus {
-  margin: 5px;
-}
-
-div.progressBar {
-  margin: 5px;
-}
-
-div.progressBar div.border {
-  background-color: #fff;
-  border: 1px solid grey;
-  width: 100%;
-}
-
-div.progressBar div.background {
-  background-color: #333;
-  height: 18px;
-  width: 0%;
-}
-
 
 
 /* Styles for admin/list */
@@ -286,31 +318,6 @@ div.notice {
 	color: #FFF;
 }
 
-/* from the Catalyst site */
-#sidebar {
-	width:170px;
-	border:1px solid #cccccc;
-	background-image:url(images/sidebarBack.gif);
-	background-repeat:no-repeat;
-	text-align:left;
-	padding:10px 0px;
-}
-#contentMain {
-	padding:0 0 0 10px;
-}
-#callout {
-	width:130px;
-	border:1px solid #cccccc;
-	background-image:url(images/calloutBack.gif);
-	background-repeat:no-repeat;
-	padding:10px;
-}
-#callout p {
-	margin:10px 0;
-}
-/* end of Catalyst css info */
-
-
 #publication_year {
 	margin-top: 5px;
 	margin-left: 10px;
@@ -327,45 +334,6 @@ div.notice {
 	padding-left: 5px;
 	padding-right: 0px;
 	padding-bottom: 10px;
-}
-
-div.map p {
-	display: block;
-	font-size: 12px;
-	margin-top: 2px;
-	margin-right: -5px;
-	margin-bottom: 2px;
-	margin-left: 7px;
-	padding: 0px;
-	text-indent: 0;
-	text-align: left;
-	background: #aa7;
-	color: white;
-	border-bottom: none;		/* Remove rule under H2 */
-	list-style: none 		/* Remove triangle from H2 */
-}
-
-div.map p a {
-	color: yellow;
-	font-size: small;
-	text-decoration: none;
-	padding: 1px 20px 0px 20px;
-	
-}
-
-div.map p a:hover {
-	background-color: #662;
-}
-
-div.map p.currentyear, div.map li.currentyear {
-	background-color: #339;
-}
-
-div.map p.currentyear a {
-	color: white;
-}
-div.map p.currentyear a:hover {
-	background: #662;
 }
 
 #title {
@@ -477,33 +445,6 @@ div.map p.currentyear a:hover {
 	margin-top: -15px;
 	margin-right: 10px;
 	padding: 3px;
-}
-
-h1, h2, .h2, h3, .h3 {
-    font-family: Arial, Helvetica, Geneva, Sans-serif;
-    font-size: 13px;
-    font-weight: bold;
-	color: #226;
-    line-height: 140%;
-    padding-bottom: 0px;
-    margin-bottom: 2px;
-    margin-top: 8px;
-    padding-top: 0px;
-}
-
-h1, .h1 {
-  font-size: 18px;
-  border-bottom: 3px;
-}
-
-h2, .h2 {
-  font-size: 15px;
-}
-
-small, .small {
-  font-size:  75%;
-  line-height: 10px;
-  color: #226;
 }
 
 #abstract, #import, #mesh {
@@ -657,12 +598,12 @@ form {
 	background-color: lightyellow;
 }
 
-.side1 {font-size: 0.8em;}
-.side2 {font-size: 0.9em;}
-.side3 {font-size: 1.0em;}
-.side4 {font-size: 1.1em;}
-.side5 {font-size: 1.2em;}
-.side6 {font-size: 1.4em;}
+.tagcloud1 {font-size: 0.8em;}
+.tagcloud2 {font-size: 0.9em;}
+.tagcloud3 {font-size: 1.0em;}
+.tagcloud4 {font-size: 1.1em;}
+.tagcloud5 {font-size: 1.2em;}
+.tagcloud6 {font-size: 1.4em;}
 
 .nube1 {font-size: 1.0em;}
 .nube2 {font-size: 1.2em;}
@@ -670,12 +611,6 @@ form {
 .nube4 {font-size: 1.6em;}
 .nube5 {font-size: 1.8em;}
 .nube6 {font-size: 2em;}
-
-.tagcloud1 {font-size: 0.8em;}
-.tagcloud2 {font-size: 0.9em;}
-.tagcloud3 {font-size: 1.0em;}
-.tagcloud4 {font-size: 1.2em;}
-.tagcloud5 {font-size: 1.4em;}
 
 /* For three column "tables" */
 #railContainer {

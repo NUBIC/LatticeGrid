@@ -9,7 +9,7 @@ xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showForm
        # cnt+=1
         xml.set(:x=>50, :y=>50, :width=>'120', :height=>'40', :name=>investigator.first_name+' '+investigator.last_name+"\n"+investigator.abstracts.length.to_s+' publications', 
           :id=>investigator.id,
-          :link => investigator_path(investigator.username),
+          :link => show_investigator_path(:id=>investigator.username, :page=>1),
           :color => '99CCFF',
           :tooltext => 'Publications  '+investigator.abstracts.length.to_s+';
   intra-programmatic collaborations:'+investigator.internal_collaborators.length.to_s+'; 
@@ -50,7 +50,7 @@ xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showForm
       :color=>'FFCC33', 
       :arrowAtStart=>'0', :arrowAtEnd=>'0',
       :tooltext => 'connections:'+investigator.external_collaborators[collaborator].length.to_s,
-      :link => investigator_path(investigator.username) )
+      :link => show_investigator_path(:id=>investigator.username, :page=>1) )
     end
   end
 end

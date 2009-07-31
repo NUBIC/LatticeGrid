@@ -1,11 +1,11 @@
 class ProgramsController < ApplicationController
-  caches_page :show_program_abstracts, :index, :show_investigators, :program_stats, :full_show_program_abstracts
+  caches_page :show, :index, :show_investigators, :program_stats, :full_show
   helper :sparklines
   # GET /programs
   # GET /programs.xml
   def index
     @programs = Program.find(:all, :order => "program_number", :include => [:investigator_programs,:program_abstracts])
-    @heading = "Current Program Listing"
+    @heading = "Current Org Listing"
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @programs }
@@ -16,7 +16,7 @@ class ProgramsController < ApplicationController
   def list_programs
     handle_start_and_end_date
     # @programs is called in application.rb for every request
-    @heading = "Publication Listing by Program "
+    @heading = "Publication Listing by Org "
     @heading = @heading + " for #{@year} " if params[:start_date].blank?
     @heading = @heading + " from #{@start_date} " if !params[:start_date].blank?
     @heading = @heading + " to #{@end_date}" if !params[:end_date].blank?
@@ -35,7 +35,7 @@ class ProgramsController < ApplicationController
           :include => ["programs"],
           :conditions => ["programs.id =:program_id",
             {:program_id => params[:id]}]
-      @heading = "Faculty Listing in Program '#{@program.program_title}'"
+      @heading = "Faculty Listing for '#{@program.program_title}'"
 
       respond_to do |format|
         format.html # show.html.erb
@@ -130,7 +130,7 @@ class ProgramsController < ApplicationController
     # then get the number of intra-program collaborations and the number of inter-program collaborations
     params[:start_date]=5.years.ago
     handle_start_and_end_date
-    @heading = "Publication Statistics by Program for the past five years"
+    @heading = "Publication Statistics by Org for the past five years"
     @programs = Program.find(:all, :include => [:abstracts, :investigators], :order => "program_number")
     @programs.each do |program|
       program["pi_intra_abstracts"] = Array.new
@@ -145,10 +145,13 @@ class ProgramsController < ApplicationController
          program.pi_intra_abstracts.push(abstract) if intra_collaborators > 1
       end
     end
+    render :layout => 'printable'
   end
-   private
-   def show_pre
-     @program = Program.find(params[:id])
-     @tags =   Program.find(params[:id]).abstracts.tag_counts(:limit => 150, :order => "count desc", :at_least => 20 )
-   end
- end
+
+  private
+
+  def show_pre
+    @program = Program.find(params[:id])
+    @tags =   Program.find(params[:id]).abstracts.tag_counts(:limit => 150, :order => "count desc", :at_least => 20 )
+  end
+end

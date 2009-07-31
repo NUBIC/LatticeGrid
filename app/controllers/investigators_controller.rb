@@ -7,6 +7,7 @@ class InvestigatorsController < ApplicationController
   end
   def list_all
     @investigators = Investigator.find(:all, :include=>[:programs], :conditions => ['investigators.end_date is null or investigators.end_date >= :now', {:now => Date.today }], :order => "last_name, first_name")   
+    render :layout => 'printable'
   end
   def full_show
     if params[:id].nil? then

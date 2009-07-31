@@ -1,0 +1,68 @@
+<h2>Impact Factor Listing</h2>
+<p>Journal rankings for the most recent ranking period (<%= @journals[0].score_year %>) were used in this analysis. 
+<% if !params[:year].blank? %>
+Only publications from <%= params[:year] %> are included. 
+<% else %>
+Publications from 2000 onward are included in the analysis. 
+<% end %>
+There were a total of <%= @all_pubs.length %> publications during this period.</p>
+<p>Please keep this information in mind when interpreting Impact Factors - the size of the field and patterns of publication are very important. See this Wikipedia article for more information: 
+<a href="http://en.wikipedia.org/wiki/Impact_factor">About Impact Factors</a>. The Article Influence Score might be a better way to rank the publications. See this Wikipedia article for more information: <a href="http://en.wikipedia.org/wiki/Eigenfactor">About Eigenfactor and Article Influence Score</a>.
+</p>
+<p>Click on a heading to re-sort</p>
+<div id="listing">
+<table cellpadding="2" cellspacing="0"> 
+  <tr valign="bottom" class="list-heading">
+	  <th align="right"># &nbsp; </th>
+	  <th align="left"><%= link_to "Journal", impact_factor_path(params[:year], "journal_abbreviation") %> &nbsp; </th>
+	  <th align="left"><%= link_to "Pub Cnt", impact_factor_path(params[:year], "count_all desc") %> &nbsp; </th>
+	  <th align="left">ISSN &nbsp; </th>
+	  <th align="left">Total Cites (<%= @journals[0].score_year %>) &nbsp; </th>
+	  <th align="left">Total Articles (<%= @journals[0].score_year %>) &nbsp; </th>
+	  <th align="left"><%= link_to "Impact Factor", impact_factor_path(params[:year], "impact_factor desc") %> &nbsp; </th>
+	  <th align="left"><%= link_to "Impact Factor (5 year)", impact_factor_path(params[:year], "impact_factor_five_year desc") %> &nbsp; </th>
+	  <th align="left"><%= link_to "Immediacy Index", impact_factor_path(params[:year], "immediacy_index desc") %> &nbsp; </th>
+	  <th align="left"><%= link_to "Eigenfactor", impact_factor_path(params[:year], "eigenfactor_score desc") %> &nbsp; </th>
+	  <th align="left"><%= link_to "Influence Score", impact_factor_path(params[:year], "article_influence_score desc") %> &nbsp; </th>
+  </tr>
+
+<% cnt = 0 %>
+<% for journal in @journals %>
+	<% cnt+=1%>
+  <tr valign="middle" class="<%= @high_impact.collect{|x| x.journal_abbreviation.downcase}.include?(journal.journal_abbreviation.downcase) ?  'list-line-highlight' : cycle('list-line-odd', 'list-line-even') %>"> 
+	<td class="list-right"><%= cnt %></td>
+	<td><%=capitalize_words journal.journal_abbreviation %></td>
+	<td class="list-right"><%= journal.count_all %></td>
+	<td class="list-right"><%= journal.issn %></td>
+	<td class="list-right"><%= journal.total_cites %></td>
+	<td class="list-right"><%= journal.total_articles %></td>
+	<td class="list-right"><%= journal.impact_factor %></td>
+	<td class="list-right"><%= journal.impact_factor_five_year %></td>
+	<td class="list-right"><%= journal.immediacy_index %></td>
+	<td class="list-right"><%= journal.eigenfactor_score %></td>
+	<td class="list-right"><%= journal.article_influence_score %></td>
+  </tr>
+<% end %>
+</table>
+<br/>
+<p>These journals do not have an impact factor in the database. This is still a work in progress!</p>
+<table cellpadding="2" cellspacing="0"> 
+  <tr valign="bottom" class="list-heading">
+	  <th align="right"># &nbsp; </th>
+	  <th align="left">Journal &nbsp; </th>
+	  <th align="left">Pub Cnt &nbsp; </th>
+  </tr>
+
+<% cnt = 0 %>
+<% for journal in @missing_journals %>
+	<% cnt+=1%>
+  <tr valign="middle" class="<%= cycle('list-line-odd', 'list-line-even') %>"> 
+	<td class="list-right"><%= cnt %></td>
+	<td><%=capitalize_words journal.journal_abbreviation %></td>
+	<td class="list-right"><%= journal.count_all %></td>
+  </tr>
+<% end %>
+</table>
+
+</div>
+

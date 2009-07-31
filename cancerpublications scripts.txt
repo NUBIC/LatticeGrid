@@ -138,6 +138,13 @@ test:
 	script/generate model investigator_study
 	script/generate model investigator_relationship
 
+	script/generate model journal journal_name:string journal_abbreviation:string issn:string score_year:integer total_cites:integer impact_factor:float impact_factor_five_year:float immediacy_index:float total_articles:integer eigenfactor_score:float article_influence_score:float
+	#headings from ISI web of science journal citations/impact factor index
+	#Abbreviated Journal Title;ISSN;{2008} Total Cites;Impact Factor;5-Year Impact Factor;Immediacy Index;{2008} Articles;Cited Half-Life;Eigenfactor Score;Article Influence Score
+	#example score for a journal
+	#ANAL CHEM;0003-2700;77792;5.712;5.918;0.831;1221;7.3;0.19839;1.679;
+	
+
 # for graphing the connections
 	script/generate controller graph
 	script/generate model graph
@@ -176,6 +183,15 @@ rake getLDAP uid_list=aqw,wakibbe
 
 ruby test/unit/abstract_test.rb
 
+#insert UCSF investigator names
+
+rake importInvestigators file=UCSFMembers.txt
+
+#insert ISI Web of Science Journal impact factor ratings
+
+rake importJournalImpact file=jcr_recs.txt
+rake environment RAILS_ENV=production importJournalImpact file=jcr_recs.txt
+
 # clean all usernames by removing any periods
 rake cleanInvestigatorsUsername
 
@@ -212,11 +228,24 @@ rake updateProgramAbstractInformation
 rake nightlyBuild
 rake RAILS_ENV=production nightlyBuild
 
+# build the information content values for each tag
+# about 60 minutes for FSM wih 46000 abstracts and 12000 tags
+# before vacuuming the database, it was processing about 1000 tags in 40 minutes. After vacuuming, it was 1000 tags in 3.5 minutes
+# finished all 12,000 tags in less than 60 minutes
+rake attachMeshInformationContent
+
+# build the investigator association files
+# 4 minutes per 10 investigators, 130/hour, about 20 hours for the complete group
+# after 500 investigators, about 300 seconds/10 investigators
+# finished in 800 minutes, or about 13 hours
+rake buildInvestigatorRelationships
+
 # something to do weekly is:
 
 vacuumdb -fz cancerpublications_development
 
 #all the mesh associations are run with this command
+#tasks: :attachMeshInformationContent, :buildInvestigatorRelationships
 rake monthlyBuild
 rake RAILS_ENV=production monthlyBuild
 

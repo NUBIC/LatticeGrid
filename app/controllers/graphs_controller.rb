@@ -50,7 +50,7 @@ class GraphsController < ApplicationController
           {:program_id => params[:id]}]
     Investigator.get_connections(@investigators)
 
-    @heading = "Faculty graph for Program '#{@program.program_title}'"
+    @heading = "Faculty graph for '#{@program.program_title}'"
        respond_to do |format|
         format.xml
       end

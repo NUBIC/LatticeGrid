@@ -13,9 +13,9 @@
 	<% cnt = 0 %>
 	<% for the_year in @year_array %>
 		<% if  controller.action_name.match('list') != nil && the_year.to_s == @year%>
-			publication_year[<%= cnt %>]='<%= link_to the_year, year_list_abstract_path(the_year), :class => "currentyear" %>';
+			publication_year[<%= cnt %>]='<%= link_to the_year, abstracts_by_year_path(:id => the_year, :page=> 1), :class => "currentyear" %>';
 		<% else %>
-			publication_year[<%= cnt %>]='<%= link_to the_year, year_list_abstract_path(the_year) %>';
+			publication_year[<%= cnt %>]='<%= link_to the_year, abstracts_by_year_path(:id => the_year, :page=> 1) %>';
 		<% end %>
 		<% cnt = cnt+1 %>
 	<% end %>
@@ -54,7 +54,7 @@
 </head>
 <body>
 
-<% if ENV['RAILS_ENV'] == 'development' && request.remote_ip =~ /127.0.*/ %>
+<% if ENV['RAILS_ENV'] == 'development' %>
     <div id="debug" style="margin: 5px 5px 5px 5px;">
         <a href="#" onclick="Element.toggle('debug_info');return false" style="text-decoration: none; color: #999;">Show Debug Info &#10162;</a>
         <div id="debug_info" style="display : none;">

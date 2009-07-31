@@ -49,7 +49,7 @@ def InsertPI (pi_data)
         :first_name => pi_data["givenName"],
         :title =>  pi_data["title"],
         :business_phone => pi_data["telephoneNumber"],
-        :nu_employee_id => pi_data["employeeNumber"],
+        :employee_id => pi_data["employeeNumber"],
         :address1 => pi_data["postalAddress"],
         :mailcode => pi_data.ou[0],
         :email => pi_data["mail"]

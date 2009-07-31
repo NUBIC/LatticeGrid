@@ -5,7 +5,7 @@ class AbstractsController < ApplicationController
          :redirect_to => { :action => :year_list }
 
    def index
-     redirect_to year_list_abstract_path(:id => @year, :page => '1')
+     redirect_to abstracts_by_year_path(:id => @year, :page => '1')
    end
 
   def year_list
@@ -30,7 +30,7 @@ class AbstractsController < ApplicationController
 
   def full_year_list
     if params[:id].nil? then
-      redirect_to year_list_abstract_path(:id => @year, :page => '1')
+      redirect_to abstracts_by_year_path(:id => @year, :page => '1')
     elsif !params[:page].nil? then
       params.delete(:page)
       redirect_to params
@@ -39,7 +39,7 @@ class AbstractsController < ApplicationController
       @abstracts = Abstract.display_all_data( @year )
       list_heading
       @do_pagination = "0"
-      render :action => 'list'
+      render :action => 'year_list'
     end
   end
 
@@ -54,7 +54,7 @@ class AbstractsController < ApplicationController
       redirect=true
     end
     if params[:id].nil? then
-      redirect_to year_list_abstract_path(:id => @year, :page => '1')
+      redirect_to abstracts_by_year_path(:id => @year, :page => '1')
     elsif redirect then
       redirect_to params
     else
@@ -77,6 +77,21 @@ class AbstractsController < ApplicationController
   def ccsg
     @date_range = DateRange.new(1.year.ago,Time.now)
   end
+  
+  def impact_factor
+    params[:year]||=""
+    params[:sortby]||="article_influence_score desc"
+    @journals = Journal.publication_record(params[:year], params[:sortby])
+    @missing_journals = Abstract.missing_publications(params[:year], @journals)
+    @high_impact = Journal.high_impact()
+    @all_pubs = Abstract.annual_data(params[:year])
+    render :layout => 'printable'
+  end
+
+  def high_impact
+    @high_impact = Journal.high_impact()
+    render :layout => 'printable'
+  end
 
   def search 
      if !@keywords.keywords.blank? then
@@ -92,7 +107,7 @@ class AbstractsController < ApplicationController
        @include_mesh=false
        render :action => 'year_list'
      else 
-       redirect_to year_list_abstract_path(:id => @year, :page => '1')
+       redirect_to abstracts_by_year_path(:id => @year, :page => '1')
      end 
   end 
   
@@ -100,7 +115,7 @@ class AbstractsController < ApplicationController
     if params[:id].include?("search") then
       redirect_to :action => 'search'
     elsif params[:id].nil? || params[:id].include?("tag") then
-      redirect_to year_list_abstract_path(:id => @year, :page => '1')
+      redirect_to abstracts_by_year_path(:id => @year, :page => '1')
     else
       @publication = Abstract.find(params[:id])
     end

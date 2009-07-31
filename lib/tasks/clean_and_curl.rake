@@ -57,9 +57,9 @@ namespace :cache do
     my_env = 'home' if public_path =~ /Users/ 
     host = case 
       when my_env == 'home': 'localhost:3000'
-      when my_env == 'development': 'rails-dev.bioinformatics.northwestern.edu'
+      when my_env == 'development': 'rails-dev.bioinformatics.northwestern.edu/cancer'
       when my_env == 'production': 'pubs.cancer.northwestern.edu'
-      else 'rails-dev.bioinformatics.northwestern.edu'
+      else 'rails-dev.bioinformatics.northwestern.edu/cancer'
     end 
     default_url_options[:host] = host
   end
@@ -74,30 +74,35 @@ namespace :cache do
     year = handle_year()
     page = 1
     run_curl tag_cloud_abstracts_url
+    run_curl full_year_list_abstract_url(:id => year)
     abstracts = Abstract.display_data( year, page )
     total_entries = abstracts.total_entries
     total_pages   = abstracts.total_pages
     (1..total_pages).to_a.each do |page|
-      run_curl year_list_abstract_url(:id => year, :page => page) 
-      #url_for :controller => 'abstracts', :action => 'year_list', :id => year, :page => page
+      run_curl abstracts_by_year_url(:id => year, :page => page) 
+      #run_curl url_for :controller => 'abstracts', :action => 'year_list', :id => year, :page => page
     end
   end
 
   def investigators
     @AllInvestigators.each do |inv|
-      run_curl investigator_url(:id => inv.username, :page => 1)
+      run_curl full_show_investigator_url(:id => inv.username)
+      run_curl show_investigator_url(:id => inv.username, :page => 1)
       #run_curl url_for :controller => 'investigators', :action => 'show', :id => inv.username, :page => 1
     end
   end
 
   def programs
-    # master page
+    # master page (index)
     run_curl programs_url
+    run_curl index_programs_url
     # program stats page
     run_curl program_stats_programs_url
     @Programs.each do |prog|
       run_curl show_investigators_program_url(prog.id)
-      run_curl show_program_program_url(:id => prog.id, :page => 1)
+      #run_curl program_url(:id => prog.id, :page => 1)
+      run_curl url_for :controller => 'programs', :action => 'show', :id => prog.id, :page => 1
+      run_curl full_show_program_url(:id => prog.id)
     end
   end
 

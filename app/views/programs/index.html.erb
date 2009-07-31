@@ -1,7 +1,7 @@
 
 <h1><%= @heading %></h1>
 
-The following is a list of the number of publications and investigators in each program. Click on the graph image to generate a graph of interactions based on co-publications. Click on the name of the program to see more information including publication for the program. Click on the number of members to see a listing of the members. Click on a MeSH term to see a listing of all publications that include that MeSH term.<br/>
+The following is a list of the number of publications and investigators in each program. Click on the graph image to generate a graph of interactions based on co-publications. Click on the name of the program to see more information including publications of the program. Click on the number of members to see a listing of the members. Click on a MeSH term to see a listing of all publications that include that MeSH term.<br/>
 
 <div id="listing">
   
@@ -25,7 +25,7 @@ The following is a list of the number of publications and investigators in each 
 	<tr valign="bottom" colspan="3">
 		<td>
 			<%= link_to( image_tag("base.gif"), show_program_graph_path(program.id), :title => "Graph member collaborations through co-authored publications ") %> 
-			<%= link_to( program.program_title, program, :title => "List publications by program members") %>
+			<%= link_to( program.program_title, program, :title => "List publications by faculty members") %>
 		</td>
 		<td class="list-title-center">
 			<%= link_to( program.investigator_programs.collect(&:investigator_id).uniq.length, show_investigators_program_path(program.id), :title=>"List investigators in program") %><br/>
