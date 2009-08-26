@@ -1,0 +1,2 @@
+class Secondary < InvestigatorAppointment
+end

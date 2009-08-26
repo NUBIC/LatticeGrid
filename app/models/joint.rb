@@ -1,0 +1,2 @@
+class Joint < InvestigatorAppointment
+end

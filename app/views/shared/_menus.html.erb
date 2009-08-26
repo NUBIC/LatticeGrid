@@ -1,0 +1,32 @@
+<% cache('navigation_menu') do %>
+<div id="side_nav_menu" class="ddsmoothmenu-v">
+<ul>
+	<li><a href="#">Publications by year</a>
+		<%= build_year_menu %>
+	</li>
+	<li><a href="#">Publications by department</a>
+		<%= build_menu(@head_node.children, Department) {|id| org_path(id)} %>
+	</li>
+	<li><a href="#">Faculty by department</a>
+		<%= build_menu(@head_node.children, Department) {|id| show_investigators_org_path(id)} %>
+	</li>
+	<li><a href="#">Graphs by department</a>
+		<%= build_menu(@head_node.children, Department) {|id| show_org_graph_path(id)} %>
+	</li>
+	<li><a href="#">Center publications</a>
+		<%= build_menu(@head_node.children, Center) {|id| org_path(id)} %>
+	</li>
+	<li><a href="#">Center members</a>
+		<%= build_menu(@head_node.children, Center) {|id| show_investigators_org_path(id)} %>
+	</li>
+	<li><a href="#">Center graphs</a>
+		<%= build_menu(@head_node.children, Center) {|id| show_org_graph_path(id)} %>
+	</li>
+	<li><%= link_to "MeSH tag cloud", tag_cloud_abstracts_path, :title=>"Display MeSH tag cloud for all publications" %></li>
+	<li><%= link_to "Department Overview", departments_orgs_path, :title => "Display an overview of all departments" %></li>
+	<li><%= link_to "Center Overview", centers_orgs_path, :title => "Display an overview for all centers" %></li>
+</ul>
+<br style="clear: left" />
+</div>
+<% end %>
+

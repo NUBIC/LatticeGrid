@@ -1,0 +1,13 @@
+update_id ||= @update_id
+update_id ||= 'tag_cloud'
+tags ||= @tags #check for tags or @tags
+investigator ||= @investigator #check for investigator or @investigator
+include_breaks ||= @include_breaks
+include_breaks ||= false
+if update_id == 'tag_cloud'
+  tag_classes =  %w(nube1 nube2 nube3 nube4 nube5)
+else
+  tag_classes =  %w(tagcloud1 tagcloud2 tagcloud3 tagcloud4 tagcloud6)
+end
+page.replace_html(update_id,'loading...') 
+page.replace_html(update_id, :partial => 'shared/tag_cloud_list', :locals => { :tags => tags, :investigator => investigator, :include_breaks => include_breaks, :tag_classes => tag_classes }) 

@@ -1,0 +1,2 @@
+class Program < OrganizationalUnit
+end

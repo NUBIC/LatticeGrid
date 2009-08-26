@@ -1,0 +1,22 @@
+class CreateLoadDates < ActiveRecord::Migration
+  def self.up
+    create_table :load_dates do |t|
+      t.timestamp :load_date
+      t.timestamps
+    end
+    add_index(:load_dates, [:load_date], :unique => true)
+  end
+
+  def self.down
+    begin
+      drop_table :last_loads
+    rescue
+      puts "unable to drop last_loads. Probably doesn't exist"
+    end
+    begin
+      drop_table :load_dates
+    rescue
+      puts "unable to drop load_dates. Probably doesn't exist"
+    end
+  end
+end

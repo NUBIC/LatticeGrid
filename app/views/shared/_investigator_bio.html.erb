@@ -1,0 +1,64 @@
+<% if ! investigator.nil? %>
+<h2><%= investigator.name %></h2>
+<div id="biograph">
+<table>
+	<tr><td>
+	<table>
+		<tr>
+			<th>Campus</th>
+			<td><span id="Campus"><%= investigator.campus %></span></td>
+		</tr>
+		<tr>
+			<th>Address</th>
+			<td><span id="Address"><%= investigator.address1.gsub(/\$/,"<br>") if ! investigator.address1.blank? %></span></td>
+		</tr>
+		<% if ! investigator.business_phone.blank?  %>
+		<tr>
+			<th>Telephone</th>
+			<td><span id="Telephone"><%= investigator.business_phone %></span></td>
+		</tr>
+		<% end %>
+		<% if ! investigator.fax.blank?  %>
+			<tr>
+				<th>Fax</th>
+				<td><span id="Fax"><%= investigator.fax %></span>
+			</td>
+			</tr>
+		<% end %>
+		<% if ! investigator.email.blank?  %>
+		<tr>
+			<th>Email</th>
+			<td><%= mail_to(investigator.email, investigator.email.split("@").join(" at "), 
+				:subject => "Contact from the Feinberg Publications site",
+				:encode => "javascript") if ! investigator.email.blank? %>	</td>
+		</tr>
+		<% end %>
+	</table>
+	</td><td>
+	<table>
+		<tr>
+			<th>Academic Title</th>
+			<td><span id="AcademicTitle"><%= investigator.title %></span></td>
+		</tr>
+		<tr>
+			<th>Primary Department</th>
+			<td><span id="PrimaryDepartment"><%= investigator.home_department.name %></span></td>
+		</tr>
+		<% if (investigator.joint_appointments+investigator.secondary_appointments).length > 0%>
+		<tr>
+			<th>Other Appointments</th>
+			<td><span id="Appointments"><%= (investigator.joint_appointments+investigator.secondary_appointments).collect(&:name).join("<br/>") %></span></td>
+		</tr>
+		<% end %>
+		<% if investigator.memberships.length > 0 %>
+		<tr>
+			<th>Center Affiliations</th>
+			<td><span id="Centers"><%= investigator.memberships.collect(&:name).join("<br/>") %></span></td>
+		</tr>
+		<% end %>
+	</table>
+	</td></tr>
+</table>
+</div>
+<% end %>
+
