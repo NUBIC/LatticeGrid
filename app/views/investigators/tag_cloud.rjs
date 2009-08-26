@@ -1,2 +1,0 @@
-page.replace_html("tag_cloud",'loading...') 
-page.replace_html("tag_cloud", :partial => "shared/tag_cloud_list", :locals => { :tags => @tags }) 
