@@ -12,27 +12,36 @@ require 'pubmed_config' #look here to change the default time spans
 require 'rubygems'
 
 task :tagAbstractsWithMeshTerms => [:getAbstracts] do
+  # tag all abstracts with associated MeSH terms
   # about 60 minutes with 46000 abstracts
   # for RHLCCC about 20 minutes with 7800 abstracts and more than 8,000 tags. Total of 120K taggings
-  start = Time.now
-  @AllAbstracts.each do |abstract|
-    TagAbstractWithMeSH (abstract)
-   end
-  stop = Time.now
-  elapsed_seconds = stop.to_f - start.to_f
-  puts "task tagAbstractsWithMeshTerms ran in #{elapsed_seconds} seconds" if @verbose
+  abstract_tag_count = Tagging.count(:conditions=>"taggable_type='Abstract'")
+  puts "count of all abstract MeSH tags is #{abstract_tag_count}" if @verbose
+  
+  block_timing("tagAbstractsWithMeshTerms") {
+    row_iterator(@AllAbstracts) do |abstract|
+      TagAbstractWithMeSH(abstract)
+    end
+  }
+  abstract_tag_count = Tagging.count(:conditions=>"taggable_type='Abstract'")
+  puts "count of all abstract MeSH tags is #{abstract_tag_count}" if @verbose
 end
 
 task :tagInvestigatorsWithMeshTerms => [:getInvestigators] do
+  # tag all invesigator with associated MeSH terms from all abstracts
   # about 15 minutes laptop, 20 minutes staging with 2100 investigators and 46000 abstracts
   # for RHLCCC about 10 minutes with 7800 abstracts and 280 investigators
+  investigator_tag_count = Tagging.count(:conditions=>"taggable_type='Investigator'")
+  puts "count of all investigator MeSH tags is #{investigator_tag_count}" if @verbose
   start = Time.now
-  @AllInvestigators.each do |investigator|
-    TagInvestigatorWithMeSH (investigator)
-   end
-  stop = Time.now
-  elapsed_seconds = stop.to_f - start.to_f
-  puts "task tagInvestigatorsWithMeshTerms ran in #{elapsed_seconds} seconds" if @verbose
+
+  block_timing("tagInvestigatorsWithMeshTerms") {
+    row_iterator(@AllInvestigators, 0, 300, start) do |investigator|
+      TagInvestigatorWithMeSH(investigator)
+    end
+  }
+  investigator_tag_count = Tagging.count(:conditions=>"taggable_type='Investigator'")
+  puts "count of all investigator MeSH tags is #{investigator_tag_count}" if @verbose
 end
 
 task :calculateTagCounts => [:getTags, :getInvestigators] do
@@ -45,48 +54,49 @@ end
 
 task :attachMeshInformationContent => :calculateTagCounts do
   # takes about an hour with 12000 tags
-  start = Time.now
-  cnt = 0
-  @AllTags.each do |tag|
-    SetMeshInformationContent(tag.name)
-    cnt+=1
-    if (cnt / 1000).round * 1000 == cnt
-      stop = Time.now
-      elapsed_seconds = stop.to_f - start.to_f
-      puts "attachMeshInformationContent processed #{cnt} tags in #{elapsed_seconds} seconds"
-    end
-  end
-  stop = Time.now
-  elapsed_seconds = stop.to_f - start.to_f
-  puts "task attachMeshInformationContent ran in #{elapsed_seconds} seconds" if @verbose
+  block_timing("attachMeshInformationContent") {
+    row_iterator(@AllTags) { |tag|
+      SetMeshInformationContent(tag.name)
+    }
+  }
 end
 
-# this is the task that will take the information content calculations and build up the InvestigatorRelationship model
-task :buildInvestigatorRelationships => [:getInvestigators, :getMeshTags] do
+# this is the task that will take the information content calculations and build up the InvestigatorColleague model
+# for the medical school with 3700 investigotors, this takes about 24 hours to run.
+task :buildInvestigatorColleagues => [:getInvestigators, :getMeshTags] do
   # load the test data
-  start = Time.now
-  cnt = 0
-  last = @AllInvestigators.length-1
-  @AllInvestigators.each do |investigator|
-    cnt+=1
-    @AllInvestigators[cnt..last].each do |colleague|
-      BuildInvestigatorRelationship (investigator, colleague)
-    end
-    if (cnt / 10).round * 10 == cnt
-      stop = Time.now
-      elapsed_seconds = stop.to_f - start.to_f
-      puts "buildInvestigatorRelationships processed #{cnt} investigators in #{elapsed_seconds} seconds"
-    end
-   end
-  stop = Time.now
-  elapsed_seconds = stop.to_f - start.to_f
-  puts "task updateProgramAbstractInformation ran in #{elapsed_seconds} seconds" if @verbose
+  block_timing("buildInvestigatorColleagues") {
+    start = Time.now
+    num_processed = 0
+    cnt = 0 # start at zero or if you want to break this into shorter tasks, you could break it differently
+    update_only=false
+    last = @AllInvestigators.length-1
+    to_process= last-cnt
+    # this is a 2 (n-1)(n-2) problem. symmetric so it requires only (n-1)(n-2) iterations
+    puts "ready to process #{((to_process-1)*(to_process-2)).humanize} symmetric investigator relationships starting with row #{cnt} of #{last}" if @verbose
+    row_iterator(@AllInvestigators[cnt..last], 0, 10, start)  { |investigator|
+      cnt+=1
+      row_iterator(@AllInvestigators[cnt..last],num_processed,4000, start) do |colleague|
+        num_processed+=1
+        BuildInvestigatorColleague(investigator, colleague, update_only)
+      end
+    }
+  }
 end
 
-task :nightlyBuild => [:insertAbstracts, :associateAbstractsWithInvestigators, :updateAbstractInvestigators, :updateInvestigatorInformation, :tagAbstractsWithMeshTerms, :tagInvestigatorsWithMeshTerms, :updateProgramAbstractInformation] do
-   puts "task nightlyBuild completed. Includes the tasks :insertAbstracts, :updateAbstractInvestigators, :updateInvestigatorInformation, :tagAbstractsWithMeshTerms, :tagInvestigatorsWithMeshTerms, :updateProgramAbstractInformation " if @verbose
+task :buildCoauthors => [:getInvestigators] do
+  
+  block_timing("BuildCoauthors") {
+    row_iterator(@AllInvestigators) { |investigator|
+      BuildCoauthors(investigator)
+    }
+  }
 end
 
-task :monthlyBuild => [ :attachMeshInformationContent, :buildInvestigatorRelationships] do
-  puts "task monthlyBuild completed. Includes the tasks :attachMeshInformationContent, :buildInvestigatorRelationships " if @verbose
+task :nightlyBuild => [:insertAbstracts, :updateAbstractInvestigators, :buildCoauthors, :updateInvestigatorInformation, :tagAbstractsWithMeshTerms, :tagInvestigatorsWithMeshTerms, :updateOrganizationAbstractInformation] do
+   puts "task nightlyBuild completed. Includes the tasks :insertAbstracts, :updateAbstractInvestigators, :updateInvestigatorInformation, :tagAbstractsWithMeshTerms, :tagInvestigatorsWithMeshTerms, :updateOrganizationAbstractInformation " if @verbose
+end
+
+task :monthlyBuild => [ :attachMeshInformationContent, :buildInvestigatorColleagues] do
+  puts "task monthlyBuild completed. Includes the tasks :attachMeshInformationContent, :buildInvestigatorColleagues " if @verbose
 end

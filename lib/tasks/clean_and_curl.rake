@@ -1,34 +1,33 @@
+require 'utilities'
 #require 'pathname'
 
 # rake cache:clear 
 
 
-# curl -s http://pubs.cancer.northwestern.edu/abstracts/list/2009/1 -o index.html
+# curl -s http://pubs.feinberg.northwestern.edu/abstracts/list/2009/1 -o index.html
 
 namespace :cache do
   task :clear => :environment do
-    start = Time.now
-    if File.directory?(public_path) then
-      directories= %w{graphs abstracts investigators programs member_nodes program_nodes}
-      directories.each do |name|
-        name="#{public_path}/#{name}"
-        if File.directory?(name) then
-          puts "running 'rm -r #{name}'"
-          system("rm -r #{name}")
+    block_timing("cache:clear") {
+      if File.directory?(public_path) then
+        directories= %w{graphs abstracts investigators programs orgs member_nodes org_nodes}
+        directories.each do |name|
+          name="#{public_path}/#{name}"
+          if File.directory?(name) then
+            puts "running 'rm -r #{name}'"
+            system("rm -r #{name}")
+          end
+        end
+        files = %w{programs.html orgs.html}
+        files.each do |name|
+          name="#{public_path}/#{name}"
+          if File.exist?(name) then
+            puts "running 'rm #{name}'"
+            system("rm #{name}")
+          end
         end
       end
-      files = %w{programs.html}
-      files.each do |name|
-        name="#{public_path}/#{name}"
-        if File.exist?(name) then
-          puts "running 'rm #{name}'"
-          system("rm #{name}")
-        end
-      end
-    end
-    stop = Time.now
-    elapsed_seconds = stop.to_f - start.to_f
-    puts "clean ran in #{elapsed_seconds} seconds"
+    }
   end
 
   def public_path
@@ -57,9 +56,9 @@ namespace :cache do
     my_env = 'home' if public_path =~ /Users/ 
     host = case 
       when my_env == 'home': 'localhost:3000'
-      when my_env == 'development': 'rails-dev.bioinformatics.northwestern.edu/cancer'
-      when my_env == 'production': 'pubs.cancer.northwestern.edu'
-      else 'rails-dev.bioinformatics.northwestern.edu/cancer'
+      when my_env == 'development': 'rails-dev.bioinformatics.northwestern.edu/fsmpubs'
+      when my_env == 'production': 'pubs.feinberg.northwestern.edu'
+      else 'rails-dev.bioinformatics.northwestern.edu/fsmpubs'
     end 
     default_url_options[:host] = host
   end
@@ -67,13 +66,36 @@ namespace :cache do
   def run_curl(the_url)
     my_command = "curl -s #{the_url} -o #{root_path}/index.html"
     puts my_command
-    system(my_command)
+    curl_result = system(my_command)
+    if ! curl_result
+      puts "rats. The command '#{my_command}' failed to execute"
+    end
   end
 
+  def run_ajax_curl(the_url)
+    my_command = "curl -H 'Accept: text/javascript' -s #{the_url} -o #{root_path}/index.html"
+    puts my_command
+    curl_result = system(my_command)
+    if ! curl_result
+      puts "rats. The command '#{my_command}' failed to execute"
+    end
+  end
+
+  def run_xml_curl(the_url)
+    my_command = "curl -H 'Accept: application/xml' -s #{the_url} -o #{root_path}/index.html"
+    puts my_command
+    curl_result = system(my_command)
+    if ! curl_result
+      puts "rats. The command '#{my_command}' failed to execute"
+    end
+  end
+
+ 
   def abstracts
     year = handle_year()
     page = 1
     run_curl tag_cloud_abstracts_url
+    run_ajax_curl tag_cloud_by_year_abstract_url(:id => year)
     run_curl full_year_list_abstract_url(:id => year)
     abstracts = Abstract.display_data( year, page )
     total_entries = abstracts.total_entries
@@ -87,22 +109,28 @@ namespace :cache do
   def investigators
     @AllInvestigators.each do |inv|
       run_curl full_show_investigator_url(:id => inv.username)
+      run_ajax_curl tag_cloud_side_investigator_url(:id => inv.id)
+      run_ajax_curl tag_cloud_investigator_url(:id => inv.id)
       run_curl show_investigator_url(:id => inv.username, :page => 1)
       #run_curl url_for :controller => 'investigators', :action => 'show', :id => inv.username, :page => 1
     end
   end
 
-  def programs
+  def orgs
     # master page (index)
-    run_curl programs_url
-    run_curl index_programs_url
-    # program stats page
-    run_curl program_stats_programs_url
-    @Programs.each do |prog|
-      run_curl show_investigators_program_url(prog.id)
-      #run_curl program_url(:id => prog.id, :page => 1)
-      run_curl url_for :controller => 'programs', :action => 'show', :id => prog.id, :page => 1
-      run_curl full_show_program_url(:id => prog.id)
+    run_curl orgs_url
+    run_curl index_orgs_url
+    run_curl centers_orgs_url
+    run_curl programs_orgs_url
+    run_curl departments_orgs_url
+    # stats page
+    run_curl stats_orgs_url
+    @AllOrganizations.each do |org|
+      run_curl show_investigators_org_url(org.id)
+      run_curl url_for :controller => 'orgs', :action => 'show', :id => org.id, :page => 1
+      run_curl full_show_org_url(:id => org.id)
+      run_ajax_curl tag_cloud_org_url(:id => org.id)
+      run_ajax_curl short_tag_cloud_org_url(:id => org.id)
     end
   end
 
@@ -116,33 +144,30 @@ namespace :cache do
     end
   end
 
-  def program_graphs
-    @Programs.each do |prog|
-       #run_curl url_for :controller => 'graphs', :action => 'show_program', :id => prog.id
-       run_curl show_program_graph_url(prog.id)
-       run_curl program_nodes_url(prog.id)
+  def org_graphs
+    @AllOrganizations.each do |org|
+       #run_curl url_for :controller => 'graphs', :action => 'show_org', :id => prog.id
+       run_curl show_org_graph_url(org.id)
+       run_curl org_nodes_url(org.id)
     end
   end
 
-  task :populate => [:setup_url_for,:getInvestigators, :getPrograms] do
-    start = Time.now
-    tasknames = %w{abstracts investigators programs investigator_graphs program_graphs}
+  task :populate => [:setup_url_for,:getInvestigators, :getAllOrganizations] do
+    tasknames = %w{abstracts investigators orgs investigator_graphs org_graphs}
     if ENV["taskname"].nil?
       puts "sorry. You need to call 'rake cache:populate taskname=task' where task is one of #{tasknames.join(', ')}"
     else
       taskname = ENV["taskname"]
-      case 
-        when taskname == 'abstracts': abstracts
-        when taskname == 'investigators': investigators
-        when taskname == 'programs': programs
-        when taskname == 'investigator_graphs': investigator_graphs
-        when taskname == 'program_graphs': program_graphs
-        else puts "sorry - unknown caching task #{taskname}."
-      end    
+      block_timing("cache:populate taskname=#{taskname}") {
+        case 
+          when taskname == 'abstracts': abstracts
+          when taskname == 'investigators': investigators
+          when taskname == 'orgs': orgs
+          when taskname == 'investigator_graphs': investigator_graphs
+          when taskname == 'org_graphs': org_graphs
+          else puts "sorry - unknown caching task #{taskname}."
+        end   
+      }
     end
-      
-    stop = Time.now
-    elapsed_seconds = stop.to_f - start.to_f
-    puts "populate_cache cache=#{taskname} ran in #{elapsed_seconds} seconds"
   end
 end

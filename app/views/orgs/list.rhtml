@@ -4,18 +4,18 @@
 
 <div id="listing">
   
-  <% for program in @programs %>
+  <% for unit in @head_node.children %>
 	<table cellpadding="2" cellspacing="0" width="900" class="borderless"> 
 	<tr valign="bottom" colspan="3">
 	<td class="list-title-center">
-		<%= program.program_title %><br/>
+		<%= unit.name %><br/>
 	</td>
 	</tr>
 	</table>
 	
-	<%= "<div id='list_#{program.id}'></div>" %>
+	<%= "<div id='list_#{unit.id}'></div>" %>
 	<script language="javascript">
-	<%= remote_function(:url => {:controller => :programs, :action => :list_abstracts_during_period_rjs, :id => program.id, :start_date => @start_date, :end_date => @end_date }, :before => "Element.show('spinner')", 
+	<%= remote_function(:url => {:controller => :orgs, :action => :list_abstracts_during_period_rjs, :id => unit.id, :start_date => @start_date, :end_date => @end_date }, :before => "Element.show('spinner')", 
 	:complete => "Element.hide('spinner')" ) %> 
 	</script>
   <% end %>

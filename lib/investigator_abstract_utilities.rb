@@ -35,7 +35,7 @@ def CreateInvestigatorAbstractsFromHash(data_row)
      return
   end
   if investigator.blank? then
-      puts "Could not find Investigator. datarow="+data_row.inspect
+      puts "Could not find Investigator by employee_id. datarow="+data_row.inspect
       return
   end
   investigator_abstract = InvestigatorAbstract.new(:abstract_id=>abstract.id, :investigator_id=>investigator.id)

@@ -1,9 +1,23 @@
 <% include_mesh=true if include_mesh.nil? %>
-<%= render :partial=>"shared/investigator_listing" %> 
+<h2><%= link_to( "Graph co-publications by faculty members in <i>#{@unit.name}</i>", show_org_graph_path(@unit.id)) %></h2>
 
+<h2><%= link_to( "Show all #{@unit.name} publications", org_path(@unit.id)) %></h2>
+
+<h1><%= @heading %></i></h1>
+
+Click on the investigator to find all publications attributed to that investigator. <br/>
+
+<%= render( :partial=>"investigator_listing", :locals => { :investigators => @unit.primary_faculty, :heading => "Primary appointments" }) if @unit.primary_faculty.length > 0 %> 
+<%= render( :partial=>"investigator_listing", :locals => { :investigators => @unit.joint_faculty, :heading => "Joint appointments" }) if @unit.joint_faculty.length > 0 %> 
+<%= render( :partial=>"investigator_listing", :locals => { :investigators => @unit.secondary_faculty, :heading => "Secondary appointments" }) if @unit.secondary_faculty.length > 0 %> 
+<% if @unit.kind_of?(Center) or @unit.kind_of?(Program) %>
+<%= render :partial=>"investigator_listing", :locals => { :investigators => @unit.members, :heading => "Members" } %> 
+<% end %>
 <% if include_mesh %>
-<h3><%= "MeSH cloud from publications in the department <i>#{@program.program_title}</i>}" %></h3>
-<div id="tag_cloud">
-	<%= render :partial => "shared/tag_cloud", :locals => { :tags => @tags } %>
-</div>
+<h3><%= "MeSH cloud from publications in <i>#{@unit.name}</i>" %></h3>
+<div id="tag_cloud"></div>
+<script language="javascript">
+<%= remote_function(:url => tag_cloud_org_path( @unit.id ), :method => :get, :before => "Element.show('spinner')", :complete => "Element.hide('spinner')" ) %> 
+</script>
+<br/>
 <% end %>

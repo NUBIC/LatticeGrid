@@ -9,8 +9,8 @@ def BuildPISearch(pi, full_first_name=true, limit_to_institution=true)
     if full_first_name then
       result = result + ", " + pi.first_name
       if !pi.middle_name.blank?  then
-        result = result + " " + pi.middle_name[0,1]
-      end
+      result = result + " " + pi.middle_name[0,1]
+    end
     else
       result = result + " " + pi.first_name[0,1]
       if !pi.middle_name.blank?  then
@@ -52,8 +52,8 @@ end
 
 def FindPubMedIDs (all_investigators, options, number_years, limit_to_institution=true, debug=false, smart_filters=false)
   theCnt = 0
-  expected_max_pubs_per_year = 30
-  expected_pubs_per_year = 10
+  expected_max_pubs_per_year = @expected_max_pubs_per_year
+  expected_min_pubs_per_year = @expected_min_pubs_per_year
   all_investigators.each do |investigator|
     #reset counters
     attempt=0
@@ -82,24 +82,24 @@ def FindPubMedIDs (all_investigators, options, number_years, limit_to_institutio
            retry
          end
          raise "Failed call with keywords: " + keywords.to_s + "; options: " + options.to_s + "; for investigator #{investigator.first_name} #{investigator.last_name}"
-       rescue
+       rescue Exception => error
         attempt+=1
         puts "Failed call with keywords: " + keywords.to_s + "; options: " + options.to_s + "; for investigator #{investigator.first_name} #{investigator.last_name}"
         retry if attempt < 3
         raise
       end
      end
-    investigator["entries"] = entries
+    investigator["entries"] = []
     if entries.length < 1 then
       puts "No publications found for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords}"
     elsif entries.length > (expected_max_pubs_per_year*number_years) then
       puts "Too many hits??: #{investigator.entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found"
-    elsif entries.length > (expected_pubs_per_year*number_years) then
-      puts "More than expected: #{investigator.entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found"
     elsif entries.length < number_years then
-      puts "Too few found: #{investigator.entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found"
+      puts "Too few found: #{investigator.entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found" if debug
+      investigator["entries"] = entries
     else
       puts "#{investigator.entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found" if debug
+      investigator["entries"] = entries
     end
     #reset these if we make it this far
 
@@ -108,6 +108,7 @@ def FindPubMedIDs (all_investigators, options, number_years, limit_to_institutio
   end
   theCnt
 end
+
 
 def GetPubsForInvestigators(investigators)
   investigators.each do |investigator|
@@ -182,11 +183,16 @@ def UpdateCitationInvestigatorInformation (abstract_id, investigator_ids, first_
 end
 
 def UpdateInvestigatorCitationInformation(investigator)
-  investigator.num_intraprogam_collaborators_last_five_years=Investigator.intramural_collaborators_cnt(investigator.id)
-  investigator.num_extraprogram_collaborators_last_five_years=Investigator.other_collaborators_cnt(investigator.id)
-  investigator.total_pubs_last_five_years=Investigator.publications_cnt(investigator.id)
-  investigator.num_first_pubs_last_five_years=Investigator.first_author_publications_cnt(investigator.id)
-  investigator.num_last_pubs_last_five_years=Investigator.last_author_publications_cnt(investigator.id)
+  investigator.num_intraunit_collaborators_last_five_years=Investigator.intramural_collaborators_since_date_cnt(investigator.id)
+  investigator.num_extraunit_collaborators_last_five_years=Investigator.other_collaborators_since_date_cnt(investigator.id)
+  investigator.total_pubs_last_five_years=investigator.publications_cnt()
+  investigator.num_first_pubs_last_five_years=investigator.first_author_publications_since_date_cnt()
+  investigator.num_last_pubs_last_five_years=investigator.last_author_publications_since_date_cnt()
+  investigator.num_intraunit_collaborators=Investigator.intramural_collaborators_cnt(investigator.id)
+  investigator.num_extraunit_collaborators=Investigator.other_collaborators_cnt(investigator.id)
+  investigator.total_pubs=investigator.abstracts.length
+  investigator.num_first_pubs=investigator.first_author_publications_cnt()
+  investigator.num_last_pubs=investigator.last_author_publications_cnt()
   investigator.save!
 end
 
@@ -255,5 +261,40 @@ def AddInvestigatorsToCitation(abstract_id, investigator_ids, first_author_id, l
       puts "adding new investigator/abstract pair (investigator: #{Investigator.find(investigator_id).last_name}; abstract pubmed_id: #{Abstract.find(abstract_id).pubmed})" if @verbose
       InsertInvestigatorPublication (abstract_id, investigator_id, !!(first_author_id == investigator_id),  !!(last_author_id == investigator_id))
     end
+  end
+end
+
+# fetch pubmed record data based on array of pubmed_ids
+def FetchPublicationData(pubmed_ids)
+  theCnt = 0
+  theSize = 499
+  theEnd = 0
+  foundPubs=[]
+  while theCnt < pubmed_ids.length do
+    theEnd = theCnt+theSize
+    theEnd = pubmed_ids.length-1 if theEnd > pubmed_ids.length-1 
+    puts "Slicing all_entries from #{theCnt} to #{theEnd}" if @debug
+    mySlice = pubmed_ids[theCnt..theEnd]
+    puts "looking up #{mySlice.length} pubs from #{theCnt} to #{theEnd}" if @debug
+    theCnt = theEnd+1
+    printSlice(mySlice) if @debug
+    pubs = Bio::PubMed.efetch(mySlice)
+    inspectObject(pubs[0]) if @debug
+    puts "found #{pubs.length} pubs" if @debug
+    foundPubs =  foundPubs + pubs
+  end
+  foundPubs
+end
+
+
+def BuildCoauthors(investigator)
+  coauthors = investigator.abstracts.collect{|x| x.investigator_abstracts.collect(&:investigator_id)}.flatten.uniq
+  coauthors.delete(investigator.id)
+  coauthors.each do |coauthor|
+    colleague=Investigator.find(coauthor)
+    citation_overlap = investigator.abstracts.collect{|x| x.id}.flatten & colleague.abstracts.collect{|x| x.id}.flatten
+    citation_overlap = citation_overlap.uniq.compact
+    InsertUpdateInvestigatorColleague(investigator.id,coauthor,citation_overlap,[],0)
+    InsertUpdateInvestigatorColleague(coauthor,investigator.id,citation_overlap,[],0)
   end
 end

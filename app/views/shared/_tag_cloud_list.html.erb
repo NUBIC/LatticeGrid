@@ -1,3 +1,15 @@
-<% tag_cloud tags, %w(tagcloud1 tagcloud2 tagcloud3 tagcloud4 tagcloud6) do |tag, css_class| %>
-   <%= link_to tag.name, tag_abstract_path(tag.name), :class => css_class, :title => "Total of #{tag.count} tags" %> <br/>
+<% include_breaks ||= false %>
+<% tag_classes ||= %w(tagcloud1 tagcloud2 tagcloud3 tagcloud4 tagcloud6) %>
+<% if ! tags.nil? %>
+	<% tag_cloud tags, tag_classes do |tag, css_class| %>
+		<% begin %>
+		<%= link_to tag.name, tagged_abstracts_abstract_path(URI.escape(tag.name)), :class => css_class, :title => "Total of #{tag.count} tags" %>
+		<% rescue %>
+		<%= tag.name %>
+		<% end %>
+		<%= "<br/>" if include_breaks %>
+	<% end %>
+	<% if controller.controller_name and ! investigator.nil? %> 
+		<%= link_to "&#8230;more", show_all_tags_investigator_url(investigator.username), :class => "tagcloud4" %> 
+	<% end %>
 <% end %>

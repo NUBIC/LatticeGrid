@@ -1,15 +1,17 @@
-class InvestigatorProgram < ActiveRecord::Base
+class InvestigatorAppointment < ActiveRecord::Base
   belongs_to :investigator
-  belongs_to :program
+  belongs_to :organizational_unit
+  belongs_to :center, :foreign_key => :organizational_unit_id
+  belongs_to :organizational_unit
   has_many :investigator_abstracts, :through => :investigator 
-  validates_uniqueness_of :investigator_id, :scope => "program_id"
+  validates_uniqueness_of :investigator_id, :scope => [:organizational_unit_id, :type]
 
 
-  def self.has_program(program_id ) 
-    programs = self.find :all, 
-         :conditions => ['program_id = :program_id  and (end_date is null or end_date >= :now) ',
-         {:now => Date.today, :program_id => program_id }] 
-    return programs.length > 0
+  def self.has_appointment(unit_id ) 
+    appointments = self.find :all, 
+         :conditions => ['organizational_unit_id = :unit_id  and (end_date is null or end_date >= :now) ',
+         {:now => Date.today, :unit_id => unit_id }] 
+    return appointments.length > 0
   end 
 
 end

@@ -9,17 +9,16 @@ def GetConnections(abstract_id, investigator_id, number_years)
    return piabstracts
 end
 
-def GetPIsInProgram (program_id)
+def GetPIsInOrganization (unit_id)
   # load all investigators
-  Investigator.find :all, 
-    :joins => ["investigator_abstracts", "investigator_programs"],
-    :conditions => ["investigator_programs.program_id = :program_id",
-      {:program_id => program_id}]
+  unit=OrganizationalUnit.find(unit_id)
+  return (unit.primary_faculty+unit.associated_faculty).uniq
 end
 
-def InvestigatorBelongsToProgram (program_id, investigator)
-  investigator.investigator_programs.each do |investigator_program|
-    return true if investigator_program.program_id == program_id
+def InvestigatorBelongsToOrganization (unit_id, investigator)
+  return true if investigator.home_department_id == unit_id
+  investigator.investigator_appointments.each do |investigator_appointment|
+    return true if investigator_appointment.organizational_unit_id == unit_id
   end
   return false
 end
@@ -37,15 +36,16 @@ def AddToEdge(edge_hash, index1, index2)
 end
 
 
-def SaveEdge(program_id, investigator_id, member_on_abstract, edge_hash, retain_connections=false)
+def SaveEdge(unit_id, investigator_id, member_on_abstract, edge_hash, retain_connections=false)
   # will want to put each member in a different cloud dependent on program membership
-  if  InvestigatorBelongsToProgram (program_id, member_on_abstract.investigator)
+  if  InvestigatorBelongsToOrganization (unit_id, member_on_abstract.investigator)
     AddToEdge(edge_hash, investigator_id, member_on_abstract.investigator_id)
   elsif retain_connections
       AddToEdge(edge_hash, investigator_id, 'e'+member_on_abstract.investigator_id.to_s)
    else
-    member_on_abstract.investigator.investigator_programs.each do |investigator_program|
-      AddToEdge(edge_hash, investigator_id, 'p'+investigator_program.program_id.to_s)
+     AddToEdge(edge_hash, investigator_id, 'p'+investigator.home_department_id.to_s)
+    member_on_abstract.investigator.investigator_appointments.each do |investigator_appointment|
+      AddToEdge(edge_hash, investigator_id, 'p'+investigator_appointment.organizational_unit_id.to_s)
     end
   end
 end

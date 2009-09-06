@@ -2,21 +2,23 @@
 @AllInvestigatorMeshTags = nil
 @AllAbstractMeshTags = nil
 @AllAbstracts = nil
-@AllDepartments = nil
-@AllDepartmentsAndDivisions = nil
+@AllPrimaryAppointments = nil
+@AllInvestigatorAssociations = nil
+@AllOrganziations = nil
 @AllTags = nil
 @all_entries = nil
 @all_publications = Array.new
 @debug = false
 @smart_filters = true
 @verbose = true
-@limit_to_institution = false
+@limit_to_institution = true
 @all_years = 10
 @number_years = 1
 @publication_years = @number_years
 @institutional_limit_search_string = '( "Northwestern University"[affil] OR "Feinberg School"[affil] OR "Robert H. Lurie Comprehensive Cancer Center"[affil] OR "Northwestern Healthcare"[affil] OR "Children''s Memorial"[affil] OR "Northwestern Memorial"[affil] OR "Northwestern Medical"[affil])'
 @last_names_to_limit = ["Brown","Chen","Liu","Lu","Lee","Smith","Wang"]
-
+@expected_min_pubs_per_year = 1
+@expected_max_pubs_per_year = 30
 
 @total_taggings_count=0
 @total_publications = 0

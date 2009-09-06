@@ -42,18 +42,18 @@
 		</tr>
 		<tr>
 			<th>Primary Department</th>
-			<td><span id="PrimaryDepartment"><%= investigator.home_department.name %></span></td>
+			<td><span id="PrimaryDepartment"><%= link_to_primary_department(investigator) %></span></td>
 		</tr>
-		<% if (investigator.joint_appointments+investigator.secondary_appointments).length > 0%>
+		<% if (investigator.joint_appointments+investigator.secondary_appointments).length > 0 %>
 		<tr>
 			<th>Other Appointments</th>
-			<td><span id="Appointments"><%= (investigator.joint_appointments+investigator.secondary_appointments).collect(&:name).join("<br/>") %></span></td>
+			<td><span id="Appointments"><%= link_to_units(investigator.joint_appointments+investigator.secondary_appointments) %></span></td>
 		</tr>
 		<% end %>
 		<% if investigator.memberships.length > 0 %>
 		<tr>
 			<th>Center Affiliations</th>
-			<td><span id="Centers"><%= investigator.memberships.collect(&:name).join("<br/>") %></span></td>
+			<td><span id="Centers"><%= link_to_units(investigator.memberships) %></span></td>
 		</tr>
 		<% end %>
 	</table>

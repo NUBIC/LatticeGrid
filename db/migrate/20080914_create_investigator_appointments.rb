@@ -1,20 +1,22 @@
-
-class CreateInvestigatorPrograms < ActiveRecord::Migration
+class CreateInvestigatorAppointments < ActiveRecord::Migration
   def self.up
-    create_table :investigator_programs do |t|
+    create_table :investigator_appointments do |t|
       #add_foreign_key (:mainentity, :mainentity_id, secundaryentity)
-      #add_foreign_key(:investigators, :id, :investigator_programs, :add_column)
-      #add_foreign_key(:programs, :id, :investigator_programs, :add_column)
-      t.column :program_id, :integer, :null => false
+      t.column :organizational_unit_id, :integer, :null => false
       t.column :investigator_id, :integer, :null => false
-      t.column :program_appointment, :string 
+      t.column :type, :string #primary, secondary, member, associate_member, joint
       t.column :start_date, :date
       t.column :end_date, :date
       t.timestamps
+      # adds created_at and updated_at
     end
   end
 
   def self.down
-    drop_table :investigator_programs
+    begin
+      drop_table :investigator_appointments
+    rescue Exception => error
+      puts "unable to drop investigator_appointments. Probably doesn't exist"
+    end
   end
 end

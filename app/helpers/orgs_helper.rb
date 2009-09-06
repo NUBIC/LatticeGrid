@@ -1,2 +1,2 @@
-module ProgramsHelper
+module OrgsHelper
 end

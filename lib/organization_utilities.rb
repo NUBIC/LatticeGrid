@@ -115,6 +115,8 @@ def CreateOrganizationFromHash(data_row)
       org.type = "Center"
     elsif org.division_id.to_s =~ /010$/ || org.division_id.to_s =~ /510$/  # 510 catches Radiation Oncology, otherwise all are 010
       org.type = "Department"
+    elsif ! FindCenter(org.department_id ).nil?
+      org.type = 'Program'
     else
       org.type = 'Division'
     end
@@ -218,7 +220,7 @@ def CreateProgramFromName(department)
            :sort_order => max_program_number
         )
       end
-    rescue
+    rescue Exception => error
      puts "something happened"+$!.message
      throw department.inspect
   end

@@ -77,11 +77,19 @@ def MatchInvestigatorsInCitation(all_investigators,abstract)
   return matched_ids
 end
 
+# takes an array of PubMed records
+def InsertPubmedRecords(publications)
+  row_iterator(publications) { |publication|
+    abstract = InsertPublication(publication)
+  }
+end
+
+# takes a PubMed record, hashed, as an inputs
 def InsertPublication (publication)
   puts "InsertPublication: this shouldn't happen - publication was nil" if publication.nil?
   raise "InsertPublication: this shouldn't happen - publication was nil" if publication.nil?
   thePub = nil
-  medline = Bio::MEDLINE.new(publication)
+  medline = Bio::MEDLINE.new(publication) # convert retrieved format into the medline format
   reference = medline.reference
   thePub = Abstract.find_by_pubmed(reference.pubmed)
   begin 
@@ -98,7 +106,7 @@ def InsertPublication (publication)
         :publication_status => medline.publication_status,
         :title   => reference.title,
         :publication_type => medline.publication_type[0],
-        :journal => medline.full_journal,
+        :journal => medline.full_journal[0..253],
         :journal_abbreviation => medline.ta, #journal Title Abbreviation
          :volume  => reference.volume,
         :issue   => reference.issue,
@@ -136,33 +144,29 @@ def InsertPublication (publication)
   thePub
 end
 
-def UpdateProgramWithAbstract(program_id, abstract_id)
-  puts "UpdateProgramWithAbstract: this shouldn't happen - abstract_id was nil" if abstract_id.nil?
-  puts "UpdateProgramWithAbstract: this shouldn't happen - program_id was nil" if program_id.nil?
-  return if abstract_id.nil? || program_id.nil?
-  if ProgramAbstract.find( :first,
-    :conditions => [" abstract_id = :abstract_id AND program_id = :program_id",
-        {:program_id => program_id, :abstract_id => abstract_id}]).nil?
-    puts "adding new abstract for program (program: #{Program.find(program_id).program_title}; abstract pubmed_id: #{Abstract.find(abstract_id).pubmed})" if @verbose
-    InsertProgramAbstract (program_id, abstract_id)
+def UpdateOrganizationAbstract(unit_id, abstract_id)
+  puts "UpdateOrganizationAbstract: this shouldn't happen - abstract_id was nil" if abstract_id.blank?
+  puts "UpdateOrganizationAbstract: this shouldn't happen - unit_id was nil" if unit_id.blank?
+  return if abstract_id.blank? || unit_id.blank?
+  if OrganizationAbstract.find( :first,
+    :conditions => [" abstract_id = :abstract_id AND organizational_unit_id = :unit_id",
+        {:unit_id => unit_id, :abstract_id => abstract_id}]).nil?
+    InsertOrganizationAbstract (unit_id, abstract_id)
   end
 end
 
-def InsertProgramAbstract (program_id, abstract_id)
-  puts "UpdateProgramWithAbstract: this shouldn't happen - abstract_id was nil" if abstract_id.nil?
-  puts "UpdateProgramWithAbstract: this shouldn't happen - program_id was nil" if program_id.nil?
-  return if abstract_id.nil? || program_id.nil?
+def InsertOrganizationAbstract (unit_id, abstract_id)
   begin 
-     theProgramPub = ProgramAbstract.create! (
+     theOrgPub = OrganizationAbstract.create! (
        :abstract_id => abstract_id,
-       :program_id  => program_id
+       :organizational_unit_id  => unit_id
      )
    rescue ActiveRecord::RecordInvalid
-     if theProgramPub.nil? then # something bad happened
-       puts "InsertProgramAbstract: unable to either insert or find a reference with the abstract_id '#{abstract_id}' and the program_id '#{program_id}'"
+     if theOrgPub.nil? then # something bad happened
+       puts "InsertOrganizationAbstract: unable to either insert or find a reference with the abstract_id '#{abstract_id}' and the unit_id '#{unit_id}'"
        return 
      end
     end
-   theProgramPub.id
+   theOrgPub.id
 end
 

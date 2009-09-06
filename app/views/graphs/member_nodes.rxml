@@ -1,7 +1,7 @@
 member_nodes = assignInvestigatorPositions(@investigator)
 xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showFormBtn=>'0', :xAxisMinValue=>'0', :xAxisMaxValue=>'100', 
   :yAxisMinValue=>'0', :yAxisMaxValue=>'100', :is3D=>'1', :animation=>'1', :palette=>'2', :formAction=>'/graphs/list', :formMethod=>'POST',  :enableLink=>'1'  ) do
-    # clickURL works: :clickURL => url_for(:controller=>'abstracts',:action=>'program_listing', :program_id => params[:program_id])
+    # clickURL works: :clickURL => url_for(:controller=>'investigators',:action=>'show', :id => params[:id])
     xml.dataSet(:seriesName => "Investigator") do
       cnt=0
       investigator = @investigator
@@ -11,9 +11,11 @@ xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showForm
           :id=>investigator.id,
           :link => show_investigator_path(:id=>investigator.username, :page=>1),
           :color => '99CCFF',
-          :tooltext => 'Publications  '+investigator.abstracts.length.to_s+';
-  intra-programmatic collaborations:'+investigator.internal_collaborators.length.to_s+'; 
-  inter-programmatic collaborations:'+investigator.external_collaborators.length.to_s)
+          :tooltext => 'Publications  '+investigator.total_pubs.to_s+';
+  first author pubs:'+investigator.num_first_pubs.to_s+'; 
+  last author pubs:'+investigator.num_last_pubs.to_s+'; 
+  intra-unit collaborations:'+investigator.num_intraunit_collaborators.to_s+'; 
+  inter-unit collaborations:'+investigator.num_extraunit_collaborators.to_s)
     end
     xml.dataSet(:seriesName => "Collaborators") do
       cnt=0
@@ -29,7 +31,9 @@ xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showForm
           :color => color,
           :onClick => 'http://www.basic.northwestern.edu/',
           :clickURL => 'http://www.basic.northwestern.edu/',
-          :tooltext => 'Publications  '+investigator.abstracts.length.to_s+';')
+          :tooltext => 'Publications  '+investigator.total_pubs.to_s+';
+  intra-unit collaborations:'+investigator.num_intraunit_collaborators.to_s+'; 
+  inter-unit collaborations:'+investigator.num_extraunit_collaborators.to_s)
       end
     end
   xml.connectors(:stdThickness => "5", :color=>'FFCC33', :arrowAtStart=>'0', :arrowAtEnd=>'0' ) do

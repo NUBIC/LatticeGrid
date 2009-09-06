@@ -2,11 +2,13 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
+  helper :all, :application
+  include ApplicationHelper
   # Pick a unique cookie name to distinguish our session data from others'
 #  session :session_key => '_nucatspublications_session_id'
   before_filter  :find_last_load_date 
   before_filter  :handle_year
-  before_filter  :get_programs
+  before_filter  :get_organizations
   before_filter  :handle_pagination
   before_filter  :define_keywords 
 
@@ -14,7 +16,7 @@ class ApplicationController < ActionController::Base
     return if query.nil?
     begin 
       query.total_entries
-    rescue
+    rescue Exception => error
       query.length
     end
   end
@@ -39,7 +41,7 @@ class ApplicationController < ActionController::Base
   private
   def find_last_load_date
     if session[:last_load_date].blank? or session[:last_refresh].blank? or session[:last_refresh] < 1.day.ago then
-      latest_record = Abstract.find(:first, :order => "updated_at DESC")
+      latest_record = LoadDate.find(:first, :order => "id DESC")
       if latest_record.blank? then
         session[:last_load_date] = (Time.now-100*365)
       else
@@ -50,9 +52,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def get_programs
-      @programs = Program.all_programs
-   end
+  def get_organizations
+    @head_node = OrganizationalUnit.head_node(menu_head_abbreviation)
+  end
 
   def handle_year (year=nil)
     @starting_year=Time.now.year
@@ -83,24 +85,6 @@ class ApplicationController < ActionController::Base
       @end_date = "12/01/#{@year}"
     else
       @end_date = params[:end_date]
-    end
-  end
-
-  def handle_member_name
-    return if params[:id].blank?
-    if !params[:format].blank? then #reassemble the username
-      params[:id]=params[:id]+"."+params[:format]
-    end
-    if params[:name].blank? then
-      @investigator = Investigator.find_by_username(params[:id])
-      if @investigator
-        params[:investigator_id] = @investigator.id
-        params[:name] =  @investigator.first_name + " " + @investigator.last_name
-      else
-        logger.error("Attempt to access invalid username (netid) #{params[:id]}") 
-        flash[:notice] = "Sorry - invalid username <i>#{params[:id]}</i>"
-        params.delete(:id)
-      end
     end
   end
 
@@ -153,24 +137,4 @@ class ApplicationController < ActionController::Base
     @keywords = Keywords.new(keywords,search_field,search_exact)
   end
 
-  # paginate a call to find_tagged_with
-  # klass is the tagged class
-  # tag is the tag to find
-  # count is the total number of items with that tag, if nil count_tags is called
-  # per_page is numbe rof items per page
-  # page is the page we are on
-  # order is the order to return the items in
-  
-  def tag_paginator(klass, tag, count=nil, per_page=10, page=1, order='updated_at DESC')
-    count ||= klass.count_tags(tag)
-    pager = ::Paginator.new(count, per_page) do |offset, per_page|
-      klass.find_tagged_with(tag, :order => order, :limit => per_page, :offset => offset)
-    end
-
-    page ||= 1
-
-    returning WillPaginate::Collection.new(page, per_page, count) do |p|
-      p.replace pager.page(page).items
-    end
-  end  
 end

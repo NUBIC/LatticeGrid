@@ -22,18 +22,25 @@ task :getMeshTags => :environment do
     puts "count of all abstract MeSH tags is #{@AllAbstractMeshTags.length}" if @verbose
 end
 
-task :getDepartments => :environment do
+task :getPrimaryAppointments => :environment do
   # load distinct Departments from Investigators
-  @AllDepartments = Investigator.distinct_departments()
+  @AllPrimaryAppointments = Investigator.distinct_primary_appointments()
   
-  puts "count of all departments is #{@AllDepartments.length}" if @verbose
+   puts "count of all investigator home appointments is #{@AllPrimaryAppointments.length}" if @verbose
 end
 
-task :getDepartmentsAndDivisions => :environment do
-  # load distinct Departments from Investigators
-  @AllDepartmentsAndDivisions = Investigator.distinct_departments_with_divisions()
+task :getAllOrganizations => :environment do
+  # load all organizations that have an investigator
+  @AllOrganizations = OrganizationalUnit.find(:all)
   
-  puts "count of all departments and divisions is #{@AllDepartmentsAndDivisions.length}" if @verbose
+  puts "count of all organizations is #{@AllOrganizations.length}" if @verbose
+end
+
+task :getAllOrganizationsWithInvestigators => :environment do
+  # load all organizations that have an investigator
+  @AllInvestigatorAssociations = Investigator.distinct_all_appointments_and_memberships()
+  
+  puts "count of all organizations with investigators (including primary appointments) is #{@AllInvestigatorAssociations.length}" if @verbose
 end
 
 task :getAbstracts => :environment do
@@ -52,35 +59,18 @@ task :getTags => :environment do
   puts "count of all tags is #{@AllTags.length}" if @verbose
 end
 
-task :getPrograms => :environment do
-  # load all abstracts for each program
-  @Programs = Program.find(:all, :order => 'program_number, id')
-  puts "count of all Programs is #{@Programs.length}" if @verbose
-end
-
-task :getProgramAbstracts => :getPrograms do
-  # load all abstracts for each program
-  @ProgramAbstracts = @Programs
-  total=0
-  @ProgramAbstracts.each do |program|
-      program.abstracts = Abstract.get_all_program_data(  program.id )
-      puts "count of Abstracts for program #{program.program_title} is #{program.abstracts.length}" if @verbose
-      total += program.abstracts.length
-   end
-   puts "count of all ProgramAbstracts is #{total}" if @verbose
-   puts "count of Abstracts for program #{@ProgramAbstracts[0].program_title} is #{@ProgramAbstracts[0].abstracts.length}" if @verbose
-end
-
-task :updateProgramAbstractInformation => [:getProgramAbstracts] do
+task :updateOrganizationAbstractInformation => [:getAllOrganizationsWithInvestigators] do
   # load the test data
-  start = Time.now
-  @ProgramAbstracts.each do |program|
-    program.abstracts.each do |abstract|
-      UpdateProgramWithAbstract (program.id,abstract.id)
-    end
-  end
-  stop = Time.now
-  elapsed_seconds = stop.to_f - start.to_f
-  puts "task updateProgramAbstractInformation ran in #{elapsed_seconds} seconds" if @verbose
+  block_timing("updateOrganizationAbstractInformation") {
+    row_iterator(@AllInvestigatorAssociations) {  |unit_id|
+      investigators = OrganizationalUnit.find(unit_id).primary_faculty+OrganizationalUnit.find(unit_id).associated_faculty
+      puts "count of all investigators for organizational unit #{unit_id} is #{investigators.length}" if @verbose
+      abstracts = Abstract.investigator_publications(investigators.collect(&:id), 10).uniq
+      puts "count of all abstracts for organizational unit #{unit_id} is #{abstracts.length}" if @verbose
+      abstracts.each do |abstract|
+        UpdateOrganizationAbstract (unit_id,abstract.id)
+      end
+    }
+  }
 end
 

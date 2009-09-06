@@ -12,6 +12,12 @@
 # http://topfunky.com
 #
 class SparklinesController < ApplicationController
+  skip_before_filter  :find_last_load_date 
+  skip_before_filter  :handle_year
+  skip_before_filter  :get_organizations
+  skip_before_filter  :handle_pagination
+  skip_before_filter  :define_keywords 
+  
 	layout nil
 
 	def index

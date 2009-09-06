@@ -1,7 +1,7 @@
-class CreateProgramAbstracts < ActiveRecord::Migration
+class CreateOrganizationAbstracts < ActiveRecord::Migration
   def self.up
-    create_table :program_abstracts do |t|
-      t.column :program_id, :integer, :null => false #now in the add_foreign_key call
+    create_table :organization_abstracts do |t|
+      t.column :organizational_unit_id, :integer, :null => false #now in the add_foreign_key call
       t.column :abstract_id, :integer, :null => false #now in the add_foreign_key call
       t.column :start_date, :date
       t.column :end_date, :date
@@ -11,9 +11,9 @@ class CreateProgramAbstracts < ActiveRecord::Migration
 
   def self.down
     begin
-      drop_table :program_abstracts
-    rescue
-      puts "unable to drop program_abstracts. Probably doesn't exist"
+      drop_table :organization_abstracts
+    rescue Exception => error
+      puts "unable to drop organization_abstracts. Probably doesn't exist"
     end
   end
 end

@@ -41,7 +41,21 @@ sudo gem install fastercsv
 script/plugin install svn://code.jeremyevans.net/rails/plugins/simple_date_select
 
 # acts_as_taggable
-script/plugin install http://svn.viney.net.nz/things/rails/plugins/acts_as_taggable_on_steroids
+#deprecated: script/plugin install http://svn.viney.net.nz/things/rails/plugins/acts_as_taggable_on_steroids
+script/plugin install git://github.com/jviney/acts_as_taggable_on_steroids.git
+
+
+# acts_as_nested_set
+# deprecated: script/plugin install acts_as_nested_set
+
+# awesome nested set plugin
+ script/plugin install git://github.com/collectiveidea/awesome_nested_set.git
+
+# prawn gem for pdf generation
+
+http://prawn.majesticseacreature.com/
+
+sudo gem install prawn 
 
 --PostgreSQL commands
 
@@ -120,7 +134,7 @@ test:
 # create the controller
 	script/generate controller abstracts
 	script/generate controller graphs
-	script/generate controller programs
+	script/generate controller orgs
 	script/generate controller investigators
 
 # create Models
@@ -129,16 +143,30 @@ test:
 	script/generate model abstract
 	script/generate model investigator
 	script/generate model investigator_abstract
-	script/generate model program
-	script/generate model program_abstract
-	script/generate model investigator_program
+	script/generate model organizational_unit name:string search_name:string abbreviation:string organization_url:string type:string organization_classification:string organization_phone:string dept_id:integer division_id:integer has_appointments:boolean
+	script/generate model organization_abstract
+	script/generate model investigator_appointment #for join, secondary, and membership data
 	script/generate model proposal
 	script/generate model investigator_proposal
 	script/generate model study
 	script/generate model investigator_study
-	script/generate model investigator_relationship
-
+	script/generate model investigator_relationship # for connections betweeen investigators
+	
 	script/generate model journal journal_name:string journal_abbreviation:string issn:string score_year:integer total_cites:integer impact_factor:float impact_factor_five_year:float immediacy_index:float total_articles:integer eigenfactor_score:float article_influence_score:float
+	script/generate model last_load last_load_date:timestamp
+	# organizational_unit types
+	script/generate model school
+	script/generate model department
+	script/generate model home_department
+	script/generate model division
+	script/generate model program
+	script/generate model center
+	
+	script/generate model joint
+	script/generate model secondary
+	script/generate model member
+	
+
 	#headings from ISI web of science journal citations/impact factor index
 	#Abbreviated Journal Title;ISSN;{2008} Total Cites;Impact Factor;5-Year Impact Factor;Immediacy Index;{2008} Articles;Cited Half-Life;Eigenfactor Score;Article Influence Score
 	#example score for a journal
@@ -155,8 +183,8 @@ test:
 bbedit db/migrate/001_create_abstracts.rb
 bbedit db/migrate/002_create_investigators.rb
 bbedit db/migrate/003_create_investigator_abstracts.rb
-bbedit db/migrate/004_create_programs.rb
-bbedit db/migrate/005_create_investigator_programs.rb
+bbedit db/migrate/004_create_organizational_units.rb
+bbedit db/migrate/005_create_investigator_appointment.rb
 
 # create the scaffolds
 	script/generate scaffold abstract
@@ -177,11 +205,26 @@ rake environment RAILS_ENV=production db:migrate
 rake environment RAILS_ENV=test db:migrate
 
 # install additional investigators using ldap
-
 rake getLDAP uid_list=aqw,wakibbe
+
 #RUN TESTS
 
 ruby test/unit/abstract_test.rb
+
+#load organizations
+rake importDepartments file=db/imports/department_lookup.txt
+rake environment RAILS_ENV=production importDepartments file=db/imports/department_lookup.txt
+
+rake importOrganizations file=db/imports/division_lookup.txt
+rake environment RAILS_ENV=production importOrganizations file=db/imports/division_lookup.txt
+
+# sets any missing division_ids appropriately
+rake cleanUpOrganizations
+rake environment RAILS_ENV=production cleanUpOrganizations
+
+# build the investigator/program relationships
+rake importProgramMembership  file=db/imports/RHLCCCProgramMemberships.txt
+rake environment RAILS_ENV=production importProgramMembership  file=db/RHLCCCProgramMemberships.txt
 
 #insert UCSF investigator names
 
@@ -189,42 +232,59 @@ rake importInvestigators file=UCSFMembers.txt
 
 #insert ISI Web of Science Journal impact factor ratings
 
-rake importJournalImpact file=jcr_recs.txt
-rake environment RAILS_ENV=production importJournalImpact file=jcr_recs.txt
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake environment RAILS_ENV=production importJournalImpact file=db/imports/jcr_recs.txt
 
 # clean all usernames by removing any periods
 rake cleanInvestigatorsUsername
+rake environment RAILS_ENV=production cleanInvestigatorsUsername
 
 # load data using the insertAbstracts rake task
 rake insertAbstracts
 rake RAILS_ENV=production insertAbstracts
 
 #insert all abstracts (10 years)
+# find abstracts: number of publications found for 10 years: 21064 in 180 seconds (staging)
+#pulled the abstracts in about 500 seconds (staging)
+# total of task insertAbstracts ran in 1820.23571395874 seconds
 rake insertAllAbstracts
 rake RAILS_ENV=production insertAllAbstracts
 
 #update member associations based on loaded publications
+# for FSM, this takes about 4 hours (2100 investigators, 15,000 abstracts, 46,000 investigator_abstract records 
+# after rebuild, to about 200 minutes (3.3 hours)
 rake associateAbstractsWithInvestigators
 rake RAILS_ENV=production associateAbstractsWithInvestigators
 
 # update publication information like first and last authors
+# for FSM, this takes about 30 minutes
+# decreased to under 10 minutes
 rake updateAbstractInvestigators
+rake RAILS_ENV=production updateAbstractInvestigators
+
 
 #update publication information for each investigator, include collaboration information
+# runs in about 6 minutes for FSM
 rake updateInvestigatorInformation
+rake RAILS_ENV=production updateInvestigatorInformation
 
 #create tags from MeSH data for each abstract
+# runs in 50 minutes
 rake tagAbstractsWithMeshTerms
+rake RAILS_ENV=production tagAbstractsWithMeshTerms
 
 #create tags from MeSH data for each investigator
 # runs in 25 minutes
-tagInvestigatorsWithMeshTerms
+rake tagInvestigatorsWithMeshTerms
+rake RAILS_ENV=production tagInvestigatorsWithMeshTerms
 
-#update publication information for each program
-rake updateProgramAbstractInformation
+#update publication information for each organization
+# runs in about 1 minute
+rake updateOrganizationAbstractInformation
+rake RAILS_ENV=production updateOrganizationAbstractInformation
 
 #all the expected tasks are run using this build command
-# runs these tasks: :insertAbstracts, :associateAbstractsWithInvestigators, :updateAbstractInvestigators, :updateInvestigatorInformation, :tagAbstractsWithMeshTerms, :updateProgramAbstractInformation
+# runs these tasks: :insertAbstracts, :associateAbstractsWithInvestigators, :updateAbstractInvestigators, :updateInvestigatorInformation, :tagAbstractsWithMeshTerms, :updateOrganizationAbstractInformation
 rake nightlyBuild
 rake RAILS_ENV=production nightlyBuild
 
@@ -238,19 +298,26 @@ rake attachMeshInformationContent
 # 4 minutes per 10 investigators, 130/hour, about 20 hours for the complete group
 # after 500 investigators, about 300 seconds/10 investigators
 # finished in 800 minutes, or about 13 hours
-rake buildInvestigatorRelationships
+# current FSM faculty list of 3700 faculty, 12000 tags takes about 20 hours
+
+rake buildInvestigatorColleagues
 
 # something to do weekly is:
 
 vacuumdb -fz cancerpublications_development
+vacuumdb -fz cancerpublications_production -U cancerpublications
+
+# logging in to psql
+psql cancerpublications_development -U cancerpublications
+psql cancerpublications_production -U cancerpublications
+
 
 #all the mesh associations are run with this command
-#tasks: :attachMeshInformationContent, :buildInvestigatorRelationships
+#tasks: :attachMeshInformationContent, :buildInvestigatorColleagues
 rake monthlyBuild
 rake RAILS_ENV=production monthlyBuild
 
-
-# see file generateGraphs.sh for how to generat connection graphs for cancer center member publications
+# see file generateGraphs.sh for how to generate connection graphs for faculty publications
 
 #start web server
     script/server
@@ -270,4 +337,22 @@ select count(*), year from abstracts  group by year order by year;
 select count(*), year from abstracts where publication_date is null group by year order by year;
 select count(*), year from abstracts where electronic_publication_date is null group by year order by year;
 select count(*), year from abstracts where electronic_publication_date > publication_date  group by year order by year;
+
+# run to set up abstracts:
+rake RAILS_ENV=production updateAbstractInvestigators
+rake RAILS_ENV=production updateInvestigatorInformation
+rake RAILS_ENV=production buildCoauthors
+rake RAILS_ENV=production tagAbstractsWithMeshTerms
+rake RAILS_ENV=production tagInvestigatorsWithMeshTerms
+rake RAILS_ENV=production updateOrganizationAbstractInformation
+rake RAILS_ENV=production monthlyBuild
+
+rake updateAbstractInvestigators
+rake updateInvestigatorInformation
+rake buildCoauthors
+rake tagAbstractsWithMeshTerms
+rake tagInvestigatorsWithMeshTerms
+rake updateOrganizationAbstractInformation
+rake monthlyBuild
+
 

@@ -26,7 +26,7 @@
 	<div id="mesh">
 		<b>MeSH terms</b><br/>
 		<% @publication.tag_list.each do |tag| %>
-		   <%= link_to tag, tag_abstract_path(tag), :class => 'nube2' %>
+		   <%= link_to tag, tagged_abstracts_abstract_path(URI.escape(tag)), :class => 'nube2' %>
 		<% end %>
 	</div>
 	<div id="import">

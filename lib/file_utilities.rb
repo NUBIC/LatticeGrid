@@ -1,43 +1,55 @@
-require 'fastercsv'
-
-require 'journal_utilities'
-require 'investigator_program_utilities'
-
 # -*- ruby -*-
 
-def ReadInvestigatorData (filename)
-  errors = ""
+require 'fastercsv'
+require 'utilities'
+require 'journal_utilities'
+require 'investigator_appointment_utilities'
+require 'investigator_abstract_utilities'
+require 'organization_utilities'
 
-  data = FasterCSV.read(filename, :col_sep => "\t", :headers => :first_row)
-  puts Investigator.find(:all).length
-  data.each do |data_row|
-    begin
-      CreateInvestigatorFromHash(data_row)
-    rescue
-      puts "something happened"+$!.message
-      errors += $!.message
-      puts data_row.inspect
-      throw data_row.inspect
-    end
-  end
-  puts Investigator.find(:all).length
+def read_data_handler(model_name, file_name, column_separator="\t")
+  errors = ""
+  data = FasterCSV.read(file_name, :col_sep => column_separator, :headers => :first_row)
+  puts model_name.find(:all).length
+  yield(data)
+  puts model_name.find(:all).length
 end
 
-def ReadJournalImpactData(filename)
-    errors = ""
+def ReadInvestigatorData(file_name)
+  read_data_handler(Investigator,file_name) {|data| row_iterator(data) {|data| CreateInvestigatorFromHash(data)} }
+end
 
-    data = FasterCSV.read(filename, :col_sep => ";", :headers => :first_row)
-    puts Journal.find(:all).length
-    data.each do |data_row|
-      begin
-        CreateJournalImpactFromHash(data_row)
-      rescue
-        puts "something happened"+$!.message
-        errors += $!.message
-        puts data_row.inspect
-        throw data_row.inspect
-      end
-    end
-    puts Journal.find(:all).length
-  end
+def ReadOrganizationData(file_name)
+  read_data_handler(OrganizationalUnit,file_name) {|data| row_iterator(data) {|data| CreateOrganizationFromHash(data)} }
+end
 
+def ReadSchoolDepartmentData(file_name)
+  read_data_handler(OrganizationalUnit,file_name) {|data| row_iterator(data) {|data| CreateSchoolDepartmentFromHash(data)} }
+end
+
+def ReadJointAppointmentData(file_name)
+  read_data_handler(InvestigatorAppointment,file_name) {|data| row_iterator(data) {|data| CreateJointAppointmentsFromHash(data)} }
+end
+
+def ReadSecondaryAppointmentData(file_name)
+  read_data_handler(InvestigatorAppointment,file_name) {|data| row_iterator(data) {|data| CreateSecondaryAppointmentsFromHash(data)} }
+end
+
+def ReadCenterMembershipData(file_name)
+  read_data_handler(InvestigatorAppointment,file_name) {|data| row_iterator(data) {|data| CreateCenterMembershipsFromHash(data)} }
+end
+
+def ReadProgramMembershipData(file_name)
+  read_data_handler(InvestigatorAppointment,file_name) {|data| row_iterator(data) {|data| CreateProgramMembershipsFromHash(data, 'Member')} }
+end
+
+def ReadInvestigatorPubmedData(file_name)
+  read_data_handler(Abstract,file_name) { |data| 
+    CreateAbstractsFromArrayHash(data) 
+  }
+  read_data_handler(InvestigatorAbstract,file_name) { |data|  row_iterator(data) {|data| CreateInvestigatorAbstractsFromHash(data)} }
+end
+
+def ReadJournalImpactData(file_name)
+  read_data_handler(Journal,file_name, ";") {|data| row_iterator(data) {|data| CreateJournalImpactFromHash(data)} }
+end

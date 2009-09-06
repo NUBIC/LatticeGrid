@@ -69,7 +69,7 @@ class TagList < Array
   
   def extract_and_apply_options!(args)
     options = args.last.is_a?(Hash) ? args.pop : {}
- #   options.assert_valid_keys :parse
+    options.assert_valid_keys :parse
     
     if options[:parse]
       args.map! { |a| self.class.from(a) }

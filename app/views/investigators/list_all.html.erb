@@ -16,13 +16,13 @@
 			First name
 		</td>
 		<td class="list-title-left">
-			Middle name
-		</td>
-		<td class="list-title-left">
 			email
 		</td>
 		<td class="list-title-left">
-			Programs
+			home department
+		</td>
+		<td class="list-title-left">
+			appointments (joint, secondary, centers)
 		</td>
 	</tr>
   <% for investigator in @investigators %>
@@ -41,13 +41,15 @@
 			<%= investigator.first_name %>
 		</td>
 		<td class="list-left">
-			<%= investigator.middle_name %>
+			<%= mail_to(investigator.email, investigator.email.split("@").join(" at "), 
+				:subject => "Contact from the Feinberg Publications site",
+				:encode => "javascript") if ! investigator.email.blank? %>
 		</td>
 		<td class="list-left">
-			<%= investigator.email %>
+			<%= investigator.home_department.abbreviation %>
 		</td>
 		<td class="list-left">
-			<%= investigator.programs.collect{|x| x.program_abbrev}.join(", ") %>
+			<%= investigator.appointments.collect{|x| x.abbreviation}.join(", ") %>
 		</td>
 	</tr>
   <% end %>

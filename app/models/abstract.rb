@@ -1,11 +1,12 @@
 class Abstract < ActiveRecord::Base
+  has_many :journals, :foreign_key => "journal_abbreviation", :primary_key =>  "journal_abbreviation", :readonly => true
   has_many :investigator_abstracts
   has_many :investigators, :through => :investigator_abstracts,
     :conditions => ['investigators.end_date is null or investigators.end_date >= :now', {:now => Date.today }]
-  has_many :investigator_programs, :through => :investigator_abstracts
-  has_many :program_abstracts,
-        :conditions => ['program_abstracts.end_date is null or program_abstracts.end_date >= :now', {:now => Date.today }]
-  has_many :programs, :through => :program_abstracts
+  has_many :investigator_appointments, :through => :investigator_abstracts
+  has_many :organization_abstracts,
+        :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
+  has_many :organizational_units, :through => :organization_abstracts
   validates_uniqueness_of :pubmed
   acts_as_taggable  # for MeSH terms
 
@@ -34,8 +35,7 @@ class Abstract < ActiveRecord::Base
   def self.display_data( year=2008, page=1)
     paginate(:page => page,
       :per_page => 20, 
-      :order => "investigators.last_name ASC, authors ASC",
-      :include => [:investigators, :investigator_abstracts],
+      :order => "publication_date DESC, electronic_publication_date DESC, authors ASC",
  		  :conditions => ['year = :year', 
   		      {:year => year }])
   end
@@ -71,51 +71,12 @@ class Abstract < ActiveRecord::Base
    		      {:start_date => cutoff_date, :investigators => investigators }])
   end
   
-  
-  def self.display_program_data( program_id, page=1 )
-    program_investigators = Investigator.program_members(program_id)
-    paginate(:page => page,
-      :per_page => 20, 
-      :order => "year DESC, investigators.last_name ASC,authors ASC",
-      :include => [:investigator_abstracts, :investigators],
-  		:conditions => ['investigator_abstracts.investigator_id IN (:program_investigators)', 
-   		      {:program_investigators => program_investigators }])
-  end
-
-  def self.display_all_program_data( program_id,  year=2008 )
-    program_investigators = Investigator.program_members(program_id)
-    find(:all,
-      :order => "investigators.last_name ASC,authors ASC",
-      :include => [:investigator_abstracts, :investigators],
-  		:conditions => ['year = :year and investigator_abstracts.investigator_id IN (:program_investigators)', 
-   		      {:program_investigators => program_investigators, :year => year }])
-  end
-
-  def self.display_program_data_by_date( program_id, start_date, end_date )
-    program_investigators = Investigator.program_members(program_id)
-    find(:all,
-      :order => "year DESC, investigators.last_name ASC,authors ASC",
-      :include => [:investigator_abstracts, :investigators],
-  		:conditions => ['investigator_abstracts.investigator_id IN (:program_investigators) and (publication_date between :start_date and :end_date or electronic_publication_date between :start_date and :end_date )', 
-   		      {:program_investigators => program_investigators, :start_date => start_date, :end_date => end_date }])
-  end
-
-  def self.get_minimal_all_program_data( program_id )
-    program_investigators = Investigator.program_members(program_id)
-    find(:all,
-    :include => [:investigator_abstracts],
-  		:conditions => ['investigator_abstracts.investigator_id IN (:program_investigators)', 
-   		      {:program_investigators => program_investigators }])
-  end
-
-
-  def self.get_all_program_data( program_id )
-    program_investigators = Investigator.program_members(program_id)
-    find(:all,
-      :order => "investigators.last_name ASC,authors ASC",
-      :include => [:investigator_abstracts, :investigators],
-  		:conditions => ['investigator_abstracts.investigator_id IN (:program_investigators)', 
-   		      {:program_investigators => program_investigators }])
+  def self.display_abstracts_by_date( unit_id, pub_start_date, pub_end_date )
+    find(:first,
+      :order => "abstracts.year DESC, authors ASC",
+      :include => [:abstracts],
+  		:conditions => ['organizational_units.id = :unit_id AND abstracts.publication_date between :pub_start_date and :pub_end_date', 
+   		      {:unit_id => unit_id, :pub_start_date => pub_start_date, :pub_end_date => pub_end_date}])
   end
 
   def self.display_search(keywords, paginate=1, page=1)

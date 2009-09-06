@@ -6,7 +6,9 @@
 
 	<% if @include_mesh %>
 	<h3><%= "MeSH cloud from publications for the year #{@year}" %></h3>
-	<div id="tag_cloud">
-		<%= render :partial => "shared/tag_cloud", :locals => { :tags => @tags } %>
-	</div>
+	<div id="tag_cloud"></div>
+	<script language="javascript">
+	<%= remote_function(:url => tag_cloud_by_year_abstract_url( @year ), :method => :get, :before => "Element.show('spinner')", :complete => "Element.hide('spinner')" ) %> 
+	</script>
+	<br/>
 	<% end %>

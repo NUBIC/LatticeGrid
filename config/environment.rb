@@ -42,7 +42,12 @@ Rails::Initializer.run do |config|
     :session_key => '_test_session',
     :secret      => 'this is a  2.0 rails requirement'
   }
+  
+  # change the cache root
+  #config.action_controller.page_cache_directory = File.join(RAILS_ROOT, 'public', 'cache')
+  
 end
+
 
   # Add new inflection rules using the following format 
   # (all these examples are active by default):
@@ -61,6 +66,14 @@ Time::DATE_FORMATS[:justdate] = "%m/%d/%Y"
 # it hooks into ActiveRecord and ActionView
 require 'will_paginate'
 require 'taggable_pagination'
+
+
+begin
+  require 'PDFRender'
+  ActionView::Template.register_template_handler 'rpdf', ActionView::PDFRender
+rescue NameError, LoadError
+  puts "PDFRender didn't load properly"
+end
 begin
   require 'RMagick'
 rescue NameError, LoadError

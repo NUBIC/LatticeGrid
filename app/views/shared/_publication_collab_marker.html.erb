@@ -1,8 +1,8 @@
 <td class="marker-left">
-	<% if publication.investigators.length > 1 && ! (investigators_in_program.nil?) %>
+	<% if publication.investigators.length > 1 && ! (investigators_in_unit.nil?) %>
 		<% investigators_on_citation = publication.investigators.collect{|x| x.id } %>
-		<% hasIntra = investigators_on_citation & investigators_in_program %>
-		<% hasInter = (investigators_on_citation | investigators_in_program) - investigators_in_program %>
+		<% hasIntra = investigators_on_citation & investigators_in_unit %>
+		<% hasInter = (investigators_on_citation | investigators_in_unit) - investigators_in_unit %>
 		<%= "*" if hasIntra.length > 1  %>
 		<%= "&bull;" if hasInter.length > 0  %>
 	<% end %>

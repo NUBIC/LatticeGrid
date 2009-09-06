@@ -33,7 +33,7 @@ def TagAbstractWithMeSH(abstract)
 end
 
 def TagInvestigatorWithMeSH(investigator)
-  AddMeshTermstoObject(investigator,CleanMeshTerms(investigator.abstracts.collect{|a| a.mesh.split(";\n")}.flatten.uniq))
+  AddMeshTermstoObject(investigator,investigator.abstracts.collect(&:tag_list).flatten.uniq)
 end
 
 def GetTag(name)
@@ -54,14 +54,14 @@ def SetMeshInformationContent(tag)
   tag_id=GetTag(tag)
   abstracts_count=Abstract.find_tagged_with(tag).length
   if abstracts_count > 0
-    information_content = @total_tagged_publications/abstracts_count 
+  information_content = @total_tagged_publications/abstracts_count
   else
     information_content = 0
   end
   SetTaggings(tag_id,'Abstract',information_content)
   tagged_investigator_count=Investigator.find_tagged_with(tag).length
   if tagged_investigator_count > 0
-    information_content = @total_investigators/tagged_investigator_count
+  information_content = @total_investigators/tagged_investigator_count
   else
     information_content = 0
   end
@@ -92,7 +92,7 @@ def CalculateMeSHinformationContent_old(mesh_array)
   ic
 end
 
-def InvestigatorRelationshipInclusionCriteria(citation_overlap,mesh_overlap,mesh_information_content)
+def InvestigatorColleagueInclusionCriteria(citation_overlap,mesh_overlap,mesh_information_content)
   if (citation_overlap != [] && !citation_overlap.last.blank?)
     # always include if they copublish
     return true
@@ -107,8 +107,13 @@ def InvestigatorRelationshipInclusionCriteria(citation_overlap,mesh_overlap,mesh
   end
   return false
 end
-  
-def BuildInvestigatorRelationship (investigator, colleague)
+
+def BuildInvestigatorColleague(investigator, colleague, update_only=true)
+  if update_only && !InvestigatorColleague.find( :first,
+    :conditions => [" investigator_id = :investigator_id AND colleague_id = :colleague_id",
+        {:investigator_id => investigator.id, :colleague_id => colleague.id}]).nil?
+    return
+  end
   citation_overlap = investigator.abstracts.collect{|x| x.id}.flatten & colleague.abstracts.collect{|x| x.id}.flatten
   citation_overlap = citation_overlap.uniq.compact
   # these two methods are similar except the tag_list calls the database
@@ -121,26 +126,26 @@ def BuildInvestigatorRelationship (investigator, colleague)
   if (mesh_overlap.length != [] && !mesh_overlap.last.blank?) then
      mesh_information_content=CalculateMeSHinformationContent(mesh_overlap)
   end
-  if InvestigatorRelationshipInclusionCriteria(citation_overlap,mesh_overlap,mesh_information_content) then
-    InsertUpdateInvestigatorRelationship(investigator.id,colleague.id,citation_overlap,mesh_overlap,mesh_information_content)
+  if InvestigatorColleagueInclusionCriteria(citation_overlap,mesh_overlap,mesh_information_content) then
+    InsertUpdateInvestigatorColleague(investigator.id,colleague.id,citation_overlap,mesh_overlap,mesh_information_content)
     #repeat as inverse
-    InsertUpdateInvestigatorRelationship(colleague.id,investigator.id,citation_overlap,mesh_overlap,mesh_information_content) 
+    InsertUpdateInvestigatorColleague(colleague.id,investigator.id,citation_overlap,mesh_overlap,mesh_information_content) 
     #puts "Found relationship: #{investigator.name} and #{colleague.name}: citations: #{citation_overlap.join(', ')}; mesh_ic: #{mesh_information_content} " if @verbose && citation_overlap.length > 0 
   end
 end
 
-def InsertUpdateInvestigatorRelationship(investigator_id,colleague_id,citation_overlap,mesh_overlap,mesh_information_content )
-  ir = InvestigatorRelationship.find( :first,
+def InsertUpdateInvestigatorColleague(investigator_id,colleague_id,citation_overlap,mesh_overlap,mesh_information_content )
+  ir = InvestigatorColleague.find( :first,
     :conditions => [" investigator_id = :investigator_id AND colleague_id = :colleague_id",
         {:investigator_id => investigator_id, :colleague_id => colleague_id}])
     if ir.nil?
-      InsertInvestigatorRelationship(investigator_id,colleague_id,citation_overlap,mesh_overlap,mesh_information_content )
+      InsertInvestigatorColleague(investigator_id,colleague_id,citation_overlap,mesh_overlap,mesh_information_content )
     else
-      UpdateInvestigatorRelationship(ir,citation_overlap,mesh_overlap,mesh_information_content )
+      UpdateInvestigatorColleague(ir,citation_overlap,mesh_overlap,mesh_information_content )
     end
 end
 
-def UpdateInvestigatorRelationship(ir,citation_overlap,mesh_overlap,mesh_information_content )
+def UpdateInvestigatorColleague(ir,citation_overlap,mesh_overlap,mesh_information_content )
   begin 
     if ir.updated_at < 7.days.ago
      ir.mesh_tags_cnt = mesh_overlap.length
@@ -151,15 +156,15 @@ def UpdateInvestigatorRelationship(ir,citation_overlap,mesh_overlap,mesh_informa
    end
   rescue ActiveRecord::RecordInvalid
     if ir.nil? then # something bad happened
-      puts "UpdateInvestigatorRelationship: unable to find a reference "
+      puts "UpdateInvestigatorColleague: unable to find a reference "
       return 
     end
   end
 end
 
-def InsertInvestigatorRelationship(investigator_id,colleague_id,citation_overlap,mesh_overlap,mesh_information_content )
+def InsertInvestigatorColleague(investigator_id,colleague_id,citation_overlap,mesh_overlap,mesh_information_content )
   begin 
-     ir = InvestigatorRelationship.create! (
+     ir = InvestigatorColleague.create!(
        :investigator_id => investigator_id,
        :colleague_id  => colleague_id,
        :mesh_tags_cnt => mesh_overlap.length,
@@ -169,7 +174,7 @@ def InsertInvestigatorRelationship(investigator_id,colleague_id,citation_overlap
      )
   rescue ActiveRecord::RecordInvalid
     if ir.nil? then # something bad happened
-       puts "InsertInvestigatorRelationship: unable to either insert a reference with the investigator_id '#{investigator_id}' and the colleague_id '#{colleague_id}'"
+       puts "InsertInvestigatorColleague: unable to either insert a reference with the investigator_id '#{investigator_id}' and the colleague_id '#{colleague_id}'"
        return 
     end
   end

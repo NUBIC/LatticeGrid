@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title>RHLCCC Faculty Publications: <%= controller.action_name %></title>
+  <title>Feinberg Faculty Publications: <%= controller.action_name %></title>
 <STYLE type="text/css">
 
 /* Global styles */
@@ -229,7 +229,6 @@ td.list-title-right {
 	margin-right:auto;
 	width:1158px;
 	height:120px;
-/*	background: url(/cancer/images/pageheader.jpg) ; # this doesn't work with rails very nicely */
 	vertical-align:bottom;
     text-align: center;
 	font-size:12px;
@@ -327,6 +326,7 @@ div.notice {
 }
 
 #search {
+  background: url(<%= image_path("titlebar.jpg") %>) ;
   padding: 3px;
   padding-left: 115px;
   margin: 0px;
@@ -398,16 +398,16 @@ small, .small {
  	margin-top: 15px;
 }
 
-span.intra_program, a.intra_program {
+span.intra_unit, a.intra_unit {
 	background-color: #AFD8F8;
 	text-decoration: none;
 }
-span.inter_program, a.inter_program {
-	background-color: #FFCC33;
+span.inter_unit, a.inter_unit {
+	background-color: #D86666;
 	text-decoration: none;
 }
 
-span.no_intra_program, a.no_intra_program {
+span.no_intra_unit, a.no_intra_unit {
 	background-color: #FF99FF;
 	text-decoration: none;
 }
@@ -454,9 +454,9 @@ img
     </div>
 <% end %>
 <div id="main" class="autoclear">
-	<div id="banner"><a href="http://www.cancer.northwestern.edu" ><%= image_tag "pageheader.jpg", options={:alt=>"The Robert H. Lurie Comprehensive Cancer Center of Northwestern University"} %></a></div>
+	<div id="banner"><a href="http://www.nucats.northwestern.edu" ><%= image_tag "pageheader.jpg", options={:alt=>"The Northwestern University Clinical and Translational Sciences Institute"} %></a></div>
 	<div id="results" class="notice"><%= flash[:notice] %> 	<%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %> </div>
-	<div id="title">Cancer Center Member Publications and Abstracts Site</div>
+	<div id="title">Feinberg Publications and Abstracts Site  </div>
 	<div id="maincontent">
 		<div id="niceline">
 		</div>

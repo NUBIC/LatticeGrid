@@ -9,13 +9,8 @@ class CreateLoadDates < ActiveRecord::Migration
 
   def self.down
     begin
-      drop_table :last_loads
-    rescue
-      puts "unable to drop last_loads. Probably doesn't exist"
-    end
-    begin
       drop_table :load_dates
-    rescue
+    rescue Exception => error
       puts "unable to drop load_dates. Probably doesn't exist"
     end
   end

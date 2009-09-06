@@ -1,15 +1,13 @@
 <% include_pubmed_id = false if include_pubmed_id.nil? %>
 <% include_collab_marker = false if include_collab_marker.nil? %>
 <% include_investigators = false if include_investigators.nil? %>
-<% investigators_in_program = [] if investigators_in_program.nil? %>
+<% investigators_in_unit = [] if investigators_in_unit.nil? %>
 <% show_paginator = true if show_paginator.nil? %>
 
 <div id="listing"> 
-<h1><%= heading %></h1>
+<h2><%= heading %></h2>
 
 <% if abstracts.length > 0 %>
-The following publications are sorted by year, member last name, and first author. Click on the investigator listed to the right of the citation to find all publications attributed to that investigator. Click on the publication title to see the abstract. <span class="first_author">First authors</span> who are Cancer Center members are <span class="first_author">highlighted like this</span>. <span class="last_author">Last authors</span> who are Cancer Center members are <span class="last_author">highlighted like this</span>. <span class="author">Other authors</span> who are Cancer Center members are <span class="author">highlighted like this</span>. <%= "Publications designated with an asterisk (*) represent intra-programmatic interactions; those with a bullet (&bull;) inter-programmatic interactions." if include_collab_marker %>
-<br/>
 
 <% params.delete(:do_pagination) if !params[:do_pagination].nil? %> 
 <% params.delete(:the_year) if !params[:the_year].nil? %> 
@@ -21,7 +19,7 @@ The following publications are sorted by year, member last name, and first autho
 	<%= link_to( 'paginate', params ) if show_paginator  %>
 	<% params[:action] = original_action %>
 <% else %>
-	<% if abstracts.total_pages > 1 && !["search","list_programs"].include?(params[:action]) %>
+	<% if abstracts.total_pages > 1 && !["search","list"].include?(params[:action]) %>
 		<% original_action = params[:action] %>
 		<% original_page = params[:page] %>
 		<% params.delete(:page) %>
@@ -33,16 +31,17 @@ The following publications are sorted by year, member last name, and first autho
 	<%= will_paginate(abstracts, :outer_window => 5, :inner_window => 5) %>
 <% end %>
 
-<%= render :partial => "shared/abstract_listing_table", :locals => { :abstracts => abstracts, :investigators_in_program => investigators_in_program, :include_pubmed_id => include_pubmed_id, :include_collab_marker => include_collab_marker, :include_investigators => include_investigators } %>
+<%= render :partial => "shared/abstract_listing_table", :locals => { :abstracts => abstracts, :investigators_in_unit => investigators_in_unit, :include_pubmed_id => include_pubmed_id, :include_collab_marker => include_collab_marker, :include_investigators => include_investigators } %>
 
 <% if do_pagination != "0"  %>
 	<%= will_paginate(abstracts, :outer_window => 5, :inner_window => 5) %>
 <% end %>
+The above publications are sorted by year, faculty last name, and first author. Click on any highlighted author listed to find all publications attributed to that individual. Click on the publication title to see the abstract. <span class="first_author">First authors</span> who are Feinberg faculty are <span class="first_author">highlighted like this</span>. <span class="last_author">Last authors</span> who are Feinberg faculty are <span class="last_author">highlighted like this</span>. <span class="author">Other authors</span> who are Feinberg faculty are <span class="author">highlighted like this</span>. <%= "Publications designated with an asterisk (*) represent intra-departmental interactions; those with a bullet (&bull;) inter-departmental interactions." if include_collab_marker %>
 
 <% else%>
 	<h2>Sorry, no publications are available!</h2>
 <% end %>
- 
+
 <br />
 
 </div>

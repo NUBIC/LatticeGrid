@@ -6,15 +6,16 @@ class CreateInvestigators < ActiveRecord::Migration
       t.column :first_name, :string, :null => false
       t.column :middle_name, :string
       t.column :email, :string 
-      t.column :nu_employee_id, :integer 
+      t.column :degrees, :string 
+      t.column :suffix, :string  #II, Sr, Jr, III, etc
+      t.column :employee_id, :integer 
       #these are to do associations/mining
       t.column :title, :string 
-      t.column :home_department, :string 
-      t.column :division, :string
-      t.column :secondary, :string
+      t.column :home_department_id, :integer 
       t.column :campus, :string # Chicago, Evanston, CMH, etc
       t.column :appointment_type, :string  # regular, research, clinical, etc
       t.column :appointment_track, :string  # research, investigator, clinician, clinician-investigator
+      t.column :appointment_basis, :string  # FT, PT, contributed services, etc
        
       #specific to the publications model
       t.column :pubmed_search_name, :string 
@@ -22,8 +23,13 @@ class CreateInvestigators < ActiveRecord::Migration
       t.column :num_first_pubs_last_five_years, :integer, :default => 0 
       t.column :num_last_pubs_last_five_years, :integer, :default => 0
       t.column :total_pubs_last_five_years, :integer, :default => 0
-      t.column :num_intraprogam_collaborators_last_five_years, :integer, :default => 0
-      t.column :num_extraprogram_collaborators_last_five_years, :integer, :default => 0
+      t.column :num_intraunit_collaborators_last_five_years, :integer, :default => 0
+      t.column :num_extraunit_collaborators_last_five_years, :integer, :default => 0
+      t.column :num_first_pubs, :integer, :default => 0 
+      t.column :num_last_pubs, :integer, :default => 0
+      t.column :total_pubs, :integer, :default => 0
+      t.column :num_intraunit_collaborators, :integer, :default => 0
+      t.column :num_extraunit_collaborators, :integer, :default => 0
       t.column :last_pubmed_search, :date
       #these are just to correspond to our existing personnel model
       t.column :mailcode, :string 
@@ -55,15 +61,15 @@ class CreateInvestigators < ActiveRecord::Migration
       t.column :password_changed_id, :integer  
       t.column :password_changed_ip, :string
       # standard audit columns
-      t.column :created_at, :timestamp, :default => Time.now
       t.column :created_id, :integer  
       t.column :created_ip, :string
-      t.column :updated_at, :timestamp
       t.column :updated_id, :integer  
       t.column :updated_ip, :string
       t.column :deleted_at, :timestamp
       t.column :deleted_id, :integer  
       t.column :deleted_ip, :string
+      t.timestamps #adds created_at and updated_at
+      
     end
     add_index :investigators, [:username], :unique => true
  end

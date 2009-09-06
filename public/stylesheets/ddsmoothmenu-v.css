@@ -19,6 +19,8 @@ overflow: auto; /*force hasLayout in IE7 */
 color: white;
 text-decoration: none;
 padding: 6px;
+padding-left: 4px;
+padding-right: 1px;
 border-bottom: 1px solid #778;
 border-right: 1px solid #778;
 }
@@ -44,9 +46,16 @@ color: white;
 position: absolute;
 width: 170px; /*Sub Menu Items width */
 top: 0;
+padding: 1px;
 font-weight: normal;
 visibility: hidden;
 }
+/*Sub level menu items */
+.ddsmoothmenu-v ul li ul li a{
+padding: 1px;
+font-weight: normal;
+}
+
 
 .ddsmoothmenu-v ul li ul li.current, .ddsmoothmenu-v ul li ul li.current a {
 	background-color: #339;

@@ -2,13 +2,13 @@
 <div id="admin">
 <h2>Reporting options</h2>
 
-	<div id="program_stats">
-		<p>Produce publication statistics for each program. Please note that this report can take several minutes to generate!</p>
-		<h2><%= link_to "Generate Program Statistics", program_stats_programs_path %></h2>
+	<div id="stats">
+		<p>Produce publication statistics for each unit. Please note that this report can take several minutes to generate!</p>
+		<h2><%= link_to "Generate Unit Statistics", stats_orgs_path %></h2>
 		<p>&nbsp;</p>
-	<div id="list_by_program">
-	<p>List by program all articles published between the following dates:</p>
-		<% form_for :date_range, :url => list_programs_programs_path, :html => { :method => :get, :class => "p" }  do |form| %> 
+	<div id="list_by_unit">
+	<p>List by unit all articles published between the following dates:</p>
+		<% form_for :date_range, :url => list_orgs_path, :html => { :method => :get, :class => "p" }  do |form| %> 
 		  <%= form.text_field(:start_date, :size => 20) %> to
 		  <%= form.text_field(:end_date, :size => 20) %> 
 		  <%= submit_tag 'List Publications' %>
@@ -16,11 +16,11 @@
 		<br/>
 	</div>
 	<p></p>
-	<div id="list_one_program">
-		<p>Use the below form for printing:  List for one program all articles published between the following dates:</p>
-		<% form_for :date_range, :url => {:controller => :programs, :action => :abstracts_during_period}, :html => { :method => :post, :class => "p" }  do |form| %> 
+	<div id="list_one_unit">
+		<p>Use the below form for printing:  List for one unit all articles published between the following dates:</p>
+		<% form_for :date_range, :url => {:controller => :orgs, :action => :abstracts_during_period}, :html => { :method => :post, :class => "p" }  do |form| %> 
 
-	  	<p><%= collection_select 'program', 'id', @programs, :id, :program_title  %> select program </p>
+	  	<p><%= collection_select '', 'id', @head_node.children, :id, :name  %> select unit </p>
 		  <%= form.text_field(:start_date, :size => 20) %> to
 		  <%= form.text_field(:end_date, :size => 20) %> 
 		  <%= submit_tag 'List Publications' %>

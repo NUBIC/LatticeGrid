@@ -1,15 +1,13 @@
 /* Global styles */
 
-html, body { 
+body { 
 	font-family : Verdana, Arial, sans-serif;
+	font-size : 8pt;
 	color : black;
-	font-size: 12px;
-	margin: 0px 0px 0px 0px;
-	padding: 0px 0px 0px 0px;
-	height: 100%;
+	background-color: #dfdfdf; 
 	line-height: 16px;
-	min-width: 800px;
-	background: #dfdfdf; 
+	margin-top: 0px; 
+	margin-left:10px; 
 }
 
 p, ol, ul, td {
@@ -26,15 +24,23 @@ p {
 	font-family : Verdana,  Arial,  sans-serif;
 }
 
-p, ul, ol { 
-	color: #000000;
-	margin-top: .6em;
-	margin-bottom: .6em;
-	font-size: .75em;
+ul {
+    margin-left: 0px;
+    padding-left: 15px;
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+ul.squareBullets {
+    list-style-type: square;
+}
+
+ol li {
+    padding-bottom: 15px;
 }
 
 
-.debug_dump {
+pre {
   background-color: #eee;
   padding: 10px;
   font-size: 11px;
@@ -44,7 +50,7 @@ h1, h2, .h2, h3, .h3 {
     font-family: Arial, Helvetica, Geneva, Sans-serif;
     font-size: 13px;
     font-weight: bold;
-	color: #226;
+    color: #226;
     line-height: 140%;
     padding-bottom: 0px;
     margin-bottom: 2px;
@@ -59,15 +65,6 @@ h1, .h1 {
 
 h2, .h2 {
   font-size: 15px;
-	margin-bottom: .6em;
-	margin-top: 0;
-}
-
-h3 { 
-	color: #3399CC;
-	font-size: 1.0em;
-	margin-bottom: .6em;
-	margin-top: 0;
 }
 
 small, .small {
@@ -139,6 +136,27 @@ a:hover { color: #fff; background-color:#888; }
   list-style: square;
 }
 
+div.uploadStatus {
+  margin: 5px;
+}
+
+div.progressBar {
+  margin: 5px;
+}
+
+div.progressBar div.border {
+  background-color: #fff;
+  border: 1px solid grey;
+  width: 100%;
+}
+
+div.progressBar div.background {
+  background-color: #333;
+  height: 18px;
+  width: 0%;
+}
+
+
 
 /* Styles for admin/list */
 
@@ -150,8 +168,37 @@ td,th {
 	padding-top: 0.25em;
 	padding-bottom: 0.25em;
 }
+
 table.borderless {
 	border: 0px;
+}
+
+#biograph table {
+	padding-left: 1em;
+	border: 0px;
+}
+
+#biograph table tr td table {
+	padding-left: 2em;
+	border: 0px;
+}
+
+#biograph table tr th {
+	padding-top: 0.125em;
+	padding-bottom: 0px;
+	padding-right: 0.5em;
+	vertical-align:top;
+	color:        #555;
+	text-align:   right;
+	line-height: 14px;
+}
+
+#biograph table tr td {
+	padding-top: 0.125em;
+	padding-bottom: 0px;
+	vertical-align:top;
+	color:        #520063;
+	line-height: 14px;
 }
 
 table.fullsize {
@@ -186,18 +233,18 @@ td.list-title-right {
 }
 
 #listing .list-title {
-	color:        #244;
+	color:        #520063;
 	font-weight:  bold;
 }
 
 #listing .list-title-center {
-	color:        #244;
+	color:        #520063;
 	font-weight:  bold;
 	text-align: center;
 }
 
 #listing .list-title-right {
-	color:        #244;
+	color:        #520063;
 	font-weight:  bold;
 	padding-right: 1em;
 	text-align: right;
@@ -232,7 +279,7 @@ td.list-title-right {
 	border-bottom: 1px solid #1c1079;
 	margin-left:auto;
 	margin-right:auto;
-	width:1158px;
+	width:1180px;
 	height:120px;
 /*	background: url(/cancer/images/pageheader.jpg) ; # this doesn't work with rails very nicely */
 	vertical-align:bottom;
@@ -283,7 +330,7 @@ div.notice {
 	margin-left: auto;
 	margin-right: auto;
 	padding: 0px;
-	width: 1160px;
+	width: 1180px;
 	height:auto;
 	vertical-align: top;
 	background-color: #FFFFFF;
@@ -305,10 +352,11 @@ div.notice {
 	margin-left: 0px;
 	padding: 5px;
 	vertical-align: top;
-	width: 140px;
+	width: 160px;
 	height: 790px;
 	color: #000;
-	background-color: #709fc7;
+    background-color: #A3A3A3;
+	/* background-color: #709fc7; */
 }
 
 #sideinfo {
@@ -317,6 +365,31 @@ div.notice {
 	font-family: Arial, Helvetica, sans-serif;
 	color: #FFF;
 }
+
+/* from the Catalyst site */
+#sidebar {
+	width:170px;
+	border:1px solid #cccccc;
+	background-image:url(images/sidebarBack.gif);
+	background-repeat:no-repeat;
+	text-align:left;
+	padding:10px 0px;
+}
+#contentMain {
+	padding:0 0 0 10px;
+}
+#callout {
+	width:130px;
+	border:1px solid #cccccc;
+	background-image:url(images/calloutBack.gif);
+	background-repeat:no-repeat;
+	padding:10px;
+}
+#callout p {
+	margin:10px 0;
+}
+/* end of Catalyst css info */
+
 
 #publication_year {
 	margin-top: 5px;
@@ -334,6 +407,45 @@ div.notice {
 	padding-left: 5px;
 	padding-right: 0px;
 	padding-bottom: 10px;
+}
+
+div.map p {
+	display: block;
+	font-size: 12px;
+	margin-top: 2px;
+	margin-right: -5px;
+	margin-bottom: 2px;
+	margin-left: 7px;
+	padding: 0px;
+	text-indent: 0;
+	text-align: left;
+	background: #aa7;
+	color: white;
+	border-bottom: none;		/* Remove rule under H2 */
+	list-style: none 		/* Remove triangle from H2 */
+}
+
+div.map p a {
+	color: yellow;
+	font-size: small;
+	text-decoration: none;
+	padding: 1px 20px 0px 20px;
+	
+}
+
+div.map p a:hover {
+	background-color: #662;
+}
+
+div.map p.currentyear, div.map li.currentyear {
+	background-color: #339;
+}
+
+div.map p.currentyear a {
+	color: white;
+}
+div.map p.currentyear a:hover {
+	background: #662;
 }
 
 #title {
@@ -373,7 +485,9 @@ div.notice {
   margin: 0px;
     color: #fff;
     font-size: 12px;
-    background-color: #339;
+	background-color: #520063;
+/*  background-color: #339; */
+
 }
 
 #niceline {
@@ -382,7 +496,8 @@ div.notice {
   margin: 0px;
     color: #fff;
     font-size: 11px;
-    background-color: #709fc7;
+    background-color: #A3A3A3;
+	/* background-color: #709fc7; */
 }
 
 #content {
@@ -409,7 +524,7 @@ div.notice {
 #collaborators a:hover { color: #fff; background-color:#888; }
 
 
-#ProgramGraph, #MemberGraph {
+#OrgGraph, #MemberGraph {
 	margin-left: -8px;
 }
 
@@ -459,16 +574,16 @@ div.notice {
  	margin-top: 15px;
 }
 
-span.intra_program, a.intra_program {
+span.intra_unit, a.intra_unit {
 	background-color: #AFD8F8;
 	text-decoration: none;
 }
-span.inter_program, a.inter_program {
-	background-color: #FFCC33;
+span.inter_unit, a.inter_unit {
+	background-color: #D86666;
 	text-decoration: none;
 }
 
-span.no_intra_program, a.no_intra_program {
+span.no_intra_unit, a.no_intra_unit {
 	background-color: #FF99FF;
 	text-decoration: none;
 }
@@ -476,7 +591,7 @@ span.no_intra_program, a.no_intra_program {
 
 
 span.first_author, a.first_author {
-	color: #660066;
+	color: #520063;
 	background-color: #CCAF9F;
 	text-decoration: none;
 }

@@ -1,14 +1,14 @@
 <div id="listing"> 
-<h1><%= @heading %></i></h1>
-
-<p><%= @investigators.length %> faculty are in the program '<%= @program.program_title %>'.</p>
-
-Click on the investigator to find all publications attributed to that investigator. <br/>
-
+	<h2><%= heading %> <%= "(#{investigators.length})" if !investigators.nil? %></h2>
+<% if  investigators.nil? or  investigators.length == 0 %>
+<p>None.</p>
+<% else %>
 <table cellpadding="2" cellspacing="0" class="fullsize"> 
   <tr valign="bottom">
 	  <th bgcolor="lightgrey" align="left"  class="list-left">Investigator</th>
 	  <th bgcolor="lightgrey" align="left"  class="list-left">Pubs</th>
+	  <th bgcolor="lightgrey" align="left"  class="list-left">Pubs last 5 years</th>
+	  <th bgcolor="lightgrey" align="left"  class="list-left">Graph</th>
 	  <th bgcolor="lightgrey" align="left"  class="list-left">Collaborators</th>
 	  <th bgcolor="lightgrey" align="left"  class="list-left" width="350px">MeSH</th>
 	  <th bgcolor="lightgrey" align="left"  class="list-left">&nbsp;</th>
@@ -16,27 +16,32 @@ Click on the investigator to find all publications attributed to that investigat
   </tr>
  
 <% count=0 %>
-<% for investigator in @investigators %>
+<% for investigator in investigators %>
   <tr valign="middle" class="<%= cycle('list-line-odd', 'list-line-even') %>"> 
 	<td class="list-left">
 		<%= link_to( image_tag("base.gif"), show_member_graph_path(investigator.username), :title => "Graph member collaborations through co-publications ") %> 
 		<%= link_to( investigator.first_name + "&nbsp;" + investigator.last_name, show_investigator_path(:id=>investigator.username, :page=>1)) %>&nbsp;<br/>
 	</td>
 	<td class="list-left">
-		<%= link_to( investigator.total_pubs_last_five_years, show_investigator_path(:id=>investigator.username, :page=>1), :title => "Total: #{investigator.total_pubs_last_five_years}; First Author: #{investigator.num_first_pubs_last_five_years}; Last Author: #{investigator.num_last_pubs_last_five_years}")  %>&nbsp;<br/>
+		<%= link_to( investigator.abstracts.length.to_s, show_investigator_path(:id=>investigator.username, :page=>1), :title => "Total: #{investigator.abstracts.length.to_s}")  %>&nbsp;<br/>
+	</td>
+	<td class="list-left">
+		<%= link_to( investigator.total_pubs_last_five_years, show_investigator_path(:id=>investigator.username, :page=>1), :title => "Total: #{investigator.total_pubs}; First Author: #{investigator.num_first_pubs}; Last Author: #{investigator.num_last_pubs}")  %>&nbsp;<br/>
+	</td>
+	<td class="list-left">	<a href='' title="citations per year"> <%= sparkline_tag( abstracts_per_year(investigator.abstracts, @year_array.sort), :type => 'bar') if ! investigator.abstracts.nil? && investigator.abstracts.length > 9 %></a>
 	</td>
 	<td class="list-left">
 		<%= link_to_collaborators(Investigator.collaborators(investigator.id)) %><br/>
 	</td>
-	<td class="list-left">
+	<td class="list-left" <%= "id='short_tag_cloud_#{investigator.id}'" %>>
 		<% tag_cloud investigator.abstracts.tag_counts(:limit => 5, :order => "count desc" ), %w(tagcloud1 tagcloud2 tagcloud3 tagcloud4) do |tag, css_class| %>
-		   <%= link_to tag.name, tag_abstract_path(tag.name), :class => css_class, :title => "Total of #{tag.count} tags" %>
+		   <%= link_to tag.name, tagged_abstracts_abstract_path(URI.escape(tag.name)), :class => css_class, :title => "Total of #{tag.count} tags" %>
 		<% end %>
 	</td>
 	<td class="list-center">
-		<%= mail_to(investigator.email, "Email", 
-			:subject => "Contact from the Cancer Center Publications site",
-			:encode => "javascript") %>
+		<%= mail_to(investigator.email, investigator.email.split("@").join(" at "), 
+			:subject => "Contact from the Feinberg Publications site",
+			:encode => "javascript") if ! investigator.email.blank? %>
 	</td>
 	<td class="list-center">
 		&nbsp; &nbsp; <%= link_to 'Graph', show_member_graph_path(investigator.username)  %>
@@ -44,4 +49,5 @@ Click on the investigator to find all publications attributed to that investigat
 	</tr>
 <% end%>
 </table>
+<% end %>
 </div>

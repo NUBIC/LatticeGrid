@@ -4,6 +4,6 @@
 <% if include_mesh %>
 <h3><%= "MeSH cloud from publications including the MeSH term <i>#{params[:id]}</i>" %></h3>
 <div id="tag_cloud">
-	<%= render :partial => "shared/tag_cloud", :locals => { :tags => @tags } %>
+	<%= render :partial => "shared/tag_cloud_list", :locals => { :tags => @tags, :investigator => @investigator } %>
 </div>
 <% end %>

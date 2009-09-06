@@ -1,5 +1,5 @@
 class AbstractsController < ApplicationController
-  caches_page :year_list, :full_year_list, :tag_cloud, :tag, :endnote, :full_tag
+  caches_page :year_list, :full_year_list, :tag_cloud, :endnote, :full_tagged_abstracts, :tag_cloud_by_year, :tagged_abstracts
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :search ],
          :redirect_to => { :action => :year_list }
@@ -43,11 +43,27 @@ class AbstractsController < ApplicationController
     end
   end
 
+  def tag_cloud_by_year
+    if params[:id].nil?
+      year = @year
+    else
+      year = params[:id]
+    end
+    tags = Abstract.tag_counts(:limit => 150, :order => "count desc", 
+                  :conditions => ["abstracts.year in (:year)", {:year=>year }])
+    respond_to do |format|
+      format.html { render :template => "shared/tag_cloud", :locals => {:tags => tags}}
+      format.js  { render  :partial => "shared/tag_cloud", :locals => {:tags => tags}  }
+    end
+  end
+
   def tag_cloud
-     @tags = Abstract.tag_counts(:limit => 150, :order => "count desc")
+    tag_limit = 300
+    @heading = "MeSH Top #{tag_limit} Terms Tag Cloud Incidence for All Abstracts"
+     @tags = Abstract.tag_counts(:limit => tag_limit, :order => "count desc")
   end
   
-  def tag
+  def tagged_abstracts #abstracts tagged with this tab
     redirect=false
     if params[:page].nil? then
       params[:page] = "1"
@@ -59,18 +75,21 @@ class AbstractsController < ApplicationController
       redirect_to params
     else
       @do_pagination = "1"
+      params[:id] = URI.unescape(params[:id])
       @abstracts = Abstract._paginate_tagged_with(params[:id],
                                         :order => 'year DESC, authors ASC',
                                         :page => params[:page],
                                         :per_page => 20)
-     tag_heading
+     tag_heading(params[:id],@abstracts)
+     render :action => 'tag'
     end
   end
 
-  def full_tag
+  def full_tagged_abstracts
     @do_pagination = "0"
+    params[:id] = URI.unescape(params[:id])
     @abstracts = Abstract.find_tagged_with(params[:id], :order => 'year DESC, authors ASC')
-    tag_heading
+    tag_heading(params[:id],@abstracts)
     render :action => 'tag'
   end
 
@@ -85,7 +104,13 @@ class AbstractsController < ApplicationController
     @missing_journals = Abstract.missing_publications(params[:year], @journals)
     @high_impact = Journal.high_impact()
     @all_pubs = Abstract.annual_data(params[:year])
-    render :layout => 'printable'
+    
+    respond_to do |format|
+      format.html {render :layout => 'printable'}
+      format.pdf do
+        send_data AbstractDrawer.draw(@high_impact), :filename => 'high_impact.pdf', :type => 'application/pdf', :disposition => 'inline'
+      end
+    end
   end
 
   def high_impact
@@ -134,10 +159,10 @@ class AbstractsController < ApplicationController
     @heading = "Publication Listing for #{@year}  (#{total_entries} publications)"
   end
   
-  def tag_heading
+  def tag_heading(tag_name, abstracts)
     @tags = Abstract.tag_counts(:limit => 150, :order => "count desc", 
                   :conditions => ["abstracts.id in (:abstract_ids)", {:abstract_ids=>@abstracts.collect{|x| x.id}}])
-    total_entries = total_length(@abstracts) 
-    @heading = "Publication Listing for the MeSH term <i>#{params[:id]}</i>. Found #{total_entries} abstracts"
+    total_entries = total_length(abstracts) 
+    @heading = "Publication Listing for the MeSH term <i>#{tag_name}</i>. Found #{total_entries} abstracts"
   end
 end
