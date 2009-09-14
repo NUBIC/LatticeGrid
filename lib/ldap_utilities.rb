@@ -1,9 +1,11 @@
+require 'net/ldap'
+require 'ldap_config'
 
 def GetLDAPentry(uid)
-  ldap_connection = Net::LDAP.new :host => "directory.northwestern.edu"
-  ldap_treebase = "ou=People, dc=northwestern,dc=edu"
+  return nil if ldap_perform_search().blank? 
+  ldap_connection = Net::LDAP.new( :host => ldap_host() )
   id_filter = Net::LDAP::Filter.eq( "uid", uid)
-  ldap_connection.search( :base => ldap_treebase, :filter => id_filter)
+  return ldap_connection.search( :base => ldap_treebase(), :filter => id_filter)
 end
 
 def CleanLDAPvalue(val)
@@ -19,9 +21,9 @@ end
 
 def CleanLDAPrecord(rec)
   # results are a hash
-     rec.each  do |key,value| 
-       rec[key]=CleanLDAPvalue(rec[key]) 
-    end
+  rec.each  do |key,value| 
+     rec[key]=CleanLDAPvalue(rec[key]) 
+  end
   return rec
 end
 

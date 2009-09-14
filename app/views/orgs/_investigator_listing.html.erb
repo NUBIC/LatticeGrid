@@ -39,9 +39,7 @@
 		<% end %>
 	</td>
 	<td class="list-center">
-		<%= mail_to(investigator.email, investigator.email.split("@").join(" at "), 
-			:subject => "Contact from the Feinberg Publications site",
-			:encode => "javascript") if ! investigator.email.blank? %>
+		<%= email_link(investigator.email) %>
 	</td>
 	<td class="list-center">
 		&nbsp; &nbsp; <%= link_to 'Graph', show_member_graph_path(investigator.username)  %>

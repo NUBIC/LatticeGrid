@@ -1,4 +1,3 @@
-require 'net/ldap'
 require 'pubmed_config' #look here to change the default time spans
 require 'ldap_utilities' #specific methods
 

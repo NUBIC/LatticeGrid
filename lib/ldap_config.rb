@@ -1,5 +1,14 @@
-@ldap_connection = Net::LDAP.new :host => "directory.northwestern.edu"
-@ldap_treebase = "ou=People, dc=northwestern,dc=edu"
+#toggle @ldap_search to true or false to turn off ldap searching
+
+def ldap_perform_search
+  true
+end
+def ldap_host
+  "directory.northwestern.edu"
+end
+def ldap_treebase 
+  "ou=People, dc=northwestern,dc=edu"
+end
 
 # sample ldap query from Northwestern
 # ldap query run in 0.0598552227020264 seconds

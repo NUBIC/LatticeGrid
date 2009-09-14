@@ -1,0 +1,72 @@
+# you will need to install at least version 1.8.5 of Ruby
+# see http://www.ruby-lang.org/en/downloads/ for how to install Ruby
+
+# you will need to install Rails. First install Ruby Gems, the package manager
+# http://rubyforge.org/frs/?group_id=126
+
+# you can now install Rails:
+sudo gem install rails
+
+# you will need to install this application, probably in your home directory
+
+# useful/necessary plugins
+
+# documentation: http://cardboardrocket.com/pages/paginating_find
+#no longer using this (5/5/2008)
+#script/plugin install http://svn.cardboardrocket.com/paginating_find
+
+# documentation: http://bparanj.blogspot.com/2007/09/how-to-use-will-paginate-20-rails.html
+# documentation: http://errtheblog.com/posts/56-im-paginating-again
+# replaced with mislav-will-paginate gem
+#script/plugin install svn://errtheblog.com/svn/plugins/will_paginate
+
+#ldap stuff
+# may need to register this site: http://rubyforge.org/projects/net-ldap/ 
+
+sudo gem install ruby-net-ldap
+
+# sparklines
+sudo gem install sparklines
+sudo gem install sparklines_generator
+# may need to do this too:
+sudo gem install rmagick
+
+ruby script/generate sparklines
+# for sparklines, add to bottom of config/environment.rb
+require 'sparklines'
+
+# in the controller where you want to use a sparkline:
+
+#class MyController < ApplicationController
+helper :sparklines
+
+# call in any view for that controller:
+
+<%= sparkline_tag [10,20,30], :type => 'pie' %>
+
+#csv parser
+sudo gem install fastercsv
+
+
+#simple date select plugin
+script/plugin install svn://code.jeremyevans.net/rails/plugins/simple_date_select
+
+# acts_as_taggable
+#deprecated: script/plugin install http://svn.viney.net.nz/things/rails/plugins/acts_as_taggable_on_steroids
+script/plugin install git://github.com/jviney/acts_as_taggable_on_steroids.git
+
+
+# acts_as_nested_set
+# deprecated: script/plugin install acts_as_nested_set
+
+# awesome nested set plugin
+ script/plugin install git://github.com/collectiveidea/awesome_nested_set.git
+
+# prawn gem for pdf generation
+
+http://prawn.majesticseacreature.com/
+
+sudo gem install prawn 
+
+# a simpler pdf generater
+sudo gem install pdf-writer

@@ -1,0 +1,117 @@
+# look in the file 'update_publications.sh' for an example of a file you can run nightly as a cron job
+# don't forget to customize the environment information for your server!
+
+# load data using the insertAbstracts rake task
+rake insertAbstracts
+rake RAILS_ENV=production insertAbstracts
+
+#insert all abstracts (10 years)
+# find abstracts: number of publications found for 10 years: 21064 in 180 seconds (staging)
+#pulled the abstracts in about 500 seconds (staging)
+# total of task insertAbstracts ran in 1820.23571395874 seconds
+rake insertAllAbstracts
+rake RAILS_ENV=production insertAllAbstracts
+
+#update member associations based on loaded publications
+# for FSM, this takes about 4 hours (2100 investigators, 15,000 abstracts, 46,000 investigator_abstract records 
+# after rebuild, to about 200 minutes (3.3 hours)
+rake associateAbstractsWithInvestigators
+rake RAILS_ENV=production associateAbstractsWithInvestigators
+
+# update publication information like first and last authors
+# for FSM, this takes about 30 minutes
+# decreased to under 10 minutes
+rake updateAbstractInvestigators
+rake RAILS_ENV=production updateAbstractInvestigators
+
+
+#update publication information for each investigator, include collaboration information
+# runs in about 6 minutes for FSM
+rake updateInvestigatorInformation
+rake RAILS_ENV=production updateInvestigatorInformation
+
+#create tags from MeSH data for each abstract
+# runs in 50 minutes
+rake tagAbstractsWithMeshTerms
+rake RAILS_ENV=production tagAbstractsWithMeshTerms
+
+#create tags from MeSH data for each investigator
+# runs in 25 minutes
+rake tagInvestigatorsWithMeshTerms
+rake RAILS_ENV=production tagInvestigatorsWithMeshTerms
+
+#update publication information for each organization
+# runs in about 1 minute
+rake updateOrganizationAbstractInformation
+rake RAILS_ENV=production updateOrganizationAbstractInformation
+
+#all the expected tasks are run using this build command
+# runs these tasks: :insertAbstracts, :associateAbstractsWithInvestigators, :updateAbstractInvestigators, :updateInvestigatorInformation, :tagAbstractsWithMeshTerms, :updateOrganizationAbstractInformation
+rake nightlyBuild
+rake RAILS_ENV=production nightlyBuild
+
+# build the information content values for each tag
+# about 60 minutes for FSM wih 46000 abstracts and 12000 tags
+# before vacuuming the database, it was processing about 1000 tags in 40 minutes. After vacuuming, it was 1000 tags in 3.5 minutes
+# finished all 12,000 tags in less than 60 minutes
+rake attachMeshInformationContent
+
+# build the investigator association files
+# 4 minutes per 10 investigators, 130/hour, about 20 hours for the complete group
+# after 500 investigators, about 300 seconds/10 investigators
+# finished in 800 minutes, or about 13 hours
+# current FSM faculty list of 3700 faculty, 12000 tags takes about 20 hours
+
+rake buildInvestigatorColleagues
+
+# something to do weekly and several times during the initial build is:
+
+# if you have the current user set up as superuser:
+vacuumdb -fz cancerpublications_development
+# to run as the rails user
+vacuumdb -fz cancerpublications_development -U cancerpublications
+# to run as the rails user in production
+vacuumdb -fz cancerpublications_production -U cancerpublications
+
+# logging in to psql
+psql cancerpublications_development -U cancerpublications
+psql cancerpublications_production -U cancerpublications
+
+
+#all the mesh associations are run with this command
+#this takes a while, but only needs to happen every month or so. These are the scripts that generate the similarity scores
+
+#tasks: :attachMeshInformationContent, :buildInvestigatorColleagues
+rake monthlyBuild
+rake RAILS_ENV=production monthlyBuild
+
+# see file generateGraphs.sh for how to generate connection graphs for faculty publications if you want to use .dot files
+
+#start web server
+    script/server
+
+# clear logs
+rake log:clear
+
+# passenger restart
+touch tmp/restart.txt
+
+# recap. run these rake tasksto set up abstracts:
+# production:
+rake RAILS_ENV=production updateAbstractInvestigators
+rake RAILS_ENV=production updateInvestigatorInformation
+rake RAILS_ENV=production buildCoauthors
+rake RAILS_ENV=production tagAbstractsWithMeshTerms
+rake RAILS_ENV=production tagInvestigatorsWithMeshTerms
+rake RAILS_ENV=production updateOrganizationAbstractInformation
+rake RAILS_ENV=production monthlyBuild
+
+#development
+rake updateAbstractInvestigators
+rake updateInvestigatorInformation
+rake buildCoauthors
+rake tagAbstractsWithMeshTerms
+rake tagInvestigatorsWithMeshTerms
+rake updateOrganizationAbstractInformation
+rake monthlyBuild
+

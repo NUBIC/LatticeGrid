@@ -24,9 +24,9 @@ class Journal < ActiveRecord::Base
 
   def self.high_impact( )
     sortby = "article_influence_score DESC" 
-    conditions = "article_influence_score > 0.001"
+    conditions = "impact_factor >= 5.0"
     # sortby should be one of impact_factor DESC, count_all DESC, journals.journal_abbreviation
-    find(:all, :limit=>25,
+    find(:all,
       :select => "score_year, impact_factor, journal_abbreviation, issn, total_cites, impact_factor_five_year, immediacy_index, total_articles, eigenfactor_score, article_influence_score",
    		:conditions => conditions, 
       :order => "score_year DESC, #{sortby}" )

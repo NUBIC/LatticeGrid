@@ -1,32 +1,33 @@
 require 'utilities'
+require 'config'
 #require 'pathname'
 
 # rake cache:clear 
 
 
-# curl -s http://pubs.feinberg.northwestern.edu/abstracts/list/2009/1 -o index.html
+# curl -s http://pubs.cancer.northwestern.edu/abstracts/list/2009/1 -o index.html
 
 namespace :cache do
   task :clear => :environment do
     block_timing("cache:clear") {
-      if File.directory?(public_path) then
+    if File.directory?(public_path) then
         directories= %w{graphs abstracts investigators programs orgs member_nodes org_nodes}
-        directories.each do |name|
-          name="#{public_path}/#{name}"
-          if File.directory?(name) then
-            puts "running 'rm -r #{name}'"
-            system("rm -r #{name}")
-          end
-        end
-        files = %w{programs.html orgs.html}
-        files.each do |name|
-          name="#{public_path}/#{name}"
-          if File.exist?(name) then
-            puts "running 'rm #{name}'"
-            system("rm #{name}")
-          end
+      directories.each do |name|
+        name="#{public_path}/#{name}"
+        if File.directory?(name) then
+          puts "running 'rm -r #{name}'"
+          system("rm -r #{name}")
         end
       end
+        files = %w{programs.html orgs.html}
+      files.each do |name|
+        name="#{public_path}/#{name}"
+        if File.exist?(name) then
+          puts "running 'rm #{name}'"
+          system("rm #{name}")
+        end
+      end
+    end
     }
   end
 
@@ -52,14 +53,7 @@ namespace :cache do
   task :setup_url_for => :environment do
     include ActionController::UrlWriter
     # just hard coding for now
-    my_env = RAILS_ENV
-    my_env = 'home' if public_path =~ /Users/ 
-    host = case 
-      when my_env == 'home': 'localhost:3000'
-      when my_env == 'development': 'rails-dev.bioinformatics.northwestern.edu/fsmpubs'
-      when my_env == 'production': 'pubs.feinberg.northwestern.edu'
-      else 'rails-dev.bioinformatics.northwestern.edu/fsmpubs'
-    end 
+    host = curl_host
     default_url_options[:host] = host
   end
 
@@ -90,7 +84,7 @@ namespace :cache do
     end
   end
 
- 
+
   def abstracts
     year = handle_year()
     page = 1
@@ -159,14 +153,14 @@ namespace :cache do
     else
       taskname = ENV["taskname"]
       block_timing("cache:populate taskname=#{taskname}") {
-        case 
-          when taskname == 'abstracts': abstracts
-          when taskname == 'investigators': investigators
+      case 
+        when taskname == 'abstracts': abstracts
+        when taskname == 'investigators': investigators
           when taskname == 'orgs': orgs
-          when taskname == 'investigator_graphs': investigator_graphs
+        when taskname == 'investigator_graphs': investigator_graphs
           when taskname == 'org_graphs': org_graphs
-          else puts "sorry - unknown caching task #{taskname}."
-        end   
+        else puts "sorry - unknown caching task #{taskname}."
+      end    
       }
     end
   end

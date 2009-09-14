@@ -41,9 +41,7 @@
 			<%= investigator.first_name %>
 		</td>
 		<td class="list-left">
-			<%= mail_to(investigator.email, investigator.email.split("@").join(" at "), 
-				:subject => "Contact from the Feinberg Publications site",
-				:encode => "javascript") if ! investigator.email.blank? %>
+			<%= email_link(investigator.email) %>
 		</td>
 		<td class="list-left">
 			<%= investigator.home_department.abbreviation %>

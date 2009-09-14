@@ -1,0 +1,72 @@
+# Once you have your environment configured, that is, Ruby is installed, Ruby Gems is installed, Rails is installed, 
+# PostgreSQL is installed, and you have moved LatticeGrid into an appropriate home directory (appropriate based on 
+#  your server configuration policies that is) you can run the following commands. Please note I have provided the 
+#  development version of the commands as well as the production version.
+
+# test that the database can be dropped, created, and models can be generated and moved into Postgres:
+rake db:drop
+rake db:create
+rake db:migrate
+
+# reverse the migration
+   rake db:migrate VERSION=0
+# repeat
+    rake db:migrate
+
+# do it in production:
+rake environment RAILS_ENV=production db:migrate
+
+# do it in test:
+rake environment RAILS_ENV=test db:migrate
+
+#RUN TESTS
+
+ruby test/unit/abstract_test.rb
+# see some testing issues for Rails 2.2+ here: http://blogs.law.harvard.edu/djcp/2009/01/rails-22-postgres-and-testing/
+
+# install  investigators using ldap
+#example:
+rake getLDAP uid_list=aqw,wakibbe
+
+# you will need to load your list of departments, programs, etc into these files. 
+#load organizations
+rake importDepartments file=db/imports/department_lookup.txt
+rake environment RAILS_ENV=production importDepartments file=db/imports/department_lookup.txt
+
+rake importOrganizations file=db/imports/division_lookup.txt
+rake environment RAILS_ENV=production importOrganizations file=db/imports/division_lookup.txt
+
+# sets any missing division_ids appropriately
+rake cleanUpOrganizations
+rake environment RAILS_ENV=production cleanUpOrganizations
+
+# you can load the investigators in a migration file, which might have entries that look like this:
+Investigator.create :username => "str", :last_name => "Rosen", :first_name => "Steven", :middle_name => "T",  :pubmed_search_name => "Rosen S T", :email => "s-rosen@northwestern.edu"
+# note that you must have a unique username for each entry
+
+#You can insert investigator names from a file, as per
+
+rake importInvestigators file=db/imports/faculty.txt
+rake environment RAILS_ENV=production importInvestigators file=db/imports/faculty.txt
+# or 
+rake importInvestigators file=db/imports/UCSFMembers.txt
+rake environment RAILS_ENV=production importInvestigators file=db/imports/UCSFMembers.txt
+# or 
+rake importInvestigators file=db/imports/cinj_faculty.txt
+rake environment RAILS_ENV=production importInvestigators file=db/imports/cinj_faculty.txt
+
+# build the investigator/program relationships. Use the following file as an example
+rake importProgramMembership  file=db/imports/RHLCCCProgramMemberships.txt
+rake environment RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCCProgramMemberships.txt
+
+#insert ISI Web of Science Journal impact factor ratings
+
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake environment RAILS_ENV=production importJournalImpact file=db/imports/jcr_recs.txt
+
+# clean all usernames by removing any periods
+rake cleanInvestigatorsUsername
+rake environment RAILS_ENV=production cleanInvestigatorsUsername
+
+# you are now ready to start loading data
+

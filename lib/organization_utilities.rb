@@ -1,6 +1,4 @@
-def GetDefaultSchool()
-  "Feinberg"
-end
+require 'config'
 
 def CreateSchoolDepartmentFromHash(data_row)
 # APPT_ENTITY_ABBR - abbreviated name
@@ -18,8 +16,10 @@ def CreateSchoolDepartmentFromHash(data_row)
   end
   org.department_id = data_row['APPT_ENTITY_ID'] || data_row['dept_id'] || data_row['department_id'] || data_row['DEPT_ID'] || data_row['DEPARTMENT_ID']
   org.name = data_row['APPT_ENTITY_NAME']
-  org.abbreviation = data_row['APPT_ENTITY_ABBR'] 
-
+  org.abbreviation = data_row['APPT_ENTITY_ABBR']
+  org.abbreviation.strip! if ! org.abbreviation.blank?
+  org.search_name.strip! if ! org.search_name.blank?
+  org.name.strip! if ! org.name.blank?
   if org.name.blank? then
     puts "org #{org.name} #{org.abbreviation}  does not have a name"
     puts data_row.inspect
@@ -108,6 +108,9 @@ def CreateOrganizationFromHash(data_row)
     org.organization_phone = data_row['DV_PHONE'] || data_row['PHONE'] || data_row['phone']
     org.organization_url = data_row['DV_URL'] || data_row['URL'] || data_row['dv_url']
     org.organization_classification = data_row['DV_TYPE'] || data_row['TYPE'] || data_row['dv_type'] #Research, Basic, Clinical, ??
+    org.abbreviation.strip! if ! org.abbreviation.blank?
+    org.search_name.strip! if ! org.search_name.blank?
+    org.name.strip! if ! org.name.blank?
     if org.name =~ /rollup/i
       return org
     end
@@ -198,14 +201,16 @@ def FindDepartment(department_id,division_id)
   nil
 end
 
-
 def CreateProgramFromName(department)
+  return nil if department.blank?
+  department.strip!
   return nil if department.blank?
   theProgram = nil
   begin
-      theProgram = Program.find_by_name(department) ||
+      theProgram = Program.find_by_abbreviation(department) ||
             Program.find_by_search_name(department) ||
-            Program.find_by_abbreviation(department)
+            Program.find_by_name(department)
+      puts "Could not find program #{department}" if  theProgram.blank?
       if theProgram.blank? && !department.blank? then
         max_program_number_q = Program.find(:first, :select => 'max(sort_order) as sort_order')
         if max_program_number_q.blank? || max_program_number_q.program_number.blank?

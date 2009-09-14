@@ -61,7 +61,6 @@ def CreateInvestigatorFromHash(data_row)
     if existing_pi.blank? then
       if pi.home_department_id.blank?
         puts "unable to set home_department_id for #{data_row}"
-        return 
       end
       pi.save!
     else
@@ -90,8 +89,8 @@ def CreateInvestigatorFromHash(data_row)
       end
       # replace this logic with a STI model of 'member??'
       if  InvestigatorAppointment.find(:all, :conditions=>['investigator_id=:investigator_id and organizational_unit_id=:program_id and type in (:types)', 
-        {:program_id => theProgram.id, :investigator_id => pi.id, :types => ["member","leader","co-leader"]}]).length == 0
-		  InvestigatorAppointment.create :organizational_unit_id => theProgram.id, :investigator_id => pi.id, :type => 'member', :start_date => Time.now
+        {:program_id => theProgram.id, :investigator_id => pi.id, :types => ["Member"]}]).length == 0
+		  Member.create :organizational_unit_id => theProgram.id, :investigator_id => pi.id, :start_date => Time.now
 		end
 	  end
 	end

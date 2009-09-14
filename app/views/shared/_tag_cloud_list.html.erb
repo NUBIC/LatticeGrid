@@ -10,6 +10,6 @@
 		<%= "<br/>" if include_breaks %>
 	<% end %>
 	<% if controller.controller_name and ! investigator.nil? %> 
-		<%= link_to "&#8230;more", show_all_tags_investigator_url(investigator.username), :class => "tagcloud4" %> 
+		<%= link_to "&#8230;more", show_all_tags_investigator_path(investigator.username), :class => "tagcloud4" %> 
 	<% end %>
 <% end %>

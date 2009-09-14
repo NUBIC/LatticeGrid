@@ -1,8 +1,7 @@
 class InvestigatorsController < ApplicationController
   caches_page :show, :full_show, :list_all, :tag_cloud_side, :tag_cloud, :show_all_tags
   helper :sparklines
-  require 'net/ldap'
-  require 'ldap_utilities' #specific methods
+  require 'ldap_utilities' #specific ldap methods
 
   skip_before_filter  :find_last_load_date, :only => [:tag_cloud_side, :tag_cloud]
   skip_before_filter  :handle_year, :only => [:tag_cloud_side, :tag_cloud]
@@ -11,7 +10,7 @@ class InvestigatorsController < ApplicationController
   skip_before_filter  :define_keywords, :only => [:tag_cloud_side, :tag_cloud]
   
   def index
-    redirect_to( year_list_abstracts_url )
+    redirect_to( year_list_abstracts_path )
   end
   def list_all
     @investigators = Investigator.find(:all, :include=>[:home_department,:appointments], :conditions => ['investigators.end_date is null or investigators.end_date >= :now', {:now => Date.today }], :order => "last_name, first_name")   
@@ -23,7 +22,7 @@ class InvestigatorsController < ApplicationController
   end
   def full_show
     if params[:id].nil? then
-      redirect_to( year_list_abstracts_url )
+      redirect_to( year_list_abstracts_path )
     elsif !params[:page].nil? then
       params.delete(:page)
       redirect_to params
@@ -38,7 +37,7 @@ class InvestigatorsController < ApplicationController
   end
   def show 
     if params[:id].nil? then
-      redirect_to( year_list_abstracts_url)
+      redirect_to( year_list_abstracts_path)
     elsif params[:page].nil? then
       params[:page]="1"
       redirect_to params
@@ -53,7 +52,7 @@ class InvestigatorsController < ApplicationController
   
   def show_all_tags
     if params[:id].nil? then
-      redirect_to( year_list_abstracts_url)
+      redirect_to( year_list_abstracts_path)
     elsif params[:page].nil? then
       params[:page]="1"
       redirect_to params
@@ -100,8 +99,12 @@ class InvestigatorsController < ApplicationController
         params[:name] =  @investigator.first_name + " " + @investigator.last_name
         begin
           pi_data = GetLDAPentry(@investigator.username)
-           ldap_rec=CleanPIfromLDAP(pi_data)
-           @investigator=MergePIrecords(@investigator,ldap_rec)
+          if pi_data.nil?
+            logger.warn("Probable error reaching the LDAP server in GetLDAPentry: GetLDAPentry returned null for #{params[:name]} using netid #{@investigator.username}.")
+          else
+            ldap_rec=CleanPIfromLDAP(pi_data)
+            @investigator=MergePIrecords(@investigator,ldap_rec)
+          end
          rescue Exception => error
           logger.error("Probable error reaching the LDAP server in GetLDAPentry: #{error.message}")
         end

@@ -21,7 +21,7 @@
 <h2><%= "MeSH cloud from publications by faculty members in <i>#{@unit.name}</i>" %></h2>
 <div id="tag_cloud"></div>
 <script language="javascript">
-<%= remote_function(:url => tag_cloud_org_url( @unit.id ), :method => :get, :before => "Element.show('spinner')", :complete => "Element.hide('spinner')" ) %> 
+<%= remote_function(:url => tag_cloud_org_path( @unit.id ), :method => :get, :before => "Element.show('spinner')", :complete => "Element.hide('spinner')" ) %> 
 </script>
 
 <% end %>

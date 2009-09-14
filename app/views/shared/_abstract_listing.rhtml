@@ -36,7 +36,7 @@
 <% if do_pagination != "0"  %>
 	<%= will_paginate(abstracts, :outer_window => 5, :inner_window => 5) %>
 <% end %>
-The above publications are sorted by year, faculty last name, and first author. Click on any highlighted author listed to find all publications attributed to that individual. Click on the publication title to see the abstract. <span class="first_author">First authors</span> who are Feinberg faculty are <span class="first_author">highlighted like this</span>. <span class="last_author">Last authors</span> who are Feinberg faculty are <span class="last_author">highlighted like this</span>. <span class="author">Other authors</span> who are Feinberg faculty are <span class="author">highlighted like this</span>. <%= "Publications designated with an asterisk (*) represent intra-departmental interactions; those with a bullet (&bull;) inter-departmental interactions." if include_collab_marker %>
+The above publications are sorted by year, faculty last name, and first author. Click on any highlighted author listed to find all publications attributed to that individual. Click on the publication title to see the abstract. <span class="first_author">First authors</span> who are faculty are <span class="first_author">highlighted like this</span>. <span class="last_author">Last authors</span> who are faculty are <span class="last_author">highlighted like this</span>. <span class="author">Other authors</span> who are faculty are <span class="author">highlighted like this</span>. <%= "Publications designated with an asterisk (*) represent intra-departmental interactions; those with a bullet (&bull;) inter-departmental interactions." if include_collab_marker %>
 
 <% else%>
 	<h2>Sorry, no publications are available!</h2>

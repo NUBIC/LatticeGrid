@@ -83,7 +83,7 @@ end
 task :updateInvestigatorInformation => [:getInvestigators] do
   # load the test data
   block_timing("updateInvestigatorInformation") {
-    row_iterator(@AllInvestigators) {  |investigator|
+    row_iterator(@AllInvestigators, 0, 50) {  |investigator|
       UpdateInvestigatorCitationInformation(investigator)
     }
   }

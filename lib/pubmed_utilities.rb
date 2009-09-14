@@ -32,7 +32,7 @@ end
 def LimitSearchToInstitution(term)
   # temporarily reverse logic limit by institution
   # term + " NOT " + InstitutionalSearchTerms()
-  "(" + term + ") AND " + InstitutionalSearchTerms()
+  "(" + term + ") AND (" + InstitutionalSearchTerms() + ")"
 end
 
 def BuildSearchOptions (number_years, max_num_records=500)
@@ -44,11 +44,6 @@ def BuildSearchOptions (number_years, max_num_records=500)
   }
 end
 
-def do_esearch(cond) 
-  if ! cond 
-    yield 
-  end
-end
 
 def FindPubMedIDs (all_investigators, options, number_years, limit_to_institution=true, debug=false, smart_filters=false)
   theCnt = 0
@@ -59,12 +54,11 @@ def FindPubMedIDs (all_investigators, options, number_years, limit_to_institutio
     attempt=0
     repeatCnt=0
     entries = nil
-    esearch_passed=false
+    perform_esearch=true
     keywords = BuildPISearch(investigator, true, limit_to_institution)
-    do_esearch(esearch_passed || repeatCnt > 3 || attempt > 3) do 
+    while perform_esearch && repeatCnt < 3 && attempt < 4
       begin
-        repeatCnt +=1
-        #puts "esearch keywords = #{keywords}; repeatCnt=#{repeatCnt}"
+         #puts "esearch keywords = #{keywords}; repeatCnt=#{repeatCnt}"
         entries = Bio::PubMed.esearch(keywords, options)
         #puts "esearch results: #{entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found"
         if entries.length < 1 && smart_filters then
@@ -72,7 +66,7 @@ def FindPubMedIDs (all_investigators, options, number_years, limit_to_institutio
         elsif entries.length > (expected_max_pubs_per_year*number_years) && smart_filters && repeatCnt < 3 && !limit_to_institution then
           keywords = LimitSearchToInstitution(keywords)
         else
-          esearch_passed=true
+          perform_esearch=false
         end
        rescue Timeout::Error => exc
          if attempt < 4 then 
@@ -88,17 +82,19 @@ def FindPubMedIDs (all_investigators, options, number_years, limit_to_institutio
         retry if attempt < 3
         raise
       end
-     end
+      repeatCnt +=1
+    end 
+    # leaving perform_esearch
     investigator["entries"] = []
     if entries.length < 1 then
       puts "No publications found for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords}"
     elsif entries.length > (expected_max_pubs_per_year*number_years) then
-      puts "Too many hits??: #{investigator.entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found"
+      puts "Too many hits??: #{entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found. RepeatCnt=#{repeatCnt}"
     elsif entries.length < number_years then
-      puts "Too few found: #{investigator.entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found" if debug
+      puts "Too few found: #{entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found" if debug
       investigator["entries"] = entries
     else
-      puts "#{investigator.entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found" if debug
+      puts "#{entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found" if debug
       investigator["entries"] = entries
     end
     #reset these if we make it this far

@@ -5,15 +5,21 @@
 source /home/wakibbe/.bashrc
 source /etc/profile
 
-cd /home/wakibbe/fsmpublications
+cd /home/wakibbe/nucatspublications
+/usr/bin/rake environment RAILS_ENV=production insertInstitutionalAbstracts >> rake_results.txt
+vacuumdb -fz nucatspublications_production -U nucatspublications
+
+cd /home/wakibbe/cancerpublications
 
 rake RAILS_ENV=production nightlyBuild >> rake_results.txt
-vacuumdb -fz fsmpublications_production -U fsmpublications
 
+#clean up the database to keep queries running smoothly
+vacuumdb -fz cancerpublications_production -U cancerpublications
 
-# monthly run this:
+# monthly run this in another shell script
 # rake RAILS_ENV=production monthlyBuild >> monthly_rake_results.txt
 
+#rebuild the application cache
 rake RAILS_ENV=production tmp:cache:clear 
 rake RAILS_ENV=production cache:clear
 rake RAILS_ENV=production cache:populate taskname=abstracts > buildCache.txt

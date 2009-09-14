@@ -1,14 +1,8 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
   include TagsHelper
-  
-  def menu_head_abbreviation
-    "Feinberg"
-  end
-  def title_abbreviation
-    "Feinberg"
-  end
-  
+  require 'config'
+    
   def build_menu(nodes, org_type=nil, &block)
     out="<ul>"
 		for unit in nodes
@@ -74,12 +68,12 @@ module ApplicationHelper
     end
   end
 
-	def link_to_coauthors(coauthors, delimiter=", ")
-	  coauthors.collect{|coauthor| link_to( coauthor.colleague.name, 
-		show_investigator_path(:id=>coauthor.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
-		  :title => " #{coauthor.colleague.total_pubs} pubs, "+(coauthor.colleague.num_intraunit_collaborators+coauthor.colleague.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
-	end
-	
+  def link_to_coauthors(coauthors, delimiter=", ")
+    coauthors.collect{|coauthor| link_to( coauthor.colleague.name, 
+      show_investigator_path(:id=>coauthor.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
+        :title => " #{coauthor.colleague.total_pubs} pubs, "+(coauthor.colleague.num_intraunit_collaborators+coauthor.colleague.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
+  end
+
   def link_to_collaborators(collaborators, delimiter=", ")
     collaborators.collect{|investigator| link_to( investigator.name, 
       show_investigator_path(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
@@ -185,5 +179,25 @@ module ApplicationHelper
       appointments.collect{ |appointment| 
           link_to( appointment.name, show_investigators_org_path(appointment.id), 
           :title => "Show investigators in #{appointment.name}")}.join(delimiter)
+  end
+  
+  def handle_tr_format(title, object, re="", replacement="")
+    return "" if object.blank?
+    if re.blank?
+      string=object.to_s
+    else
+      string=object.gsub(re,replacement)
+    end
+		output = "<tr><th>#{title}</th>"
+		output += "<td><span id='#{title}'>#{string}</span></td>"
+		output += "</tr>"
+		return output
+	end
+	
+	def email_link(email)
+	  return "" if email.blank?
+	  return mail_to(email, email.split("@").join(" at "), 
+          		:subject => email_subject(),
+          		:encode => "javascript") 
   end
 end

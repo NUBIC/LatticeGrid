@@ -4,58 +4,18 @@
 <table>
 	<tr><td>
 	<table>
-		<tr>
-			<th>Campus</th>
-			<td><span id="Campus"><%= investigator.campus %></span></td>
-		</tr>
-		<tr>
-			<th>Address</th>
-			<td><span id="Address"><%= investigator.address1.gsub(/\$/,"<br>") if ! investigator.address1.blank? %></span></td>
-		</tr>
-		<% if ! investigator.business_phone.blank?  %>
-		<tr>
-			<th>Telephone</th>
-			<td><span id="Telephone"><%= investigator.business_phone %></span></td>
-		</tr>
-		<% end %>
-		<% if ! investigator.fax.blank?  %>
-			<tr>
-				<th>Fax</th>
-				<td><span id="Fax"><%= investigator.fax %></span>
-			</td>
-			</tr>
-		<% end %>
-		<% if ! investigator.email.blank?  %>
-		<tr>
-			<th>Email</th>
-			<td><%= mail_to(investigator.email, investigator.email.split("@").join(" at "), 
-				:subject => "Contact from the Feinberg Publications site",
-				:encode => "javascript") if ! investigator.email.blank? %>	</td>
-		</tr>
-		<% end %>
+		<%= handle_tr_format("Campus",investigator.campus) %>
+		<%= handle_tr_format("Address",investigator.address1, /\$/,"<br>" ) %>
+		<%= handle_tr_format("Telephone",investigator.business_phone) %>
+		<%= handle_tr_format("Fax",investigator.fax) %>
+		<%= handle_tr_format("Email",email_link(investigator.email)) %>
 	</table>
 	</td><td>
 	<table>
-		<tr>
-			<th>Academic Title</th>
-			<td><span id="AcademicTitle"><%= investigator.title %></span></td>
-		</tr>
-		<tr>
-			<th>Primary Department</th>
-			<td><span id="PrimaryDepartment"><%= link_to_primary_department(investigator) %></span></td>
-		</tr>
-		<% if (investigator.joint_appointments+investigator.secondary_appointments).length > 0 %>
-		<tr>
-			<th>Other Appointments</th>
-			<td><span id="Appointments"><%= link_to_units(investigator.joint_appointments+investigator.secondary_appointments) %></span></td>
-		</tr>
-		<% end %>
-		<% if investigator.memberships.length > 0 %>
-		<tr>
-			<th>Center Affiliations</th>
-			<td><span id="Centers"><%= link_to_units(investigator.memberships) %></span></td>
-		</tr>
-		<% end %>
+		<%= handle_tr_format("Academic Title",investigator.title) %>
+		<%= handle_tr_format("Primary Department",link_to_primary_department(investigator)) %>
+		<%= handle_tr_format("Other Appointments", link_to_units(investigator.joint_appointments+investigator.secondary_appointments))%>
+		<%= handle_tr_format("Center Affiliations",link_to_units(investigator.memberships))%>
 	</table>
 	</td></tr>
 </table>

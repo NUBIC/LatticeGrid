@@ -30,10 +30,10 @@
 
 	<div id="impact_factor">
 		<h2>Impact Factor and Eigenvalues Analysis</h2>
-		<h2><%= link_to "List High Impact Journals", high_impact_url %></h2>
+		<h2><%= link_to "List High Impact Journals", high_impact_path %></h2>
 		<h2>Click on the year to run the analysis</h2>
 		<% @year_array.each do |year| %>
-			<h3><%= link_to year, impact_factor_url(year, '') %></h3>
+			<h3><%= link_to year, impact_factor_path(year, '') %></h3>
 		<% end %>
 	</div>
 </div>

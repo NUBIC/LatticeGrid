@@ -87,14 +87,14 @@ end
 task :buildCoauthors => [:getInvestigators] do
   
   block_timing("BuildCoauthors") {
-    row_iterator(@AllInvestigators) { |investigator|
+    row_iterator(@AllInvestigators, 0, 50) { |investigator|
       BuildCoauthors(investigator)
     }
   }
 end
 
 task :nightlyBuild => [:insertAbstracts, :updateAbstractInvestigators, :buildCoauthors, :updateInvestigatorInformation, :tagAbstractsWithMeshTerms, :tagInvestigatorsWithMeshTerms, :updateOrganizationAbstractInformation] do
-   puts "task nightlyBuild completed. Includes the tasks :insertAbstracts, :updateAbstractInvestigators, :updateInvestigatorInformation, :tagAbstractsWithMeshTerms, :tagInvestigatorsWithMeshTerms, :updateOrganizationAbstractInformation " if @verbose
+   puts "task nightlyBuild completed. Includes the tasks :insertAbstracts, :updateAbstractInvestigators, :buildCoauthors, :updateInvestigatorInformation, :tagAbstractsWithMeshTerms, :tagInvestigatorsWithMeshTerms, :updateOrganizationAbstractInformation" if @verbose
 end
 
 task :monthlyBuild => [ :attachMeshInformationContent, :buildInvestigatorColleagues] do

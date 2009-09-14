@@ -1,0 +1,15 @@
+# Some quality control sql to run from the postgres psql command line. 
+# Ideally all the counts should be zero for those looking for nulls
+# However, some data is not quite kosher in pubmed.
+
+# logging in to psql
+psql cancerpublications_development -U cancerpublications
+psql cancerpublications_production -U cancerpublications
+
+select count(*) from abstracts where year is null;
+select count(*) from abstracts where publication_date is null;
+select count(*) from abstracts where electronic_publication_date is null;
+select count(*), year from abstracts  group by year order by year;
+select count(*), year from abstracts where publication_date is null group by year order by year;
+select count(*), year from abstracts where electronic_publication_date is null group by year order by year;
+select count(*), year from abstracts where electronic_publication_date > publication_date  group by year order by year;
