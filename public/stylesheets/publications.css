@@ -223,7 +223,7 @@ td.list-title-right {
 	margin-right:auto;
 	width:1180px;
 	height:120px;
-/*	background: url(/cancer/images/pageheader.jpg) ; # this doesn't work with rails very nicely */
+/*	background: url(../images/pageheader.jpg) ; */
 	vertical-align:bottom;
     text-align: center;
 	font-size:12px;

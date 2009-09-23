@@ -60,9 +60,15 @@ rake importProgramMembership  file=db/imports/RHLCCCProgramMemberships.txt
 rake environment RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCCProgramMemberships.txt
 
 #insert ISI Web of Science Journal impact factor ratings
+# you can download the ISI Journal Citation Records and process them
+# http://admin-apps.isiknowledge.com/JCR/JCR
+# cat jcr_recs.txt | sort -u > new_jcr_recs.txt
 
 rake importJournalImpact file=db/imports/jcr_recs.txt
 rake environment RAILS_ENV=production importJournalImpact file=db/imports/jcr_recs.txt
+
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake environment RAILS_ENV=production importJournalISOnames file=db/imports/jcr_iso_titles.txt
 
 # clean all usernames by removing any periods
 rake cleanInvestigatorsUsername

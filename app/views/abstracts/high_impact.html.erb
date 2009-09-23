@@ -1,5 +1,5 @@
 <h2>High Impact Factor Journals Listing</h2>
-<p>Journal rankings for the most recent ranking period (<%= @high_impact[0].score_year %>) are listed.</p>
+<p>Journal rankings for the most recent ranking period (<%= @high_impact[0].score_year if @high_impact.length > 0 %>) are listed.</p>
 <p>Please keep this information in mind when interpreting Impact Factors - the size of the field and patterns of publication are very important. See this Wikipedia article for more information: 
 <a href="http://en.wikipedia.org/wiki/Impact_factor">About Impact Factors</a>. The Article Influence Score might be a better way to rank the publications. See this Wikipedia article for more information: <a href="http://en.wikipedia.org/wiki/Eigenfactor">About Eigenfactor and Article Influence Score</a>.
 </p>

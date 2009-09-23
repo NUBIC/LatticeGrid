@@ -53,3 +53,7 @@ end
 def ReadJournalImpactData(file_name)
   read_data_handler(Journal,file_name, ";") {|data| row_iterator(data) {|data| CreateJournalImpactFromHash(data)} }
 end
+
+def ReadJournalISOnamesData(file_name)
+  read_data_handler(Journal,file_name, ";") {|data| row_iterator(data) {|data| UpdateJournalAbbreviation(data)} }
+end

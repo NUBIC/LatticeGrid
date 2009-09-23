@@ -3,8 +3,8 @@
 # However, some data is not quite kosher in pubmed.
 
 # logging in to psql
-psql cancerpublications_development -U cancerpublications
-psql cancerpublications_production -U cancerpublications
+psql latticegrid_development -U latticegrid
+psql latticegrid_production -U latticegrid
 
 select count(*) from abstracts where year is null;
 select count(*) from abstracts where publication_date is null;

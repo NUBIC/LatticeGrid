@@ -1,21 +1,25 @@
 <h2>Impact Factor Listing</h2>
-<p>Journal rankings for the most recent ranking period (<%= @journals[0].score_year %>) were used in this analysis. 
+<p>Journal rankings for the most recent ranking period (<%= @journals[0].score_year if @journals.length > 0 %>) were used in this analysis. 
 <% if !params[:year].blank? %>
 Only publications from <%= params[:year] %> are included. 
 <% else %>
 Publications from 2000 onward are included in the analysis. 
 <% end %>
-There were a total of <%= @all_pubs.length %> publications during this period.</p>
-<p>Please keep this information in mind when interpreting Impact Factors - the size of the field and patterns of publication are very important. See this Wikipedia article for more information: 
+<% high_impact_pubs = @high_impact_pubs.sum{|pub| pub.count_all.to_i } %>
+<% journal_pubs = @journals.sum{|pub| pub.count_all.to_i } %>
+<% missing_impact_pubs = @missing_journals.sum{|pub| pub.count_all.to_i } %>
+There were a total of <%= @all_pubs.length %> publications during this period, with <%= high_impact_pubs %> high impact publications out of <%= journal_pubs %> publications with impact factors listed, and <%= missing_impact_pubs %> publications from journals without ISI listed impact factors or for which ISI and PubMed list the journals differently.</p>
+<p>Please keep in mind that the size of the field and patterns of publication are very important when interpreting Impact Factors - the. See this Wikipedia article for more information: 
 <a href="http://en.wikipedia.org/wiki/Impact_factor">About Impact Factors</a>. The Article Influence Score might be a better way to rank the publications. See this Wikipedia article for more information: <a href="http://en.wikipedia.org/wiki/Eigenfactor">About Eigenfactor and Article Influence Score</a>.
 </p>
+<% if @journals.length > 0 %>
 <p>Click on a heading to re-sort</p>
 <div id="listing">
 <table cellpadding="2" cellspacing="0"> 
   <tr valign="bottom" class="list-heading">
 	  <th align="right"># &nbsp; </th>
 	  <th align="left"><%= link_to "Journal", impact_factor_path(params[:year], "journal_abbreviation") %> &nbsp; </th>
-	  <th align="left"><%= link_to "Pub Cnt", impact_factor_path(params[:year], "count_all desc") %> &nbsp; </th>
+	  <th align="left"><%= link_to "Faculty Pubs", impact_factor_path(params[:year], "count_all desc") %> &nbsp; </th>
 	  <th align="left">ISSN &nbsp; </th>
 	  <th align="left">Total Cites (<%= @journals[0].score_year %>) &nbsp; </th>
 	  <th align="left">Total Articles (<%= @journals[0].score_year %>) &nbsp; </th>
@@ -44,6 +48,7 @@ There were a total of <%= @all_pubs.length %> publications during this period.</
   </tr>
 <% end %>
 </table>
+<% end %>
 <br/>
 <p>These journals do not have an impact factor in the database. This is still a work in progress!</p>
 <table cellpadding="2" cellspacing="0"> 

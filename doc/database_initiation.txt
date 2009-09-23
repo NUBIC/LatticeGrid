@@ -5,7 +5,7 @@
 
 -- add this line to pg_hba.conf so you can connect to it on the local machine without a password, if you so desire
 
-local  all    cinjcancerpublications   trust
+local  all    latticegrid   trust
 
 -- now login to postgres using psql
 
@@ -14,46 +14,38 @@ psql postgres
 -- create the user (role)
 -- for a little bit of security, create a role. user is an alias for role that also specifies that the role is permitted to login
 
-CREATE USER cinjcancerpublications with createdb;
+CREATE USER latticegrid with createdb;
 
 #if you need to add the createdb role to user, do it like this:
-ALTER USER cinjcancerpublications with createdb;
+ALTER USER latticegrid with createdb;
 
 -- you can also specify a user and password:
 
-CREATE USER cinjcancerpublications WITH PASSWORD 'jw8s0F4';
+CREATE USER latticegrid WITH PASSWORD 'jw8s0F4';
 -- or if the user has already been created:
-ALTER USER cinjcancerpublications WITH PASSWORD 'jw8s0F4';
+ALTER USER latticegrid WITH PASSWORD 'jw8s0F4';
 
 
 -- or add a end date to the user:
 
-CREATE ROLE cinjcancerpublications WITH LOGIN PASSWORD 'jw8s0F4' VALID UNTIL '2008-01-01';
+CREATE ROLE latticegrid WITH LOGIN PASSWORD 'jw8s0F4' VALID UNTIL '2008-01-01';
 
 
 -- now switch to the new user
 
-\connect - cinjcancerpublications
+\connect - latticegrid
 
 
 -- now create the database
 
-create database cinjcancerpublications_development;
-create database cinjcancerpublications_test;
-create database cinjcancerpublications_production;
+create database latticegrid_development;
+create database latticegrid_test;
+create database latticegrid_production;
 
 # You can also use the shell script but this requires looser security, specifying access, or reassigning ownership of the database
 
-createdb cinjcancerpublications_development
-createdb cinjcancerpublications_test
-
--- and specify privileges if you did not create the database using the new user. Skip this step if you used the new user
-
-GRANT SELECT, INSERT, UPDATE ON TABLE schema_info TO nucatspublications;
-
--- sequences
-
-GRANT SELECT, UPDATE ON  allele_types_id_seq, animal_model_publications_id_seq, animal_models_id_seq, model_types_id_seq, mutation_methods_id_seq, pi_contacts_id_seq,  tumor_types_id_seq TO animalmodels;
+createdb latticegrid_development
+createdb latticegrid_test
 
 # now edit the database.yml file:
 
@@ -61,16 +53,16 @@ config/database.yml : sets the database connection strings
 
 development:
   adapter: postgresql
-  database: cinjcancerpublications_development
-  username: cinjcancerpublications
+  database: latticegrid_development
+  username: latticegrid
 
 test:
   adapter: postgresql
-  database: cinjcancerpublications_test
-  username: cinjcancerpublications
+  database: latticegrid_test
+  username: latticegrid
 
 production:
   adapter: postgresql
-  database: cinjcancerpublications_production
-  username: cinjcancerpublications
+  database: latticegrid_production
+  username: latticegrid
 

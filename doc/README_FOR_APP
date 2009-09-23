@@ -37,7 +37,7 @@ cd /*LatticeGrid home directory*
 rake RAILS_ENV=production nightlyBuild >> rake_results.txt
 
 #clean up the database to keep queries running smoothly
-vacuumdb -fz cancerpublications_production -U cancerpublications
+vacuumdb -fz latticegrid_production -U latticegrid
 
 # monthly run this in another shell script
 # rake RAILS_ENV=production monthlyBuild >> monthly_rake_results.txt

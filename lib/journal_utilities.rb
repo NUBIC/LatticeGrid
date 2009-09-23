@@ -7,8 +7,8 @@ def AllJournalsWithImpact()
   journals = Journal.all.collect{|a| a.journal_abbreviation.downcase}.sort.uniq
 end
 
-def CurrentJournalsWithImpactScore(journal_list)
-  journals_w_scores = Journal.journals_with_scores(journal_list)
+def CurrentJournalsWithImpactScore(journals)
+  journals_w_scores = Journal.journals_with_scores(journals)
 end
 
 def CreateJournalImpactFromHash(data_row)
@@ -28,6 +28,7 @@ def CreateJournalImpactFromHash(data_row)
   j = Journal.new
   j.score_year = 2008
   j.journal_abbreviation =  data_row['Abbreviated Journal Title']
+  j.jcr_journal_abbreviation =  data_row['Abbreviated Journal Title']
   j.issn = data_row['ISSN']
   j.total_cites = data_row["{#{j.score_year}} Total Cites"]
   j.impact_factor = data_row['Impact Factor']
@@ -39,6 +40,21 @@ def CreateJournalImpactFromHash(data_row)
 
   existing_j = Journal.find_by_journal_abbreviation(j.journal_abbreviation)
   if existing_j.blank? && ! j.journal_abbreviation.blank? then
-    j.save!
-   end
+    j.save
+  end
+end
+
+def UpdateJournalAbbreviation(data_row)
+  # assumed header values
+  #Abbreviated Journal Title
+  #ISO Abbreviated Journal Title
+  journal_abbreviation =  data_row['ISO Abbreviated Journal Title']
+  jcr_journal_abbreviation =  data_row['Abbreviated Journal Title']
+  j = Journal.find_by_jcr_journal_abbreviation(jcr_journal_abbreviation)
+  if ! jcr_journal_abbreviation.blank?  && ! journal_abbreviation.blank? && ! j.blank? then
+    puts "updating journal with jcr_journal_abbreviation=#{jcr_journal_abbreviation} and iso abbreviation #{journal_abbreviation} " if @verbose
+    j.journal_abbreviation=journal_abbreviation
+    j.jcr_journal_abbreviation=jcr_journal_abbreviation
+    j.save
+  end
 end

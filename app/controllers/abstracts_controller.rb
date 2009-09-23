@@ -100,10 +100,11 @@ class AbstractsController < ApplicationController
   def impact_factor
     params[:year]||=""
     params[:sortby]||="article_influence_score desc"
-    @journals = Journal.publication_record(params[:year], params[:sortby])
-    @missing_journals = Abstract.missing_publications(params[:year], @journals)
+    @journals = Journal.journal_publications([params[:year]], params[:sortby])
+    @missing_journals = Abstract.missing_publications([params[:year]], @journals)
     @high_impact = Journal.high_impact()
-    @all_pubs = Abstract.annual_data(params[:year])
+    @high_impact_pubs = Journal.with_publications([params[:year]], @high_impact)
+    @all_pubs = Abstract.annual_data([params[:year]])
     
     respond_to do |format|
       format.html {render :layout => 'printable'}

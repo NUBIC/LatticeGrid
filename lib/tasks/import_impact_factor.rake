@@ -23,6 +23,25 @@ task :importJournalImpact => :environment do
    end
 end
 
+task :importJournalISOnames => :environment do
+   if ENV["file"].nil?
+     puts "couldn't find a file in the calling parameters. Please call as 'rake importJournalISOnames file=filewithpath'" 
+   else
+     block_timing("importJournalISOnames") {
+       puts "file: "+ENV["file"]
+       ENV["file"].split(',').each do | filename |
+         p1 = Pathname.new(filename) 
+         if p1.file? then
+           ReadJournalISOnamesData(filename)
+         else
+           puts "unable to open file #{filename}"
+         end
+       end
+     }
+   end
+end
+
+
 task :getJournalsWithImpactFactor => :environment do
   block_timing("getJournalsWithImpactFactor") {
     all_journals=CurrentJournals()

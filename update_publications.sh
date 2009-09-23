@@ -5,16 +5,12 @@
 source /home/wakibbe/.bashrc
 source /etc/profile
 
-cd /home/wakibbe/nucatspublications
-/usr/bin/rake environment RAILS_ENV=production insertInstitutionalAbstracts >> rake_results.txt
-vacuumdb -fz nucatspublications_production -U nucatspublications
-
-cd /home/wakibbe/cancerpublications
+cd /home/wakibbe/latticegrid
 
 rake RAILS_ENV=production nightlyBuild >> rake_results.txt
 
 #clean up the database to keep queries running smoothly
-vacuumdb -fz cancerpublications_production -U cancerpublications
+vacuumdb -fz latticegrid_production -U latticegrid
 
 # monthly run this in another shell script
 # rake RAILS_ENV=production monthlyBuild >> monthly_rake_results.txt

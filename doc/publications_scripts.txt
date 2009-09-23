@@ -67,15 +67,15 @@ rake buildInvestigatorColleagues
 # something to do weekly and several times during the initial build is:
 
 # if you have the current user set up as superuser:
-vacuumdb -fz cancerpublications_development
+vacuumdb -fz latticegrid_development
 # to run as the rails user
-vacuumdb -fz cancerpublications_development -U cancerpublications
+vacuumdb -fz latticegrid_development -U latticegrid
 # to run as the rails user in production
-vacuumdb -fz cancerpublications_production -U cancerpublications
+vacuumdb -fz latticegrid_production -U latticegrid
 
 # logging in to psql
-psql cancerpublications_development -U cancerpublications
-psql cancerpublications_production -U cancerpublications
+psql latticegrid_development -U latticegrid
+psql latticegrid_production -U latticegrid
 
 
 #all the mesh associations are run with this command
