@@ -282,15 +282,15 @@ def FetchPublicationData(pubmed_ids)
   foundPubs
 end
 
-
+# put in the investigatorColleague entries for an investigator
 def BuildCoauthors(investigator)
-  coauthors = investigator.abstracts.collect{|x| x.investigator_abstracts.collect(&:investigator_id)}.flatten.uniq
-  coauthors.delete(investigator.id)
-  coauthors.each do |coauthor|
-    colleague=Investigator.find(coauthor)
+  coauthor_ids = investigator.abstracts.collect{|x| x.investigator_abstracts.collect(&:investigator_id)}.flatten.uniq
+  coauthor_ids.delete(investigator.id)
+  coauthor_ids.each do |coauthor_id|
+    colleague=Investigator.find(coauthor_id)
     citation_overlap = investigator.abstracts.collect{|x| x.id}.flatten & colleague.abstracts.collect{|x| x.id}.flatten
     citation_overlap = citation_overlap.uniq.compact
-    InsertUpdateInvestigatorColleague(investigator.id,coauthor,citation_overlap,[],0)
-    InsertUpdateInvestigatorColleague(coauthor,investigator.id,citation_overlap,[],0)
+    InsertUpdateInvestigatorColleague(investigator.id,coauthor_id,citation_overlap,[],0)
+    InsertUpdateInvestigatorColleague(coauthor_id,investigator.id,citation_overlap,[],0)
   end
 end

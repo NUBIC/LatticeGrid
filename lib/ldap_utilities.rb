@@ -3,6 +3,7 @@ require 'ldap_config'
 
 def GetLDAPentry(uid)
   return nil if ldap_perform_search().blank? 
+  return nil if uid.blank? 
   ldap_connection = Net::LDAP.new( :host => ldap_host() )
   id_filter = Net::LDAP::Filter.eq( "uid", uid)
   return ldap_connection.search( :base => ldap_treebase(), :filter => id_filter)
@@ -67,7 +68,8 @@ def MergePIrecords(thePI, pi_data)
     thePI.title = pi_data["title"] || thePI.title
     thePI.business_phone = pi_data["telephoneNumber"] || thePI.business_phone
     thePI.employee_id = pi_data["employeeNumber"] || thePI.employee_id
-    thePI.address1 = pi_data["postalAddress"] || thePI.address1
+    thePI.campus_address = pi_data["postalAddress"] || thePI.campus_address
+    thePI.campus_address = thePI.campus_address.split("$").join(13.chr) if !  thePI.campus_address.blank?
     thePI.campus = pi_data["postalAddress"].split("$").last || thePI.campus if ! pi_data["postalAddress"].blank?
     # home_department is no longer a string
     thePI["home"] = pi_data.ou  if pi_data.ou !~ /People/

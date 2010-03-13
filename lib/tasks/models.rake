@@ -43,6 +43,20 @@ task :getAllOrganizationsWithInvestigators => :environment do
   puts "count of all organizations with investigators (including primary appointments) is #{@AllInvestigatorAssociations.length}" if @verbose
 end
 
+task :getAllMembers => :environment do
+  # load all organizations that have an investigator
+  @AllMembers = Investigator.all_members()
+  
+  puts "count of all investigators  with a membership is #{@AllMembers.length}" if @verbose
+end
+
+task :getAllInvestigatorsWithoutMembership => :environment do
+  # load all organizations that have an investigator
+  @InvestigatorsWithoutMembership = Investigator.not_members()
+  
+  puts "count of all investigators  without a membership is #{@InvestigatorsWithoutMembership.length}" if @verbose
+end
+
 task :getAbstracts => :environment do
   # load all abstracts
   @AllAbstracts = Abstract.find(:all, :order => 'id', :include => ["investigator_abstracts","investigators"])
@@ -57,6 +71,12 @@ task :getTags => :environment do
   # load all tags
   @AllTags = Tag.find(:all)
   puts "count of all tags is #{@AllTags.length}" if @verbose
+end
+
+task :getInvestigatorColleagues => :environment do
+  # load all investigator_colleagues
+  @AllInvestigatorColleagues = InvestigatorColleague.find(:all)
+  puts "count of all investigator_colleagues is #{@AllInvestigatorColleagues.length}" if @verbose
 end
 
 task :updateOrganizationAbstractInformation => [:getAllOrganizationsWithInvestigators] do

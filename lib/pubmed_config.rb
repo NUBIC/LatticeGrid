@@ -10,7 +10,7 @@
 # build this to identify all the publications at your institution
 @institutional_limit_search_string = '( "Northwestern University"[affil] OR "Feinberg School"[affil] OR "Robert H. Lurie Comprehensive Cancer Center"[affil] OR "Northwestern Healthcare"[affil] OR "Children''s Memorial"[affil] OR "Northwestern Memorial"[affil] OR "Northwestern Medical"[affil])'
 # these names will always be limited to the institutional search only
-@last_names_to_limit = ["Brown","Chen","Liu","Lu","Lee","Smith","Wang"]
+@last_names_to_limit = ["Brown","Chen","Liu","Lu","Lee","Smith","Wang","Yang","Zhou"]
 # these are for messages regarding the expected number of publications
 @expected_min_pubs_per_year = 1
 @expected_max_pubs_per_year = 30
@@ -23,11 +23,14 @@
 
 # these shouldn't be changed...
 @AllInvestigators = nil
+@AllInvestigatorColleagues = nil
 @AllInvestigatorMeshTags = nil
 @AllAbstractMeshTags = nil
 @AllAbstracts = nil
 @AllPrimaryAppointments = nil
 @AllInvestigatorAssociations = nil
+@InvestigatorsWithoutMembership = nil
+@AllMembers = nil
 @AllOrganziations = nil
 @AllTags = nil
 @all_entries = nil

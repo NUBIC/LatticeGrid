@@ -193,6 +193,7 @@ def CreateProgramMembershipsFromHash(data_row, type='Member')
 	 # FirstName
 	 # email
    last_name = data_row["LastName"]
+   first_name = data_row["FirstName"]
    unit_abbreviation = data_row["Program"]
   email = data_row["email"]
   if unit_abbreviation.blank? || (last_name.blank? and email.blank?) then
@@ -206,8 +207,16 @@ def CreateProgramMembershipsFromHash(data_row, type='Member')
   if investigators.length == 1
     investigator = investigators[0]
   else
-    investigator = Investigator.find_by_email(email)
-  end
+    investigator = Investigator.find_by_email(email.downcase)
+    if investigator.blank? then
+      more_pis = Investigator.find(:all, 
+        :conditions => ["lower(last_name) = :last_name AND lower(first_name) like :first_name",
+           {:last_name => last_name.downcase, :first_name => "#{first_name.downcase}%"}])
+      if more_pis.length == 1
+        investigator = more_pis[0]
+      end
+    end
+   end
   if  program.blank? then
      puts "Could not find Organization. datarow="+data_row.inspect
      return
@@ -256,3 +265,10 @@ def doCleanInvestigators(investigators)
     pi.save!
   end
 end
+
+def purgeNonMembers(investigators)
+  investigators.each do |pi|
+    pi.delete
+  end
+end
+  

@@ -59,6 +59,15 @@ rake environment RAILS_ENV=production importInvestigators file=db/imports/cinj_f
 rake importProgramMembership  file=db/imports/RHLCCCProgramMemberships.txt
 rake environment RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCCProgramMemberships.txt
 
+rake getAllMembers  
+rake environment RAILS_ENV=production getAllMembers
+
+rake purgeNonMembers
+rake environment RAILS_ENV=production purgeNonMembers
+
+rake getAllInvestigatorsWithoutMembership  
+rake environment RAILS_ENV=production getAllInvestigatorsWithoutMembership
+
 #insert ISI Web of Science Journal impact factor ratings
 # you can download the ISI Journal Citation Records and process them
 # http://admin-apps.isiknowledge.com/JCR/JCR

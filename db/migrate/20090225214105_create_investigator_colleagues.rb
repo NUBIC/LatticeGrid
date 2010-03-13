@@ -21,6 +21,7 @@ class CreateInvestigatorColleagues < ActiveRecord::Migration
     add_foreign_key(:investigators, :id, :investigator_colleagues)
     add_index(:investigator_colleagues, [:colleague_id, :investigator_id, :publication_cnt], :name => 'by_colleague_pubs')
     add_index(:investigator_colleagues, [:colleague_id, :investigator_id, :mesh_tags_ic], :name => 'by_colleague_mesh_ic')
+    add_index(:investigator_colleagues, [:mesh_tags_ic], :name => 'mesh_tags_ic')
     add_index(:investigator_colleagues, [:colleague_id, :investigator_id], :name => 'by_colleague_investigator', :unique => true)
   end
 

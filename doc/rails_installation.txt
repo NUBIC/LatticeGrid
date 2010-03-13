@@ -70,3 +70,15 @@ sudo gem install prawn
 
 # a simpler pdf generater
 sudo gem install pdf-writer
+
+
+#install PrinceXML and princely
+
+http://www.princexml.com/download/
+tar zxf filename.tar.gz
+script/plugin install git://github.com/mbleigh/princely.git
+
+# install bioruby to make the calls to pubmed
+sudo gem install bioruby
+sudo gem sources -a http://gems.github.com
+sudo gem install mislav-will_paginate

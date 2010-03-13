@@ -1,22 +1,24 @@
 class Investigator < ActiveRecord::Base
+  acts_as_taggable  # for MeSH terms
+
   has_many :investigator_abstracts
   has_many :investigator_colleagues
   has_many :similar_investigators, 
       :class_name => "InvestigatorColleague", 
       :include => [:colleague], 
-      :conditions => ['investigator_colleagues.publication_cnt=0'], 
+      :conditions => ['investigator_colleagues.publication_cnt=0 and investigator_colleagues.mesh_tags_ic > 500'], 
       :limit=>15,
       :order=>'mesh_tags_ic desc'
   has_many :all_similar_investigators, 
       :class_name => "InvestigatorColleague", 
       :include => [:colleague], 
-      :conditions => ['investigator_colleagues.publication_cnt=0'], 
-      :order=>'mesh_tags_ic desc'
+      :conditions => ['investigator_colleagues.mesh_tags_ic > 500'], 
+      :order=>'investigator_colleagues.mesh_tags_ic desc'
   has_many :co_authors, 
       :class_name => "InvestigatorColleague", 
       :include => [:colleague], 
       :conditions => ['investigator_colleagues.publication_cnt>0'], 
-      :order=>'mesh_tags_ic desc'
+      :order=>'investigator_colleagues.publication_cnt desc'
   has_many :colleagues, :through => :investigator_colleagues
   has_many :abstracts, :through => :investigator_abstracts
   has_many :investigator_abstracts_meshes
@@ -35,7 +37,7 @@ class Investigator < ActiveRecord::Base
   has_many :memberships, :source => :organizational_unit, :through => :member_appointments
   belongs_to :home_department, :class_name => 'OrganizationalUnit'
 
-  acts_as_taggable  # for MeSH terms
+  #default_scope :order => 'lower(investigators.last_name),lower(investigators.first_name)'
 
   validates_uniqueness_of :username
   validates_presence_of :username
@@ -87,6 +89,15 @@ class Investigator < ActiveRecord::Base
   
   def self.distinct_all_appointments_and_memberships()
     (distinct_other_appointments_or_memberships()+distinct_primary_appointments()).uniq.compact
+  end
+  
+  def self.all_members()
+      find(:all, :joins => [:investigator_appointments], :conditions=>"type='Member'")
+  end
+
+  def self.not_members()
+    allmembers  = self.all_members()
+    find(:all, :conditions=>["id not in (:all)", {:all => allmembers}])
   end
   
 # used in the rake tasks to add to the investigator object attributes

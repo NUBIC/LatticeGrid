@@ -7,6 +7,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :orgs, :only => [:index, :show], :collection => { :stats => :get, :list => :get, :centers => :get, :departments => :get, :programs => :get }, 
     :member => {:full_show => :get, :show_investigators => :get, :list_abstracts_during_period_rjs => :post }
   map.resources :investigators, :only => [:index, :show], :member => {:full_show => :get, :show_all_tags => :get}, :collection => { :list_all => :get }
+  map.resources :copublications, :only => [:show], :member => {:investigator_colleagues => :get}
 
 # manually added rjs routes to enforce .js format
   map.tag_cloud_side_investigator '/investigators/:id/tag_cloud_side.js', :action=>"tag_cloud_side", :controller=>"investigators",  :conditions => { :method => :get }
@@ -19,6 +20,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :abstracts, :only => [:index, :show], :collection => { :search => [:get, :post], :ccsg => :get, :tag_cloud => :get },
     :member => {:full_year_list => :get, :endnote => :get, :full_tagged_abstracts => :get, :tagged_abstracts => [:get, :post] }
   map.resources :graphs, :only => [:none], :member => {:show_member => :get, :show_org => :get}
+  map.resources :graphviz, :only => [:none], :member => {:show_member => :get, :show_member_mesh => :get, :show_org_mesh => :get, :show_org => :get}
 
   map.connect 'orgs/abstracts_during_period/:id', :controller => 'orgs', :action => 'abstracts_during_period'
   map.connect 'ccsg', :controller => 'abstracts', :action => 'ccsg', :conditions => { :method => :get }
@@ -31,6 +33,11 @@ ActionController::Routing::Routes.draw do |map|
   map.high_impact 'high_impact', :controller => 'abstracts', :action => 'high_impact', :conditions => { :method => :get }
   map.org_nodes 'org_nodes/:id', :controller => 'graphs', :action => 'org_nodes' #need this for some of the flash xml calls
   map.member_nodes 'member_nodes/:id', :controller => 'graphs', :action => 'member_nodes' #need this for some of the flash xml calls
+
+  map.send_graphviz_image 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:program.:format', :controller => 'graphviz', :action => 'send_graphviz_image'
+  map.restless_graphviz 'get_graphviz/', :controller => 'graphviz', :action => 'get_graphviz'
+#  map.graphviz 'graph/:id/graphviz/:distance/:stingency/:program.:format', :controller => 'graphviz', :action => 'graphviz'
+
   map.connect ':controller/:id/:action/:page'
   map.connect ':controller/:id/:action'  #need this for some of the rjs calls and the sparklines
 

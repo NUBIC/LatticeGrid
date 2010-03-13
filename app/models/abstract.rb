@@ -10,6 +10,11 @@ class Abstract < ActiveRecord::Base
   validates_uniqueness_of :pubmed
   acts_as_taggable  # for MeSH terms
 
+  def self.co_authors(abstracts)
+    author_ids=abstracts.collect{|ab| ab.investigator_abstracts.collect(&:investigator_id)}.flatten.sort.uniq
+    Investigator.find(:all, :conditions =>  ["id IN (:author_ids)", 
+      {:author_ids => author_ids }], :order => "lower(last_name), lower(first_name)" )
+  end
   def self.annual_data( years)
     conditions = "year IN (#{Journal.yearstring(years)}) "
     find(:all,

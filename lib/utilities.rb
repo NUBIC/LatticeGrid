@@ -23,6 +23,7 @@ def human_timing(elapsed_seconds)
 end
 
 def block_timing (taskname="task")
+  puts "starting #{taskname}" if @verbose
   start = Time.now
   yield
   stop = Time.now

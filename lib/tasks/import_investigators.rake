@@ -74,3 +74,9 @@ task :cleanInvestigatorsUsername => :environment do
      doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%.%'"))
    }
 end
+
+task :purgeNonMembers => :getAllInvestigatorsWithoutMembership do
+   block_timing("purgeNonMembers") {
+     purgeNonMembers(@InvestigatorsWithoutMembership)
+   }
+end

@@ -12,6 +12,7 @@ end
   
 def CleanMeshTerm(mesh_term)
   # mesh terms appear to be composite - term root plus one or more categories. For now strip off everything after root
+  return [] if mesh_term !~ /\*/
   mesh_array = mesh_term.split(/\//).collect{ |a| a.gsub(/\*/,'')}
   mesh_array.delete("Humans")
   mesh_array.delete("Animals")
@@ -51,36 +52,77 @@ def SetTaggings(tag_id,taggable_type, information_content)
 end
 
 def SetMeshInformationContent(tag)
+  # lets assume that the information content follows a normal distribution, with most tags having little information. Need to normalize to 100
+  # Math.log10(@total_tagged_publications) is the largest possible number. For the cancer center the number is about 8000 pubs with MeSH tags
   tag_id=GetTag(tag)
-  abstracts_count=Abstract.find_tagged_with(tag).length
-  if abstracts_count > 0
-  information_content = @total_tagged_publications/abstracts_count
-  else
-    information_content = 0
+  tagged_abstracts_count=Abstract.find_tagged_with(tag).length
+  information_content = 0
+  if tagged_abstracts_count > 0
+    information_content = 500/(tagged_abstracts_count+4)
   end
   SetTaggings(tag_id,'Abstract',information_content)
   tagged_investigator_count=Investigator.find_tagged_with(tag).length
+  information_content = 0
   if tagged_investigator_count > 0
-  information_content = @total_investigators/tagged_investigator_count
-  else
-    information_content = 0
+    information_content = 500/(tagged_investigator_count+4)
   end
   SetTaggings(tag_id,'Investigator',information_content)
 end
 
-def CalculateMeSHinformationContent(mesh_array)
+def GetSumTaggedInformationContent(mesh_tag_ids, tag_type, single_id)
+  Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id = :taggable_id", {:tag_type => tag_type, :taggable_id => single_id, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+end
+
+
+def GetSumTagInformationContent(mesh_tag_ids, tag_type, abstract_ids)
+  Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+end
+
+def CalculateMeSHinformationContent(investigator,colleague, mesh_tag_ids)
+  # these two methods are similar except the tag_list calls the database
+  # for all FSM takes about 4 minutes per 10 investigators
+
+  if mesh_tag_ids.length < 1
+    return 0
+  end
+  abstract_ids1 = investigator.abstracts.collect(&:id)
+  abstract_ids2 = colleague.abstracts.collect(&:id)
+  if abstract_ids1.length < 1 or abstract_ids2.length < 1
+    return 0
+  end
+
+  # let us assume that Abstract.tag.information_content is a log normalized 0-100 value based on the total 
+  # number of articles indexed/number with this tag. That is, if every publication had a given tag, its information
+  # content would be zero. For a compendium of 10,000 tagged articles, if a tag was found in 5000 it would have a 
+  # score of 7.5. If  1000 were tagged, it would be 25. If 100 were tagged it would have a score of 50. If 10 were tagged 
+  # it would have a score of 75. If only one was tagged, it would have a score of 100
+  # this may overly penalize rare MeSH terms and over-represent middle-ranked MeSH terms. 
+  
+  # Now for a given comparison, we intersect the tag clouds for the investigators:
+  #this is already unique
+  
+  # Now sum up the number of each tags for each investigator
+
+  ic1 = GetSumTagInformationContent(mesh_tag_ids, "Abstract", abstract_ids1)
+  ic2 = GetSumTagInformationContent(mesh_tag_ids, "Abstract", abstract_ids2)
+  ic_pi = GetSumTaggedInformationContent(mesh_tag_ids, "Investigator", investigator.id)
+  (ic1*ic1+ic2*ic2)/(ic_pi+abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length)
+
+end
+
+def CalculateMeSHinformationContent_old(mesh_array)
   # takes about 4 minutes per 10 investigators for all FSM
   ic=0
   mesh_array.each do |tag|
     mesh_abstract_ic=@AllAbstractMeshTags.find{|x| x.name == tag}.information_content
     mesh_investigator_ic=@AllInvestigatorMeshTags.find{|x| x.name == tag}.information_content
-     ic+=mesh_abstract_ic
+    ic+=mesh_abstract_ic
     ic+=mesh_investigator_ic
   end
   ic
 end
 
-def CalculateMeSHinformationContent_old(mesh_array)
+def CalculateMeSHinformationContent_older(mesh_array)
   # takes about 6 minutes per 10 investigators for all FSM
   ic=0
   mesh_array.each do |tag|
@@ -92,7 +134,7 @@ def CalculateMeSHinformationContent_old(mesh_array)
   ic
 end
 
-def InvestigatorColleagueInclusionCriteria(citation_overlap,mesh_overlap,mesh_information_content)
+def InvestigatorColleagueInclusionCriteria(citation_overlap,mesh_information_content)
   if (citation_overlap != [] && !citation_overlap.last.blank?)
     # always include if they copublish
     return true
@@ -102,7 +144,23 @@ def InvestigatorColleagueInclusionCriteria(citation_overlap,mesh_overlap,mesh_in
     # at an ic > 200 there are still 150,000 entries, and at 500 there are 100,000 entries. At 1000 there are 66,000 entries
     # so for an ic > 500 there are still 50 entries per person on average. The number is slightly higher, as only 1500 of the 2100
     # fsm members have publications in PubMed
-  if (mesh_information_content > 2000) then
+    
+    # for the latest log based information content analysis for RHLCCC, there are 77373 full entries for 280 members of these, all had at least an ic of 50. 73102 had an ic of 500
+    # 68000 had a ic of >1000
+    # 60300 had an ic of >2000
+    # 42000 had an ic of >5000
+    # 24000 had an ic of >10000
+    # 8500 had an ic of >20000
+    # 720 had an ic > 50000
+    # 40 had an ic > 100000
+    
+    # latest score is a bit different. 10,000 is very high score
+    #110 had an ic > 20,000
+    #320 had an ic > 10,000
+    
+    
+    # for now cut at 10000
+  if (mesh_information_content > 500) then
     return true
   end
   return false
@@ -116,20 +174,14 @@ def BuildInvestigatorColleague(investigator, colleague, update_only=true)
   end
   citation_overlap = investigator.abstracts.collect{|x| x.id}.flatten & colleague.abstracts.collect{|x| x.id}.flatten
   citation_overlap = citation_overlap.uniq.compact
-  # these two methods are similar except the tag_list calls the database
-  # for all FSM takes about 4 minutes per 10 investigators
-  mesh_overlap = investigator.abstracts.collect{|x| x.tag_list}.flatten & colleague.abstracts.collect{|x| x.tag_list}.flatten
-  # this one does a lot of processing and is slower about 5 minutes per 10 investigators
-  # mesh_overlap = investigator.abstracts.collect{|x| CleanMeshTerms(x.mesh.split(";\n"))}.flatten & colleague.abstracts.collect{|x| CleanMeshTerms(x.mesh.split(";\n"))}.flatten
-  mesh_overlap = mesh_overlap.uniq.compact
-  mesh_information_content=0
-  if (mesh_overlap.length != [] && !mesh_overlap.last.blank?) then
-     mesh_information_content=CalculateMeSHinformationContent(mesh_overlap)
-  end
-  if InvestigatorColleagueInclusionCriteria(citation_overlap,mesh_overlap,mesh_information_content) then
-    InsertUpdateInvestigatorColleague(investigator.id,colleague.id,citation_overlap,mesh_overlap,mesh_information_content)
+  mesh_tag_ids = investigator.abstracts.collect{|x| x.tags.collect(&:id)}.flatten & colleague.abstracts.collect{|x| x.tags.collect(&:id)}.flatten
+  
+  mesh_information_content=CalculateMeSHinformationContent(investigator, colleague, mesh_tag_ids)
+
+  if InvestigatorColleagueInclusionCriteria(citation_overlap,mesh_information_content) then
+    InsertUpdateInvestigatorColleague(investigator.id,colleague.id,citation_overlap,mesh_tag_ids,mesh_information_content)
     #repeat as inverse
-    InsertUpdateInvestigatorColleague(colleague.id,investigator.id,citation_overlap,mesh_overlap,mesh_information_content) 
+    InsertUpdateInvestigatorColleague(colleague.id,investigator.id,citation_overlap,mesh_tag_ids,mesh_information_content) 
     #puts "Found relationship: #{investigator.name} and #{colleague.name}: citations: #{citation_overlap.join(', ')}; mesh_ic: #{mesh_information_content} " if @verbose && citation_overlap.length > 0 
   end
 end
@@ -147,13 +199,11 @@ end
 
 def UpdateInvestigatorColleague(ir,citation_overlap,mesh_overlap,mesh_information_content )
   begin 
-    if ir.updated_at < 7.days.ago
-     ir.mesh_tags_cnt = mesh_overlap.length
-     ir.mesh_tags_ic = mesh_information_content
-     ir.publication_cnt = citation_overlap.length
-     ir.publication_list = citation_overlap.join(',')
-     ir.save!
-   end
+    ir.mesh_tags_cnt = mesh_overlap.length
+    ir.mesh_tags_ic = mesh_information_content
+    ir.publication_cnt = citation_overlap.length
+    ir.publication_list = citation_overlap.join(',')
+    ir.save!
   rescue ActiveRecord::RecordInvalid
     if ir.nil? then # something bad happened
       puts "UpdateInvestigatorColleague: unable to find a reference "

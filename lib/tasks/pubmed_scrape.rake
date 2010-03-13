@@ -89,6 +89,14 @@ task :updateInvestigatorInformation => [:getInvestigators] do
   }
 end
 
+task :buildCoauthors => [:getInvestigators] do
+  # insert all the co-publication data for all authors
+  block_timing("BuildCoauthors") {
+    row_iterator(@AllInvestigators, 0, 50) { |investigator|
+      BuildCoauthors(investigator)
+    }
+  }
+end
 
 task :getInstitutionalPubmedIDs => :environment do
   # get all pubmed IDs using the following keywords:

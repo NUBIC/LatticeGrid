@@ -52,6 +52,10 @@ class OrganizationalUnit < ActiveRecord::Base
     def self.menu_nodes(abbreviation)
       @@menu_nodes ||= OrganizationalUnit.find_by_abbreviation( abbreviation ).self_and_descendants
     end
+ 
+    def all_members
+      self.self_and_descendants.collect{|unit| unit.members}.flatten.uniq
+    end
     
     def abstract_data( page=1 )
        self.abstracts.paginate(:page => page,

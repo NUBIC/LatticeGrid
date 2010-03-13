@@ -42,7 +42,9 @@
 		<%= email_link(investigator.email) %>
 	</td>
 	<td class="list-center">
-		&nbsp; &nbsp; <%= link_to 'Graph', show_member_graph_path(investigator.username)  %>
+		 <%= link_to( 'Flash', show_member_graph_path(investigator.username)) + "&nbsp;" +
+		 link_to( 'GraphViz', show_member_graphviz_path(investigator.username)) + "&nbsp;" +
+		 link_to( 'MeSH', show_member_mesh_graphviz_path(investigator.username) ) %>
 	</td>
 	</tr>
 <% end%>

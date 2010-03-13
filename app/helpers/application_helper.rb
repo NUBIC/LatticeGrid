@@ -36,6 +36,11 @@ module ApplicationHelper
     string.downcase.gsub(/\b\w/) { $&.upcase } 
   end 
 
+  def truncate_words(phrase, count=20) 
+    re = Regexp.new('^(.{'+count.to_s+'}\w*)(.*)', Regexp::MULTILINE)
+    phrase.gsub(re) {$2.empty? ? $1 : $1 + '...'}
+  end
+
   def abstracts_per_year(abstracts, year_array)
     years=Array.new(year_array.length, 0)
     first_year = year_array[0]
@@ -81,7 +86,7 @@ module ApplicationHelper
   end
   
   def link_to_similar_investigators(relationships, delimiter=", ")
-    relationships.collect{|relationship| link_to( "#{relationship.colleague.name} <span class='simularity'>#{(relationship.mesh_tags_ic/10).round}</span>", 
+    relationships.collect{|relationship| link_to( "#{relationship.colleague.name} <span class='simularity'>#{relationship.mesh_tags_ic.round}</span>", 
       show_investigator_path(:id=>relationship.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
         :title => " #{relationship.colleague.total_pubs} pubs, "+(relationship.colleague.num_intraunit_collaborators+relationship.colleague.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
   end
@@ -200,4 +205,31 @@ module ApplicationHelper
           		:subject => email_subject(),
           		:encode => "javascript") 
   end
+  
+  def handle_ldap(applicant)
+    begin
+      pi_data = GetLDAPentry(applicant.username)
+      logger.warn("dump of pi_data: #{pi_data.inspect}")
+      if pi_data.nil?
+        logger.warn("Probable error reaching the LDAP server in GetLDAPentry: GetLDAPentry returned null using netid #{applicant.username}.")
+      elsif pi_data.blank?
+          logger.warn("Entry not found. GetLDAPentry returned null using netid #{applicant.username}.")
+      else
+        ldap_rec=CleanPIfromLDAP(pi_data)
+        applicant = BuildPIobject(ldap_rec) if applicant.id.blank?
+        applicant=MergePIrecords(applicant,ldap_rec)
+      end
+     rescue Exception => error
+      logger.error("Probable error reaching the LDAP server in GetLDAPentry: #{error.message}")
+    end
+    applicant
+  end
+    
+	def hidden_div_if(condition, attributes = {}, &block)
+    if condition 
+      attributes["style"] = "display: none;"
+    end
+    content_tag("div", attributes, &block)
+  end
+
 end

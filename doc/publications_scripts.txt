@@ -30,16 +30,6 @@ rake RAILS_ENV=production updateAbstractInvestigators
 rake updateInvestigatorInformation
 rake RAILS_ENV=production updateInvestigatorInformation
 
-#create tags from MeSH data for each abstract
-# runs in 50 minutes
-rake tagAbstractsWithMeshTerms
-rake RAILS_ENV=production tagAbstractsWithMeshTerms
-
-#create tags from MeSH data for each investigator
-# runs in 25 minutes
-rake tagInvestigatorsWithMeshTerms
-rake RAILS_ENV=production tagInvestigatorsWithMeshTerms
-
 #update publication information for each organization
 # runs in about 1 minute
 rake updateOrganizationAbstractInformation
@@ -50,11 +40,23 @@ rake RAILS_ENV=production updateOrganizationAbstractInformation
 rake nightlyBuild
 rake RAILS_ENV=production nightlyBuild
 
+#create tags from MeSH data for each abstract
+# runs in 50 minutes
+rake tagAbstractsWithMeshTerms
+rake RAILS_ENV=production tagAbstractsWithMeshTerms
+
+#create tags from MeSH data for each investigator
+# runs in 25 minutes
+rake tagInvestigatorsWithMeshTerms
+rake RAILS_ENV=production tagInvestigatorsWithMeshTerms
+
+
 # build the information content values for each tag
 # about 60 minutes for FSM wih 46000 abstracts and 12000 tags
 # before vacuuming the database, it was processing about 1000 tags in 40 minutes. After vacuuming, it was 1000 tags in 3.5 minutes
 # finished all 12,000 tags in less than 60 minutes
 rake attachMeshInformationContent
+rake RAILS_ENV=production attachMeshInformationContent
 
 # build the investigator association files
 # 4 minutes per 10 investigators, 130/hour, about 20 hours for the complete group
@@ -63,6 +65,7 @@ rake attachMeshInformationContent
 # current FSM faculty list of 3700 faculty, 12000 tags takes about 20 hours
 
 rake buildInvestigatorColleagues
+rake RAILS_ENV=production buildInvestigatorColleagues
 
 # something to do weekly and several times during the initial build is:
 
