@@ -1,0 +1,74 @@
+<% params[:program] ||= "fdp" %>
+<% params[:analysis] ||= "member" %>
+<% if params[:analysis].include?("org") and params[:analysis].include?("mesh") %>
+	<% params[:stringency] ||= "1000" %>
+<% end %>
+<% if params[:analysis].include?("org") %>
+	<% params[:stringency] ||= "3" %>
+<% end %>
+<% if params[:analysis].include?("mesh") %>
+	<% params[:stringency] ||= "1000" %>
+	<% params[:stringency] = "1000" if params[:stringency].to_i < 500 %>
+<% end %>
+<% params[:id] ||= "str" %>
+<% params[:format] ||= "svg" %>
+<% params[:distance] ||= "1" %>
+<% params[:stringency] ||= "1" %>
+<% params[:include_orphans] ||= "0" %>
+
+<% if params[:format] == "svg" %>
+	<%= render( :partial => "svg_javascript" ) %>
+<% end %>
+
+<!-- this requires a params[:id] to be valid -->
+<form onsubmit="return false">
+	<%=  hidden_field_tag :username,  params[:id] %>
+	<%=  hidden_field_tag :analysis,  params[:analysis] %>
+	<%= select_tag(:program, 
+			options_for_select([["neato", "neato"], ["dot", "dot"], ["twopi","twopi"], ["circo","circo"], ["fdp","fdp"]], [params[:program]]),  
+		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans') }
+	) %>
+	<%= select_tag(:format, 
+			options_for_select([["pdf", "pdf"], ["png", "png"], ["svg", "svg"]], [params[:format]]),  
+		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans') }
+	) %>
+	Distance: <%= select_tag(:distance, 
+			options_for_select([["One","1"], ["Two","2"]], [params[:distance]]),  
+		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans') }
+	 ) %>
+	<% if params[:analysis].include?("mesh")%>
+		MeSH Stringency: <%= select_tag(:stringency, 
+			options_for_select([[">500","500"], [">1000","1000"], [">2,000","2000"], [">3,000","3000"], [">4,000","4000"], [">5,000","5000"], [">6,000","6000"]],
+				 [params[:stringency]]),  
+		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans') }
+	 ) %>
+	<% else %>
+	Stringency: <%= select_tag(:stringency, 
+			options_for_select([["One","1"], ["Two","2"], ["Three","3"], ["Four","4"], ["Five","5"], ["Six","6"], ["Seven","7"], ["Eight","8"]],
+				[params[:stringency]]),  
+		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans') }
+	 ) %>
+	<% end %>
+	Include orphaned nodes:<%=  check_box_tag( :include_orphans,  1, params[:include_orphans] != "0", 
+		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans')} ) %> &nbsp; 
+	
+</form>
+ &nbsp; 
+<%= link_to( 'Download the SVG graph',
+      send_graphviz_image_path(params[:id],params[:analysis],params[:distance],params[:stringency],params[:include_orphans],params[:program],params[:format] ),
+      :id => 'download_graph', :target=>'_blank') %>
+
+<div id="member"> 
+	<div id="graph"></div>
+</div>
+
+<% javascript_tag do %>
+	<%= graphviz_remote_function('graph', 'program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans') %>
+	$('download_graph').observe('click', function(event){
+		var thelink=document.getElementById('download_graph');
+		var base_url = '<%= image_path("../send_graphviz_image") -%>';
+		var full_url = base_url + "/"+$('username').getValue() +"/"+$('analysis').getValue() +"/"+$('distance').getValue() +"/"+$('stringency').getValue() +"/"+$('include_orphans').getValue() +"/"+$('program').getValue() +"."+$('format').getValue();
+		thelink.href = full_url;
+		return true;
+	});
+<% end %>

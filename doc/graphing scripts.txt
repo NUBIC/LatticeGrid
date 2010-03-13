@@ -1,0 +1,14 @@
+#graphing using graphiz
+
+#built dependencies in the graphviz_controller.rb  and the library file graph_generator.rb
+
+# and a template to build a graphviz graph
+
+graphviz_template
+
+script/generate controller copublications
+
+
+#mesh and mesh_ic
+
+Added mesh_ic to Abstracts to allow each abstract to have its own ic total

@@ -1,0 +1,1 @@
+<%= graph_method(@output_format, @file_name, @content_type) %>

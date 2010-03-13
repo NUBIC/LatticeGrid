@@ -1,0 +1,29 @@
+<% @include_mesh=true if @include_mesh.nil? %>
+<% @include_mesh=false if ! @include_all_mesh.nil? %>
+<% @include_all_mesh=false if @include_all_mesh.nil? %>
+<% @include_graph_link=true if @include_graph_link.nil? %>
+<% @show_paginator=true if @show_paginator.nil? %>
+
+<% @include_investigators=false if @include_investigators.nil? %>
+<% @include_pubmed_id = false if @include_pubmed_id.nil? %>
+<% @include_collab_marker = false if @include_collab_marker.nil? %>
+
+<% if ! @abstracts.nil? %>
+
+<h2> Shared publications between <i><%= @investigator_colleague.investigator.name %></i> and <i><%= @investigator_colleague.colleague.name %></i>
+</h2>
+
+<table class="borderless">
+<tr valign="top">
+	<td width="800px">
+		<%= render :partial => "shared/abstract_listing", :locals => { :abstracts => @abstracts, :do_pagination => @do_pagination, :heading => "Publications (#{@total_entries})", :show_paginator => @show_paginator, :include_investigators => @include_investigators, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker  } %>
+	</td>
+	<td>
+		<h3>Co-Authors:</h3> 
+		<div id="collaborators">
+		<%= link_to_collaborators(Abstract.co_authors(@abstracts), "<br/>") %>
+		</div>
+	</td>
+</tr>
+</table>
+<% end %>

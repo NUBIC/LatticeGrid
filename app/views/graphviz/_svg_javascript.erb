@@ -1,0 +1,12 @@
+<%= javascript_include_tag 'svgcheck' %> 
+<script type="text/vbscript" language="VBScript" >
+Function isSVGControlInstalled()
+	on error resume next
+	isSVGControlInstalled = IsObject(CreateObject("Adobe.SVGCtl"))
+end Function
+</script>
+<script type="text/javascript" language="JavaScript">
+<!--
+	checkAndGetSVGViewer();
+	// -->
+</script>
