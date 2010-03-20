@@ -1,0 +1,37 @@
+<h1><%= @heading %></i></h1>
+
+The following is a list of collaborative publications between the following units. <br/>
+
+<% unit_names = @units.collect(&:name) %>
+<% unit_ids   = @units.collect(&:id) %>
+
+<div id="listing">
+  
+<table cellpadding="2" cellspacing="0" class="borderless"> 
+<tr valign="bottom" colspan="3">
+	<td class="list-title-left">
+		&nbsp;	
+	</td>
+	<% for unit in unit_names %>
+	<td class="list-title-left">
+		<%= unit %>
+	</td>
+	<% end %>
+</tr>
+
+<% for unit in @units %>
+	<tr valign="bottom" colspan="3">
+		<td>
+			<%= unit.name %>
+		</td>
+		<% for unit_id in unit_ids %>
+			<td class="list-title-left">
+				<%= unit.collaboration_matrix[unit_id].length %>
+			</td>
+		<% end %>
+	</tr>
+<% end %>
+</table>
+<br/>
+
+</div>
