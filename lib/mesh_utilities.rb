@@ -51,22 +51,18 @@ def SetTaggings(tag_id,taggable_type, information_content)
   Tagging.update_all( {:information_content => information_content}, {:tag_id => tag_id, :taggable_type => taggable_type})
 end
 
-def SetMeshInformationContent(tag)
+
+def SetMeshInformationContent(tag_count, total_count, taggable_type)
   # lets assume that the information content follows a normal distribution, with most tags having little information. Need to normalize to 100
   # Math.log10(@total_tagged_publications) is the largest possible number. For the cancer center the number is about 8000 pubs with MeSH tags
-  tag_id=GetTag(tag)
-  tagged_abstracts_count=Abstract.find_tagged_with(tag).length
+  # 500*(1-tagged_count/total_count)
+  tag_id=GetTag(tag_count.name)
+  tagged_count=tag_count.count
   information_content = 0
-  if tagged_abstracts_count > 0
-    information_content = 500/(tagged_abstracts_count+4)
+  if tagged_count > 0
+    information_content = (500.0 * (1.0 - tagged_count.to_f/total_count)).round
   end
-  SetTaggings(tag_id,'Abstract',information_content)
-  tagged_investigator_count=Investigator.find_tagged_with(tag).length
-  information_content = 0
-  if tagged_investigator_count > 0
-    information_content = 500/(tagged_investigator_count+4)
-  end
-  SetTaggings(tag_id,'Investigator',information_content)
+  SetTaggings(tag_id,taggable_type,information_content)
 end
 
 def GetSumTaggedInformationContent(mesh_tag_ids, tag_type, single_id)
@@ -101,12 +97,18 @@ def CalculateMeSHinformationContent(investigator,colleague, mesh_tag_ids)
   # Now for a given comparison, we intersect the tag clouds for the investigators:
   #this is already unique
   
+  #(ic1*ic1+ic2*ic2)/(ic_pi+abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length)
+  
+  
   # Now sum up the number of each tags for each investigator
 
   ic1 = GetSumTagInformationContent(mesh_tag_ids, "Abstract", abstract_ids1)
   ic2 = GetSumTagInformationContent(mesh_tag_ids, "Abstract", abstract_ids2)
   ic_pi = GetSumTaggedInformationContent(mesh_tag_ids, "Investigator", investigator.id)
-  (ic1*ic1+ic2*ic2)/(ic_pi+abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length)
+  
+  #simplify as 
+  # ic1+ic2+(2*ic_pi)
+  (ic1+ic2+(2*ic_pi)).round
 
 end
 
@@ -166,12 +168,37 @@ def InvestigatorColleagueInclusionCriteria(citation_overlap,mesh_information_con
   return false
 end
 
+def AnalyzeInvestigatorColleague(investigator, update_only=true)
+  
+  # this is the call that converts the problem from an N squared to a linear problem!
+  tag_ids = investigator.tags.collect(&:id)
+  return if tag_ids.blank?
+  ic_tags = Investigator.information_cloud(tag_ids, :limit=>250)
+  
+  ic_tags.each do |ic_tag|
+    next if ic_tag.taggable_id.to_i == investigator.id.to_i
+    return if ic_tag.total.to_i < 500
+    colleague = Investigator.find(ic_tag.taggable_id)
+    BuildInvestigatorColleague(investigator, colleague, update_only)
+  end
+end
+
+
 def BuildInvestigatorColleague(investigator, colleague, update_only=true)
+  
   if update_only && !InvestigatorColleague.find( :first,
     :conditions => [" investigator_id = :investigator_id AND colleague_id = :colleague_id",
         {:investigator_id => investigator.id, :colleague_id => colleague.id}]).nil?
     return
   end
+  
+  
+  #pi = Investigator.find(174)
+  #tag_ids = pi.tags.collect(&:id)
+  #Investigator.information_cloud(tag_ids, :limit=>30).collect(&:taggable_id)
+  #Investigator.information_cloud(tag_ids, :limit=>30).collect(&:total)
+  #Investigator.information_cloud(tag_ids, :limit=>30).collect(&:count)
+
   citation_overlap = investigator.abstracts.collect{|x| x.id}.flatten & colleague.abstracts.collect{|x| x.id}.flatten
   citation_overlap = citation_overlap.uniq.compact
   mesh_tag_ids = investigator.abstracts.collect{|x| x.tags.collect(&:id)}.flatten & colleague.abstracts.collect{|x| x.tags.collect(&:id)}.flatten
@@ -230,3 +257,21 @@ def InsertInvestigatorColleague(investigator_id,colleague_id,citation_overlap,me
   end
 end
 
+def find_cutoff(initial_number, ideal_number)
+  mesh_cutoff = 2000
+  #do we need to adjust up or down
+  if initial_number > ideal_number
+    while initial_number > ideal_number
+      mesh_cutoff += 200
+      initial_number = InvestigatorColleague.find(:all, 
+              :conditions => ['investigator_colleagues.mesh_tags_ic > :mesh_cutoff', {:mesh_cutoff => mesh_cutoff}]).count
+    end
+  else
+    while initial_number < ideal_number
+      mesh_cutoff -= 200
+      initial_number = InvestigatorColleague.find(:all, 
+              :conditions => ['investigator_colleagues.mesh_tags_ic > :mesh_cutoff', {:mesh_cutoff => mesh_cutoff}]).count
+    end
+  end
+  mesh_cutoff
+end

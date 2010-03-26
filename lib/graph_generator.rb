@@ -40,11 +40,11 @@ def graph_output( g, path, file_name, output_format )
   output_format = 'svg' if output_format == 'xml'
   check_path(path)
   begin
-    logger.error("path is #{path}; filename is #{file_name}, outputformat is #{output_format}.")
     Dir.entries(path)
     g.output( output_format => path+file_name+"."+output_format )
   rescue Exception => error
     logger.error("graph_output error: #{error.message}")
+    logger.error("path is #{path}; filename is #{file_name}, outputformat is #{output_format}.")
     puts "unable to link to directory #{path} or write out file"
   end
 
@@ -167,6 +167,12 @@ def graph_addedge(graph, parent, child, url, tooltip, label, weight )
               :weight => weight  )
 end
 
+def edge_label(connection, root, leaf)
+  "#{connection.publication_cnt} shared publications between #{leaf.name} and #{root.name}; " + 
+  "MeSH similarity score: #{connection.mesh_tags_ic.round}; " + 
+  "tags: "+ trunc_and_join_array((root.tag_list & leaf.tag_list))
+end
+
 def graph_add_nodes(program, g, connections, mesh_only=false, node_opts={}, edege_opts={} )
 #    g.add_node(plant[0]).label = plant[1]+"\\n"+ plant[2]+", "+plant[3]+"\\n("+plant[0]+")"
   @graph_edges ||= {}
@@ -184,10 +190,10 @@ def graph_add_nodes(program, g, connections, mesh_only=false, node_opts={}, edeg
       leaf_node = graph_addleaf(g, leaf, nopts) if leaf_node.nil?  # leaf_node = graph_addleaf(g, leaf, node_opts)
       @graph_edges << "#{root.id}_#{leaf.id}"
       @graph_edges << "#{leaf.id}_#{root.id}"
-      tooltiptext = "#{connection.publication_cnt} Shared publications between #{leaf.name} and #{root.name}; MeSH similarity score: #{connection.mesh_tags_ic.round}"
+      tooltiptext = edge_label(connection, root, leaf)
       label = connection.publication_cnt
       weight = (mesh_only or connection.publication_cnt == 0) ? 3000/(connection.mesh_tags_ic+500) : connection.publication_cnt
-      this_edge = graph_addedge(g, root_node, leaf_node, investigator_colleagues_copublication_path(connection.id), tooltiptext, label, weight )
+      this_edge = graph_addedge(g, root_node, leaf_node, investigator_colleagues_copublication_url(connection.id), tooltiptext, label, weight )
     end
   end
   return g

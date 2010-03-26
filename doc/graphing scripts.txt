@@ -4,11 +4,24 @@
 
 # and a template to build a graphviz graph
 
-graphviz_template
+#graphviz_template
 
-script/generate controller copublications
+#script/generate controller copublications
 
 
 #mesh and mesh_ic
 
-Added mesh_ic to Abstracts to allow each abstract to have its own ic total
+#Added mesh_ic to Abstracts to allow each abstract to have its own ic total
+
+#Install graphviz
+
+curl http://graphviz.org/pub/graphviz/stable/SOURCES/graphviz-2.26.3.tar.gz -O graphviz-2.26.3.tar.gz
+tar zxf graphviz-2.26.3.tar.gz 
+./configure
+make
+sudo make install
+dot -V
+
+#install ruby-graphviz
+
+sudo gem install ruby-graphviz

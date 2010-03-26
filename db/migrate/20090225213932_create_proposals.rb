@@ -1,15 +1,22 @@
 class CreateProposals < ActiveRecord::Migration
   def self.up
     create_table :proposals do |t|
-      t.column :title, :text 
+      t.column :sponsor_award_number, :string 
+      t.column :sponsor_code, :string 
+      t.column :sponsor_name, :string 
+      t.column :institution_award_number, :string 
+      t.column :title, :string 
       t.column :abstract, :text
-      t.column :authors, :text
+      t.column :keywords, :text
       t.column :agency, :string
       t.column :submission_date, :date # DP: pubmed YYYY/MM/DD
       t.column :award_date, :date # DP: pubmed YYYY/MM/DD
-      t.column :is_awarded, :boolean, :default => false 
+      t.column :project_start_date, :date # DP: pubmed YYYY/MM/DD
+      t.column :project_end_date, :date # DP: pubmed YYYY/MM/DD
+      t.column :is_awarded, :boolean, :default => true 
+      t.column :award_category, :string # Clinical Trial, Sponsored Research
       t.column :award_mechanism, :string # R01, U01, K01
-      t.column :status, :string 
+      t.column :award_type, :string # Grant, Contract
       t.column :url, :string 
       t.column :created_id, :integer  
       t.column :created_ip, :string

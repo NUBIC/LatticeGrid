@@ -1,5 +1,5 @@
 class CopublicationsController < ApplicationController
-  caches_page :investigator_colleagues
+  caches_page :investigator_colleagues, :tag_cloud_side, :tag_cloud
   
   def show
     if params[:id].include?("search") then
@@ -20,5 +20,24 @@ class CopublicationsController < ApplicationController
       @total_entries=@abstracts.length
     end
   end
+  
+  def tag_cloud_side
+    investigator_colleague = InvestigatorColleague.find(params[:id], :joins=>[:investigator,:colleague])
+    tags = investigator_colleague.investigator.tag_counts(:limit => 40, :order => "count desc") & investigator_colleague.colleague.tag_counts(:limit => 40, :order => "count desc")
+    respond_to do |format|
+      format.html { render :template => "shared/tag_cloud", :locals => {:tags => tags}}
+      format.js  { render  :partial => "shared/tag_cloud", :locals => {:tags => tags, :update_id => 'tag_cloud_side', :include_breaks => true} }
+    end
+  end 
+  
+  def tag_cloud
+    investigator_colleague = InvestigatorColleague.find(params[:id], :joins=>[:investigator,:colleague])
+    tags = investigator_colleague.investigator.tag_counts(:order => "count desc") & investigator_colleague.colleague.tag_counts(:order => "count desc")
+    respond_to do |format|
+      format.html { render :template => "shared/tag_cloud", :locals => {:tags => tags}}
+      format.js  { render  :partial => "shared/tag_cloud", :locals => {:tags => tags}  }
+    end
+  end 
+  
   
 end

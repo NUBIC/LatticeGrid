@@ -87,7 +87,7 @@ def FindPubMedIDs (all_investigators, options, number_years, limit_to_institutio
     # leaving perform_esearch
     investigator["entries"] = []
     if entries.length < 1 then
-      puts "No publications found for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords}"
+      puts "No publications found for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords}" if debug
     elsif entries.length > (expected_max_pubs_per_year*number_years) then
       puts "Too many hits??: #{entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found. RepeatCnt=#{repeatCnt}"
     elsif entries.length < number_years then
@@ -135,7 +135,7 @@ def GetPubsForInvestigators(investigators)
         raise "efetch timeout looking up #{investigator.entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name}"
       end
     else
-      puts "no publications found for investigator #{investigator.first_name} #{investigator.last_name}"
+      puts "no publications found for investigator #{investigator.first_name} #{investigator.last_name}" if @debug
       investigator["publications"] = nil
     end
   end

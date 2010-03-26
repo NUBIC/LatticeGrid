@@ -1,6 +1,10 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
+  begin
   include TagsHelper
+  rescue
+    puts "unable to load TagsHelper. Tagging plugin installed?"
+  end
   require 'config'
     
   def build_menu(nodes, org_type=nil, &block)
@@ -35,6 +39,14 @@ module ApplicationHelper
   def capitalize_words(string) 
     string.downcase.gsub(/\b\w/) { $&.upcase } 
   end 
+  
+  def  trunc_and_join_array(array, count=20, delimiter=", ")
+    if array.length > count.to_i
+      array[0,count.to_i].join(delimiter)+'…'
+    else
+      array.join(delimiter)
+    end
+  end
 
   def truncate_words(phrase, count=20) 
     re = Regexp.new('^(.{'+count.to_s+'}\w*)(.*)', Regexp::MULTILINE)
@@ -209,7 +221,7 @@ module ApplicationHelper
   def handle_ldap(applicant)
     begin
       pi_data = GetLDAPentry(applicant.username)
-      logger.warn("dump of pi_data: #{pi_data.inspect}")
+     # logger.warn("dump of pi_data: #{pi_data.inspect}")
       if pi_data.nil?
         logger.warn("Probable error reaching the LDAP server in GetLDAPentry: GetLDAPentry returned null using netid #{applicant.username}.")
       elsif pi_data.blank?

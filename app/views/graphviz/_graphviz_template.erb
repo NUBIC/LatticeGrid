@@ -1,14 +1,15 @@
 <% params[:program] ||= "fdp" %>
 <% params[:analysis] ||= "member" %>
 <% if params[:analysis].include?("org") and params[:analysis].include?("mesh") %>
-	<% params[:stringency] ||= "1000" %>
+	<% params[:stringency] ||= "2000" %>
 <% end %>
 <% if params[:analysis].include?("org") %>
 	<% params[:stringency] ||= "3" %>
+	<% params[:distance]   ||= "0" %>
 <% end %>
 <% if params[:analysis].include?("mesh") %>
-	<% params[:stringency] ||= "1000" %>
-	<% params[:stringency] = "1000" if params[:stringency].to_i < 500 %>
+	<% params[:stringency] ||= "2000" %>
+	<% params[:stringency] = "2000" if params[:stringency].to_i < 500 %>
 <% end %>
 <% params[:id] ||= "str" %>
 <% params[:format] ||= "svg" %>
@@ -32,13 +33,21 @@
 			options_for_select([["pdf", "pdf"], ["png", "png"], ["svg", "svg"]], [params[:format]]),  
 		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans') }
 	) %>
+	<% if params[:analysis].include?("org")%>
+	Distance: <%= select_tag(:distance, 
+			options_for_select([["Zero","0"],["One","1"], ["Two","2"]], [params[:distance]]),  
+		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans') }
+	 ) %>
+	<% else %>
 	Distance: <%= select_tag(:distance, 
 			options_for_select([["One","1"], ["Two","2"]], [params[:distance]]),  
 		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans') }
 	 ) %>
+	<% end %>
+	
 	<% if params[:analysis].include?("mesh")%>
 		MeSH Stringency: <%= select_tag(:stringency, 
-			options_for_select([[">500","500"], [">1000","1000"], [">2,000","2000"], [">3,000","3000"], [">4,000","4000"], [">5,000","5000"], [">6,000","6000"]],
+			options_for_select([[">500","500"], [">1,000","1000"],  [">1,500","1500"], [">2,000","2000"],  [">2,500","2500"], [">3,000","3000"], [">4,000","4000"], [">5,000","5000"], [">6,000","6000"]],
 				 [params[:stringency]]),  
 		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans') }
 	 ) %>

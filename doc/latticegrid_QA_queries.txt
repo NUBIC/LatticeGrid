@@ -13,3 +13,54 @@ select count(*), year from abstracts  group by year order by year;
 select count(*), year from abstracts where publication_date is null group by year order by year;
 select count(*), year from abstracts where electronic_publication_date is null group by year order by year;
 select count(*), year from abstracts where electronic_publication_date > publication_date  group by year order by year;
+
+
+pi = Investigator.find(174)
+ pi = Investigator.find(174)
+ tag_ids = pi.tags.collect(&:id)
+Investigator.information_cloud(tag_ids, :limit=>30).collect(&:taggable_id)
+Investigator.information_cloud(tag_ids, :limit=>30).collect(&:total)
+Investigator.information_cloud(tag_ids, :limit=>30).collect(&:count)
+
+Basic sciences
+
+12,13,14,15,16
+
+OrganizationalUnit.find(:all,:conditions=>'id IN (12,13,14,15,16)').collect{|org| org.primary_faculty.collect{|pi| pi.appointment_type}}.flatten.uniq 
+
+OrganizationalUnit.find(:all,:conditions=>'id IN (12,13,14,15,16)').collect{|org| org.primary_faculty.collect{|pi| pi.appointment_track}}.flatten.uniq
+
+OrganizationalUnit.find(:all,:conditions=>'id IN (12,13,14,15,16)').collect{|org| org.primary_faculty.collect{|pi| pi.appointment_basis}}.flatten.uniq
+
+OrganizationalUnit.find(:all,:conditions=>'id IN (12,13,14,15,16)').collect{|org| org.primary_faculty.collect{|pi| pi.last_name+", "+pi.first_name}}.flatten.uniq
+
+ OrganizationalUnit.find(:all,:conditions=>'id IN (12,13,14,15,16)').count 
+
+OrganizationalUnit.find(16).all_faculty.collect(&:name)
+
+(OrganizationalUnit.find(16).associated_faculty.full_time.tenure_track+OrganizationalUnit.find(16).primary_faculty.full_time.tenure_track).collect(&:appointment_track).uniq
+
+(OrganizationalUnit.find(16).associated_faculty.full_time.tenure_track+OrganizationalUnit.find(16).primary_faculty.full_time.tenure_track).collect(&:appointment_type).uniq
+
+(OrganizationalUnit.find(:all,:conditions=>'id IN (12,13,14,15,16)').collect{|org| org.primary_faculty.collect{|pi| pi.appointment_track}}.flatten.uniq
+
+(OrganizationalUnit.find(16).associated_faculty.full_time.tenure_track+OrganizationalUnit.find(16).primary_faculty.full_time.tenure_track).collect(&:name)
+
+(OrganizationalUnit.find(16).associated_faculty.full_time.tenure_track+OrganizationalUnit.find(16).primary_faculty.full_time.tenure_track).uniq.count
+
+(OrganizationalUnit.find(16).associated_faculty.full_time.research+OrganizationalUnit.find(16).primary_faculty.full_time.research).collect(&:appointment_type).uniq
+
+(OrganizationalUnit.find(16).associated_faculty.full_time.tenure_track.clinician+OrganizationalUnit.find(16).primary_faculty.full_time.tenure_track.clinician).uniq.count
+
+(OrganizationalUnit.find(16).associated_faculty.full_time.tenure_track.investigator+OrganizationalUnit.find(16).primary_faculty.full_time.tenure_track.investigator).uniq.count
+
+(OrganizationalUnit.find(16).associated_faculty.full_time.tenure_track.investigator_only+OrganizationalUnit.find(16).primary_faculty.full_time.tenure_track.investigator_only).collect(&:name) 
+(OrganizationalUnit.find(16).associated_faculty.full_time.tenure_track.investigator_only+OrganizationalUnit.find(16).primary_faculty.full_time.tenure_track.investigator_only).collect(&:appointment_track)
+
+
+OrganizationalUnit.find(:all,:conditions=>'id IN (12,13,14,15,16)').collect{ |org| (org.associated_faculty.full_time.tenure_track.investigator_only+org.primary_faculty.full_time.tenure_track.investigator_only)}.flatten.collect(&:name).count
+
+OrganizationalUnit.find(:all,:conditions=>'id IN (12,13,14,15,16)').collect{ |org| org.primary_faculty.full_time.tenure_track.investigator_only}.flatten.collect(&:name).count
+
+OrganizationalUnit.find(:all,:conditions=>'id IN (12,13,14,15,16)').collect{ |org| org.primary_faculty.full_time.tenure_track.investigator_only}.flatten.collect{|pi| pi.last_name+", "+pi.first_name}.count
+

@@ -67,9 +67,9 @@ module GraphsHelper
     new_nodes.push(match_node) if new_nodes.index( match_node ).nil?
     match_node.internal_collaborators.keys.each do |key_id|
       found_node = old_nodes.find { |i| i.id.to_i == key_id.to_i }
-      logger.info 'looking for key '+key_id 
+      #logger.info 'looking for key '+key_id 
       if ! found_node.nil?
-        logger.info 'found node for key '+key_id 
+       # logger.info 'found node for key '+key_id 
         new_nodes.push(found_node) if new_nodes.index( found_node ).nil?
         old_nodes.delete(found_node) 
       end

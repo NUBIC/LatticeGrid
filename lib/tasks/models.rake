@@ -9,7 +9,11 @@ end
 task :getInvestigators => :environment do
   # load all investigators
   # @AllInvestigators = Investigator.find(:all,  :conditions => ['end_date is null or end_date >= :now', {:now => Date.today }])
-  @AllInvestigators = Investigator.find(:all, :order => 'id', :include => ["abstracts"])
+  begin
+    @AllInvestigators = Investigator.find(:all, :order => 'id', :include => ["abstracts"])
+  rescue
+    @AllInvestigators = Investigator.find(:all, :order => 'id')
+  end
   
 #  @AllInvestigators = Investigator.find(:all, :conditions => "id=1")
   puts "count of all investigators is #{@AllInvestigators.length}" if @verbose
@@ -59,7 +63,11 @@ end
 
 task :getAbstracts => :environment do
   # load all abstracts
-  @AllAbstracts = Abstract.find(:all, :order => 'id', :include => ["investigator_abstracts","investigators"])
+  begin
+    @AllAbstracts = Abstract.find(:all, :order => 'id', :include => ["investigator_abstracts","investigators"])
+  rescue
+    @AllAbstracts = Abstract.find(:all, :order => 'id')
+  end
   puts "count of all abstracts is #{@AllAbstracts.length}" if @verbose
   if @verbose then
     investigator_abstracts_length = @AllAbstracts.collect{|x| x.investigator_abstracts.length }.sum

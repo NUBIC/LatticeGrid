@@ -1,5 +1,6 @@
 module GraphvizHelper
 
+  require 'graphviz_config'
   include TagsHelper
   include ActionView::Helpers::AssetTagHelper #or whatever helpers you want
 
@@ -28,7 +29,7 @@ module GraphvizHelper
     request.env["HTTP_USER_AGENT" ][/(MSIE)/]
   end
   
-  def get_graph_path(file_path)
+  def get_graph_dir(file_path)
     image_path("../#{file_path}")
   end
   
@@ -75,32 +76,10 @@ module GraphvizHelper
     remote_function( :update =>  {:success => div_id, :failure => 'flash_notice'},
             :before => "new Element.update('#{div_id}','<p>Loading graph ...</p>')",
             :complete => "new Effect.Highlight('#{div_id}');",
-            :url => restless_graphviz_path(),
+            :url => restless_graphviz_url(),
             :with => "'program='+encodeURIComponent( $('"+program_name.to_s+"').getValue())+'&format='+encodeURIComponent( $('"+format_name.to_s+"').getValue())+'&distance='+encodeURIComponent( $('"+distance_name.to_s+"').getValue())+'&stringency='+encodeURIComponent( $('"+stringency_name.to_s+"').getValue())+'&id='+encodeURIComponent( $('"+id_name.to_s+"').getValue())+'&analysis='+encodeURIComponent( $('"+analysis_name.to_s+"').getValue())+'&include_orphans='+encodeURIComponent( $('"+include_orphans_name.to_s+"').getValue())",
             :method => :get)
 	end
-	
-	def handle_graphviz_params
-     params[:program] ||= "neato"
-     params[:analysis] ||= "member"
-     params[:format] ||= "svg"
-     params[:distance] ||= "2"
-     params[:stringency] ||= "1"
-     params[:include_orphans] ||= "1"
-     params[:id] ||= "cam493"
-     if params[:distance] != "1" and params[:program] == "dot"
-       params[:program] = "neato"
-     end
-     if params[:include_orphans] != "1"
-       params[:include_orphans] = "0"
-     end
-   end
-
-   def build_graphviz_filepath
-     # map to restful order
-     # 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:program.:format',
-     "graphs/#{params[:id]}/#{params[:analysis]}/#{params[:distance]}/#{params[:stringency]}/#{params[:include_orphans]}/"
-   end
 
    def build_graphviz_output_format
      output_format = params[:format]
@@ -110,17 +89,17 @@ module GraphvizHelper
    
    def handle_graphviz_request        
      @output_format = build_graphviz_output_format()
-     @graph_path = build_graphviz_filepath()
+     @graph_path = build_graphviz_filepath(params)
      mime_type = Mime::Type.lookup_by_extension(@output_format)
      @content_type = mime_type.to_s || "text/html"
    end
 
    def handle_graph_file
-     graph_path = "public/#{@graph_path}"
-     if ! graph_exists?( graph_path, params[:program], @output_format )
+     # params = set_graphviz_defaults(params)
+     graph_dir = "public/#{@graph_path}"
+     if ! graph_exists?( graph_dir, params[:program], @output_format )
        graph = build_graph(params[:analysis],params[:program],params[:id], params[:distance], params[:stringency], params[:include_orphans])
-       graph_output( graph, graph_path, params[:program], @output_format )
+       graph_output( graph, graph_dir, params[:program], @output_format )
      end
    end
-
 end

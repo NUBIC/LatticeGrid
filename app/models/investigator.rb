@@ -21,8 +21,8 @@ class Investigator < ActiveRecord::Base
       :order=>'investigator_colleagues.publication_cnt desc'
   has_many :colleagues, :through => :investigator_colleagues
   has_many :abstracts, :through => :investigator_abstracts
-  has_many :investigator_abstracts_meshes
-  has_many :meshes, :through => :investigator_abstracts_meshes
+#  has_many :investigator_abstracts_meshes
+#  has_many :meshes, :through => :investigator_abstracts_meshes
   has_many :investigator_appointments,
     :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
   has_many :joints, :class_name => "Joint",
@@ -37,6 +37,14 @@ class Investigator < ActiveRecord::Base
   has_many :memberships, :source => :organizational_unit, :through => :member_appointments
   belongs_to :home_department, :class_name => 'OrganizationalUnit'
 
+  named_scope :full_time, :conditions => "appointment_basis = 'FT'"
+  named_scope :tenure_track, :conditions => "appointment_type = 'Regular'"
+  named_scope :research, :conditions => "appointment_type = 'Research'"
+  named_scope :investigator, :conditions => "appointment_track like '%Investigator%'"
+  named_scope :investigator_only, :conditions => "appointment_track = 'Investigator'"
+  named_scope :clinician, :conditions => "appointment_track like '%Clinician%'"
+  named_scope :clinician_only, :conditions => "appointment_track = 'Clinician'"
+ 
   #default_scope :order => 'lower(investigators.last_name),lower(investigators.first_name)'
 
   validates_uniqueness_of :username

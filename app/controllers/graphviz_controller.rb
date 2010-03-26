@@ -1,6 +1,10 @@
 class GraphvizController < ApplicationController
+
+  caches_page :show_member, :show_member_mesh, :show_org, :show_org_mesh
+
   # GET /admins
   # GET /admins.xml
+  require 'graphviz_config'
   require 'csv_generator'
   require 'graph_generator'
   helper :all
@@ -33,7 +37,8 @@ class GraphvizController < ApplicationController
   # use get_graphviz to convert to a proper REST call. default remote_function call is very hard to make RESTful
   def get_graphviz
     handle_graphviz_setup
-    @file_name = get_graph_path("#{@graph_path}#{params[:program]}.#{@output_format}")
+    @file_name = build_graphviz_restfulpath(params, @output_format)
+ #   @file_name = get_graph_dir("#{@graph_path}#{params[:program]}.#{@output_format}")
     
     render :layout=>false
   end
@@ -49,8 +54,10 @@ class GraphvizController < ApplicationController
   private  
   
   def handle_graphviz_setup
+    # in 'graphviz_config'
+    params[:program] ||= "neato"
+    set_graphviz_defaults(params)
     # in the helper
-    handle_graphviz_params()
     handle_graphviz_request()
     handle_graph_file()
   end
@@ -58,7 +65,9 @@ class GraphvizController < ApplicationController
   
   def show_core
     params[:program] ||= "neato"
+     set_graphviz_defaults(params)
     
+    params[:format] =  nil
     if !params[:id].blank? then
        respond_to do |format|
         format.html { render }
@@ -69,8 +78,9 @@ class GraphvizController < ApplicationController
   end 
     
   def build_graph(analysis, program, id, distance, stringency, include_orphans)
-    logger.warn "analysis=#{analysis}, program=#{program}, username=#{id}, distance=#{distance}, stringency=#{stringency}, include_orphans=#{include_orphans}"
+    # logger.warn "analysis=#{analysis}, program=#{program}, username=#{id}, distance=#{distance}, stringency=#{stringency}, include_orphans=#{include_orphans}"
     @graph_edges=[]
+    #include_orphans = "0" if include_orphans.to_s != "1"
     graph = graph_new(program)
     
     graph = case analysis
@@ -110,7 +120,7 @@ class GraphvizController < ApplicationController
       graph_newroot(graph, @investigator)
       similar_investigators = @investigator.all_similar_investigators.mesh_ic(stringency)
       graph = graph_add_nodes(program, graph, similar_investigators, true)
-      if distance != "1"
+      if distance == "2"
         opts = {}
         opts[:fillcolor] = "#E0ECF8"
         similar_investigators.each do |similar|
@@ -123,16 +133,19 @@ class GraphvizController < ApplicationController
  
   def build_org_graph(graph, program, id, distance, stringency,include_orphans)
     colleagues = get_colleagues(id)
-    logger.info "colleagues: #{colleagues.length}"
+    #slogger.info "colleagues: #{colleagues.length}"
     if colleagues.nil?
       graph = graph_no_data(graph, "No colleagues found in #{org.name}")
     else
       colleagues.each do |colleague|
         co_authors = colleague.co_authors.shared_pubs(stringency)
+        if  distance == "0"
+          co_authors = co_authors.collect{|ic| colleagues.include?(ic.colleague) ? ic : nil }.compact
+        end
         if include_orphans == "1" or co_authors.length > 0
           graph_secondaryroot(graph, colleague) 
-          graph = graph_add_nodes(program, graph, co_authors)
-          if distance != "1"
+          graph = graph_add_nodes(program, graph, co_authors) if co_authors.length > 0
+          if distance == "2"
             opts = {}
             opts[:fillcolor] = "#E0ECF8"
             co_authors.each do |inner_colleague|
@@ -148,7 +161,7 @@ class GraphvizController < ApplicationController
   
   def build_org_mesh_graph(graph, program, id, distance, stringency, include_orphans)
     colleagues = get_colleagues(id)
-    logger.info "colleagues: #{colleagues.length}"
+    # logger.info "colleagues: #{colleagues.length}"
     if colleagues.nil?
       graph = graph_no_data(graph, "No colleagues found in #{org.name}")
     else
@@ -157,7 +170,7 @@ class GraphvizController < ApplicationController
         if include_orphans == "1" or similar_investigators.length > 0
           graph_secondaryroot(graph, colleague)
           graph = graph_add_nodes(program, graph, similar_investigators, true)
-          if distance != "1"
+          if distance == "2"
             opts = {}
             opts[:fillcolor] = "#E0ECF8"
             similar_investigators.each do |similar|
@@ -172,7 +185,7 @@ class GraphvizController < ApplicationController
   end
   
   def get_org_name(id)
-    logger.info "id: #{id}"
+    # logger.info "id: #{id}"
     ids=id.split(",")
     if ids.length > 1
       OrganizationalUnit.find(:all, :conditions => ["id in (:ids)", {:ids=>ids }]).collect(&:name).join(", ")
@@ -185,10 +198,11 @@ class GraphvizController < ApplicationController
     ids=id.split(",")
     if ids.length > 1
       orgs = OrganizationalUnit.find(:all, :conditions => ["id in (:ids)", {:ids=>ids }])
-      colleagues=orgs.collect{|org| org.members }.flatten.uniq
+      colleagues=orgs.collect{|org| org.all_faculty }.flatten.uniq
+      #orgs.collect{ |org| org.primary_faculty.full_time.investigator}.flatten
     else
       org = OrganizationalUnit.find(id)
-      colleagues = org.all_members
+      colleagues = org.all_faculty
     end
   end
   

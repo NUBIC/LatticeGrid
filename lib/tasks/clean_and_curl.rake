@@ -1,17 +1,18 @@
 require 'utilities'
 require 'config'
+require 'graphviz_config'
 #require 'pathname'
 
 # rake cache:clear 
 
 
-# curl -s http://pubs.cancer.northwestern.edu/abstracts/list/2009/1 -o index.html
+# curl -s http://latticegrid.cancer.northwestern.edu/abstracts/list/2010/1 -o index.html
 
 namespace :cache do
   task :clear => :environment do
     block_timing("cache:clear") {
     if File.directory?(public_path) then
-        directories= %w{graphs abstracts investigators programs orgs member_nodes org_nodes copublications}
+        directories= %w{graphs abstracts investigators programs orgs member_nodes org_nodes copublications graphviz}
       directories.each do |name|
         name="#{public_path}/#{name}"
         if File.directory?(name) then
@@ -138,6 +139,24 @@ namespace :cache do
     end
   end
 
+  def investigator_graphviz
+    params = set_graphviz_defaults({})
+    params[:distance] = "1"
+    @AllInvestigators.each do |inv|
+      params[:id] =  inv.username
+      params[:analysis] = "member"
+      params[:stringency] = "1"
+      run_curl build_graphviz_restfulpath(params, params[:format]) 
+      params[:stringency] = "2"
+      run_curl build_graphviz_restfulpath(params, params[:format]) 
+      params[:stringency] = "3"
+      run_curl build_graphviz_restfulpath(params, params[:format]) 
+      params[:analysis] = "member_mesh"
+      params[:stringency] = "2000"
+      run_curl build_graphviz_restfulpath(params, params[:format]) 
+    end
+  end
+
   def org_graphs
     @AllOrganizations.each do |org|
        #run_curl url_for :controller => 'graphs', :action => 'show_org', :id => prog.id
@@ -146,8 +165,26 @@ namespace :cache do
     end
   end
 
+  def org_graphviz
+    params = set_graphviz_defaults({})
+    params[:distance] = "1"
+    @AllOrganizations.each do |org|
+     params[:id] =  org.id
+     params[:analysis] = "org"
+     params[:stringency] = "1"
+     run_curl build_graphviz_restfulpath(params, params[:format]) 
+     params[:stringency] = "2"
+     run_curl build_graphviz_restfulpath(params, params[:format]) 
+     params[:stringency] = "3"
+     run_curl build_graphviz_restfulpath(params, params[:format]) 
+     params[:analysis] = "org_mesh"
+     params[:stringency] = "2000"
+     run_curl build_graphviz_restfulpath(params, params[:format]) 
+    end
+  end
+
   task :populate => [:setup_url_for,:getInvestigators, :getAllOrganizations] do
-    tasknames = %w{abstracts investigators orgs investigator_graphs org_graphs}
+    tasknames = %w{abstracts investigators orgs investigator_graphs org_graphs investigator_graphviz org_graphviz}
     if ENV["taskname"].nil?
       puts "sorry. You need to call 'rake cache:populate taskname=task' where task is one of #{tasknames.join(', ')}"
     else
@@ -156,9 +193,11 @@ namespace :cache do
       case 
         when taskname == 'abstracts': abstracts
         when taskname == 'investigators': investigators
-          when taskname == 'orgs': orgs
+        when taskname == 'orgs': orgs
         when taskname == 'investigator_graphs': investigator_graphs
-          when taskname == 'org_graphs': org_graphs
+        when taskname == 'investigator_graphviz': investigator_graphviz
+        when taskname == 'org_graphs': org_graphs
+        when taskname == 'org_graphviz': org_graphviz
         else puts "sorry - unknown caching task #{taskname}."
       end    
       }

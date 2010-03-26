@@ -23,6 +23,8 @@ rake RAILS_ENV=production cache:populate taskname=investigators >> buildCache.tx
 rake RAILS_ENV=production cache:populate taskname=orgs >> buildCache.txt
 rake RAILS_ENV=production cache:populate taskname=investigator_graphs >> buildCache.txt
 rake RAILS_ENV=production cache:populate taskname=org_graphs >> buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=investigator_graphviz >> buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=org_graphviz >> buildCache.txt
 
 # in development
 
@@ -33,3 +35,5 @@ rake cache:populate taskname=investigators >> buildCache.txt
 rake cache:populate taskname=orgs >> buildCache.txt
 rake cache:populate taskname=investigator_graphs >> buildCache.txt
 rake cache:populate taskname=org_graphs >> buildCache.txt
+rake cache:populate taskname=investigator_graphviz >> buildCache.txt
+rake cache:populate taskname=org_graphviz >> buildCache.txt

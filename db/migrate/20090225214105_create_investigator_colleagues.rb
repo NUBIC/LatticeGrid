@@ -7,6 +7,7 @@ class CreateInvestigatorColleagues < ActiveRecord::Migration
       t.column :colleague_id, :integer
       t.column :mesh_tags_cnt, :integer   #number of tags in common
       t.column :mesh_tags_ic, :float   #information content of the tags in common
+      t.column :tag_list, :text
       t.column :publication_cnt, :integer, :default => 0 
       t.column :publication_list, :text
       t.column :in_same_program, :boolean, :default => false 

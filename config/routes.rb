@@ -4,14 +4,16 @@ ActionController::Routing::Routes.draw do |map|
   map.show_investigator 'investigators/:id/show/:page', {:controller => "investigators",:action => "show", :conditions => { :method => :get }  }
   map.abstracts_by_year 'abstracts/:id/year_list/:page', {:controller => "abstracts",:action => "year_list", :conditions => { :method => :get } }
   map.index_orgs 'orgs/index', :controller => 'orgs', :action => 'index'  #handle the route for orgs_path to make sure it is cached properly
-  map.resources :orgs, :only => [:index, :show], :collection => { :stats => :get, :list => :get, :centers => :get, :departments => :get, :programs => :get }, 
+  map.resources :orgs, :only => [:index, :show], :collection => { :stats => :get, :list => :get, :centers => :get, :departments => :get, :programs => :get, :department_collaborations => :get }, 
     :member => {:full_show => :get, :show_investigators => :get, :list_abstracts_during_period_rjs => :post }
   map.resources :investigators, :only => [:index, :show], :member => {:full_show => :get, :show_all_tags => :get}, :collection => { :list_all => :get }
   map.resources :copublications, :only => [:show], :member => {:investigator_colleagues => :get}
 
 # manually added rjs routes to enforce .js format
   map.tag_cloud_side_investigator '/investigators/:id/tag_cloud_side.js', :action=>"tag_cloud_side", :controller=>"investigators",  :conditions => { :method => :get }
+  map.tag_cloud_side_copublication '/copublications/:id/tag_cloud_side.js', :action=>"tag_cloud_side", :controller=>"copublications",  :conditions => { :method => :get }
   map.tag_cloud_investigator '/investigators/:id/tag_cloud.js', :action=>"tag_cloud", :controller=>"investigators",  :conditions => { :method => :get }
+  map.tag_cloud_copublication '/copublications/:id/tag_cloud.js', :action=>"tag_cloud", :controller=>"copublications",  :conditions => { :method => :get }
   map.short_tag_cloud_org '/orgs/:id/short_tag_cloud.js', :action=>"short_tag_cloud", :controller=>"orgs",  :conditions => { :method => :get }
   map.tag_cloud_org '/orgs/:id/tag_cloud.js', :action=>"tag_cloud", :controller=>"orgs",  :conditions => { :method => [:get, :post] }
   

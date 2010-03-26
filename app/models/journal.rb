@@ -50,7 +50,7 @@ class Journal < ActiveRecord::Base
   def self.yearstring(years)
     return '' if years.nil? or years.length == 0
     year_string = years.to_s
-    logger.warn("years = #{year_string}, cnt  =#{year_string.split(',').length}")
+    # logger.warn("years = #{year_string}, cnt  =#{year_string.split(',').length}")
     "'"+year_string.split(',').join("\', \'")+"'"
   end
 end

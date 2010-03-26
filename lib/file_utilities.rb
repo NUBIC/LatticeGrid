@@ -3,6 +3,7 @@
 require 'fastercsv'
 require 'utilities'
 require 'journal_utilities'
+require 'award_utilities'
 require 'investigator_appointment_utilities'
 require 'investigator_abstract_utilities'
 require 'organization_utilities'
@@ -56,4 +57,8 @@ end
 
 def ReadJournalISOnamesData(file_name)
   read_data_handler(Journal,file_name, ";") {|data| row_iterator(data) {|data| UpdateJournalAbbreviation(data)} }
+end
+
+def ReadAwardData(file_name)
+  read_data_handler(Proposal,file_name) {|data| row_iterator(data) {|data| CreateAwardData(data)} }
 end

@@ -80,3 +80,8 @@ task :purgeNonMembers => :getAllInvestigatorsWithoutMembership do
      purgeNonMembers(@InvestigatorsWithoutMembership)
    }
 end
+
+task :importAwardData => :getInvestigators do
+  read_file_handler("importAwardData" ) {|filename| ReadAwardData(filename)}
+end
+

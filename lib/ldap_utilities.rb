@@ -99,9 +99,9 @@ def MakePIfromLDAP(pi_data)
     thePI = BuildPIobject(clean_rec)
     thePI=MergePIrecords(thePI, clean_rec)
     begin
-      logger.info "#{thePI.id}  #{thePI.username} #{thePI.last_name} #{thePI.first_name}"
-      logger.info pi_data.inspect
-      logger.info thePI.inspect
+     # logger.info "#{thePI.id}  #{thePI.username} #{thePI.last_name} #{thePI.first_name}"
+     # logger.info pi_data.inspect
+      #logger.info thePI.inspect
     rescue Exception => error
       puts "#{thePI.id}  #{thePI.username} #{thePI.last_name} #{thePI.first_name}"
       puts pi_data.inspect

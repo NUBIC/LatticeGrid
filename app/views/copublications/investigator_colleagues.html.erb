@@ -23,6 +23,12 @@
 		<div id="collaborators">
 		<%= link_to_collaborators(Abstract.co_authors(@abstracts), "<br/>") %>
 		</div>
+		<h3>Keywords (MeSH):</h3>
+		<div id="tag_cloud_side"></div>
+		<script language="javascript">
+		<%= remote_function(:url => tag_cloud_side_copublication_path( @investigator_colleague.id), :method => :get, :before => "Element.show('spinner')", 
+		:complete => "Element.hide('spinner')" ) %> 
+		</script>
 	</td>
 </tr>
 </table>

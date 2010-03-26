@@ -59,7 +59,7 @@ task :associateAbstractsWithInvestigators => [:getAbstracts, :getInvestigators] 
       new_ids = all_investigator_ids.delete_if{|id| old_investigator_ids.include?(id)}.compact
       #sped this up by only processing the intersection
       if !(new_ids == [] ) then
-        puts "found new investigators for abstract #{abstract.id}. new investigator ids: #{new_ids.join(',')}; old investigator ids: #{old_investigator_ids.join(',')}" if @verbose
+        puts "found new investigators for abstract #{abstract.id}. new investigator ids: #{new_ids.join(',')}; old investigator ids: #{old_investigator_ids.join(',')}" if @debug
         new_ids.each do |investigator_id|
           InsertInvestigatorPublication (abstract.id, investigator_id)
         end

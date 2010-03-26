@@ -1,6 +1,9 @@
 class OrgsController < ApplicationController
   caches_page :show, :index, :departments, :centers, :programs, :show_investigators, :stats, :full_show, :tag_cloud, :short_tag_cloud
   helper :sparklines
+
+  require 'fastercsv' # for department_collaborations
+
   # GET /orgs
   # GET /orgs.xml
   def index
@@ -9,6 +12,114 @@ class OrgsController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @units }
+    end
+  end
+
+  def department_collaborations
+    year=2006
+    edge_strength_to_graph=10
+    @units = OrganizationalUnit.collaborations("9/1/#{year-1}","9/1/#{year}")
+    @heading = "Departmental Collaborations for FY#{year}"
+    #@units = OrganizationalUnit.collaborations("9/1/#{year-1}")
+    #@heading = "Departmental Collaborations"
+    respond_to do |format|
+      format.html { render(:layout => 'scaled') }
+      format.xml  { render :xml => @units }
+      format.csv {
+        unit_ids   = @units.collect(&:id)
+        csv_string = FasterCSV.generate do |csv|
+          # header row
+          csv << [ "id", "name", "investigators", "total", "units" ] + @units.collect(&:name)
+ 
+          # data rows
+          @units.each do |unit|
+            total_units =  unit_ids.collect{|unit_id| (unit_id == unit.id) ? 0 : unit.collaboration_matrix[unit_id].length }.sum
+            csv << [unit.id, unit.name, unit.primary_faculty.length, unit.collaboration_matrix[unit.id].length, total_units ] + unit_ids.collect {|unit_id| (unit_id == unit.id) ? 0 : unit.collaboration_matrix[unit_id].length }
+          end
+        end
+
+        # send it to the browser
+        send_data csv_string,
+                  :type => 'text/csv; charset=iso-8859-1; header=present',
+                  :disposition => "attachment; filename=department_collaborations.csv"
+      }
+      format.dot {
+        unit_ids   = @units.collect(&:id)
+        # format
+        dot_string = "graph G {\r"
+        dot_string << "graph [fontname=Arial,fontsize=24, label=\"\\n#{@heading}\"];\r"
+        dot_string << "nodesep=0.5; mindist=1.0; clusterrank=global; rankdir=LR;\r"
+        dot_string << "node [style=filled,color=gray,fontname=Arial,fontsize=16];\r"
+        dot_string << "edge [color=gray,fontname=Arial,fontsize=16];\r"
+        
+        # precalculate
+        cnt = 0 # start at zero or if you want to break this into shorter tasks, you could break it differently
+        last = @units.length-1
+        to_process= last-cnt
+        nodes = []
+        max_length = 0
+        max_units = 0
+        @units[cnt..last].each  { |outer_unit|
+          cnt+=1
+          total_units =  unit_ids.collect{|unit_id| (unit_id == outer_unit.id) ? 0 : outer_unit.collaboration_matrix[unit_id].length }.sum
+          max_units = total_units if max_units < total_units
+          @units[cnt..last].each  { |inner_unit|
+            if outer_unit.collaboration_matrix[inner_unit.id].length > edge_strength_to_graph
+              nodes << inner_unit.id
+              nodes << outer_unit.id
+              max_length  =outer_unit.collaboration_matrix[inner_unit.id].length if max_length < outer_unit.collaboration_matrix[inner_unit.id].length
+            end
+          }
+        }
+        nodes = nodes.sort.uniq
+        # output the nodes
+         @units.each { |unit| dot_string << ' node'+unit.id.to_s+' [label="'+unit.name+'" color='+node_color(unit_ids.collect{|unit_id| (unit_id == unit.id) ? 0 : unit.collaboration_matrix[unit_id].length }.sum,max_units)+']'+";\r" if nodes.include?(unit.id) }
+        #create the edges
+        cnt = 0 # start at zero or if you want to break this into shorter tasks, you could break it differently
+        last = @units.length-1
+        to_process= last-cnt
+        @units[cnt..last].each  { |outer_unit|
+          cnt+=1
+          @units[cnt..last].each  { |inner_unit|
+             if outer_unit.collaboration_matrix[inner_unit.id].length > edge_strength_to_graph
+               pubs = outer_unit.collaboration_matrix[inner_unit.id].length
+               the_length = (10-(pubs/(max_length/9))).to_i
+              dot_string << ' node'+outer_unit.id.to_s+' -- node'+inner_unit.id.to_s+' [len='+the_length.to_s+' color='+color_scheme(the_length)+' label="'+pubs.to_s+' pubs"]'+";\r"
+            end
+          }
+        }
+        
+        # complete the graph
+        dot_string << "}\r" 
+        
+        # send it to the browser
+        send_data dot_string,
+                  :type => 'text/plain; charset=iso-8859-1; header=present',
+                  :disposition => "attachment; filename=department_collaborations.dot"
+      }
+      
+    end
+  end
+  
+  def color_scheme(color_number)
+    case color_number 
+      when 0..2 then "maroon"
+      when 3..4 then "firebrick"
+      when 5..6 then "darkturquoise"
+      when 7..8 then "slategray"
+      when 9 then "powderblue"
+      else "goldenrod"
+    end
+  end
+
+  def node_color(pub_units, max_units)
+    case (5-(pub_units/(max_units/5))).to_i
+      when 0 then "tomato"
+      when 1 then "coral"
+      when 2 then "thistle"
+      when 3 then "cyan"
+      when 4 then "powderblue"
+      else "lightgray"
     end
   end
 
