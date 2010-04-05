@@ -1,0 +1,347 @@
+@page {
+    size: US-Letter;
+    margin: 40pt 25pt 40pt 30pt;
+}
+
+/* Global styles */
+
+body { 
+	font-family : Verdana, Arial, sans-serif;
+	font-size : 8pt;
+	color : black;
+	background-color: white; 
+	line-height: 14px;
+	background: white; 
+	margin: 5px 5px 5px 5px;
+}
+
+p, ol, ul, td {
+	font-family: Arial, Helvetica, Geneva, Sans-serif;
+	font-size: 9px;
+	line-height: 18px;
+}
+
+p {
+    padding: 0px 0px 4px 0px;
+    margin:  0px 0px 4px 0px;
+	color : black;
+	font-size : 8pt;
+	font-family : Verdana,  Arial,  sans-serif;
+}
+
+ul {
+    margin-left: 0px;
+    padding-left: 15px;
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+ul.squareBullets {
+    list-style-type: square;
+}
+
+ol li {
+    padding-bottom: 15px;
+}
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+
+h1, h2, .h2, h3, .h3 {
+    font-family: Arial, Helvetica, Geneva, Sans-serif;
+    font-size: 11pt;
+    font-weight: bold;
+	color: #226;
+    line-height: 140%;
+    padding-bottom: 0px;
+    margin-bottom: 2px;
+    margin-top: 8px;
+    padding-top: 0px;
+}
+
+a { color: #000; }
+a:visited { color: #666; }
+a:hover { color: #fff; background-color:#888; }
+
+
+/* Styles for admin/list */
+
+table {
+	border: 1px indigo solid;
+}
+
+td,th {
+	padding-top: 0.25em;
+	padding-bottom: 0.25em;
+}
+
+table.borderless {
+	border: 0px;
+}
+
+#biograph table {
+	padding-left: 1em;
+	border: 0px;
+}
+
+#biograph table tr td table {
+	padding-left: 2em;
+	border: 0px;
+}
+
+#biograph table tr th {
+	padding-top: 0.125em;
+	padding-bottom: 0px;
+	padding-right: 0.5em;
+	vertical-align:top;
+	color:        #555;
+	text-align:   right;
+	line-height: 14px;
+}
+
+#biograph table tr td {
+	padding-top: 0.125em;
+	padding-bottom: 0px;
+	vertical-align:top;
+	color:        #520063;
+	line-height: 14px;
+}
+
+table.fullsize {
+	width: 100%;
+}
+
+td.list-left, th.list-left {
+	padding-left: 1em;
+}
+
+td.list-right {
+	padding-right: 1em;
+	text-align: right;
+}
+
+th {
+	padding-bottom: 0px;
+}
+
+td.list-title-left {
+	padding-left: 1em;
+	color:        #244;
+	font-weight:  bold;
+}
+
+td.list-title-center {
+	text-align: center;
+}
+td.list-title-right {
+	padding-right: 1em;
+	text-align: right;
+}
+
+#listing .list-heading {
+	background-color: #709fc7;
+	color:        #244;
+	font-weight:  bold;
+}
+
+#listing .list-title {
+	color:        #244;
+	font-weight:  bold;
+}
+
+#listing .list-title-center {
+	color:        #244;
+	font-weight:  bold;
+	text-align: center;
+}
+
+#listing .list-title-right {
+	color:        #244;
+	font-weight:  bold;
+	padding-right: 1em;
+	text-align: right;
+}
+
+#listing .list-image {
+	width:        60px;
+	height:       70px;
+}
+
+
+#listing .list-actions {
+	font-size:    x-small;
+	text-align:   right;
+	padding-left: 0.5em;
+}
+
+#listing .list-line-even {
+	background:   aliceblue;
+	padding-bottom: 0.5em;
+}
+
+#listing .list-line-odd {
+	background:   lightyellow;
+	padding-bottom: 0.5em;
+}
+
+#listing .list-line-highlight {
+	background:   yellow;
+	padding-bottom: 0.5em;
+}
+
+/* Styles for psd */
+
+
+/* --- main --- */
+#main {
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px;
+	width: 100%;
+	height:auto;
+	vertical-align: top;
+	background-color: #FFFFFF;
+}
+
+#maincontent {
+	float: right;  
+	margin-top: 0px;
+	margin-right: 0px;
+    width: 100% ;
+	height:auto;
+	vertical-align: top;
+	background-color: #FFFFFF;
+}
+
+
+#title {
+  margin: 0px;
+  padding: 5px;
+  padding-left: 20px;
+  padding-bottom: 10px;
+  font:  180% sans-serif;
+  color: #226;
+  background-color: lightyellow;
+}
+
+#title a {
+  padding: 5px;
+  color: #226;
+  text-decoration:none;
+  background: none;
+}
+
+#title a:hover {
+  background: yellow;
+}
+
+#content {
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 5px;
+  overflow:auto;
+}
+
+#collaborators {
+  padding:1px;
+  margin:0px;
+  line-height: 15px;
+  padding-left: 15px;
+  padding-right: 5px;
+  overflow:auto;
+}
+
+#collaborators a {
+	text-decoration: none;
+	color: #229;
+}
+#collaborators a:visited { color: #88C; }
+#collaborators a:hover { color: #fff; background-color:#888; }
+
+
+#OrgGraph, #MemberGraph {
+	margin-left: -8px;
+}
+
+#abstractcontent {
+	margin-left: 30px;
+	padding: 15px;
+	padding-left: 15px;
+	padding-right: 5px;
+	margin-right: 30px;
+ 	height:auto;
+	vertical-align: top;
+	background-color: #FFFFFF;
+}
+
+#endnotecontent {
+	margin-left: 30px;
+	margin-top:   3px;
+	padding: 3px;
+	padding-left: 15px;
+	padding-right: 15px;
+	margin-right: 30px;
+	vertical-align: top;
+	background-color: #FFFFFF;
+}
+
+#endnotecontent br {
+	margin: 0px;
+	padding: 3px;
+}
+
+#last_load_date {
+	float: right;  
+	margin-top: -15px;
+	margin-right: 10px;
+	padding: 3px;
+}
+
+#abstract, #import, #mesh {
+	border-top: 1px indigo solid;
+ 	margin-top: 15px;
+}
+
+#linkout {
+	border: 1px indigo solid;
+	padding: 3px;
+	padding-left: 10px;
+ 	margin-top: 15px;
+}
+
+span.intra_unit, a.intra_unit {
+	background-color: #AFD8F8;
+	text-decoration: none;
+}
+span.inter_unit, a.inter_unit {
+	background-color: #FFCC33;
+	text-decoration: none;
+}
+
+span.no_intra_unit, a.no_intra_unit {
+	background-color: #FF99FF;
+	text-decoration: none;
+}
+
+span.first_author, a.first_author {
+	color: #660066;
+	background-color: #CCAF9F;
+	text-decoration: none;
+}
+span.last_author, a.last_author {
+	color: #002EB8;
+	background-color: khaki;
+	text-decoration: none;
+}
+span.author, a.author {
+	color: #353;
+	background-color: peachpuff;
+	text-decoration: none;
+}
+.author:hover, .first_author:hover, .last_author:hover {
+	background: #AAA;
+}
+

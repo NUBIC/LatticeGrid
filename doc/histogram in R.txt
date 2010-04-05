@@ -1,0 +1,640 @@
+#
+#
+#
+
+#Analysis
+#ic=InvestigatorColleague.find(6399)
+#Pat McCarthy and Norm Smith
+
+investigator = Investigator.find_by_username("nds213")
+colleague = Investigator.find_by_username("pmm918")
+
+# repeat these
+tag_ids = investigator.tags.collect(&:id)
+
+citation_overlap = investigator.abstracts.collect{|x| x.id}.flatten & colleague.abstracts.collect{|x| x.id}.flatten
+mesh_tag_ids = investigator.abstracts.collect{|x| x.tags.collect(&:id)}.flatten & colleague.abstracts.collect{|x| x.tags.collect(&:id)}.flatten
+
+mesh_tag_ids.length 
+
+
+abstract_ids1 = investigator.abstracts.collect(&:id)
+abstract_ids2 = colleague.abstracts.collect(&:id)
+tag_type = "Abstract"
+ic1 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids1, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+ic_overlap = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => citation_overlap, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+ic2 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids2, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+tag_type = "Investigator"
+ic_pi = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id = :taggable_id", {:tag_type => tag_type, :taggable_id => investigator.id, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+# investigator and colleague ic are always the same
+
+ic1  #741.0
+ic2 # 800.0
+ic_pi  # 586.0
+ic_overlap # 0
+
+mesh_tag_ids.length  #37
+
+[abstract_ids1.length,abstract_ids2.length].min #43
+
+  ((ic1+ic2+(2*ic_pi))/[abstract_ids1.length,abstract_ids2.length].min).round   #65
+  ((ic1+ic2+(2*ic_pi))/mesh_tag_ids.length).round   #73
+((ic1+ic2+ic_overlap+(2*ic_pi))/(5+mesh_tag_ids.length)).round #109
+
+#
+#
+#
+#Again, but Norm Smith and Robert Nadler
+
+investigator = Investigator.find_by_username("nds213")
+colleague = Investigator.find_by_username("rbn657")
+
+ic1  #6482.0
+ic2 # 11976.0
+ic_pi  # 4259.0
+ic_overlap # 2424.0
+
+mesh_tag_ids.length  #65
+
+[abstract_ids1.length,abstract_ids2.length].min #43
+
+  ((ic1+ic2+(2*ic_pi))/[abstract_ids1.length,abstract_ids2.length].min).round   #627
+  ((ic1+ic2+(2*ic_pi))/mesh_tag_ids.length).round   #415
+((ic1+ic2+ic_overlap+(2*ic_pi))/(5+mesh_tag_ids.length)).round #420
+
+
+#
+#
+#
+# Norm Smith and Bill Catalona
+
+investigator = Investigator.find_by_username("nds213")
+colleague = Investigator.find_by_username("wjc135")
+
+ic1  #4351.0
+ic2 # 10722.0.0
+ic_pi  # 2726.0
+ic_overlap # 1713.0
+
+mesh_tag_ids.length #54
+
+[abstract_ids1.length,abstract_ids2.length].min #43
+
+  ((ic1+ic2+(2*ic_pi))/[abstract_ids1.length,abstract_ids2.length].min).round   #477
+  ((ic1+ic2+(2*ic_pi))/mesh_tag_ids.length).round   #380
+((ic1+ic2+ic_overlap+(2*ic_pi))/(5+mesh_tag_ids.length)).round #377
+
+#
+#
+# June McKoy jmm392 and Charlie Bennett cbe282
+
+investigator = Investigator.find_by_username("cbe282")
+colleague = Investigator.find_by_username("jmm392")
+
+
+ic1  #50456.0
+ic2 # 32229.0
+ic_pi  # 21626.0
+ic_overlap # 31463.0
+
+[abstract_ids1.length,abstract_ids2.length].min #38
+
+  ((ic1+ic2+(2*ic_pi))/[abstract_ids1.length,abstract_ids2.length].min).round   #3314
+  ((ic1+ic2+(2*ic_pi))/mesh_tag_ids.length).round   #1067
+((ic1+ic2+ic_overlap+(2*ic_pi))/(5+mesh_tag_ids.length)).round #1280
+
+#
+#
+#
+
+colleagues = InvestigatorColleague.find(:all, :conditions => ['investigator_colleagues.mesh_tags_ic > 2000'])
+colleagues.length
+unique_colleagues = colleagues.collect{|c| c.colleague_id }.uniq
+unique_colleagues.length
+
+
+colleagues.length
+unique_colleagues.length
+
+
+
+Abstract.all.collect{|x| x.taggings.collect(&:information_content)}.flatten.join(", ")
+
+InvestigatorColleague.find(:all, :conditions => ['investigator_colleagues.mesh_tags_ic > 500'])
+
+    		
+
+InvestigatorColleague.find(:all,  :conditions => ['investigator_id > colleague_id and investigator_colleagues.mesh_tags_ic > 2'], :order => "mesh_tags_ic asc").collect(&:mesh_tags_ic)
+
+InvestigatorColleague.find(:all, :order => "mesh_tags_ic desc").collect(&:mesh_tags_ic)
+
+Tag.find(:all, :include=>:taggings, :conditions => "taggings.taggable_type='Investigator'", :order => "taggings.information_content desc").collect{ |x| x.taggings.length}
+Tag.find(:all, :include=>:taggings, :conditions => "taggings.taggable_type='Abstract'", :order => "taggings.information_content desc").collect{ |x| x.taggings.length}
+
+Tag.find(:all, :include=>:taggings, :conditions => "taggings.taggable_type='Abstract'", :order => "taggings.information_content desc").collect{ |x| x.taggings[0].information_content}
+Tag.find(:all, :include=>:taggings, :conditions => "taggings.taggable_type='Investigator'", :order => "taggings.information_content desc").collect{ |x| x.taggings[0].information_content}
+
+Tag.find(:all, :include=>:taggings, :order => "taggings.information_content desc").collect{ |x| x.taggings[0].information_content.round}
+
+Tag.find(:all, :include=>:taggings, :order => "taggings.information_content desc", :limit=>300).collect{ |x| x.name + " - " + x.taggings[0].information_content.round.to_s}
+
+Tagging.delete_all
+Tag.delete_all
+
+InvestigatorColleague.update_all("mesh_tags_ic = 0")
+InvestigatorColleague.update_all("mesh_tags_cnt = 0")
+
+
+tag_ids = investigator.tags.collect(&:id)
+return if tag_ids.blank?
+ic_tags = Investigator.information_cloud(tag_ids, :limit=>25)
+ic_tags.collect{ |ic_tag| Investigator.find(ic_tag.taggable_id).name}
+c_tags.collect(&:total)
+
+tagcounts=Investigator.tag_counts(:limit=>5, :order=>"count desc")
+investigator_max_tag_count=Investigator.tag_counts(:limit=>5, :order=>"count desc")[0].count
+abstract_max_tag_count=Abstract.tag_counts(:limit=>5, :order=>"count desc")[0].count
+
+#
+#
+#
+#
+
+dd <- read.table("taggings.ic.txt")
+hist(dd[1:127000,1])
+
+d2 <- read.table("taggings.mesh_ic.txt")
+hist(d2[1:77800,1])
+
+d2 <- read.table("investigator_colleagues_ic.txt")
+hist(d2[1:77800,1])
+
+d2 <- read.table("investigator_colleagues_ic2.txt")
+hist(d2[1:99800,1])
+
+d2 <- read.table("investigator_colleagues_ic_500.txt")
+hist(d2[1:99800,1])
+
+d2 <- read.table("investigator_colleagues_ic3.txt")
+hist(d2[1:99800,1])
+
+d2 <- read.table("investigator_colleagues_ic_no_zeros.txt")
+hist(d2[1:77800,1], 100)
+
+d2 <- read.table("investigator_colleagues_ic_trimmed.txt")
+hist(d2[1:77800,1], 100)
+
+
+
+tags <- read.table("mesh_tags_ic.txt")
+hist(tags[1:8723,1])
+
+tags <- read.table("mesh_tags_ic2.txt")
+hist(tags[1:8723,1])
+
+tags <- read.table("mesh_tags_ic3.txt")
+hist(tags[1:8723,1])
+
+tags <- read.table("mesh_tags_ic4.txt")
+hist(tags[1:10000,1])
+
+
+tagfreq <- read.table("mesh_tag_abstracts.txt")
+hist(tagfreq[1:10000,1])
+
+abstract_tagfreq <- read.table("mesh_tag_abstracts2.txt")
+hist(abstract_tagfreq[1:10000,1])
+
+
+#
+#
+#
+
+tag_type = "Abstract"
+
+#
+#
+#
+
+# used this equation for a full evaluation
+  (ic1*ic1+ic2*ic2)/(ic_pi+abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length)
+# The results were not very good for showing distant relationships
+
+
+colleague=Investigator.find_by_username("tkw086") # Teresa Woodruff tkw086
+investigator=Investigator.find_by_username("btshea") #Lonnie Shea  btshea
+
+abstract_ids1 = investigator.abstracts.collect(&:id)
+			mesh_tag_ids = investigator.abstracts.collect{|x| x.tags}.flatten & colleague.abstracts.collect{|x| x.tags}.flatten
+
+abstract_ids1.length
+abstract_ids2.length
+mesh_tag_ids.length
+
+ic1 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids1, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+ic_pi = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id = :taggable_id", {:tag_type => 'Investigator', :taggable_id => investigator.id, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+ic2 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids2, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+(ic1*ic1+ic2*ic2)/ic_pi # 32953
+(ic1*ic1+ic2*ic2)/(ic_pi+abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length) #  30345
+(ic1+ic_pi+ic2)/(abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length+20)  # 53
+(ic1+ic_pi+ic2)/(mesh_tag_ids.length+20)  # 101
+
+
+ic1 # 25
+ic2 # 64
+ic_pi # 25
+ic1+ic2+(2*ic_pi) #139
+
+
+#
+#
+#
+
+colleague=Investigator.find_by_username("tam011") # Thomas Mustoe 
+investigator=Investigator.find_by_username("btshea") #Lonnie Shea  btshea
+
+ abstract_ids1 = investigator.abstracts.collect(&:id)
+ abstract_ids2 = colleague.abstracts.collect(&:id)
+mesh_tag_ids = investigator.abstracts.collect{|x| x.tags}.flatten & colleague.abstracts.collect{|x| x.tags}.flatten
+
+abstract_ids1.length
+abstract_ids2.length
+mesh_tag_ids.length
+
+ic1 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids1, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+ic_pi = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id = :taggable_id", {:tag_type => 'Investigator', :taggable_id => investigator.id, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+ic2 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids2, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+(ic1*ic1+ic2*ic2)/ic_pi # 5898
+(ic1*ic1+ic2*ic2)/(ic_pi+abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length) #  4878
+(ic1+ic_pi+ic2)/(abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length+20)  # 18
+(ic1+ic_pi+ic2)/(mesh_tag_ids.length+20)  # 40
+
+#
+#
+#
+
+colleague=Investigator.find_by_username("wakibbe") # Warren Kibbe
+investigator=Investigator.find_by_username("pgreenld") #Phil Greenland
+
+ abstract_ids1 = investigator.abstracts.collect(&:id)
+ abstract_ids2 = colleague.abstracts.collect(&:id)
+mesh_tag_ids = investigator.abstracts.collect{|x| x.tags}.flatten & colleague.abstracts.collect{|x| x.tags}.flatten
+
+abstract_ids1.length
+abstract_ids2.length
+mesh_tag_ids.length
+
+ic1 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids1, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+ic_pi = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id = :taggable_id", {:tag_type => 'Investigator', :taggable_id => investigator.id, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+ic2 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids2, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+(ic1*ic1+ic2*ic2)/ic_pi # 7293
+(ic1*ic1+ic2*ic2)/(ic_pi+abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length) #  6723
+(ic1+ic_pi+ic2)/(abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length+20)  # 43
+(ic1+ic_pi+ic2)/(mesh_tag_ids.length+20)  # 83
+
+ic1 # 902.0
+ic2 # 503.0
+ic_pi # 221.
+ic1+ic2+(2*ic_pi) #1888.0
+
+#
+#
+#
+
+
+
+colleague=Investigator.find_by_username("wakibbe") # Warren Kibbe
+investigator=Investigator.find_by_username("slk862") #Simon Lin
+
+ abstract_ids1 = investigator.abstracts.collect(&:id)
+ abstract_ids2 = colleague.abstracts.collect(&:id)
+mesh_tag_ids = investigator.abstracts.collect{|x| x.tags}.flatten & colleague.abstracts.collect{|x| x.tags}.flatten
+
+abstract_ids1.length
+abstract_ids2.length
+mesh_tag_ids.length
+
+ic1 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids1, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+ic_pi = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id = :taggable_id", {:tag_type => 'Investigator', :taggable_id => investigator.id, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+ic2 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids2, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+(ic1*ic1+ic2*ic2)/ic_pi # 7293
+(ic1*ic1+ic2*ic2)/(ic_pi+abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length) #  6723
+(ic1+ic_pi+ic2)/(abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length+20)  # 43
+(ic1+ic_pi+ic2)/(mesh_tag_ids.length+20)  # 83
+
+ic1 # 13627.0
+ic2 # 12855.0
+ic_pi # 4033.
+ic1+ic2+(2*ic_pi) #34548.0
+
+#
+#
+#
+
+colleague=Investigator.find_by_username("wakibbe") # Warren Kibbe
+investigator=Investigator.find_by_username("jameson") #Larry Jameson
+
+ abstract_ids1 = investigator.abstracts.collect(&:id)
+ abstract_ids2 = colleague.abstracts.collect(&:id)
+mesh_tag_ids = investigator.abstracts.collect{|x| x.tags}.flatten & colleague.abstracts.collect{|x| x.tags}.flatten
+
+abstract_ids1.length
+abstract_ids2.length
+mesh_tag_ids.length
+
+ic1 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids1, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+ic_pi = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id = :taggable_id", {:tag_type => 'Investigator', :taggable_id => investigator.id, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+ic2 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids2, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+(ic1*ic1+ic2*ic2)/ic_pi # 090
+(ic1*ic1+ic2*ic2)/(ic_pi+abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length) #  577
+(ic1+ic_pi+ic2)/(abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length+20)  # 5
+(ic1+ic_pi+ic2)/(mesh_tag_ids.length+20)  # 17
+
+ic1 #  1891.0
+ic2 # 377.0
+ic_pi # 228.
+ic1+ic2+(2*ic_pi) # 2724
+
+#
+#
+#
+
+
+
+Abstract.all.collect{|x| x.taggings.collect(&:information_content)}.flatten.join(", ")
+colleague.co_authors.shared_pubs(1).mesh_ic(50).collect{ |x| x.mesh_tags_cnt.to_s + " " + x.mesh_tags_ic.to_s + ": "+ (x.mesh_tags_ic/x.mesh_tags_cnt).to_s }.join(",")
+colleague.co_authors.shared_pubs(1).mesh_ic(10000).length
+mesh_overlap = investigator.abstracts.collect{|x| x.taggings}.flatten & colleague.abstracts.collect{|x| x.taggings}.flatten
+
+Tag.all.length
+Tagging.all.length
+Tag.find(18)
+investigator.abstracts.collect{|x| x.taggings}.flatten.collect(&:tag_id).length
+investigator.abstracts.collect{|x| x.taggings}.flatten
+
+@total_tagged_publications = Abstract.find(:all, :conditions=>"mesh <> ''").length
+multiplier = 100/Math.log10(@total_tagged_publications)
+
+ abstract_ids1 = investigator.abstracts.collect(&:id)
+ abstract_ids2 = colleague.abstracts.collect(&:id)
+mesh_tag_ids = investigator.abstracts.collect{|x| x.tags}.flatten & colleague.abstracts.collect{|x| x.tags}.flatten
+
+
+@total_investigators = Investigator.all.length
+
+tag="metabolism"
+tagged_investigator_count=Investigator.find_tagged_with(tag).length
+
+tagged_abstracts_count=Abstract.find_tagged_with(tag).length
+
+information_content = multiplier * Math.log10(@total_tagged_publications.to_f/tagged_abstracts_count)
+
+ information_content = multiplier * Math.log10(@total_investigators.to_f/tagged_investigator_count)
+ 
+   mesh_tag_overlap = investigator.abstracts.collect{|x| x.tags.collect(&:id)}.flatten & colleague.abstracts.collect{|x| x.tags.collect(&:id)}.flatten
+
+mesh_tag_ids = investigator.abstracts.collect{|x| x.tags}.flatten & colleague.abstracts.collect{|x| x.tags}.flatten
+  
+  # Now sum up the number of each tags for each in
+
+  mesh_tag_overlap = investigator.abstracts.collect{|x| x.taggings}.flatten & colleague.abstracts.collect{|x| x.taggings}.flatten
+
+
+#
+#
+#
+
+colleague=Investigator.find_by_username("gsk116") # Geoff Kansas gsk116
+investigator=Investigator.find_by_username("philip") # Phil Iannaccone philip
+
+ abstract_ids1 = investigator.abstracts.collect(&:id)
+ abstract_ids2 = colleague.abstracts.collect(&:id)
+mesh_tag_ids = investigator.abstracts.collect{|x| x.tags}.flatten & colleague.abstracts.collect{|x| x.tags}.flatten
+
+abstract_ids1.length
+abstract_ids2.length
+mesh_tag_ids.length
+
+ic1 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids1, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+ic_pi = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id = :taggable_id", {:tag_type => 'Investigator', :taggable_id => investigator.id, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+ic2 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids2, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+(ic1*ic1+ic2*ic2)/ic_pi # 435
+(ic1*ic1+ic2*ic2)/(ic_pi+abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length) #  324
+(ic1+ic_pi+ic2)/(abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length+20)  # 6.5
+(ic1+ic_pi+ic2)/(mesh_tag_ids.length+20)  # 10.9
+
+ic1 #  101.0
+ic2 # 7.0
+ic_pi # 14.9
+ic1+ic2+(2*ic_pi) # 137
+
+
+#
+#
+#
+
+
+colleague=Investigator.find_by_username("dow641") # David Walterhouse dow641
+investigator=Investigator.find_by_username("philip") # Phil Iannaccone philip
+
+ abstract_ids1 = investigator.abstracts.collect(&:id)
+ abstract_ids2 = colleague.abstracts.collect(&:id)
+mesh_tag_ids = investigator.abstracts.collect{|x| x.tags}.flatten & colleague.abstracts.collect{|x| x.tags}.flatten
+
+abstract_ids1.length
+abstract_ids2.length
+mesh_tag_ids.length
+
+ic1 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids1, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+ic_pi = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id = :taggable_id", {:tag_type => 'Investigator', :taggable_id => investigator.id, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+ic2 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids2, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+(ic1*ic1+ic2*ic2)/ic_pi # 9018
+(ic1*ic1+ic2*ic2)/(ic_pi+abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length) #  8510
+(ic1+ic_pi+ic2)/(abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length+20)  # 50
+(ic1+ic_pi+ic2)/(mesh_tag_ids.length+20)  # 62
+
+ic1 # 16649.0
+ic2 # 12840.0
+ic_pi # 5046
+
+ic1+ic2+(2*ic_pi) #39582
+
+
+#
+#
+#
+
+colleague=Investigator.find_by_username("dce946") # David Cella dce946
+investigator=Investigator.find_by_username("cbe282") # Charlie Bennett  cbe282
+
+ abstract_ids1 = investigator.abstracts.collect(&:id)
+ abstract_ids2 = colleague.abstracts.collect(&:id)
+mesh_tag_ids = investigator.abstracts.collect{|x| x.tags}.flatten & colleague.abstracts.collect{|x| x.tags}.flatten
+
+abstract_ids1.length
+abstract_ids2.length
+mesh_tag_ids.length
+
+ic1 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids1, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+ic_pi = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id = :taggable_id", {:tag_type => 'Investigator', :taggable_id => investigator.id, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+ic2 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids2, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+(ic1*ic1+ic2*ic2)/ic_pi # 44411
+(ic1*ic1+ic2*ic2)/(ic_pi+abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length) #  39764
+(ic1+ic_pi+ic2)/(abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length+20)  # 41
+(ic1+ic_pi+ic2)/(mesh_tag_ids.length+20)  # 94
+
+ic1 # 14007.0
+ic2 # 8626.0
+ic_pi # 1795
+
+ic1+ic2+(2*ic_pi) #26223
+
+#
+#
+#
+
+colleague=Investigator.find_by_username("dce946") # David Cella dce946
+investigator=Investigator.find_by_username("eha003") # Beth Hahn eha003
+
+ abstract_ids1 = investigator.abstracts.collect(&:id)
+ abstract_ids2 = colleague.abstracts.collect(&:id)
+mesh_tag_ids = investigator.abstracts.collect{|x| x.tags}.flatten & colleague.abstracts.collect{|x| x.tags}.flatten
+
+abstract_ids1.length
+abstract_ids2.length
+mesh_tag_ids.length
+
+ic1 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids1, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+ic_pi = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id = :taggable_id", {:tag_type => 'Investigator', :taggable_id => investigator.id, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+ic2 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids2, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+(ic1*ic1+ic2*ic2)/ic_pi # 31177
+(ic1*ic1+ic2*ic2)/(ic_pi+abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length) #  28004
+(ic1+ic_pi+ic2)/(abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length+20)  # 40
+(ic1+ic_pi+ic2)/(mesh_tag_ids.length+20)  # 96
+
+ic1 # 12676
+ic2 # 14650
+ic_pi # 3455
+
+ic1+ic2+(2*ic_pi) #34237
+
+#
+#
+#
+
+
+
+colleague=Investigator.find_by_username("kgreen") # Kathleen Green
+investigator=Investigator.find_by_username("sge340") # Spiro Getsios
+
+ abstract_ids1 = investigator.abstracts.collect(&:id)
+ abstract_ids2 = colleague.abstracts.collect(&:id)
+mesh_tag_ids = investigator.abstracts.collect{|x| x.tags}.flatten & colleague.abstracts.collect{|x| x.tags}.flatten
+
+abstract_ids1.length
+abstract_ids2.length
+mesh_tag_ids.length
+
+ic1 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids1, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+ic_pi = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id = :taggable_id", {:tag_type => 'Investigator', :taggable_id => investigator.id, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+ic2 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids2, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+(ic1*ic1+ic2*ic2)/ic_pi # 12441
+(ic1*ic1+ic2*ic2)/(ic_pi+abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length) #  11459
+(ic1+ic_pi+ic2)/(abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length+20)  # 45
+(ic1+ic_pi+ic2)/(mesh_tag_ids.length+20)  # 62
+
+ic1 # 6543
+ic2 # 1198.0
+ic_pi # 2068.0
+ic1+ic2+(2*ic_pi) #18111
+
+#
+#
+#
+
+colleague=Investigator.find_by_username("kgreen") # Kathleen Green
+investigator=Investigator.find_by_username("pbm864") # Phil Messersmith
+
+
+ abstract_ids1 = investigator.abstracts.collect(&:id)
+ abstract_ids2 = colleague.abstracts.collect(&:id)
+mesh_tag_ids = investigator.abstracts.collect{|x| x.tags.collect(&:id)}.flatten & colleague.abstracts.collect{|x| x.tags.collect(&:id)}.flatten
+
+abstract_ids1.length
+abstract_ids2.length
+mesh_tag_ids.length
+
+ic1 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids1, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+ic_pi = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id = :taggable_id", {:tag_type => 'Investigator', :taggable_id => investigator.id, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+ic2 = Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids2, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
+
+
+(ic1*ic1+ic2*ic2)/ic_pi # 469
+(ic1*ic1+ic2*ic2)/(ic_pi+abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length) #  319
+(ic1+ic_pi+ic2)/(abstract_ids1.length+abstract_ids2.length+mesh_tag_ids.length+20)  # 5
+(ic1+ic_pi+ic2)/(mesh_tag_ids.length+20)  # 11
+
+ic1 # 25
+ic2 # 64
+ic_pi # 25
+ic1+ic2+(2*ic_pi) #139
+
+
+

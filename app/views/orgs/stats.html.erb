@@ -1,0 +1,62 @@
+<h1><%= @heading %></i></h1>
+
+The following is a list of the total publications, number of publications with intra-unit sharing, and inter-unit sharing, broken down by organizational unit. <br/>
+
+<div id="listing">
+  
+<table cellpadding="2" cellspacing="0" width="900" class="borderless"> 
+<tr valign="bottom" colspan="3">
+	<td class="list-title-left">
+		Unit name
+	</td>
+	<td class="list-title-left">
+		Unit type
+	</td>
+	<td class="list-title-center">
+		Primary Investigators<br/>
+	</td>
+	<td class="list-title-center">
+		Associated Investigators<br/>
+	</td>
+	<td class="list-title-center">
+		Total publications<br/>
+	</td>
+	<td class="list-title-center">
+		Intra-unit<br/>
+	</td>
+	<td class="list-title-center">
+		Inter-unit<br/>
+	</td>
+</tr>
+
+<% for unit in @units %>
+	<% if unit.primary_faculty.length > 0 or unit.associated_faculty.length > 0 then %>
+	<tr valign="bottom" colspan="3">
+		<td>
+			<%= unit.name %>
+		</td>
+		<td>
+			<%= unit.type %>
+		</td>
+		<td class="list-title-center">
+			<%= unit.primary_faculty.length %>
+		</td>
+		<td class="list-title-center">
+			<%= unit.associated_faculty.length %>
+		</td>
+		<td class="list-title-center">
+			<%= unit.abstracts.length %>
+		</td>
+		<td class="list-title-center">
+			<%= (unit.pi_intra_abstracts.length) %> (<%= unit.abstracts.length > 0 ? (100*(unit.pi_intra_abstracts.length)/unit.abstracts.length) : 0 %>%)<br/>
+		</td>
+		<td class="list-title-center">
+			<%= unit.pi_inter_abstracts.length %> (<%= unit.abstracts.length > 0 ? (100*unit.pi_inter_abstracts.length/unit.abstracts.length) : 0 %>%) <br/>
+		</td>
+	</tr>
+	<% end %>
+<% end %>
+</table>
+<br/>
+
+</div>

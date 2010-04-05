@@ -1,0 +1,24 @@
+<h1><%= @heading %></h1>
+
+<p>The following publications are sorted by year and author. Click on the investigator listed to the right of the reference to find other publications by that investigator. Click on the title for a publication to see the abstract. </p>
+
+<div id="listing">
+  
+  <% for unit in @head_node.children %>
+	<table cellpadding="2" cellspacing="0" width="900" class="borderless"> 
+	<tr valign="bottom" colspan="3">
+	<td class="list-title-center">
+		<%= unit.name %><br/>
+	</td>
+	</tr>
+	</table>
+	
+	<%= "<div id='list_#{unit.id}'></div>" %>
+	<script language="javascript">
+	<%= remote_function(:url => {:controller => :orgs, :action => :list_abstracts_during_period_rjs, :id => unit.id, :start_date => @start_date, :end_date => @end_date }, :before => "Element.show('spinner')", 
+	:complete => "Element.hide('spinner')" ) %> 
+	</script>
+  <% end %>
+
+<br/>
+</div>
