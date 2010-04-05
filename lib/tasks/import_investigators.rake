@@ -72,6 +72,7 @@ end
 task :cleanInvestigatorsUsername => :environment do
    block_timing("cleanInvestigatorsUsername") {
      doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%.%'"))
+     doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%(%'"))
    }
 end
 

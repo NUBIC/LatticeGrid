@@ -17,6 +17,8 @@
 
 curl http://graphviz.org/pub/graphviz/stable/SOURCES/graphviz-2.26.3.tar.gz -O graphviz-2.26.3.tar.gz
 tar zxf graphviz-2.26.3.tar.gz 
+cd graphviz-2.26.3
+
 ./configure
 make
 sudo make install

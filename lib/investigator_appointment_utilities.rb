@@ -262,6 +262,7 @@ end
 def doCleanInvestigators(investigators)
   investigators.each do |pi|
     pi.username = pi.username.split('.')[0]
+    pi.username = pi.username.split('(')[0]
     pi.save!
   end
 end

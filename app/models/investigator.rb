@@ -6,8 +6,7 @@ class Investigator < ActiveRecord::Base
   has_many :similar_investigators, 
       :class_name => "InvestigatorColleague", 
       :include => [:colleague], 
-      :conditions => ['investigator_colleagues.publication_cnt=0 and investigator_colleagues.mesh_tags_ic > 500'], 
-      :limit=>15,
+      :conditions => ['investigator_colleagues.publication_cnt=0 and investigator_colleagues.mesh_tags_ic > 2000'], 
       :order=>'mesh_tags_ic desc'
   has_many :all_similar_investigators, 
       :class_name => "InvestigatorColleague", 

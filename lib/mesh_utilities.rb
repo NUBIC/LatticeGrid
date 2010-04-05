@@ -56,11 +56,17 @@ def SetMeshInformationContent(tag_count, total_count, taggable_type)
   # lets assume that the information content follows a normal distribution, with most tags having little information. Need to normalize to 100
   # Math.log10(@total_tagged_publications) is the largest possible number. For the cancer center the number is about 8000 pubs with MeSH tags
   # 500*(1-tagged_count/total_count)
-  tag_id=GetTag(tag_count.name)
+  tag_id=tag_count.id
   tagged_count=tag_count.count
   information_content = 0
+  # total count / (tagged count +9) - max is 1/10th total count
+  # to get to 100, (500/total_count) * total_count/ (tagged_count +4)
+  # for cancer center, out 6000 MeSH terms 2500 are unique, 1000 have 2, 500 have 3, 400 have 4, 250 have 5, 200 have 6, 150 have 7, 100 have 8, 100 have 9, 
+  # for FSM, out of 9318 MeSH terms, 3024 are unique, 1500 have 2, 900 have 3, 600 have 4, 440 have 5, 350 have 6, 260 have 7, 220 have 8, 190 have 9, 
+  #    145 have 10, 155 have 11, 140 have 12, 115 have 13, 102 have 14, 75 have 15, and the last 1100 have more
   if tagged_count > 0
-    information_content = (500.0 * (1.0 - tagged_count.to_f/total_count)).round
+    information_content = (2500.0/ (tagged_count + 4)).round
+    #information_content = (500.0 * (1.0 - tagged_count.to_f/total_count)).round
   end
   SetTaggings(tag_id,taggable_type,information_content)
 end
@@ -74,7 +80,7 @@ def GetSumTagInformationContent(mesh_tag_ids, tag_type, abstract_ids)
   Tagging.find(:all, :conditions => [" taggable_type = :tag_type AND tag_id IN (:tag_ids) AND taggable_id IN (:taggable_ids)", {:tag_type => tag_type, :taggable_ids => abstract_ids, :tag_ids => mesh_tag_ids}]).collect(&:information_content).sum
 end
 
-def CalculateMeSHinformationContent(investigator,colleague, mesh_tag_ids)
+def CalculateMeSHinformationContent(investigator,colleague, mesh_tag_ids, citation_overlap)
   # these two methods are similar except the tag_list calls the database
   # for all FSM takes about 4 minutes per 10 investigators
 
@@ -104,11 +110,14 @@ def CalculateMeSHinformationContent(investigator,colleague, mesh_tag_ids)
 
   ic1 = GetSumTagInformationContent(mesh_tag_ids, "Abstract", abstract_ids1)
   ic2 = GetSumTagInformationContent(mesh_tag_ids, "Abstract", abstract_ids2)
+  ic_overlap = GetSumTagInformationContent(mesh_tag_ids, "Abstract", citation_overlap) 
   ic_pi = GetSumTaggedInformationContent(mesh_tag_ids, "Investigator", investigator.id)
   
   #simplify as 
   # ic1+ic2+(2*ic_pi)
-  (ic1+ic2+(2*ic_pi)).round
+  # ((ic1+ic2+(2*ic_pi))/[abstract_ids1.length,abstract_ids2.length].min).round
+  # distribution of meshtags averages around 7. 
+  ((ic1+ic2+ic_overlap+(2*ic_pi))*10/(5+mesh_tag_ids.length)).round  
 
 end
 
@@ -162,7 +171,7 @@ def InvestigatorColleagueInclusionCriteria(citation_overlap,mesh_information_con
     
     
     # for now cut at 10000
-  if (mesh_information_content > 500) then
+  if (mesh_information_content > 150) then
     return true
   end
   return false
@@ -176,8 +185,8 @@ def AnalyzeInvestigatorColleague(investigator, update_only=true)
   ic_tags = Investigator.information_cloud(tag_ids, :limit=>250)
   
   ic_tags.each do |ic_tag|
-    next if ic_tag.taggable_id.to_i == investigator.id.to_i
-    return if ic_tag.total.to_i < 500
+    next if ic_tag.taggable_id.to_i <= investigator.id.to_i
+    return if ic_tag.total.to_i < 250
     colleague = Investigator.find(ic_tag.taggable_id)
     BuildInvestigatorColleague(investigator, colleague, update_only)
   end
@@ -203,7 +212,7 @@ def BuildInvestigatorColleague(investigator, colleague, update_only=true)
   citation_overlap = citation_overlap.uniq.compact
   mesh_tag_ids = investigator.abstracts.collect{|x| x.tags.collect(&:id)}.flatten & colleague.abstracts.collect{|x| x.tags.collect(&:id)}.flatten
   
-  mesh_information_content=CalculateMeSHinformationContent(investigator, colleague, mesh_tag_ids)
+  mesh_information_content=CalculateMeSHinformationContent(investigator, colleague, mesh_tag_ids, citation_overlap)
 
   if InvestigatorColleagueInclusionCriteria(citation_overlap,mesh_information_content) then
     InsertUpdateInvestigatorColleague(investigator.id,colleague.id,citation_overlap,mesh_tag_ids,mesh_information_content)
@@ -257,20 +266,20 @@ def InsertInvestigatorColleague(investigator_id,colleague_id,citation_overlap,me
   end
 end
 
-def find_cutoff(initial_number, ideal_number)
-  mesh_cutoff = 2000
+def find_cutoff(initial_number, ideal_number, cutoff_start)
+  mesh_cutoff = cutoff_start
   #do we need to adjust up or down
   if initial_number > ideal_number
     while initial_number > ideal_number
-      mesh_cutoff += 200
+      mesh_cutoff += 10
       initial_number = InvestigatorColleague.find(:all, 
-              :conditions => ['investigator_colleagues.mesh_tags_ic > :mesh_cutoff', {:mesh_cutoff => mesh_cutoff}]).count
+              :conditions => ['investigator_colleagues.mesh_tags_ic > :mesh_cutoff', {:mesh_cutoff => mesh_cutoff}]).length
     end
   else
     while initial_number < ideal_number
-      mesh_cutoff -= 200
+      mesh_cutoff -= 10
       initial_number = InvestigatorColleague.find(:all, 
-              :conditions => ['investigator_colleagues.mesh_tags_ic > :mesh_cutoff', {:mesh_cutoff => mesh_cutoff}]).count
+              :conditions => ['investigator_colleagues.mesh_tags_ic > :mesh_cutoff', {:mesh_cutoff => mesh_cutoff}]).length
     end
   end
   mesh_cutoff

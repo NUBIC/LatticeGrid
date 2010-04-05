@@ -167,9 +167,12 @@ class GraphvizController < ApplicationController
     else
       colleagues.each do |colleague|
         similar_investigators = colleague.all_similar_investigators.mesh_ic(stringency)
+        if  distance == "0"
+          similar_investigators = similar_investigators.collect{|ic| colleagues.include?(ic.colleague) ? ic : nil }.compact
+        end
         if include_orphans == "1" or similar_investigators.length > 0
           graph_secondaryroot(graph, colleague)
-          graph = graph_add_nodes(program, graph, similar_investigators, true)
+          graph = graph_add_nodes(program, graph, similar_investigators, true) if similar_investigators.length > 0
           if distance == "2"
             opts = {}
             opts[:fillcolor] = "#E0ECF8"

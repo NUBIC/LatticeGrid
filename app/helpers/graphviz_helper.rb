@@ -41,8 +41,10 @@ module GraphvizHelper
     end
   end
   def get_svg_method(file_name, content_type) 
-    if (mozilla_user_agent?) || internetexplorer_user_agent?
+    if (mozilla_user_agent?)
       get_object_method(file_name, content_type)
+    elsif internetexplorer_user_agent?
+      get_ie_svg_method(file_name, content_type)
     else
       get_image_method(file_name, content_type)
     end
@@ -55,10 +57,13 @@ module GraphvizHelper
     '<p>iframe tag load from '+request.env["HTTP_USER_AGENT"]+'</p>
     <iframe src="'+image_path( file_name)+'" />'
   end
+  def get_ie_svg_method(file_name, content_type)
+     '<!--[if IE]><embed src="'+image_path( file_name)+'" name="printable_map" type="'+content_type+'" height="800px" width="990px" pluginspage="http://www.adobe.com/svg/viewer/install/" /><![endif]-->'
+  end
   def get_object_method(file_name, content_type)
-    '<!--[if IE]><embed src="'+image_path( file_name)+'" name="printable_map" type="'+content_type+'" /><![endif]-->
-    <object data="'+file_name+'" type="'+content_type+' height="800px" width="1000px">
-    	<a href="'+file_name+'">[<acronym>SVG</acronym> Image</a>] (Using the link to view the image requires a stand alone <acronym>SVG</acronym> viewer and your browser needs to be configured to use this player)
+     '<!--[if IE]><embed src="'+image_path( file_name)+'" name="printable_map" type="'+content_type+'" height="800px" width="990px"/><![endif]-->
+    <object data="'+file_name+'" type="'+content_type+'" height="800px" width="990px">
+    	<a href="'+file_name+'">[<acronym>SVG</acronym> Image</a>] (Using the link to view the image requires a stand alone <acronym>SVG</acronym> viewer and your browser needs to be configured to use this player)</a>
     </object>'
   end
 

@@ -39,8 +39,8 @@
 <% for unit in units %>
 	<tr valign="bottom" colspan="3">
 		<td>
-			<%= link_to( image_tag("base.gif"), show_org_graph_path(unit.id), :title => "Graph member collaborations through co-authored publications ") %> 
-			<%= link_to( unit.name, org_path(unit.id), :title => "List publications by faculty members") %>
+			<%= link_to( image_tag("base.gif"), show_org_graph_url(unit.id), :title => "Graph member collaborations through co-authored publications ") %> 
+			<%= link_to( unit.name, org_url(unit.id), :title => "List publications by faculty members") %>
 		</td>
 		<% if show_unit_type %>
 		<td>
@@ -49,17 +49,17 @@
 		<% end %>
 		<% if show_primary_faculty %>
 		<td class="list-title-center">
-			<%= link_to( (unit.primary_faculty).collect(&:id).uniq.length, show_investigators_org_path(unit.id), :title=>"List investigators in unit") %><br/>
+			<%= link_to( (unit.primary_faculty).collect(&:id).uniq.length, show_investigators_org_url(unit.id), :title=>"List investigators in unit") %><br/>
 		</td>
 		<% end %>
 		<% if show_associated_faculty %>
 		<td class="list-title-center">
-			<%= link_to( (unit.joint_faculty+unit.secondary_faculty).collect(&:id).uniq.length, show_investigators_org_path(unit.id), :title=>"List investigators in unit") %><br/>
+			<%= link_to( (unit.joint_faculty+unit.secondary_faculty).collect(&:id).uniq.length, show_investigators_org_url(unit.id), :title=>"List investigators in unit") %><br/>
 		</td>
 		<% end %>
 		<% if show_members %>
 		<td class="list-title-center">
-			<%= link_to( (unit.members).collect(&:id).uniq.length, show_investigators_org_path(unit.id), :title=>"List investigators in unit") %><br/>
+			<%= link_to( (unit.members).collect(&:id).uniq.length, show_investigators_org_url(unit.id), :title=>"List investigators in unit") %><br/>
 		</td>
 		<% end %>
 		<td class="list-title-center">
@@ -67,9 +67,9 @@
 		</td>
 		<td class="list-title-left">
 		<% tag_cloud unit.abstracts.tag_counts(:limit => 6, :order => "count desc" ), %w(tagcloud1 tagcloud2 tagcloud3 tagcloud4) do |tag, css_class| %>
-		   <%= link_to tag.name, tagged_abstracts_abstract_path(URI.escape(tag.name)), :class => css_class, :title => "Total of #{tag.count} tags" %>
+		   <%= link_to tag.name, tagged_abstracts_abstract_url(URI.escape(tag.name)), :class => css_class, :title => "Total of #{tag.count} tags" %>
 		<% end %>
-		<%= link_to "...more...", org_path(unit.id) %>
+		<%= link_to "...more...", org_url(unit.id) %>
 		</td>
 	</tr>
 <% end %>

@@ -22,7 +22,7 @@
 		<h3> <%= @investigator.name %> <a href='' title="citations per year"> <%= sparkline_tag( abstracts_per_year(@all_abstracts, @year_array.sort), :type => 'bar') if ! @all_abstracts.nil? && @all_abstracts.length > 10 %></a>
 		</h3>
 		
-		<h3><%= link_to('Graph Interactions', show_member_graph_path(params[:id]) ) %> <br/>
+		<h3><%= link_to('Graph Interactions', show_member_graph_url(params[:id]) ) %> <br/>
 		<%= link_to( "New GraphViz Interactions", show_member_graphviz_url(params[:id]) ) %> <br/>
 			<%= link_to( "MeSH similarities Graph", show_member_mesh_graphviz_url(params[:id])) %>
 		</h3>
@@ -37,9 +37,6 @@
 			<h3>Similar Investigators:</h3> 
 			<div id="collaborators">
 			<%= link_to_similar_investigators(similar_investigators, "<br/>") %>
-			<% if similar_investigators.length >= 15 %>
-				<p>...more investigators</p>
-			<% end %>
 			</div>
 		<% end %>
 		<br/>

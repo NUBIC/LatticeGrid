@@ -30,7 +30,7 @@ def build_graphviz_filepath(gparams)
    gparams[:stringency] ||= "1"
    gparams[:include_orphans] ||= "0"
    gparams[:id] ||= "cam493"
-   if gparams[:distance] != "1" and gparams[:program] == "dot"
+   if gparams[:distance] == "2" and gparams[:program] == "dot"
      gparams[:program] = "neato"
    end
    if gparams[:include_orphans] != "1" or gparams[:include_orphans] == "null"

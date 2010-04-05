@@ -163,6 +163,12 @@ class OrgsController < ApplicationController
       respond_to do |format|
         format.html # show.html.erb
         format.xml  { render :xml => @unit }
+        format.pdf do
+           render :pdf => "Show Investigators for " + @unit.name, 
+              :stylesheets => "pdf", 
+              :template => "orgs/show_investigators.html.erb",
+              :layout => "pdf"
+        end
       end
     end
   end
@@ -290,6 +296,13 @@ class OrgsController < ApplicationController
     respond_to do |format|
       format.html { render :layout => 'printable', :controller=> :orgs, :action => :show }# show.html.erb
       format.xml  { render :action => :show, :xml => @abstracts }
+      format.pdf do
+         render :pdf => "Abstracts for " + @unit.name, 
+            :stylesheets => "pdf", 
+            :template => "orgs/show.html.erb",
+            :layout => "pdf"
+      end
+      
     end
   end
 

@@ -26,7 +26,7 @@
 	<div id="mesh">
 		<b>MeSH terms</b><br/>
 		<% @publication.tag_list.each do |tag| %>
-		   <%= link_to tag, tagged_abstracts_abstract_path(URI.escape(tag)), :class => 'nube2' %>
+		   <%= link_to tag, tagged_abstracts_abstract_url(URI.escape(tag)), :class => 'nube2' %>
 		<% end %>
 	</div>
 	<div id="import">
@@ -37,11 +37,11 @@
 		<%= link_to 'Go to PubMed entry', @publication.url  %>
 	</div>
 	<div id="linkout">
-		<%= link_to 'View citation formatted for EndNote', endnote_abstract_path(@publication)  %>
+		<%= link_to 'View citation formatted for EndNote', endnote_abstract_url(@publication)  %>
 	</div>
 </div>
 
 
-<%= link_to 'Back', abstracts_by_year_path(:id => @year, :page=> 1) %> 
+<%= link_to 'Back', abstracts_by_year_url(:id => @year, :page=> 1) %> 
 
 </div>

@@ -29,7 +29,7 @@ module ApplicationHelper
 			else
     		out+="<li>"
 			end
-			out+=link_to( the_year, abstracts_by_year_path(:id => the_year, :page=> 1))
+			out+=link_to( the_year, abstracts_by_year_url(:id => the_year, :page=> 1))
    		out+="</li>"
 		end
 		out+="</ul>"
@@ -87,26 +87,26 @@ module ApplicationHelper
 
   def link_to_coauthors(coauthors, delimiter=", ")
     coauthors.collect{|coauthor| link_to( coauthor.colleague.name, 
-      show_investigator_path(:id=>coauthor.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
+      show_investigator_url(:id=>coauthor.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
         :title => " #{coauthor.colleague.total_pubs} pubs, "+(coauthor.colleague.num_intraunit_collaborators+coauthor.colleague.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
   end
 
   def link_to_collaborators(collaborators, delimiter=", ")
     collaborators.collect{|investigator| link_to( investigator.name, 
-      show_investigator_path(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
+      show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
         :title => " #{investigator.total_pubs} pubs, "+(investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
   end
   
   def link_to_similar_investigators(relationships, delimiter=", ")
     relationships.collect{|relationship| link_to( "#{relationship.colleague.name} <span class='simularity'>#{relationship.mesh_tags_ic.round}</span>", 
-      show_investigator_path(:id=>relationship.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
+      show_investigator_url(:id=>relationship.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
         :title => " #{relationship.colleague.total_pubs} pubs, "+(relationship.colleague.num_intraunit_collaborators+relationship.colleague.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
   end
   
   def link_to_investigator(citation, investigator, name=nil) 
     name=investigator.last_name if name.blank?
     link_to name, 
-      show_investigator_path(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
+      show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
       :class => setInvestigatorClass(citation,investigator),
       :title => "Go to #{name}: #{investigator.total_pubs} pubs, "+(investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators"
   end
@@ -183,7 +183,7 @@ module ApplicationHelper
   end
   
   def link_to_primary_department(investigator)
-    return link_to( investigator.home_department.name, show_investigators_org_path(investigator.home_department_id), :title => "Show investigators in #{investigator.home_department.name}" ) if !investigator.home_department_id.nil?
+    return link_to( investigator.home_department.name, show_investigators_org_url(investigator.home_department_id), :title => "Show investigators in #{investigator.home_department.name}" ) if !investigator.home_department_id.nil?
     begin
       return investigator.home if ! investigator.home.nil?
     rescue
@@ -194,7 +194,7 @@ module ApplicationHelper
   
   def link_to_units(appointments, delimiter="<br/>")
       appointments.collect{ |appointment| 
-          link_to( appointment.name, show_investigators_org_path(appointment.id), 
+          link_to( appointment.name, show_investigators_org_url(appointment.id), 
           :title => "Show investigators in #{appointment.name}")}.join(delimiter)
   end
   
@@ -244,4 +244,11 @@ module ApplicationHelper
     content_tag("div", attributes, &block)
   end
 
+  def image_url(source)
+    abs_path = image_path(source)
+    unless abs_path =~ /^http/
+      abs_path = "#{request.protocol}#{request.host_with_port}#{abs_path}"
+    end
+   abs_path
+  end
 end

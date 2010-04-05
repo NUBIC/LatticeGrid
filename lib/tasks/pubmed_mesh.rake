@@ -55,10 +55,10 @@ end
 task :attachMeshInformationContent => :environment do
   # takes about an hour with 12000 tags
 
-  investigator_tag_counts=Investigator.tag_counts()
+  investigator_tag_counts=Investigator.tag_counts(:order=>"count asc")
   investigator_max_tag_count=Investigator.tag_counts(:limit=>5, :order=>"count desc")[0].count
 
-  abstract_tag_counts=Abstract.tag_counts()
+  abstract_tag_counts=Abstract.tag_counts(:order=>"count asc")
   abstract_max_tag_count=Abstract.tag_counts(:limit=>5, :order=>"count desc")[0].count
   
   block_timing("attachMeshInformationContent") {
@@ -84,7 +84,7 @@ task :buildInvestigatorColleaguesMesh => [:getInvestigators, :getMeshTags] do
     to_process= last-cnt+1
     # this is a 2 (n-1)(n-2) problem. symmetric so it requires only (n-1)(n-2) iterations
     puts "ready to process #{to_process.humanize} investigators relationships starting with row #{cnt} of #{last}" if @verbose
-    row_iterator(@AllInvestigators[cnt..last], 0, 100, start)  { |investigator|
+    row_iterator(@AllInvestigators[cnt..last], 0, 40, start)  { |investigator|
       num_processed+=1
       AnalyzeInvestigatorColleague(investigator, update_only)
     }
@@ -92,18 +92,27 @@ task :buildInvestigatorColleaguesMesh => [:getInvestigators, :getMeshTags] do
   }
 end
 
-task :normalizeInvestigatorColleaguesMesh => [:getInvestigatorColleagues] do
+task :normalizeInvestigatorColleaguesMesh => :environment do
   block_timing("normalizeInvestigatorColleaguesMesh") {
     max_mesh_ic = InvestigatorColleague.find(:first, :order => 'mesh_tags_ic desc').mesh_tags_ic
-    mesh_ic_multiplier = 10000/max_mesh_ic
+    if max_mesh_ic < 100
+      puts "Unable to normalize. max_mesh_ic = #{max_mesh_ic};"
+      break
+    end
+    mesh_ic_multiplier = 10000.0/max_mesh_ic
     puts "max_mesh_ic = #{max_mesh_ic}; mesh_ic_multiplier = #{mesh_ic_multiplier}" if @verbose
-    InvestigatorColleague.update_all("mesh_tags_ic = #{mesh_ic_multiplier} * mesh_tags_ic") if mesh_ic_multiplier < 0.99 or mesh_ic_multiplier > 1.01
-    investigator_colleagues_count = InvestigatorColleague.find(:all, :conditions => ['investigator_colleagues.mesh_tags_ic > 2000']).count
-    pub_colleagues_count = InvestigatorColleague.find(:all, :conditions => ['investigator_colleagues.publication_cnt > 0']).count
+    InvestigatorColleague.update_all("mesh_tags_ic = round(#{mesh_ic_multiplier} * mesh_tags_ic)") if mesh_ic_multiplier < 0.99 or mesh_ic_multiplier > 1.01
+    investigator_colleagues_count = InvestigatorColleague.find(:all, :conditions => ['investigator_colleagues.mesh_tags_ic > 2000']).length
+    pub_colleagues_count = InvestigatorColleague.find(:all, :conditions => ['investigator_colleagues.publication_cnt > 0']).length
     # the number of records in colleagues should be about 2x  pub_colleagues at 2000 to give about the right MeSH graphs
-    if (investigator_colleagues_count < 1.9*pub_colleagues_count  or  investigator_colleagues_count > 2.5*pub_colleagues_count)
+    max_investigator_colleagues_count = InvestigatorColleague.find(:all, :conditions => ['investigator_colleagues.mesh_tags_ic > 100']).length
+    if max_investigator_colleagues_count.to_f / pub_colleagues_count < 2.0
+      puts "Unable to normalize count. max_investigator_colleagues_count = #{max_investigator_colleagues_count}; pub_colleagues_count = #{pub_colleagues_count}"
+      break
+    end
+    if (investigator_colleagues_count < 1.4*pub_colleagues_count  or  investigator_colleagues_count > 1.8*pub_colleagues_count)
       puts "investigator_colleagues_count = #{investigator_colleagues_count}; pub_colleagues_count = #{pub_colleagues_count}" if @verbose
-      cutoff = find_cutoff(investigator_colleagues_count, pub_colleagues_count*2.2)
+      cutoff = find_cutoff(investigator_colleagues_count, pub_colleagues_count*1.6, 2000)
       # this is the new adjustment - do we need to adjust the Y intercept too?
       # for instance, assume that 6000 needs to be reassigned as 2000
       # compressing all the numbers below 6000 is probably fine, so that "mesh_tags_ic = mesh_tags_ic * multiplier " where "mesh_tags_ic <= cutoff"
@@ -112,18 +121,58 @@ task :normalizeInvestigatorColleaguesMesh => [:getInvestigatorColleagues] do
       
       # and above the cutoff we do something like this: "mesh_tags_ic = mesh_tags_ic * multiplier " where "mesh_tags_ic > cutoff"
       mesh_ic_multiplier = 2000.0/cutoff
-      puts "cutoff = #{cutoff}; mesh_ic_multiplier = #{mesh_ic_multiplier}" if @verbose
-      InvestigatorColleague.update_all("mesh_tags_ic = #{mesh_ic_multiplier} * mesh_tags_ic", "mesh_tags_ic <= #{cutoff}")
-      mesh_ic_multiplier = 8000.0 / (10000.0-cutoff) 
-      puts "cutoff = #{cutoff}; above cutoff: mesh_ic_multiplier = #{mesh_ic_multiplier}" if @verbose
-
-      InvestigatorColleague.update_all("mesh_tags_ic = #{mesh_ic_multiplier} * (mesh_tags_ic- #{cutoff}) +2000", "mesh_tags_ic >= #{cutoff}")
-      max_mesh_ic = InvestigatorColleague.find(:first, :order => 'mesh_tags_ic desc').mesh_tags_ic
-      puts "temporary max_mesh_ic = #{max_mesh_ic};" if @verbose
-      InvestigatorColleague.update_all("mesh_tags_ic = 10000", "mesh_tags_ic > 10000")
-      max_mesh_ic = InvestigatorColleague.find(:first, :order => 'mesh_tags_ic desc').mesh_tags_ic
-      puts "corrected max_mesh_ic = #{max_mesh_ic};" if @verbose
+      puts "Adjusting overall slope: cutoff = #{cutoff}; mesh_ic_multiplier = #{mesh_ic_multiplier}" if @verbose
+      #adjustment for the entire set
+      InvestigatorColleague.update_all("mesh_tags_ic = round(#{mesh_ic_multiplier} * mesh_tags_ic)")
     end
+      
+    # now check if the upper bound is reasonable. if 2000 is about pub_colleagues_count*2.3, 3000 should be about pub_colleagues_count*1.1
+    investigator_colleagues_count = InvestigatorColleague.find(:all, :conditions => ['investigator_colleagues.mesh_tags_ic > 3000']).length
+    
+    if (investigator_colleagues_count < 0.65 *pub_colleagues_count  or  investigator_colleagues_count > 0.9*pub_colleagues_count)
+      cut_point = 2000
+      cutoff = find_cutoff(investigator_colleagues_count, pub_colleagues_count*0.8, cut_point+1000)
+      # need to reslope the line to go from cut_point to cut_point+1000
+      mesh_ic_multiplier = 1000.0/(cutoff-cut_point)
+      puts "Adjusting from 2000 to 3000: cut_point = #{cut_point}; cutoff = #{cutoff}; mesh_ic_multiplier = #{mesh_ic_multiplier}" if @verbose
+      InvestigatorColleague.update_all("mesh_tags_ic = round(#{mesh_ic_multiplier} * (mesh_tags_ic-#{cut_point})) + #{cut_point}", "mesh_tags_ic > #{cut_point}")
+    end
+
+    # now check if the upper bound is reasonable. if 3000 is about pub_colleagues_count*1.1, 4000 should be about pub_colleagues_count*0.5
+    investigator_colleagues_count = InvestigatorColleague.find(:all, :conditions => ['investigator_colleagues.mesh_tags_ic > 4000']).length
+
+    if (investigator_colleagues_count < 0.3 *pub_colleagues_count  or  investigator_colleagues_count > 0.5*pub_colleagues_count)
+      cut_point = 3000
+      cutoff = find_cutoff(investigator_colleagues_count, pub_colleagues_count*0.4, cut_point+1000)
+      # need to reslope the line to go from cut_point to cut_point+1000
+      mesh_ic_multiplier = 1000.0/(cutoff-cut_point)
+      puts "Adjusting from 3000 to 4000: cut_point = #{cut_point}; cutoff = #{cutoff}; mesh_ic_multiplier = #{mesh_ic_multiplier}" if @verbose
+      InvestigatorColleague.update_all("mesh_tags_ic = round(#{mesh_ic_multiplier} * (mesh_tags_ic-#{cut_point})) + #{cut_point}", "mesh_tags_ic > #{cut_point}")
+    end
+
+    # now check if the upper bound is reasonable. if 4000 is about pub_colleagues_count*0.55, 5000 should be about pub_colleagues_count*0.27
+    investigator_colleagues_count = InvestigatorColleague.find(:all, :conditions => ['investigator_colleagues.mesh_tags_ic > 5000']).length
+    
+    if investigator_colleagues_count < 0.15 *pub_colleagues_count
+      cut_point = 4000
+      cutoff = find_cutoff(investigator_colleagues_count, pub_colleagues_count*0.2, cut_point+1000)
+      # need to reslope the line to go from cutoff to 5000 starting at 4000
+      mesh_ic_multiplier = 1000.0/(cutoff-cut_point)
+      puts "Adjusting from 4000 to 5000: cut_point = #{cut_point}; cutoff = #{cutoff}; mesh_ic_multiplier = #{mesh_ic_multiplier}" if @verbose
+      InvestigatorColleague.update_all("mesh_tags_ic = round(#{mesh_ic_multiplier} * (mesh_tags_ic-#{cut_point})) + #{cut_point}", "mesh_tags_ic > #{cut_point}")
+    end
+
+    # now readjust from 5000 to 10,000, if upper value is over 10,000
+    max_mesh_ic = InvestigatorColleague.find(:first, :order => 'mesh_tags_ic desc').mesh_tags_ic
+    if max_mesh_ic > 10000
+      cut_point = 5000
+      mesh_ic_multiplier = 5000.0 / (max_mesh_ic-cut_point)
+      puts "Now adjust upper slope - cut_point = #{cut_point}; mesh_ic_multiplier = #{mesh_ic_multiplier}; max_mesh_ic=#{max_mesh_ic};" if @verbose
+
+      InvestigatorColleague.update_all("mesh_tags_ic = round(#{mesh_ic_multiplier} * (mesh_tags_ic-#{cut_point})) + #{cut_point}", "mesh_tags_ic > #{cut_point}")
+    end
+    max_mesh_ic = InvestigatorColleague.find(:first, :order => 'mesh_tags_ic desc').mesh_tags_ic
+    puts "final max_mesh_ic = #{max_mesh_ic};" if @verbose
    }
 end
 

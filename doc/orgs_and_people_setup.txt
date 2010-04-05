@@ -48,6 +48,9 @@ Investigator.create :username => "str", :last_name => "Rosen", :first_name => "S
 
 rake importInvestigators file=db/imports/faculty.txt
 rake environment RAILS_ENV=production importInvestigators file=db/imports/faculty.txt
+
+rake importInvestigators file=db/imports/new_faculty.txt
+rake environment RAILS_ENV=production importInvestigators file=db/imports/new_faculty.txt
 # or 
 rake importInvestigators file=db/imports/UCSFMembers.txt
 rake environment RAILS_ENV=production importInvestigators file=db/imports/UCSFMembers.txt

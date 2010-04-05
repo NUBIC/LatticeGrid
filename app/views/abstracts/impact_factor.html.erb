@@ -18,16 +18,16 @@ There were a total of <%= @all_pubs.length %> publications during this period, w
 <table cellpadding="2" cellspacing="0"> 
   <tr valign="bottom" class="list-heading">
 	  <th align="right"># &nbsp; </th>
-	  <th align="left"><%= link_to "Journal", impact_factor_path(params[:year], "journal_abbreviation") %> &nbsp; </th>
-	  <th align="left"><%= link_to "Faculty Pubs", impact_factor_path(params[:year], "count_all desc") %> &nbsp; </th>
+	  <th align="left"><%= link_to "Journal", impact_factor_url(params[:year], "journal_abbreviation") %> &nbsp; </th>
+	  <th align="left"><%= link_to "Faculty Pubs", impact_factor_url(params[:year], "count_all desc") %> &nbsp; </th>
 	  <th align="left">ISSN &nbsp; </th>
 	  <th align="left">Total Cites (<%= @journals[0].score_year %>) &nbsp; </th>
 	  <th align="left">Total Articles (<%= @journals[0].score_year %>) &nbsp; </th>
-	  <th align="left"><%= link_to "Impact Factor", impact_factor_path(params[:year], "impact_factor desc") %> &nbsp; </th>
-	  <th align="left"><%= link_to "Impact Factor (5 year)", impact_factor_path(params[:year], "impact_factor_five_year desc") %> &nbsp; </th>
-	  <th align="left"><%= link_to "Immediacy Index", impact_factor_path(params[:year], "immediacy_index desc") %> &nbsp; </th>
-	  <th align="left"><%= link_to "Eigenfactor", impact_factor_path(params[:year], "eigenfactor_score desc") %> &nbsp; </th>
-	  <th align="left"><%= link_to "Influence Score", impact_factor_path(params[:year], "article_influence_score desc") %> &nbsp; </th>
+	  <th align="left"><%= link_to "Impact Factor", impact_factor_url(params[:year], "impact_factor desc") %> &nbsp; </th>
+	  <th align="left"><%= link_to "Impact Factor (5 year)", impact_factor_url(params[:year], "impact_factor_five_year desc") %> &nbsp; </th>
+	  <th align="left"><%= link_to "Immediacy Index", impact_factor_url(params[:year], "immediacy_index desc") %> &nbsp; </th>
+	  <th align="left"><%= link_to "Eigenfactor", impact_factor_url(params[:year], "eigenfactor_score desc") %> &nbsp; </th>
+	  <th align="left"><%= link_to "Influence Score", impact_factor_url(params[:year], "article_influence_score desc") %> &nbsp; </th>
   </tr>
 
 <% cnt = 0 %>
