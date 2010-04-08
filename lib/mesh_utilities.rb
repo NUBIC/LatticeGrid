@@ -146,7 +146,7 @@ def CalculateMeSHinformationContent_older(mesh_array)
 end
 
 def InvestigatorColleagueInclusionCriteria(citation_overlap,mesh_information_content)
-  if (citation_overlap != [] && !citation_overlap.last.blank?)
+  if (citation_overlap != [] )
     # always include if they copublish
     return true
   end
@@ -182,8 +182,7 @@ def AnalyzeInvestigatorColleague(investigator, update_only=true)
   # this is the call that converts the problem from an N squared to a linear problem!
   tag_ids = investigator.tags.collect(&:id)
   return if tag_ids.blank?
-  ic_tags = Investigator.information_cloud(tag_ids, :limit=>250)
-  
+  ic_tags = Investigator.information_cloud(tag_ids, :limit=>500)
   ic_tags.each do |ic_tag|
     next if ic_tag.taggable_id.to_i <= investigator.id.to_i
     return if ic_tag.total.to_i < 250
@@ -222,7 +221,7 @@ def BuildInvestigatorColleague(investigator, colleague, update_only=true)
   end
 end
 
-def InsertUpdateInvestigatorColleague(investigator_id,colleague_id,citation_overlap,mesh_overlap,mesh_information_content )
+def InsertUpdateInvestigatorColleague(investigator_id,colleague_id,citation_overlap,mesh_overlap=nil,mesh_information_content=nil )
   ir = InvestigatorColleague.find( :first,
     :conditions => [" investigator_id = :investigator_id AND colleague_id = :colleague_id",
         {:investigator_id => investigator_id, :colleague_id => colleague_id}])
@@ -233,10 +232,10 @@ def InsertUpdateInvestigatorColleague(investigator_id,colleague_id,citation_over
     end
 end
 
-def UpdateInvestigatorColleague(ir,citation_overlap,mesh_overlap,mesh_information_content )
+def UpdateInvestigatorColleague(ir,citation_overlap,mesh_overlap=nil,mesh_information_content=nil )
   begin 
-    ir.mesh_tags_cnt = mesh_overlap.length
-    ir.mesh_tags_ic = mesh_information_content
+    ir.mesh_tags_cnt = mesh_overlap.length if !mesh_overlap.nil?
+    ir.mesh_tags_ic = mesh_information_content if ! mesh_information_content.nil?
     ir.publication_cnt = citation_overlap.length
     ir.publication_list = citation_overlap.join(',')
     ir.save!
@@ -248,9 +247,11 @@ def UpdateInvestigatorColleague(ir,citation_overlap,mesh_overlap,mesh_informatio
   end
 end
 
-def InsertInvestigatorColleague(investigator_id,colleague_id,citation_overlap,mesh_overlap,mesh_information_content )
+def InsertInvestigatorColleague(investigator_id,colleague_id,citation_overlap,mesh_overlap=nil,mesh_information_content=nil )
   begin 
-     ir = InvestigatorColleague.create!(
+    mesh_information_content = 0.0 if mesh_information_content.nil? 
+    mesh_overlap = [] if mesh_overlap.nil? 
+    ir = InvestigatorColleague.create!(
        :investigator_id => investigator_id,
        :colleague_id  => colleague_id,
        :mesh_tags_cnt => mesh_overlap.length,

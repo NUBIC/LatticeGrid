@@ -18,6 +18,22 @@ def FindREmatch(str,re)
   return false
 end
 
+# abstract.authors string will look like: "Vorontsov, I. I.\nMinasov, G.\nBrunzelle, J. S.\nShuvalova, L.\nKiryukhina, O.\nCollart, F. R.\nAnderson, W. F."
+
+# abstract.full_authors  string will look like: "Vorontsov, Ivan I\nMinasov, George\nBrunzelle, Joseph S\nShuvalova, Ludmilla\nKiryukhina, Olga\nCollart, Frank R\nAnderson, Wayne F"
+
+def GetAuthor(string, is_full)
+  if is_full
+    re = /([^,\n\r]+), +([^;\n\r ]+) *([^;\n\r ]*)/
+  else
+    re = /([^,\n\r]+), +(.) *([^;\n\r ]*)/
+  end
+  re.match(string)
+  return [$1, $2] if $3.blank?
+  return [$1, $2, $3].compact
+end
+
+# used when inserting InvestigatorAbstract record
 def IsFirstAuthor(abstract,investigator)
   puts "searching for first author using PI #{investigator.last_name}, #{investigator.first_name} "  if @debug
   if abstract.full_authors.blank?
@@ -28,6 +44,7 @@ def IsFirstAuthor(abstract,investigator)
   return false
 end
 
+# used when inserting InvestigatorAbstract record
 def IsLastAuthor(abstract,investigator)
   if abstract.full_authors.blank?
     return FindREmatch(abstract.authors,  /#{investigator.last_name}, #{investigator.first_name.at(0)}[^;]*$/i)
@@ -37,42 +54,67 @@ def IsLastAuthor(abstract,investigator)
   return false
 end
 
-
-def FindFirstAuthorInCitation(all_investigators,abstract)
-  all_investigators.each do |investigator|
+def FindFirstAuthorInCitation(citation_investigators,abstract)
+  citation_investigators.each do |investigator|
     return investigator.id if IsFirstAuthor(abstract,investigator) 
   end
   0
 end
 
-def FindLastAuthorInCitation(all_investigators,abstract)
-  all_investigators.each do |investigator|
+def FindLastAuthorInCitation(citation_investigators,abstract)
+  citation_investigators.each do |investigator|
     return investigator.id if IsLastAuthor(abstract,investigator) 
   end
   0
 end
 
-def IsAuthor(abstract,investigator)
-  if abstract.full_authors.blank?
-    abstract.authors.split("\n").each do |author|
-      # author string will look like: "Vorontsov, I. I.\nMinasov, G.\nBrunzelle, J. S.\nShuvalova, L.\nKiryukhina, O.\nCollart, F. R.\nAnderson, W. F."
-      return true if FindREmatch(author,  /^#{investigator.last_name}, #{investigator.first_name.at(0)}/i)
-    end
-  else
-    abstract.full_authors.split("\n").each do |author|
-      # full_author string will look like: "Vorontsov, Ivan I\nMinasov, George\nBrunzelle, Joseph S\nShuvalova, Ludmilla\nKiryukhina, Olga\nCollart, Frank R\nAnderson, Wayne F"
-      return true if FindREmatch(author,  /^#{investigator.last_name}, #{investigator.first_name}/i) 
-    end
+def GetInvestigatorIDfromAuthorRecord(author_rec, author_string)
+  return 0  if author_rec.length < 2
+  investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name || '%' ", 
+        {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase}] )
+  if investigators.length > 1 and author_rec.length > 2
+    # has middle name or initial
+    investigators = Investigator.find(:all, 
+      :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name || '%' and lower(middle_name) like :middle_name || '%' ", 
+          {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase, :middle_name => author_rec[2].downcase}] )
   end
-  return false
+  puts "Multiple investigators matching #{author_rec.inspect} found. Author was #{author_string}" if investigators.length > 1 and @debug
+  if investigators.length == 0
+    investigators = Investigator.find(:all, :conditions=>["lower(last_name) like :last_name || '%' and lower(first_name) like :first_name || '%' ", 
+          {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase}] )
+  end
+  return investigators[0].id if investigators.length == 1
+  0
+end  
+
+def GetAuthorStringArray(abstract, is_full)
+  if is_full
+    abstract.full_authors.split("\n")
+  else
+    abstract.authors.split("\n")
+  end
 end
 
-def MatchInvestigatorsInCitation(all_investigators,abstract)
-  matched_ids=Array.new
-  all_investigators.each do |investigator|
-    if IsAuthor(abstract,investigator) then
-      matched_ids.push(investigator.id)
-    end
+def FindFirstAuthor(abstract)
+  is_full = ! abstract.full_authors.blank?
+  author_array = GetAuthor(GetAuthorStringArray(abstract,is_full).first, is_full)
+  return GetInvestigatorIDfromAuthorRecord(author_array)
+end
+
+def FindLastAuthor(abstract)
+  is_full = ! abstract.full_authors.blank?
+  author_array = GetAuthor(GetAuthorStringArray(abstract,is_full).last, is_full)
+  return GetInvestigatorIDfromAuthorRecord(author_array)
+end
+
+def MatchInvestigatorsInCitation(abstract)
+  matched_ids = []
+  is_full = ! abstract.full_authors.blank?
+  author_array = GetAuthorStringArray(abstract,is_full)
+  author_array.each do | author |
+    author_ary = GetAuthor(author, is_full)
+    author_id = GetInvestigatorIDfromAuthorRecord(author_ary, author)
+    matched_ids.push(author_id) if author_id > 0
   end
   return matched_ids
 end
@@ -85,7 +127,7 @@ def InsertPubmedRecords(publications)
 end
 
 # takes a PubMed record, hashed, as an inputs
-def InsertPublication (publication)
+def InsertPublication(publication)
   puts "InsertPublication: this shouldn't happen - publication was nil" if publication.nil?
   raise "InsertPublication: this shouldn't happen - publication was nil" if publication.nil?
   thePub = nil
@@ -94,7 +136,7 @@ def InsertPublication (publication)
   thePub = Abstract.find_by_pubmed(reference.pubmed)
   begin 
     if thePub.nil? || thePub.id < 1 then
-      thePub = Abstract.create! (
+      thePub = Abstract.create!(
         :endnote_citation => reference.endnote, 
         :abstract => reference.abstract,
         :authors => reference.authors.join("\n"),
@@ -151,13 +193,13 @@ def UpdateOrganizationAbstract(unit_id, abstract_id)
   if OrganizationAbstract.find( :first,
     :conditions => [" abstract_id = :abstract_id AND organizational_unit_id = :unit_id",
         {:unit_id => unit_id, :abstract_id => abstract_id}]).nil?
-    InsertOrganizationAbstract (unit_id, abstract_id)
+    InsertOrganizationAbstract(unit_id, abstract_id)
   end
 end
 
-def InsertOrganizationAbstract (unit_id, abstract_id)
+def InsertOrganizationAbstract(unit_id, abstract_id)
   begin 
-     theOrgPub = OrganizationAbstract.create! (
+     theOrgPub = OrganizationAbstract.create!(
        :abstract_id => abstract_id,
        :organizational_unit_id  => unit_id
      )

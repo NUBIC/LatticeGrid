@@ -5,8 +5,8 @@ class CreateInvestigatorColleagues < ActiveRecord::Migration
     create_table :investigator_colleagues do |t|
       t.column :investigator_id, :integer
       t.column :colleague_id, :integer
-      t.column :mesh_tags_cnt, :integer   #number of tags in common
-      t.column :mesh_tags_ic, :float   #information content of the tags in common
+      t.column :mesh_tags_cnt, :integer, :default => 0   #number of tags in common
+      t.column :mesh_tags_ic, :float, :default => 0.0   #information content of the tags in common
       t.column :tag_list, :text
       t.column :publication_cnt, :integer, :default => 0 
       t.column :publication_list, :text

@@ -62,6 +62,35 @@ rake environment RAILS_ENV=production importInvestigators file=db/imports/cinj_f
 rake importProgramMembership  file=db/imports/RHLCCCProgramMemberships.txt
 rake environment RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCCProgramMemberships.txt
 
+
+#load investigators with additional data
+rake importInvestigators file=db/imports/FSM_Full_time_Faculty.txt
+rake environment RAILS_ENV=production importInvestigators file=db/imports/FSM_Full_time_Faculty.txt
+
+
+# load appointments
+rake importJointAppointments file=db/imports/joint_appointments.txt
+rake environment RAILS_ENV=production  importJointAppointments file=db/imports/joint_appointments.txt
+
+rake importSecondaryAppointments file=db/imports/secondary_appointments.txt
+rake environment RAILS_ENV=production  importSecondaryAppointments file=db/imports/secondary_appointments.txt
+
+rake importCenterMemberships file=db/imports/center_memberships.txt
+rake environment RAILS_ENV=production  importCenterMemberships file=db/imports/center_memberships.txt
+
+#load publications from database
+rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids.txt
+rake environment RAILS_ENV=production  importInvestigatorPubmedIDs file=db/imports/pubmed_ids.txt
+
+#load awards from InfoEd
+rake importAwardData file=db/imports/Cognos_Awards.txt
+rake environment RAILS_ENV=production  importAwardData file=db/imports/Cognos_Awards.txt
+
+
+# test version for Dixon Kaufman
+rake importInvestigators file=db/imports/FSM_Dixon_test.txt
+
+# 
 rake getAllMembers  
 rake environment RAILS_ENV=production getAllMembers
 

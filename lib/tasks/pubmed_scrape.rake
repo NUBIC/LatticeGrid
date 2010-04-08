@@ -49,11 +49,11 @@ task :insertAllAbstracts => [:setAllYears, :insertAbstracts] do
   # dependencies do all the work
 end
 
-task :associateAbstractsWithInvestigators => [:getAbstracts, :getInvestigators] do
+task :associateAbstractsWithInvestigators => [:getAbstracts] do
   # load the test data
   block_timing("associateAbstractsWithInvestigators") {
     row_iterator(@AllAbstracts) {  |abstract|
-      investigator_ids = MatchInvestigatorsInCitation(@AllInvestigators,abstract)
+      investigator_ids = MatchInvestigatorsInCitation(abstract)
       old_investigator_ids = abstract.investigators.collect(&:id).sort.uniq
       all_investigator_ids=(investigator_ids|old_investigator_ids).sort.uniq
       new_ids = all_investigator_ids.delete_if{|id| old_investigator_ids.include?(id)}.compact
@@ -63,6 +63,8 @@ task :associateAbstractsWithInvestigators => [:getAbstracts, :getInvestigators] 
         new_ids.each do |investigator_id|
           InsertInvestigatorPublication (abstract.id, investigator_id)
         end
+        # this fails on the server but not on my laptop...
+        # abstract.investigators = Abstract.find(abstract.id).investigators
       end
     }
   }

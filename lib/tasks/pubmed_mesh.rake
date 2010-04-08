@@ -84,7 +84,7 @@ task :buildInvestigatorColleaguesMesh => [:getInvestigators, :getMeshTags] do
     to_process= last-cnt+1
     # this is a 2 (n-1)(n-2) problem. symmetric so it requires only (n-1)(n-2) iterations
     puts "ready to process #{to_process.humanize} investigators relationships starting with row #{cnt} of #{last}" if @verbose
-    row_iterator(@AllInvestigators[cnt..last], 0, 40, start)  { |investigator|
+    row_iterator(@AllInvestigators[cnt..last], 0, 40)  { |investigator|
       num_processed+=1
       AnalyzeInvestigatorColleague(investigator, update_only)
     }
@@ -100,7 +100,7 @@ task :normalizeInvestigatorColleaguesMesh => :environment do
       break
     end
     mesh_ic_multiplier = 10000.0/max_mesh_ic
-    puts "max_mesh_ic = #{max_mesh_ic}; mesh_ic_multiplier = #{mesh_ic_multiplier}" if @verbose
+    puts "Adjusting slope based on max: max_mesh_ic = #{max_mesh_ic}; mesh_ic_multiplier = #{mesh_ic_multiplier}" if @verbose
     InvestigatorColleague.update_all("mesh_tags_ic = round(#{mesh_ic_multiplier} * mesh_tags_ic)") if mesh_ic_multiplier < 0.99 or mesh_ic_multiplier > 1.01
     investigator_colleagues_count = InvestigatorColleague.find(:all, :conditions => ['investigator_colleagues.mesh_tags_ic > 2000']).length
     pub_colleagues_count = InvestigatorColleague.find(:all, :conditions => ['investigator_colleagues.publication_cnt > 0']).length
@@ -167,7 +167,7 @@ task :normalizeInvestigatorColleaguesMesh => :environment do
     if max_mesh_ic > 10000
       cut_point = 5000
       mesh_ic_multiplier = 5000.0 / (max_mesh_ic-cut_point)
-      puts "Now adjust upper slope - cut_point = #{cut_point}; mesh_ic_multiplier = #{mesh_ic_multiplier}; max_mesh_ic=#{max_mesh_ic};" if @verbose
+      puts "Adjusting upper slope from #{cut_point} to 10000; mesh_ic_multiplier = #{mesh_ic_multiplier}; max_mesh_ic=#{max_mesh_ic};" if @verbose
 
       InvestigatorColleague.update_all("mesh_tags_ic = round(#{mesh_ic_multiplier} * (mesh_tags_ic-#{cut_point})) + #{cut_point}", "mesh_tags_ic > #{cut_point}")
     end
