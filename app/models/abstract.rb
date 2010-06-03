@@ -9,6 +9,27 @@ class Abstract < ActiveRecord::Base
   has_many :organizational_units, :through => :organization_abstracts
   validates_uniqueness_of :pubmed
   acts_as_taggable  # for MeSH terms
+  default_scope :conditions => 'abstracts.deleted_at is null'
+
+
+  def self.include_deleted( investigator_id=nil )
+    with_exclusive_scope do
+      if investigator_id.blank?
+        find(:all)
+      else
+        find(investigator_id)
+      end
+    end
+  end
+
+  def self.display_all_investigator_data_include_deleted( investigator_id )
+    with_exclusive_scope do
+      find(:all,
+        :order => "year DESC, authors ASC",
+        :joins => :investigator_abstracts,
+        :conditions => ["investigator_abstracts.investigator_id = :investigator_id", {:investigator_id => investigator_id}])
+    end
+  end
 
   def self.co_authors(abstracts)
     author_ids=abstracts.collect{|ab| ab.investigator_abstracts.collect(&:investigator_id)}.flatten.sort.uniq

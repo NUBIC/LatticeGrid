@@ -1,5 +1,5 @@
 class OrgsController < ApplicationController
-  caches_page :show, :index, :departments, :centers, :programs, :show_investigators, :stats, :full_show, :tag_cloud, :short_tag_cloud
+  caches_page :show, :index, :departments, :centers, :programs, :show_investigators, :stats, :full_show, :tag_cloud, :short_tag_cloud if CachePages()
   helper :sparklines
 
   require 'fastercsv' # for department_collaborations
@@ -295,14 +295,21 @@ class OrgsController < ApplicationController
 
     respond_to do |format|
       format.html { render :layout => 'printable', :controller=> :orgs, :action => :show }# show.html.erb
-      format.xml  { render :action => :show, :xml => @abstracts }
+      format.xml  { render :xml => @abstracts }
       format.pdf do
          render :pdf => "Abstracts for " + @unit.name, 
             :stylesheets => "pdf", 
             :template => "orgs/show.html.erb",
             :layout => "pdf"
       end
-      
+      format.xls  { send_data(render(:template => 'orgs/show.html', :layout => "excel"),
+        :filename => "Abstracts for #{@unit.name}.xls",
+        :type => 'application/vnd.ms-excel',
+        :disposition => 'attachment') }
+      format.doc  { send_data(render(:template => 'orgs/show.html', :layout => "excel"),
+        :filename => "Abstracts for #{@unit.name}.doc",
+        :type => 'application/msword',
+        :disposition => 'attachment') }
     end
   end
 

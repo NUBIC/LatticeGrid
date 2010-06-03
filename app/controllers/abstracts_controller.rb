@@ -1,13 +1,13 @@
 class AbstractsController < ApplicationController
-  caches_page :year_list, :full_year_list, :tag_cloud, :endnote, :full_tagged_abstracts, :tag_cloud_by_year, :tagged_abstracts
+  caches_page :year_list, :full_year_list, :tag_cloud, :endnote, :full_tagged_abstracts, :tag_cloud_by_year, :tagged_abstracts  if CachePages()
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :search ],
          :redirect_to => { :action => :year_list }
 
-   def index
-     redirect_to abstracts_by_year_path(:id => @year, :page => '1')
-   end
-
+  def index
+    redirect_to abstracts_by_year_path(:id => @year, :page => '1')
+  end
+   
   def year_list
     redirect=false
     if params[:page].nil? then
@@ -95,7 +95,36 @@ class AbstractsController < ApplicationController
 
   def ccsg
     @date_range = DateRange.new(1.year.ago,Time.now)
+    @investigators = Investigator.find(:all, :order=>"last_name, first_name")
   end
+
+  def investigator_listing
+    @abstracts = Abstract.display_all_investigator_data_include_deleted(params[:id])
+    @investigator = Investigator.find(params[:id])
+    heading_base="Publication listing for investigator #{@investigator.name}."
+    @heading="#{heading_base} Uncheck boxes to remove these publications from <i>any</i> listing."
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @abstracts }
+      format.xls  { send_data(render(:template => 'abstracts/investigator_listing', :layout => "excel"),
+        :filename => "investigator_listing_for_#{@investigator.first_name}_#{@investigator.last_name}.xls",
+        :type => 'application/vnd.ms-excel',
+        :disposition => 'attachment') }
+      format.doc  { send_data(render(:template => 'abstracts/investigator_listing.xls', :layout => "excel"),
+        :filename => "investigator_listing_for_#{@investigator.first_name}_#{@investigator.last_name}.doc",
+        :type => 'application/msword',
+        :disposition => 'attachment') }
+      format.pdf do
+        @heading="#{heading_base}"
+         @show_delete_checkboxes = false
+         render( :pdf => "Publication Listing for " + @investigator.name, 
+            :stylesheets => "pdf", 
+            :template => "abstracts/investigator_listing.html",
+            :layout => "pdf")
+      end
+    end
+  end
+
   
   def impact_factor
     params[:year]||=""
@@ -109,7 +138,10 @@ class AbstractsController < ApplicationController
     respond_to do |format|
       format.html {render :layout => 'printable'}
       format.pdf do
-        send_data AbstractDrawer.draw(@high_impact), :filename => 'high_impact.pdf', :type => 'application/pdf', :disposition => 'inline'
+         render( :pdf => "High Impact publications for " + params[:year], 
+            :stylesheets => "pdf", 
+            :template => "abstracts/impact_factor.html",
+            :layout => "pdf")
       end
     end
   end
@@ -145,6 +177,19 @@ class AbstractsController < ApplicationController
     else
       @publication = Abstract.find(params[:id])
     end
+  end
+
+  def set_deleted_date
+    @publication = Abstract.include_deleted(params[:id])
+    if @publication.deleted_at.blank?
+      @publication.deleted_at = Date.today
+    else
+      @publication.deleted_id = "prev: #{@publication.deleted_ip} on #{@publication.deleted_at}"
+      @publication.deleted_at = nil
+    end
+    @publication.deleted_ip = request.remote_ip
+    @publication.save
+    render :text => ""
   end
 
   def endnote

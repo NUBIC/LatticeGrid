@@ -4,39 +4,52 @@
 
 	<div id="stats">
 		<p>Produce publication statistics for each unit. Please note that this report can take several minutes to generate!</p>
-		<h2><%= link_to "Generate Unit Statistics", stats_orgs_path %></h2>
+		<%= link_to "Unit Statistics", stats_orgs_path %> <- click to generate statistics
 		<p>&nbsp;</p>
 	<div id="list_by_unit">
-	<p>List by unit all articles published between the following dates:</p>
 		<% form_for :date_range, :url => list_orgs_path, :html => { :method => :get, :class => "p" }  do |form| %> 
-		  <%= form.text_field(:start_date, :size => 20) %> to
-		  <%= form.text_field(:end_date, :size => 20) %> 
+		<p>List by unit all articles published between the following dates:</p>
+		  <p><%= form.text_field(:start_date, :size => 20) %> to
+		  <%= form.text_field(:end_date, :size => 20) %> select dates </p
 		  <%= submit_tag 'List Publications' %>
 		<% end %> 
 		<br/>
 	</div>
-	<p></p>
+	<p>&nbsp;</p>
 	<div id="list_one_unit">
-		<p>Use the below form for printing:  List for one unit all articles published between the following dates:</p>
 		<% form_for :date_range, :url => {:controller => :orgs, :action => :abstracts_during_period}, :html => { :method => :post, :class => "p" }  do |form| %> 
+		<p>Use the below form for printing:  List for one unit all articles published between the following dates:</p>
 
 	  	<p><%= collection_select '', 'id', @head_node.children, :id, :name  %> select unit </p>
-		  <%= form.text_field(:start_date, :size => 20) %> to
-		  <%= form.text_field(:end_date, :size => 20) %> 
-			<%= select_tag(:format, 
-				options_for_select(["html", "xml","pdf"], [params[:format]])  
-				) %>
-		  <%= submit_tag 'List Publications' %>
+		 <p><%= form.text_field(:start_date, :size => 20) %> to
+		  <%= form.text_field(:end_date, :size => 20) %>  select dates </p>
+		<p><%= select_tag(:format, 
+				options_for_select([["HTML","html"], ["XML", "xml"],["PDF", "pdf"],["Excel", "xls"], ["Word", "doc"]], [params[:format]])  
+				) %> select format </p>
+		  <%= submit_tag 'List Publications by Unit' %>
 		<% end %> 
 	</div>
-	<p></p>
+	<p>&nbsp;</p>
+	<div id="investigator_listing">
+		<% form_for :abstract, :url => {:controller => :abstracts, :action => :investigator_listing}, :html => { :method => :post, :class => "p" }  do |form| %> 
+		<p>Select an investigator to get a list of publications associated with that investigator. You can use this report to remove a publication from all lists.</p>
+
+	  	<p><%= collection_select '', 'id', @investigators, :id, :name  %> Select investigator </p>
+		<p><%= select_tag(:format, 
+				options_for_select([["HTML","html"], ["XML", "xml"],["PDF", "pdf"],["Excel", "xls"], ["Word", "doc"]], [params[:format]])  
+				) %> select format </p>
+		  <%= submit_tag 'List Publications for Investigator' %>
+		<% end %> 
+	</div>
+	<p>&nbsp;</p>
 
 	<div id="impact_factor">
 		<h2>Impact Factor and Eigenvalues Analysis</h2>
 		<h2><%= link_to "List High Impact Journals", high_impact_path %></h2>
-		<h2>Click on the year to run the analysis</h2>
+		<h2>Impact Factor Listing</h2>
+		<p>Click on the year to run the analysis</p>
 		<% @year_array.each do |year| %>
-			<h3><%= link_to year, impact_factor_path(year, '') %></h3>
+			<h3><%= link_to year, impact_factor_path(year, '') %> &nbsp; <%= link_to "as pdf", formatted_impact_factor_path(year,"pdf") %></h3>
 		<% end %>
 	</div>
 </div>

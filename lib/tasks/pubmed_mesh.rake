@@ -75,7 +75,7 @@ end
 # for the medical school with 3700 investigotors, this takes about 24 hours to run.
 task :buildInvestigatorColleaguesMesh => [:getInvestigators, :getMeshTags] do
   # load the test data
-  block_timing("buildInvestigatorColleagues") {
+  block_timing("buildInvestigatorColleaguesMesh") {
     start = Time.now
     num_processed = 0
     cnt = 0 # start at zero or if you want to break this into shorter tasks, you could break it differently

@@ -154,7 +154,7 @@ module ApplicationHelper
       authors = authorList.gsub("\n","; ")
     end
     citation.investigators.each do |investigator|
-      re = Regexp.new('('+investigator.last_name+', '+investigator.first_name.at(0)+'[^;]+)') 
+      re = Regexp.new('('+investigator.last_name.downcase+', '+investigator.first_name.at(0).downcase+'[^;]+)', Regexp::IGNORECASE) 
       authors.gsub!(re){|match| link_to_investigator(citation, investigator, author_name(investigator))}
     end
     authors

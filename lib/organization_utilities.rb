@@ -209,7 +209,10 @@ def CreateProgramFromName(department)
   begin
       theProgram = Program.find_by_abbreviation(department) ||
             Program.find_by_search_name(department) ||
-            Program.find_by_name(department)
+            Program.find_by_name(department) ||
+             Program.find_by_abbreviation(department.upcase)
+             Program.find_by_search_name(department.upcase) ||
+             Program.find_by_name(department.upcase)
       puts "Could not find program #{department}" if  theProgram.blank?
       if theProgram.blank? && !department.blank? then
         max_program_number_q = Program.find(:first, :select => 'max(sort_order) as sort_order')

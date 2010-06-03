@@ -85,19 +85,24 @@ namespace :cache do
     end
   end
 
-
-  def abstracts
-    year = handle_year()
+  def do_abstracts_for_year(year)
     page = 1
-    run_curl tag_cloud_abstracts_url
     run_ajax_curl tag_cloud_by_year_abstract_url(:id => year)
     run_curl full_year_list_abstract_url(:id => year)
     abstracts = Abstract.display_data( year, page )
     total_entries = abstracts.total_entries
     total_pages   = abstracts.total_pages
-    (1..total_pages).to_a.each do |page|
-      run_curl abstracts_by_year_url(:id => year, :page => page) 
-      #run_curl url_for :controller => 'abstracts', :action => 'year_list', :id => year, :page => page
+    (1..total_pages).to_a.each do |abstract_page|
+      run_curl abstracts_by_year_url(:id => year, :page => abstract_page) 
+      #run_curl url_for :controller => 'abstracts', :action => 'year_list', :id => year, :page => abstract_page
+    end
+  end
+
+  def abstracts
+    year_array = handle_year()
+    run_curl tag_cloud_abstracts_url
+    year_array.each do |year|
+      do_abstracts_for_year(year)
     end
   end
 

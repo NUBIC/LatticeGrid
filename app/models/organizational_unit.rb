@@ -49,12 +49,12 @@ class OrganizationalUnit < ActiveRecord::Base
       @@all_units ||= OrganizationalUnit.find( :all, :order => "sort_order, search_name, name" )
     end
     
-    def self.head_node(abbreviation)
-      @@head_node ||= OrganizationalUnit.find_by_abbreviation( abbreviation )
+    def self.head_node(node_name)
+      @@head_node ||= OrganizationalUnit.find_by_abbreviation( node_name ) || OrganizationalUnit.find_by_name( node_name ) 
     end
     
-    def self.menu_nodes(abbreviation)
-      @@menu_nodes ||= OrganizationalUnit.find_by_abbreviation( abbreviation ).self_and_descendants
+    def self.menu_nodes(node_name)
+      @@menu_nodes ||= (OrganizationalUnit.find_by_abbreviation( node_name ) || OrganizationalUnit.find_by_name( node_name )).self_and_descendants
     end
     
     def all_members

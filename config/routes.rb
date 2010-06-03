@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   # need to add .js to any rjs files we cache
-  map.connect 'abstracts/admin', :controller => 'abstracts', :action => 'ccsg', :conditions => { :method => :get } #legacy url. delete after 12/1/09
+#  map.connect 'abstracts/admin', :controller => 'abstracts', :action => 'ccsg', :conditions => { :method => :get } #legacy url. delete after 12/1/09
   map.show_investigator 'investigators/:id/show/:page', {:controller => "investigators",:action => "show", :conditions => { :method => :get }  }
   map.abstracts_by_year 'abstracts/:id/year_list/:page', {:controller => "abstracts",:action => "year_list", :conditions => { :method => :get } }
   map.index_orgs 'orgs/index', :controller => 'orgs', :action => 'index'  #handle the route for orgs_path to make sure it is cached properly
@@ -20,18 +20,18 @@ ActionController::Routing::Routes.draw do |map|
   map.tag_cloud_by_year_abstract '/abstracts/:id/tag_cloud_by_year.js', :action=>"tag_cloud_by_year", :controller=>"abstracts",  :conditions => { :method => :get }
    
   map.resources :abstracts, :only => [:index, :show], :collection => { :search => [:get, :post], :ccsg => :get, :tag_cloud => :get },
-    :member => {:full_year_list => :get, :endnote => :get, :full_tagged_abstracts => :get, :tagged_abstracts => [:get, :post] }
+    :member => {:set_deleted_date => [:get,:post],  :full_year_list => :get, :endnote => :get, :full_tagged_abstracts => :get, :tagged_abstracts => [:get, :post] }
   map.resources :graphs, :only => [:none], :member => {:show_member => :get, :show_org => :get}
   map.resources :graphviz, :only => [:none], :member => {:show_member => :get, :show_member_mesh => :get, :show_org_mesh => :get, :show_org => :get}
 
+  map.connect 'abstracts/investigator_listing/:id', :controller => 'abstracts', :action => 'investigator_listing'
   map.connect 'orgs/abstracts_during_period/:id', :controller => 'orgs', :action => 'abstracts_during_period'
   map.connect 'ccsg', :controller => 'abstracts', :action => 'ccsg', :conditions => { :method => :get }
   map.connect 'admin', :controller => 'abstracts', :action => 'ccsg', :conditions => { :method => :get }
   map.abstract_search 'abstracts/search/:page', :controller => 'abstracts', :action => 'search', :method => [:get, :post]
   map.tag_cloud 'tag_cloud', :controller => 'abstracts', :action => 'tag_cloud', :conditions => { :method => :get }
   map.impact_factor 'impact_factor/:year/:sortby', :controller => 'abstracts', :action => 'impact_factor', :conditions => { :method => :get }
-  map.connect 'impact_factor/:year', :controller => 'abstracts', :action => 'impact_factor', :sortby=>'', :conditions => { :method => :get }
-  map.connect 'impact_factor', :controller => 'abstracts', :action => 'impact_factor', :conditions => { :method => :get }
+  map.formatted_impact_factor 'impact_factor/:year.:format', :controller => 'abstracts', :action => 'impact_factor', :sortby=>'', :conditions => { :method => :get }
   map.high_impact 'high_impact', :controller => 'abstracts', :action => 'high_impact', :conditions => { :method => :get }
   map.org_nodes 'org_nodes/:id', :controller => 'graphs', :action => 'org_nodes' #need this for some of the flash xml calls
   map.member_nodes 'member_nodes/:id', :controller => 'graphs', :action => 'member_nodes' #need this for some of the flash xml calls
@@ -44,48 +44,5 @@ ActionController::Routing::Routes.draw do |map|
   map.connect ':controller/:id/:action'  #need this for some of the rjs calls and the sparklines
 
 #  map.root :controller => 'abstracts', :action => 'list', :conditions => { :method => :get }
-
-
-  # The priority is based upon order of creation: first created -> highest priority.
-
-  # Sample of regular route:
-  #   map.connect 'products/:id', :controller => 'catalog', :action => 'view'
-  # Keep in mind you can assign values other than :controller and :action
-
-  # Sample of named route:
-  #   map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
-  # This route can be invoked with purchase_url(:id => product.id)
-
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   map.resources :products
-
-  # Sample resource route with options:
-  #   map.resources :products, :member => { :short => :get, :toggle => :post }, :collection => { :sold => :get }
-
-  # Sample resource route with sub-resources:
-  #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
-  
-  # Sample resource route with more complex sub-resources
-  #   map.resources :products do |products|
-  #     products.resources :comments
-  #     products.resources :sales, :collection => { :recent => :get }
-  #   end
-
-  # Sample resource route within a namespace:
-  #   map.namespace :admin do |admin|
-  #     # Directs /admin/products/* to Admin::ProductsController (app/controllers/admin/products_controller.rb)
-  #     admin.resources :products
-  #   end
-
-  # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
-  # map.root :controller => "welcome"
-
-  # See how all your routes lay out with "rake routes"
-
-  # Install the default routes as the lowest priority.
-  # Note: These default routes make all actions in every controller accessible via GET requests. You should
-  # consider removing the them or commenting them out if you're using named routes and resources.
-  # map.connect ':controller/:action/:id'
-  # map.connect ':controller/:action/:id.:format'
 
 end

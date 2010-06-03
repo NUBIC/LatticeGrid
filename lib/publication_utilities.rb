@@ -21,6 +21,7 @@ end
 # abstract.authors string will look like: "Vorontsov, I. I.\nMinasov, G.\nBrunzelle, J. S.\nShuvalova, L.\nKiryukhina, O.\nCollart, F. R.\nAnderson, W. F."
 
 # abstract.full_authors  string will look like: "Vorontsov, Ivan I\nMinasov, George\nBrunzelle, Joseph S\nShuvalova, Ludmilla\nKiryukhina, Olga\nCollart, Frank R\nAnderson, Wayne F"
+# full_authors string:  "Munoz, Lenka\n Ranaivo, Hantamalala Ralay\n Roy, Saktimayee M\n Hu, Wenhui\n Craft, Jeffrey M\n McNamara, Laurie K\n Chico, Laura Wing\n Van Eldik, LJ\n Watterson, DM"
 
 def GetAuthor(string, is_full)
   if is_full
@@ -72,6 +73,7 @@ def GetInvestigatorIDfromAuthorRecord(author_rec, author_string)
   return 0  if author_rec.length < 2
   investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name || '%' ", 
         {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase}] )
+  return investigators[0].id if investigators.length == 1
   if investigators.length > 1 and author_rec.length > 2
     # has middle name or initial
     investigators = Investigator.find(:all, 
@@ -80,8 +82,8 @@ def GetInvestigatorIDfromAuthorRecord(author_rec, author_string)
   end
   puts "Multiple investigators matching #{author_rec.inspect} found. Author was #{author_string}" if investigators.length > 1 and @debug
   if investigators.length == 0
-    investigators = Investigator.find(:all, :conditions=>["lower(last_name) like :last_name || '%' and lower(first_name) like :first_name || '%' ", 
-          {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase}] )
+    investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name || '%' ", 
+          {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase}] )
   end
   return investigators[0].id if investigators.length == 1
   0

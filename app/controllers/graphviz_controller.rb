@@ -1,6 +1,6 @@
 class GraphvizController < ApplicationController
 
-  caches_page :show_member, :show_member_mesh, :show_org, :show_org_mesh
+  caches_page :show_member, :show_member_mesh, :show_org, :show_org_mesh if CachePages()
 
   # GET /admins
   # GET /admins.xml
