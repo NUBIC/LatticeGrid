@@ -1,0 +1,184 @@
+@page {
+    size: US-Letter;
+    margin: 40pt 25pt 40pt 30pt;
+}
+
+/* Global styles */
+
+body { 
+	font-family : Verdana, Arial, sans-serif;
+	font-size : 12pt;
+	color : black;
+	background-color: white; 
+	line-height: 14pt;
+	background: white; 
+	margin: 5px 5px 5px 5px;
+}
+
+p, ol, ul, td {
+	font-family: Arial, Helvetica, Geneva, Sans-serif;
+	font-size: 12pt;
+	line-height: 16pt;
+}
+
+p {
+    padding: 0px 0px 4px 0px;
+    margin:  0px 0px 4px 0px;
+	color : black;
+	font-size : 12pt;
+	font-family : Verdana,  Arial,  sans-serif;
+}
+
+ul {
+    margin-left: 0px;
+    padding-left: 15px;
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+ul.squareBullets {
+    list-style-type: square;
+}
+
+ol li {
+    padding-bottom: 15px;
+}
+
+h1, h2, .h2, h3, .h3 {
+    font-family: Arial, Helvetica, Geneva, Sans-serif;
+    font-size: 14pt;
+    font-weight: bold;
+	color: #226;
+    line-height: 140%;
+    padding-bottom: 0px;
+    margin-bottom: 2px;
+    margin-top: 8px;
+    padding-top: 0px;
+}
+
+a { color: #000; }
+a:visited { color: #666; }
+a:hover { color: #fff; background-color:#888; }
+
+
+/* Styles for admin/list */
+
+table {
+	border: 1px indigo solid;
+}
+
+td,th {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+table.borderless {
+	border-style:none;
+	border-width: 0px;
+	border-collapse:collapse;
+}
+
+#biograph table {
+	padding-left: 1em;
+	border: 0px;
+}
+
+#biograph table tr td table {
+	padding-left: 2em;
+	border: 0px;
+}
+
+#biograph table tr th {
+	padding-top: 0.125em;
+	padding-bottom: 0px;
+	padding-right: 0.5em;
+	vertical-align:top;
+	color:        #555;
+	text-align:   right;
+	line-height: 14pt;
+}
+
+#biograph table tr td {
+	padding-top: 0.125em;
+	padding-bottom: 0px;
+	vertical-align:top;
+	color:        #520063;
+	line-height: 14pt;
+}
+
+table.fullsize {
+	width: 100%;
+}
+
+td.list-left, th.list-left {
+	padding-left: 1em;
+}
+
+td.list-right {
+	padding-right: 1em;
+	text-align: right;
+}
+
+th {
+	padding-bottom: 0px;
+}
+
+td.list-title-left {
+	padding-left: 1em;
+	color:        #244;
+	font-weight:  bold;
+}
+
+td.list-title-center {
+	text-align: center;
+}
+td.list-title-right {
+	padding-right: 1em;
+	text-align: right;
+}
+
+
+/* --- main --- */
+#main {
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px;
+	width: 100%;
+	height:auto;
+	vertical-align: top;
+	background-color: #FFFFFF;
+}
+
+intra_unit, a.intra_unit {
+	background-color: #AFD8F8;
+	text-decoration: none;
+}
+span.inter_unit, a.inter_unit {
+	background-color: #FFCC33;
+	text-decoration: none;
+}
+
+span.no_intra_unit, a.no_intra_unit {
+	background-color: #FF99FF;
+	text-decoration: none;
+}
+
+span.first_author, a.first_author {
+	color: #660066;
+	background-color: #CCAF9F;
+	text-decoration: none;
+}
+span.last_author, a.last_author {
+	color: #002EB8;
+	background-color: khaki;
+	text-decoration: none;
+}
+span.author, a.author {
+	color: #353;
+	background-color: peachpuff;
+	text-decoration: none;
+}
+.author:hover, .first_author:hover, .last_author:hover {
+	background: #AAA;
+}
+
