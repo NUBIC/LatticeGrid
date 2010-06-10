@@ -44,7 +44,7 @@ class Investigator < ActiveRecord::Base
   named_scope :investigator_only, :conditions => "appointment_track = 'Investigator'"
   named_scope :clinician, :conditions => "appointment_track like '%Clinician%'"
   named_scope :clinician_only, :conditions => "appointment_track = 'Clinician'"
-  default_scope :include => :abstracts
+#  default_scope :include => :abstracts
   #default_scope :order => 'lower(investigators.last_name),lower(investigators.first_name)'
 
   validates_uniqueness_of :username
