@@ -26,7 +26,7 @@
 		<%= link_to( investigator.abstracts.length.to_s, show_investigator_url(:id=>investigator.username, :page=>1), :title => "Total: #{investigator.abstracts.length.to_s}")  %>&nbsp;<br/>
 	</td>
 	<td class="list-left">
-		<%= link_to( investigator.total_pubs_last_five_years, show_investigator_url(:id=>investigator.username, :page=>1), :title => "Total: #{investigator.total_pubs}; First Author: #{investigator.num_first_pubs}; Last Author: #{investigator.num_last_pubs}")  %>&nbsp;<br/>
+		<%= link_to( investigator.abstract_last_five_years_count, show_investigator_url(:id=>investigator.username, :page=>1), :title => "Total: #{investigator.abstract_count}; First Author: #{investigator.num_first_pubs}; Last Author: #{investigator.num_last_pubs}")  %>&nbsp;<br/>
 	</td>
 	<td class="list-left">	<a href='' title="citations per year"> <%= sparkline_tag( abstracts_per_year(investigator.abstracts, @year_array.sort), :type => 'bar') if ! investigator.abstracts.nil? && investigator.abstracts.length > 9 %></a>
 	</td>

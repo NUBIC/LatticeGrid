@@ -11,7 +11,7 @@ xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showForm
         :id=>investigator.id,
         :link => show_member_graph_path(investigator.username),
         :color => '99CCFF',
-        :tooltext => 'Publications  '+investigator.total_pubs.to_s+';
+        :tooltext => 'Publications  '+investigator.abstract_count.to_s+';
  first author pubs:'+investigator.num_first_pubs.to_s+'; 
  last author pubs:'+investigator.num_last_pubs.to_s+'; 
  intra-unit collaborations:'+investigator.num_intraunit_collaborators.to_s+'; 
@@ -27,7 +27,7 @@ xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showForm
         :id=>investigator.id,
         :link => show_member_graph_path(investigator.username),
         :color => 'FF99FF',
-        :tooltext => 'Publications  '+investigator.total_pubs.to_s+';
+        :tooltext => 'Publications  '+investigator.abstract_count.to_s+';
   first author pubs:'+investigator.num_first_pubs.to_s+'; 
   last author pubs:'+investigator.num_last_pubs.to_s+'; 
   intra-unit collaborations:'+investigator.num_intraunit_collaborators.to_s+'; 

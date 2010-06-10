@@ -8,7 +8,9 @@ class CreateInvestigatorAbstracts < ActiveRecord::Migration
       t.column :investigator_id, :integer, :null => false  #now in the add_foreign_key call
       t.column :is_first_author, :boolean, :default => false, :null => false
       t.column :is_last_author, :boolean, :default => false, :null => false
-      t.timestamps
+      t.timestamps #adds created_at and updated_at
+      t.column :start_date, :date
+      t.column :end_date, :date
     end
   end
 

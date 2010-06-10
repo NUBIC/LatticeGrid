@@ -1,29 +1,43 @@
 class AbstractsController < ApplicationController
   caches_page :year_list, :full_year_list, :tag_cloud, :endnote, :full_tagged_abstracts, :tag_cloud_by_year, :tagged_abstracts  if CachePages()
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :search ],
-         :redirect_to => { :action => :year_list }
+  # verify :method => :post, :only => [ :search ], :redirect_to => :current_abstracts_path
 
   def index
     redirect_to abstracts_by_year_path(:id => @year, :page => '1')
   end
-   
-  def year_list
-    redirect=false
+  
+  def current
+    params[:id]=@starting_year.to_s
+    pre_year_list
+    @abstracts = Abstract.display_data( params[:id], params[:page] )
+    list_heading(params[:id])
+    @do_pagination = "1"
+    render :action => 'year_list'
+  end
+  
+  def pre_year_list
+    @redirect=false
     if params[:page].nil? then
       params[:page] = "1"
-      redirect=true
+      @redirect=true
     end
     if params[:id].nil? || params[:id].include?("tag") then
       params[:id]= @year
-      redirect=true
+      @redirect=true
     end
-    if redirect then
+    if ! @redirect
+      handle_year(params[:id]) if params[:id] != @year
+    end
+  end
+  
+  def year_list
+    pre_year_list
+    if @redirect then
       redirect_to params
     else
-      handle_year(params[:id]) if params[:id] != @year
       @abstracts = Abstract.display_data( @year, params[:page] )
-      list_heading
+      list_heading(@year)
       @do_pagination = "1"
     end
   end
@@ -37,7 +51,7 @@ class AbstractsController < ApplicationController
     else
       handle_year(params[:id]) if params[:id] != @year
       @abstracts = Abstract.display_all_data( @year )
-      list_heading
+      list_heading(@year)
       @do_pagination = "0"
       render :action => 'year_list'
     end
@@ -152,6 +166,7 @@ class AbstractsController < ApplicationController
   end
 
   def search 
+    logger.error "entering search action"
      if !@keywords.keywords.blank? then
  #      @tags = Abstract.tag_counts(:limit => 150, :order => "count desc")
       @do_pagination="1"
@@ -163,10 +178,12 @@ class AbstractsController < ApplicationController
        end
        @heading = "There were #{total_entries} matches to search term <i>"+ @keywords.keywords.downcase + "</i>"
        @include_mesh=false
-       render :action => 'year_list'
      else 
-       redirect_to abstracts_by_year_path(:id => @year, :page => '1')
+        logger.error "search did not have a defined keyword"
+        pre_year_list
+        year_list
      end 
+     render :action => 'year_list'
   end 
   
   def show
@@ -198,11 +215,11 @@ class AbstractsController < ApplicationController
   
   private
   
-  def list_heading
+  def list_heading(year)
     @tags = Abstract.tag_counts(:limit => 150, :order => "count desc", 
-                  :conditions => ["abstracts.year in (:year)", {:year=>@year }])
+                  :conditions => ["abstracts.year in (:year)", {:year=>year }])
     total_entries = total_length(@abstracts) 
-    @heading = "Publication Listing for #{@year}  (#{total_entries} publications)"
+    @heading = "Publication Listing for #{year}  (#{total_entries} publications)"
   end
   
   def tag_heading(tag_name, abstracts)

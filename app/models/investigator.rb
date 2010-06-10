@@ -1,7 +1,8 @@
 class Investigator < ActiveRecord::Base
   acts_as_taggable  # for MeSH terms
 
-  has_many :investigator_abstracts
+  has_many :investigator_abstracts,
+         :conditions => ['investigator_abstracts.end_date is null or investigator_abstracts.end_date >= :now', {:now => Date.today }]
   has_many :investigator_colleagues
   has_many :similar_investigators, 
       :class_name => "InvestigatorColleague", 
@@ -43,7 +44,7 @@ class Investigator < ActiveRecord::Base
   named_scope :investigator_only, :conditions => "appointment_track = 'Investigator'"
   named_scope :clinician, :conditions => "appointment_track like '%Clinician%'"
   named_scope :clinician_only, :conditions => "appointment_track = 'Clinician'"
- 
+  default_scope :include => :abstracts
   #default_scope :order => 'lower(investigators.last_name),lower(investigators.first_name)'
 
   validates_uniqueness_of :username
@@ -52,6 +53,15 @@ class Investigator < ActiveRecord::Base
   def name
     [first_name, last_name].join(' ')
   end
+
+  def abstract_count
+    abstracts.length
+  end
+ 
+  def abstract_last_five_years_count
+    abstracts.abstracts_last_five_years.length
+  end
+
 
 #  def self.similar_investigators(investigator_id)
 #    self.find(:all, :joins=>[:investigator_colleagues], 
@@ -108,11 +118,6 @@ class Investigator < ActiveRecord::Base
   end
   
 # used in the rake tasks to add to the investigator object attributes
-  def publications_cnt()
-       self.abstracts.find(:all, 
-          :conditions => ["publication_date >= :pub_date or electronic_publication_date >= :pub_date",
-              {:pub_date => Investigator.generate_date()}] ).length
-  end 
 
   def first_author_publications_cnt()
     self.investigator_abstracts.find(:all,

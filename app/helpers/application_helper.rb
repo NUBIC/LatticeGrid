@@ -88,19 +88,19 @@ module ApplicationHelper
   def link_to_coauthors(coauthors, delimiter=", ")
     coauthors.collect{|coauthor| link_to( coauthor.colleague.name, 
       show_investigator_url(:id=>coauthor.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
-        :title => " #{coauthor.colleague.total_pubs} pubs, "+(coauthor.colleague.num_intraunit_collaborators+coauthor.colleague.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
+        :title => " #{coauthor.colleague.abstract_count} pubs, "+(coauthor.colleague.num_intraunit_collaborators+coauthor.colleague.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
   end
 
   def link_to_collaborators(collaborators, delimiter=", ")
     collaborators.collect{|investigator| link_to( investigator.name, 
       show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
-        :title => " #{investigator.total_pubs} pubs, "+(investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
+        :title => " #{investigator.abstract_count} pubs, "+(investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
   end
   
   def link_to_similar_investigators(relationships, delimiter=", ")
     relationships.collect{|relationship| link_to( "#{relationship.colleague.name} <span class='simularity'>#{relationship.mesh_tags_ic.round}</span>", 
       show_investigator_url(:id=>relationship.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
-        :title => " #{relationship.colleague.total_pubs} pubs, "+(relationship.colleague.num_intraunit_collaborators+relationship.colleague.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
+        :title => " #{relationship.colleague.abstract_count} pubs, "+(relationship.colleague.num_intraunit_collaborators+relationship.colleague.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
   end
   
   def link_to_investigator(citation, investigator, name=nil) 
@@ -108,7 +108,7 @@ module ApplicationHelper
     link_to name, 
       show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
       :class => setInvestigatorClass(citation,investigator),
-      :title => "Go to #{name}: #{investigator.total_pubs} pubs, "+(investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators"
+      :title => "Go to #{name}: #{investigator.abstract_count} pubs, "+(investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators"
   end
   
   def getFirstAuthorIDForCitation(citation)

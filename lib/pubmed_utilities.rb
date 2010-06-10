@@ -181,7 +181,7 @@ end
 def UpdateInvestigatorCitationInformation(investigator)
   investigator.num_intraunit_collaborators_last_five_years=Investigator.intramural_collaborators_since_date_cnt(investigator.id)
   investigator.num_extraunit_collaborators_last_five_years=Investigator.other_collaborators_since_date_cnt(investigator.id)
-  investigator.total_pubs_last_five_years=investigator.publications_cnt()
+  investigator.total_pubs_last_five_years=investigator.abstract_last_five_years_count()
   investigator.num_first_pubs_last_five_years=investigator.first_author_publications_since_date_cnt()
   investigator.num_last_pubs_last_five_years=investigator.last_author_publications_since_date_cnt()
   investigator.num_intraunit_collaborators=Investigator.intramural_collaborators_cnt(investigator.id)

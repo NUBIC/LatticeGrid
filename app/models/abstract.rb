@@ -9,6 +9,12 @@ class Abstract < ActiveRecord::Base
   has_many :organizational_units, :through => :organization_abstracts
   validates_uniqueness_of :pubmed
   acts_as_taggable  # for MeSH terms
+  
+  has_many :organization_abstracts,
+        :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
+  named_scope :abstracts_last_five_years, 
+   :conditions => ['(publication_date >= :start_date or electronic_publication_date  >= :start_date)', 
+   		      {:start_date => 5.years.ago }]
   default_scope :conditions => 'abstracts.deleted_at is null'
 
 

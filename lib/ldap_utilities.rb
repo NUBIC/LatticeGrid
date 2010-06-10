@@ -64,12 +64,13 @@ end
 
 def MergePIrecords(thePI, pi_data)
   # trust LDAP
+  # this database does not have a campus_address field
   if ! pi_data.blank?
     thePI.title = pi_data["title"] || thePI.title
     thePI.business_phone = pi_data["telephoneNumber"] || thePI.business_phone
     thePI.employee_id = pi_data["employeeNumber"] || thePI.employee_id
-    thePI.campus_address = pi_data["postalAddress"] || thePI.campus_address
-    thePI.campus_address = thePI.campus_address.split("$").join(13.chr) if !  thePI.campus_address.blank?
+    thePI.address1 = pi_data["postalAddress"] || thePI.address1
+    thePI.address1 = thePI.address1.split("$").join(13.chr) if !  thePI.address1.blank?
     thePI.campus = pi_data["postalAddress"].split("$").last || thePI.campus if ! pi_data["postalAddress"].blank?
     # home_department is no longer a string
     thePI["home"] = pi_data.ou  if pi_data.ou !~ /People/
@@ -79,6 +80,7 @@ def MergePIrecords(thePI, pi_data)
     #clean up the campus data
     thePI.campus = (thePI.campus =~ /CH|Chicago/) ? 'Chicago' : thePI.campus
     thePI.campus = (thePI.campus =~ /EV|Evanston/) ? 'Evanston' : thePI.campus
+    thePI.campus = (thePI.campus =~ /CMH|Children/) ? 'CMH' : thePI.campus
   end
   thePI
 end

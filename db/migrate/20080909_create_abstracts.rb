@@ -28,15 +28,14 @@ class CreateAbstracts < ActiveRecord::Migration
       t.column :citation_url, :string # url to ISI or GoogleScholar citations for the article
       t.column :url, :string 
       t.column :mesh, :text 
-      t.column :created_at, :timestamp
       t.column :created_id, :integer  
       t.column :created_ip, :string
-      t.column :updated_at, :timestamp
       t.column :updated_id, :integer  
       t.column :updated_ip, :string
       t.column :deleted_at, :timestamp
       t.column :deleted_id, :integer  
       t.column :deleted_ip, :string
+      t.timestamps #adds created_at and updated_at
     end
   end
 
