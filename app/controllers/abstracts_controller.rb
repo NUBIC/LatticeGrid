@@ -113,8 +113,12 @@ class AbstractsController < ApplicationController
   end
 
   def investigator_listing
-    @abstracts = Abstract.display_all_investigator_data_include_deleted(params[:id])
-    @investigator = Investigator.find(params[:id])
+    if params[:id] =~ /^\d+$/
+      @investigator = Investigator.find(params[:id])
+    else
+      @investigator = Investigator.find_by_username(params[:id])
+    end
+    @abstracts = Abstract.display_all_investigator_data_include_deleted(@investigator.id)
     heading_base="Publication listing for investigator #{@investigator.name}."
     @heading="#{heading_base} Uncheck boxes to remove these publications from <i>any</i> listing."
     respond_to do |format|

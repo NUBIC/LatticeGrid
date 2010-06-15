@@ -7,7 +7,7 @@
 			#
 		</td>
 		<td class="list-title-left">
-			netid
+			username
 		</td>
 		<td class="list-title-left">
 			Last name
@@ -22,7 +22,13 @@
 			home department
 		</td>
 		<td class="list-title-left">
+			publication listing
+		</td>
+		<td class="list-title-left">
 			appointments (joint, secondary, centers)
+		</td>
+		<td class="list-title-left">
+			Publications
 		</td>
 	</tr>
   <% for investigator in @investigators %>
@@ -44,10 +50,16 @@
 			<%= email_link(investigator.email) %>
 		</td>
 		<td class="list-left">
-			<%= investigator.home_department.abbreviation %>
+			<%= investigator.home_department.abbreviation if ! investigator.home_department.blank? %>
+		</td>
+		<td class="list-left">
+			<%= link_to "link", investigator_listing_abstract_url(investigator.username) %>
 		</td>
 		<td class="list-left">
 			<%= investigator.appointments.collect{|x| x.abbreviation}.join(", ") %>
+		</td>
+		<td class="list-left">
+			<%= investigator.abstracts.length %>
 		</td>
 	</tr>
   <% end %>

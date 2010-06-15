@@ -57,6 +57,9 @@ rake environment RAILS_ENV=production importInvestigators file=db/imports/UCSFMe
 # or 
 rake importInvestigators file=db/imports/cinj_faculty.txt
 rake environment RAILS_ENV=production importInvestigators file=db/imports/cinj_faculty.txt
+# or 
+rake importInvestigators file=db/imports/stanford_faculty.txt
+rake environment RAILS_ENV=production importInvestigators file=db/imports/stanford_faculty.txt
 
 # build the investigator/program relationships. Use the following file as an example
 rake importProgramMembership  file=db/imports/RHLCCCProgramMemberships.txt
