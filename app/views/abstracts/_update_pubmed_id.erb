@@ -1,0 +1,4 @@
+<%= "PubMedID #{params[:pubmed_id].to_s} #{(is_new ? 'was added.' : 'was in LatticeGrid.')} Authors: <b>#{abstract.authors}</b> Title: "+  link_to( "<b>#{abstract.title}</b>", abstract_url(abstract.id))+" Year: <b>#{abstract.year}</b>. #{pluralize(abstract.investigators.length, 'investigator')} was/were found: " %>
+<% abstract.investigators.each do |investigator| -%>
+	<%= link_to(investigator.name, show_investigator_url(investigator.username, 1))+"; " %>
+<% end -%>

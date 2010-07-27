@@ -5,6 +5,8 @@
 <% show_paginator = true if show_paginator.nil? %>
 <% do_pagination = "0" if do_pagination.nil? %>
 <% show_delete_checkboxes = false if show_delete_checkboxes.nil? %>
+<% bold_members = false if bold_members.nil? %>
+
 
 <div id="listing"> 
 <h2><%= heading %></h2>
@@ -33,13 +35,13 @@
 	<%= will_paginate(abstracts, :outer_window => 5, :inner_window => 5) %>
 <% end %>
 
-<%= render :partial => "shared/abstract_listing_table.html", :locals => { :abstracts => abstracts, :investigators_in_unit => investigators_in_unit, :include_pubmed_id => include_pubmed_id, :include_collab_marker => include_collab_marker, :include_investigators => include_investigators, :show_delete_checkboxes => show_delete_checkboxes } %>
+<%= render :partial => "shared/abstract_listing_table.html", :locals => { :abstracts => abstracts, :investigators_in_unit => investigators_in_unit, :include_pubmed_id => include_pubmed_id, :include_collab_marker => include_collab_marker, :include_investigators => include_investigators, :show_delete_checkboxes => show_delete_checkboxes, :bold_members => bold_members } %>
 
 <% if do_pagination != "0"  %>
 	<%= will_paginate(abstracts, :outer_window => 5, :inner_window => 5) %>
 <% end %>
 <p>
-The above publications are sorted by year, faculty last name, and first author. Click on any highlighted author listed to find all publications attributed to that individual. Click on the publication title to see the abstract. <span class="first_author">First authors</span> who are faculty are <span class="first_author">highlighted like this</span>. <span class="last_author">Last authors</span> who are faculty are <span class="last_author">highlighted like this</span>. <span class="author">Other authors</span> who are faculty are <span class="author">highlighted like this</span>. <%= "Publications designated with an asterisk (*) represent intra-departmental interactions; those with a bullet (&bull;) inter-departmental interactions." if include_collab_marker %>
+The above publications are sorted by year, faculty last name, and first author. Click on any highlighted author listed to find all publications attributed to that individual. Click on the publication title to see the abstract. <span class="first_author">First authors</span> who are faculty are <span class="first_author">highlighted like this</span>. <span class="last_author">Last authors</span> who are faculty are <span class="last_author">highlighted like this</span>. <span class="author">Other authors</span> who are faculty are <span class="author">highlighted like this</span>. <%= "Publications designated with an asterisk (*) represent intra-departmental interactions; those with a bullet (&bull;) inter-departmental interactions. " if include_collab_marker %> <%= "Authors highlighted in <b>bold</b> are in the same unit/program" if bold_members %>
 </p>
 <% else%>
 	<h2>Sorry, no publications are available!</h2>

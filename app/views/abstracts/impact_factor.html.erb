@@ -35,7 +35,7 @@ There were a total of <%= @all_pubs.length %> publications during this period, w
 	<% cnt+=1%>
   <tr valign="middle" class="<%= @high_impact.collect{|x| x.journal_abbreviation.downcase}.include?(journal.journal_abbreviation.downcase) ?  'list-line-highlight' : cycle('list-line-odd', 'list-line-even') %>"> 
 	<td class="list-right"><%= cnt %></td>
-	<td><%=capitalize_words journal.journal_abbreviation %></td>
+	<td><%= link_to capitalize_words(journal.journal_abbreviation), journal_list_abstract_url(journal.id) %></td>
 	<td class="list-right"><%= journal.count_all %></td>
 	<td class="list-right"><%= journal.issn %></td>
 	<td class="list-right"><%= journal.total_cites %></td>

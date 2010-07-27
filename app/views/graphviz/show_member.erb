@@ -2,7 +2,7 @@
 
 <%= render :partial => "shared/investigator_bio", :locals => { :investigator => @investigator } %>
 
-<p><%= link_to "MeSH version of this graph", show_member_mesh_graphviz_url(params[:id]) %></p>
+<p><%= link_to "MeSH similarity version of this graph", show_member_mesh_graphviz_url(params[:id]) %></p>
 
 <%= render( :partial => "graphviz_template" ) %>
 

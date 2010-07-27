@@ -64,7 +64,11 @@ end
 task :getAbstracts => :environment do
   # load all abstracts
   begin
-    @AllAbstracts = Abstract.find(:all, :order => 'id', :include => ["investigator_abstracts","investigators"])
+    if ENV['RAILS_ENV'] != 'production'
+      @AllAbstracts = Abstract.find(:all, :order => 'id', :include => ["investigator_abstracts","investigators"])
+    else
+      @AllAbstracts = Abstract.find(:all, :order => 'id')
+    end
   rescue
     @AllAbstracts = Abstract.find(:all, :order => 'id')
   end

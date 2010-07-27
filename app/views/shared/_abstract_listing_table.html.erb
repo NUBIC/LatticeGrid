@@ -3,6 +3,8 @@
 <% include_investigators = false if include_investigators.nil? -%>
 <% investigators_in_unit = [] if investigators_in_unit.nil? -%>
 <% show_delete_checkboxes = false if show_delete_checkboxes.nil? -%>
+<% bold_members = false if bold_members.nil? -%>
+
 <form onsubmit="return false">
 <table class="borderless"> 
   <tr valign="bottom">
@@ -14,7 +16,7 @@
   <tr valign="middle" class="<%= cycle('list-line-odd', 'list-line-even') %>"> 
 	<%= render :partial => "shared/publication_collab_marker.html", :locals => { :publication => publication, :investigators_in_unit => investigators_in_unit } if include_collab_marker %>
 	<%= render :partial => "shared/pubmed_id_item.html", :locals => { :publication => publication } if include_pubmed_id %>
-	<%= render :partial => "shared/publication_item.html", :locals => { :publication => publication, :show_delete_checkboxes => show_delete_checkboxes } %>
+	<%= render :partial => "shared/publication_item.html", :locals => { :publication => publication, :show_delete_checkboxes => show_delete_checkboxes, :bold_members => bold_members, :investigators_in_unit => investigators_in_unit } %>
 	<%= render :partial => "shared/publication_investigators_item.html", :locals => { :publication => publication }  if include_investigators %>
   </tr>
 <% end -%>

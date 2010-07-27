@@ -56,6 +56,23 @@ def HandleSchool(school_name)
   return school
 end
 
+def ReorderByAbbreviation(node=nil)
+  return ReorderByAbbreviation(OrganizationalUnit.root) if node.blank?
+  child_nodes = node.children
+  child_nodes.each do |unit|
+    right_sib = unit.right_sibling 
+    if (!right_sib.blank? ) and unit.abbreviation > right_sib.abbreviation
+      unit.move_right
+      return ReorderByAbbreviation(node)
+    end
+  end
+  child_nodes = node.children
+  child_nodes.each do |unit|
+    ReorderByAbbreviation(unit)
+  end
+end
+
+
 def CleanUpOrganizationData()
   all = OrganizationalUnit.find_all_by_division_id(0)
   all.each do |unit|
@@ -223,7 +240,7 @@ def CreateProgramFromName(department)
         end
         max_program_number += 1
         puts max_program_number
-        theProgram = Program.create! (
+        theProgram = Program.create!(
            :name  => department,
            :sort_order => max_program_number
         )

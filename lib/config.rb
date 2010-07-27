@@ -9,6 +9,10 @@ def GetDefaultSchool()
   "Feinberg"
 end
 
+def CachePages()
+  true
+end
+
 def curl_host
     my_env = RAILS_ENV
     my_env = 'home' if public_path =~ /Users/ 

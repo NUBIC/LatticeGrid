@@ -1,5 +1,5 @@
 class OrgsController < ApplicationController
-  caches_page :show, :index, :departments, :centers, :programs, :show_investigators, :stats, :full_show, :tag_cloud, :short_tag_cloud if CachePages()
+  caches_page(:show, :index, :departments, :centers, :programs, :show_investigators, :stats, :full_show, :tag_cloud, :short_tag_cloud) if CachePages()
   helper :sparklines
 
   require 'fastercsv' # for department_collaborations
@@ -217,18 +217,44 @@ class OrgsController < ApplicationController
     end
   end
 
-  def stats
+  def period_stats
     # get all publications by  members
     # then get the number of intra-unit collaborations and the number of inter-unit collaborations
-    params[:start_date]=5.years.ago
     handle_start_and_end_date
-    @heading = "Publication Statistics by Org for the past five years"
-    @units = OrganizationalUnit.find(:all, :include => [:abstracts, :associated_faculty, :primary_faculty], :order => "lower(type) DESC, lower(search_name), lower(name), sort_order")
+    @heading = "Publication Statistics by Org from #{params[:start_date]} to #{params[:end_date]} "
+    @units = @head_node.children.sort_by(&:abbreviation)
     @units.each do |unit|
       unit["pi_intra_abstracts"] = Array.new
       unit["pi_inter_abstracts"] = Array.new
       unit_pis = (unit.associated_faculty+unit.primary_faculty).collect{|x| x.id}
-      unit.abstracts.each do |abstract| 
+      unit["publications"]=unit.display_data_by_date( params[:start_date], params[:end_date] )
+      unit.publications.each do |abstract| 
+        abstract_investigators = abstract.investigator_abstracts.collect{|x| x.investigator_id}
+        intra_collaborators_arr = abstract_investigators & unit_pis  # intersection of the two sets
+        intra_collaborators = intra_collaborators_arr.length
+        inter_collaborators = abstract_investigators.length - intra_collaborators
+        unit.pi_inter_abstracts.push(abstract) if inter_collaborators > 0
+        unit.pi_intra_abstracts.push(abstract) if intra_collaborators > 1
+      end
+    end
+    render :layout => 'printable', :action => 'stats'
+  end
+
+
+  def stats
+    # get all publications by  members
+    # then get the number of intra-unit collaborations and the number of inter-unit collaborations
+    params[:start_date]=5.years.ago
+    params[:end_date]=Date.tomorrow
+    handle_start_and_end_date
+    @heading = "Publication Statistics by Org for the past five years"
+    @units = @head_node.children.sort_by(&:abbreviation)
+    @units.each do |unit|
+      unit["pi_intra_abstracts"] = Array.new
+      unit["pi_inter_abstracts"] = Array.new
+      unit_pis = (unit.associated_faculty+unit.primary_faculty).collect{|x| x.id}
+      unit["publications"]=unit.display_data_by_date( params[:start_date], params[:end_date] )
+      unit.publications.each do |abstract| 
         abstract_investigators = abstract.investigator_abstracts.collect{|x| x.investigator_id}
         intra_collaborators_arr = abstract_investigators & unit_pis  # intersection of the two sets
         intra_collaborators = intra_collaborators_arr.length
@@ -292,6 +318,7 @@ class OrgsController < ApplicationController
     @include_investigators=true 
     @include_pubmed_id = true 
     @include_collab_marker = true
+    @bold_members = true
 
     respond_to do |format|
       format.html { render :layout => 'printable', :controller=> :orgs, :action => :show }# show.html.erb

@@ -18,12 +18,12 @@ class Abstract < ActiveRecord::Base
   default_scope :conditions => 'abstracts.deleted_at is null'
 
 
-  def self.include_deleted( investigator_id=nil )
+  def self.include_deleted( id=nil )
     with_exclusive_scope do
-      if investigator_id.blank?
+      if id.blank?
         find(:all)
       else
-        find(investigator_id)
+        find(id)
       end
     end
   end
@@ -37,6 +37,14 @@ class Abstract < ActiveRecord::Base
     end
   end
 
+  def self.from_journal_include_deleted(journal_abbreviation)
+    with_exclusive_scope do
+      find(:all,
+          :conditions => ['lower(journal_abbreviation) = :journal_abbreviation',{:journal_abbreviation => journal_abbreviation}],
+          :order => "year DESC, authors ASC" )
+    end
+  end
+  
   def self.co_authors(abstracts)
     author_ids=abstracts.collect{|ab| ab.investigator_abstracts.collect(&:investigator_id)}.flatten.sort.uniq
     Investigator.find(:all, :conditions =>  ["id IN (:author_ids)", 

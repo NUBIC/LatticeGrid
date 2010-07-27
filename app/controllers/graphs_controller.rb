@@ -1,5 +1,5 @@
 class GraphsController < ApplicationController
-  caches_page :show_org, :show_member, :member_nodes, :org_nodes if CachePages()
+  caches_page( :show_org, :show_member, :member_nodes, :org_nodes) if CachePages()
   
   def index
     redirect_to show_org_graph_path(1)

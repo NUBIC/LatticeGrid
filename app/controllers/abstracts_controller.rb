@@ -1,5 +1,13 @@
 class AbstractsController < ApplicationController
-  caches_page :year_list, :full_year_list, :tag_cloud, :endnote, :full_tagged_abstracts, :tag_cloud_by_year, :tagged_abstracts  if CachePages()
+#removed :full_tagged_abstracts and :tagged_abstracts - too many cached pages
+  caches_page( :year_list, :full_year_list, :tag_cloud, :endnote, :tag_cloud_by_year, :endnote, :show)  if CachePages()
+  
+  require 'bio' #require bioruby!
+#  require 'utilities' #all the helper methods
+  require 'publication_utilities' #all the helper methods
+  require 'pubmed_utilities' #all the helper methods
+#  require 'pubmed_config' #look here to change the default time spans
+  require 'pubmedext' #my extensions to grab other dates and full author names
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   # verify :method => :post, :only => [ :search ], :redirect_to => :current_abstracts_path
 
@@ -16,23 +24,20 @@ class AbstractsController < ApplicationController
     render :action => 'year_list'
   end
   
-  def pre_year_list
-    @redirect=false
-    if params[:page].nil? then
-      params[:page] = "1"
-      @redirect=true
-    end
-    if params[:id].nil? || params[:id].include?("tag") then
-      params[:id]= @year
-      @redirect=true
-    end
-    if ! @redirect
-      handle_year(params[:id]) if params[:id] != @year
+  def journal_list
+    pre_list(1)
+    if @redirect then
+      redirect_to params
+    else
+      journal = Journal.find(params[:id])
+      @abstracts = journal.publications
+      journal_heading(capitalize_words(journal.journal_abbreviation))
     end
   end
-  
+
   def year_list
-    pre_year_list
+    pre_list(@year)
+    handle_pre_year(@year)
     if @redirect then
       redirect_to params
     else
@@ -49,7 +54,8 @@ class AbstractsController < ApplicationController
       params.delete(:page)
       redirect_to params
     else
-      handle_year(params[:id]) if params[:id] != @year
+      @redirect = false
+      handle_pre_year(@year)
       @abstracts = Abstract.display_all_data( @year )
       list_heading(@year)
       @do_pagination = "0"
@@ -196,7 +202,7 @@ class AbstractsController < ApplicationController
     elsif params[:id].nil? || params[:id].include?("tag") then
       redirect_to abstracts_by_year_path(:id => @year, :page => '1')
     else
-      @publication = Abstract.find(params[:id])
+      @publication = Abstract.include_deleted(params[:id])
     end
   end
 
@@ -217,8 +223,78 @@ class AbstractsController < ApplicationController
     show
   end
   
+  def add_abstracts
+  end
+  def add_pubmed_ids
+    #should be an ajax call
+    @abstracts=Abstract.find(:all, :conditions => ["pubmed in (:pubmed_ids)", {:pubmed_ids=>params[:pubmed_ids].split}])
+  end
+  
+  #called as xhr
+  
+  def update_pubmed_id
+    is_new=false
+    if ! params[:pubmed_id].blank?
+      abstract=Abstract.find(:first, :conditions => ["pubmed = :pubmed_id", {:pubmed_id=>params[:pubmed_id].split.first}])
+      if abstract.blank?
+        is_new=true
+        publications = FetchPublicationData(params[:pubmed_id].split)
+        InsertPubmedRecords(publications)
+        abstract=Abstract.find(:first, :conditions => ["pubmed = :pubmed_id", {:pubmed_id=>params[:pubmed_id].split.first}])
+      end
+      if !abstract.blank?
+        investigator_ids = MatchInvestigatorsInCitation(abstract)
+        old_investigator_ids = abstract.investigators.collect(&:id).sort.uniq
+        all_investigator_ids=(investigator_ids|old_investigator_ids).sort.uniq
+        new_ids = all_investigator_ids.delete_if{|id| old_investigator_ids.include?(id)}.compact
+        #sped this up by only processing the intersection
+        if !(new_ids == [] ) then
+          new_ids.each do |investigator_id|
+            InsertInvestigatorPublication (abstract.id, investigator_id)
+          end
+          abstract.reload()
+        end
+      end
+    end
+    # Is this an XmlHttpRequest request?
+    if (request.xhr? )
+      if abstract.blank?
+        render :text => "Could not find PubMedID #{params[:pubmed_id].to_s}"
+      else
+        render :partial => 'update_pubmed_id', :locals => {:abstract=>abstract, :is_new => is_new}
+      end
+    else
+      # No? Or no data? Then render an action.
+      redirect_to :action=>:add_abstracts
+    end
+  end
+  
+  
   private
   
+  def pre_list(id)
+    @redirect=false
+    if params[:page].nil? then
+      params[:page] = "1"
+      @redirect=true
+    end
+    if params[:id].nil? || params[:id].include?("tag") then
+      params[:id]= id
+      @redirect=true
+    end
+  end
+  
+  def handle_pre_year(id)
+    if ! @redirect
+      handle_year(params[:id]) if params[:id] != id
+    end
+  end
+
+  def journal_heading(journal_name)
+    total_entries = total_length(@abstracts) 
+    @heading = "Publication Listing for <i>#{journal_name}</i>  (#{total_entries} publications)"
+  end
+
   def list_heading(year)
     @tags = Abstract.tag_counts(:limit => 150, :order => "count desc", 
                   :conditions => ["abstracts.year in (:year)", {:year=>year }])

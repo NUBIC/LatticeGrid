@@ -1,11 +1,24 @@
 
 <div id="admin">
+	
+	<p><%= link_to("Add abstracts by PubMed ID", add_abstracts_abstracts_url() ) %></p>
+	
 <h2>Reporting options</h2>
 
 	<div id="stats">
 		<p>Produce publication statistics for each unit. Please note that this report can take several minutes to generate!</p>
 		<%= link_to "Unit Statistics", stats_orgs_path %> <- click to generate statistics
 		<p>&nbsp;</p>
+	<div id="period_stats">
+		<% form_for :date_range, :url => period_stats_orgs_path, :html => { :method => :get, :class => "p" }  do |form| %> 
+		<p>Produce publication statistics for each unit based on articles published between the following dates. Please note that this report can take several minutes to generate! (roughly one minute per year analyzed. Not bad if you think about it in those terms!)</p>
+		  <p><%= form.text_field(:start_date, :size => 20) %> to
+		  <%= form.text_field(:end_date, :size => 20) %> select dates </p
+		  <%= submit_tag 'Generate Stats for dates' %>
+		<% end %> 
+		<br/>
+	</div>
+	<p>&nbsp;</p>
 	<div id="list_by_unit">
 		<% form_for :date_range, :url => list_orgs_path, :html => { :method => :get, :class => "p" }  do |form| %> 
 		<p>List by unit all articles published between the following dates:</p>
@@ -20,7 +33,7 @@
 		<% form_for :date_range, :url => {:controller => :orgs, :action => :abstracts_during_period}, :html => { :method => :post, :class => "p" }  do |form| %> 
 		<p>Use the below form for printing:  List for one unit all articles published between the following dates:</p>
 
-	  	<p><%= collection_select '', 'id', @head_node.children, :id, :name  %> select unit </p>
+	  	<p><%= collection_select '', 'id', @head_node.children.sort_by(&:abbreviation), :id, :name  %> select unit </p>
 		 <p><%= form.text_field(:start_date, :size => 20) %> to
 		  <%= form.text_field(:end_date, :size => 20) %>  select dates </p>
 		<p><%= select_tag(:format, 
@@ -29,9 +42,10 @@
 		  <%= submit_tag 'List Publications by Unit' %>
 		<% end %> 
 	</div>
+
 	<p>&nbsp;</p>
 	<div id="investigator_listing">
-		<% form_for :abstract, :url => {:controller => :abstracts, :action => :investigator_listing}, :html => { :method => :post, :class => "p" }  do |form| %> 
+		<% form_for( :abstract, :url => {:controller => :abstracts, :action => :investigator_listing}, :html => { :method => :post, :class => "p" })  do |form| %> 
 		<p>Select an investigator to get a list of publications associated with that investigator. You can use this report to remove a publication from all lists.</p>
 
 	  	<p><%= collection_select '', 'id', @investigators, :id, :name  %> Select investigator </p>

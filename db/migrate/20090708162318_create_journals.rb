@@ -2,7 +2,7 @@ class CreateJournals < ActiveRecord::Migration
   def self.up
     create_table :journals do |t|
       t.string :journal_name
-      t.string :journal_abbreviation
+      t.string :journal_abbreviation, :null => false
       t.string :jcr_journal_abbreviation
       t.string :issn
       t.integer :score_year
@@ -16,6 +16,7 @@ class CreateJournals < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :journals, [:journal_abbreviation], :unique => true
   end
 
   def self.down

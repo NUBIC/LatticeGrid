@@ -90,10 +90,14 @@ def CreateInvestigatorFromHash(data_row)
         throw "unable to match program #{data_row['program']} for user #{pi.username}"
       end
       # replace this logic with a STI model of 'member??'
-      if  InvestigatorAppointment.find(:all, :conditions=>['investigator_id=:investigator_id and organizational_unit_id=:program_id and type in (:types)', 
-        {:program_id => theProgram.id, :investigator_id => pi.id, :types => ["Member"]}]).length == 0
-		  Member.create :organizational_unit_id => theProgram.id, :investigator_id => pi.id, :start_date => Time.now
-		end
+      membership = InvestigatorAppointment.find(:all, 
+          :conditions=>['investigator_id=:investigator_id and organizational_unit_id=:program_id and type in (:types)', 
+            {:program_id => theProgram.id, :investigator_id => pi.id, :types => ["Member"]}])
+      if membership.length == 0
+        Member.create :organizational_unit_id => theProgram.id, :investigator_id => pi.id, :start_date => Time.now
+      else
+        membership[0].save  # update the record
+      end
 	  end
 	end
 end

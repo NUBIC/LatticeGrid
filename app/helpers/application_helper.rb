@@ -12,7 +12,7 @@ module ApplicationHelper
 		for unit in nodes
 		  if org_type.nil? or unit.kind_of?(org_type)
     		out+="<li>"
-    		out+=link_to( unit.abbreviation.gsub(/\'/, ""), yield(unit.id))
+    		out+=link_to( truncate(unit.name.gsub(/\'/, ""),:length=>80), yield(unit.id))
         out+=build_menu(unit.children, nil, &block) if ! unit.leaf?
     		out+="</li>"
   		end
@@ -77,11 +77,19 @@ module ApplicationHelper
     return false
    end
   
-  def setInvestigatorClass(citation,investigator)
-    if isInvestigatorLastAuthor(citation,investigator) : "last_author" 
-    elsif isInvestigatorFirstAuthor(citation,investigator) : "first_author"
+  def setInvestigatorClass(citation,investigator, isMember=false)
+    if isMember
+      if isInvestigatorLastAuthor(citation,investigator) : "member_last_author" 
+      elsif isInvestigatorFirstAuthor(citation,investigator) : "member_first_author"
+      else
+        "member_author"
+      end
     else
-      "author"
+      if isInvestigatorLastAuthor(citation,investigator) : "last_author" 
+      elsif isInvestigatorFirstAuthor(citation,investigator) : "first_author"
+      else
+        "author"
+      end
     end
   end
 
@@ -103,11 +111,11 @@ module ApplicationHelper
         :title => " #{relationship.colleague.abstract_count} pubs, "+(relationship.colleague.num_intraunit_collaborators+relationship.colleague.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
   end
   
-  def link_to_investigator(citation, investigator, name=nil) 
+  def link_to_investigator(citation, investigator, name=nil, isMember=false) 
     name=investigator.last_name if name.blank?
     link_to name, 
       show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
-      :class => setInvestigatorClass(citation,investigator),
+      :class => setInvestigatorClass(citation, investigator, isMember),
       :title => "Go to #{name}: #{investigator.abstract_count} pubs, "+(investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators"
   end
   
@@ -146,16 +154,28 @@ module ApplicationHelper
   def author_name(author)
     author.last_name+',  '+author.first_name.at(0)+(author.middle_name.blank? ? '' : author.middle_name.at(0) )
   end
-    
-  def highlightInvestigator(citation, authorList=nil)
+  
+  def highlightMemberInvestigator(citation,memberArray=nil)
+    if memberArray.blank?
+      authors = highlightInvestigator(citation)
+    else
+      authors = citation.authors.gsub("\n","; ")
+      authors = highlightInvestigator(citation,authors,memberArray)
+      
+    end
+    authors
+  end
+  
+  def highlightInvestigator(citation, authorList=nil,memberArray=nil)
     if authorList.blank?
       authors = citation.authors.gsub("\n","; ")
     else
       authors = authorList.gsub("\n","; ")
     end
     citation.investigators.each do |investigator|
-      re = Regexp.new('('+investigator.last_name.downcase+', '+investigator.first_name.at(0).downcase+'[^;]+)', Regexp::IGNORECASE) 
-      authors.gsub!(re){|match| link_to_investigator(citation, investigator, author_name(investigator))}
+      re = Regexp.new('('+investigator.last_name.downcase+', '+investigator.first_name.at(0).downcase+'[^;]+)', Regexp::IGNORECASE)
+      isMember = (!memberArray.blank? and memberArray.include?(investigator.id))
+      authors.gsub!(re){|match| link_to_investigator(citation, investigator, author_name(investigator), isMember)}
     end
     authors
   end

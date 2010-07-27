@@ -149,36 +149,39 @@ td.list-title-right {
 	background-color: #FFFFFF;
 }
 
-intra_unit, a.intra_unit {
+.intra_unit {
 	background-color: #AFD8F8;
 	text-decoration: none;
 }
-span.inter_unit, a.inter_unit {
+.inter_unit {
 	background-color: #FFCC33;
 	text-decoration: none;
 }
 
-span.no_intra_unit, a.no_intra_unit {
+.no_intra_unit {
 	background-color: #FF99FF;
 	text-decoration: none;
 }
 
-span.first_author, a.first_author {
+.first_author, .member_first_author {
 	color: #660066;
 	background-color: #CCAF9F;
 	text-decoration: none;
 }
-span.last_author, a.last_author {
+.last_author, .member_last_author {
 	color: #002EB8;
 	background-color: khaki;
 	text-decoration: none;
 }
-span.author, a.author {
+.author, .member_author {
 	color: #353;
 	background-color: peachpuff;
 	text-decoration: none;
 }
-.author:hover, .first_author:hover, .last_author:hover {
+.member_first_author, .member_last_author, .member_author {
+	font-weight: bold;
+}
+.author:hover, .first_author:hover, .last_author:hover, .member_first_author:hover, .member_last_author:hover, .member_author:hover {
 	background: #AAA;
 }
 

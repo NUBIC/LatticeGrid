@@ -1,6 +1,14 @@
 class Journal < ActiveRecord::Base
-  has_many :abstracts, :foreign_key => "journal_abbreviation", :primary_key =>  "journal_abbreviation", :readonly => true
-  
+  has_many :abstracts, 
+    :foreign_key => "journal_abbreviation", 
+    :primary_key =>  "journal_abbreviation", 
+    :readonly => true,
+    :order => "year DESC, authors ASC"
+
+  def publications( )
+    Abstract.from_journal_include_deleted(journal_abbreviation.downcase)
+  end
+
   def self.journals_with_scores( journals )
     find(:all,
       :order => "score_year,journal_abbreviation",
@@ -12,7 +20,7 @@ class Journal < ActiveRecord::Base
     sortby = "impact_factor DESC" 
     # sortby should be one of impact_factor DESC, count_all DESC, journals.journal_abbreviation
     find(:all,
-      :select => "score_year, impact_factor, journal_abbreviation, issn, total_cites, impact_factor_five_year, immediacy_index, total_articles, eigenfactor_score, article_influence_score",
+      :select => "id, score_year, impact_factor, journal_abbreviation, issn, total_cites, impact_factor_five_year, immediacy_index, total_articles, eigenfactor_score, article_influence_score",
       :conditions => ['impact_factor >= :impact', 
             {:impact => impact}],
       :order => "score_year DESC, #{sortby}" )
@@ -25,21 +33,21 @@ class Journal < ActiveRecord::Base
     conditions += " AND #{sortby.sub(/desc/i,'')} > 0.001" if (sortby =~ /desc/i ) and (sortby !~ /count_all/i )
     # sortby should be one of impact_factor DESC, count_all DESC, journals.journal_abbreviation
     find(:all, 
-      :select => "count(*) as count_all, journals.score_year, journals.impact_factor, journals.journal_abbreviation, journals.issn, journals.total_cites, journals.impact_factor_five_year, journals.immediacy_index, journals.total_articles, journals.eigenfactor_score, journals.article_influence_score",
+      :select => "count(*) as count_all, journals.id, journals.score_year, journals.impact_factor, journals.journal_abbreviation, journals.issn, journals.total_cites, journals.impact_factor_five_year, journals.immediacy_index, journals.total_articles, journals.eigenfactor_score, journals.article_influence_score",
       :joins => "INNER JOIN abstracts on lower(abstracts.journal_abbreviation) = lower(journals.journal_abbreviation)",
       :conditions => "#{conditions}",
-      :group => "journals.score_year, journals.impact_factor, journals.journal_abbreviation, journals.issn, journals.total_cites, journals.impact_factor_five_year, journals.immediacy_index, journals.total_articles, journals.eigenfactor_score, journals.article_influence_score", 
+      :group => "journals.id, journals.score_year, journals.impact_factor, journals.journal_abbreviation, journals.issn, journals.total_cites, journals.impact_factor_five_year, journals.immediacy_index, journals.total_articles, journals.eigenfactor_score, journals.article_influence_score", 
       :order => "journals.score_year DESC, #{sortby}" )
   end
 
   def self.with_publications(years, journals)
     conditions = " abstracts.year IN (#{yearstring(years)}) "
      find(:all, 
-      :select => "count(*) as count_all, journals.score_year, journals.impact_factor, journals.journal_abbreviation, journals.issn, journals.total_cites, journals.impact_factor_five_year, journals.immediacy_index, journals.total_articles, journals.eigenfactor_score, journals.article_influence_score",
+      :select => "count(*) as count_all, journals.id, journals.score_year, journals.impact_factor, journals.journal_abbreviation, journals.issn, journals.total_cites, journals.impact_factor_five_year, journals.immediacy_index, journals.total_articles, journals.eigenfactor_score, journals.article_influence_score",
       :joins => "INNER JOIN abstracts on lower(abstracts.journal_abbreviation) = lower(journals.journal_abbreviation)",
       :conditions => ["lower(abstracts.journal_abbreviation) IN (:abbreviations) AND journals.impact_factor > 0.001 AND #{conditions}", 
            {:abbreviations => journal_to_array(journals) }],
-      :group => "journals.score_year, journals.impact_factor, journals.journal_abbreviation, journals.issn, journals.total_cites, journals.impact_factor_five_year, journals.immediacy_index, journals.total_articles, journals.eigenfactor_score, journals.article_influence_score", 
+      :group => "journals.id, journals.score_year, journals.impact_factor, journals.journal_abbreviation, journals.issn, journals.total_cites, journals.impact_factor_five_year, journals.immediacy_index, journals.total_articles, journals.eigenfactor_score, journals.article_influence_score", 
       :order => "count_all DESC" )
    end
   

@@ -7,10 +7,10 @@
 @verbose = true
 # limit searches to include the institutional_limit_search_string
 @limit_to_institution = false
-# build this to identify all the publications at your institution
+# build @institutional_limit_search_string to identify all the publications at your institution 
 @institutional_limit_search_string = '( "Northwestern University"[affil] OR "Feinberg School"[affil] OR "Robert H. Lurie Comprehensive Cancer Center"[affil] OR "Northwestern Healthcare"[affil] OR "Children''s Memorial"[affil] OR "Northwestern Memorial"[affil] OR "Northwestern Medical"[affil])'
-# these names will always be limited to the institutional search only
-@last_names_to_limit = ["Brown","Chen","Liu","Lu","Lee","Shen","Smith","Wang","Xia","Yang","Zhou"]
+# these names will always be limited to the institutional search only even if @limit_to_institution is false
+@last_names_to_limit = ["Brown","Chen","Das","Khan","Liu","Lu","Lee","Shen","Smith","Wang","Xia","Yang","Zhou"]
 # these are for messages regarding the expected number of publications
 @expected_min_pubs_per_year = 1
 @expected_max_pubs_per_year = 30

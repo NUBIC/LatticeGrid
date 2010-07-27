@@ -3,7 +3,7 @@
 <p style="float:right; margin-right:20px; margin-top:12px;">
 <%= link_to_unless(params[:format] == "pdf", "Download as pdf", show_investigators_org_url(@unit.id,"pdf")) %>
 </p>
-<h2><%= link_to( "Graph co-publications by faculty members in <i>#{@unit.name}</i>", show_org_graph_url(@unit.id)) %></h2>
+<p><%= link_to( "Graph co-publications by faculty members in <i>#{@unit.name}</i>", show_org_graph_url(@unit.id)) + " &nbsp; &nbsp; " +  link_to( "GraphViz version of this graph", show_org_graphviz_url(@unit.id)) + " &nbsp; &nbsp; " + link_to( "MeSH similarities version of this graph", show_org_mesh_graphviz_url(@unit.id)) %></p>
 
 <h2><%= link_to( "Show all #{@unit.name} publications", org_url(@unit.id)) %></h2>
 

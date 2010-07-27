@@ -5,16 +5,18 @@
 <% @include_investigators=false if @include_investigators.nil? %>
 <% @include_pubmed_id = false if @include_pubmed_id.nil? %>
 <% @include_collab_marker = false if @include_collab_marker.nil? %>
+<% @bold_members = true if @bold_members.nil? %>
 
 
 <h1><%= @unit.name %> Overview <a href='' title="citations per year"> <%= sparkline_tag( abstracts_per_year(@all_abstracts, @year_array.sort), :type => 'bar') if ! @all_abstracts.nil? && @all_abstracts.length > 10 %></a></h1>
 <% if @include_graph_link %>
-<h2><%= link_to( "Graph co-Publications by faculty members in <i>#{@unit.name}</i>", show_org_graph_url(@unit.id)) %></h2>
+<p><%= link_to( "Graph co-publications by faculty members in <i>#{@unit.name}</i>", show_org_graph_url(@unit.id)) + " &nbsp; &nbsp; " +  link_to( "GraphViz version of this graph", show_org_graphviz_url(@unit.id)) + " &nbsp; &nbsp; " + link_to( "MeSH similarities version of this graph", show_org_mesh_graphviz_url(@unit.id)) %></p>
+
 <% end %>
 
 <h2><%= link_to( "Show all #{@unit.name} members", show_investigators_org_url(@unit.id)) %></h2>
 
-<%= render :partial => "shared/abstract_listing.html", :locals => { :abstracts => @abstracts, :do_pagination => @do_pagination, :heading => @heading, :show_paginator => @show_paginator, :include_investigators => @include_investigators, :investigators_in_unit => @investigators_in_unit, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker  } %>
+<%= render :partial => "shared/abstract_listing.html", :locals => { :abstracts => @abstracts, :do_pagination => @do_pagination, :heading => @heading, :show_paginator => @show_paginator, :include_investigators => @include_investigators, :investigators_in_unit => @investigators_in_unit, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker, :bold_members => @bold_members  } %>
 
 
 <% if @include_mesh %>

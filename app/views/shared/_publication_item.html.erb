@@ -1,9 +1,11 @@
+<% investigators_in_unit = [] if investigators_in_unit.nil? -%>
 <% show_delete_checkboxes = false if show_delete_checkboxes.nil? %>
+<% bold_members = false if bold_members.nil? or investigators_in_unit.blank?  %>
 <td class="list-left"> 
 	<%= check_box_tag(publication.id, publication.id, publication.deleted_at.blank?, :onclick => remote_function( :url =>  set_deleted_date_abstract_path(publication.id),
 	:before => "Element.show('spinner')", :complete => "Element.hide('spinner')"
 	))  if show_delete_checkboxes %>
-	<%= highlightInvestigator(publication) %>
+	<%= (bold_members) ? highlightMemberInvestigator(publication,investigators_in_unit) : highlightInvestigator(publication) %>
 	<%= link_to publication.title, abstract_url(publication) %>
 	<i><%= publication.journal_abbreviation %></i> 	
 	(<%= publication.year %>)

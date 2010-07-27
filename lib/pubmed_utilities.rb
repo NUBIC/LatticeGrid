@@ -9,16 +9,16 @@ def BuildPISearch(pi, full_first_name=true, limit_to_institution=true)
     if full_first_name then
       result = result + ", " + pi.first_name
       if !pi.middle_name.blank?  then
-      result = result + " " + pi.middle_name[0,1]
-    end
+        result = result + " " + pi.middle_name[0,1]
+      end
     else
       result = result + " " + pi.first_name[0,1]
       if !pi.middle_name.blank?  then
         result = result + pi.middle_name[0,1]
       end
     end
-    result = result + '[auth]'
   end
+  result = result + '[auth]' unless result =~ /\[auth|\(/
   if pi.pubmed_limit_to_institution || limit_to_institution || @last_names_to_limit.include?(pi.last_name) then
     result = LimitSearchToInstitution(result)
   end

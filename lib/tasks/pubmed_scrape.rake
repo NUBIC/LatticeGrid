@@ -67,6 +67,7 @@ task :associateAbstractsWithInvestigators => [:getAbstracts] do
         # abstract.investigators = Abstract.find(abstract.id).investigators
       end
     }
+    @AllAbstracts = Abstract.find(:all, :order => 'id')
   }
 end
 

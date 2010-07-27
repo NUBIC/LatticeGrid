@@ -1,31 +1,52 @@
 <h1><%= @heading %></i></h1>
 
-The following is a list of the total publications, number of publications with intra-unit sharing, and inter-unit sharing, broken down by organizational unit. <br/>
+<% hasPrimary = false %>
+<% for unit in @units %>
+	<% hasPrimary = true if unit.primary_faculty.length > 0 %>
+<% end %>
+<% multipleUnits = false %>
+<% unitType = "organizational unit" %>
+<% unitType = @units[0].type if !@units.blank? and @units.length > 0 %>
+<% for unit in @units %>
+	<% multipleUnits = true if unit.type != unitType %>
+<% end %>
+The following is a list of the total publications, number of publications with intra-<%= multipleUnits ? "unit" : unitType.downcase -%> sharing, and inter-<%= multipleUnits ? "unit" : unitType.downcase -%> sharing, broken down by <%= multipleUnits ? "organizational unit" : unitType  -%>. <br/>
 
 <div id="listing">
   
 <table cellpadding="2" cellspacing="0" width="900" class="borderless"> 
 <tr valign="bottom" colspan="3">
 	<td class="list-title-left">
-		Unit name
+		<%=  multipleUnits ? "Unit" : unitType  -%> name<br />
 	</td>
+	<% if multipleUnits %>
 	<td class="list-title-left">
-		Unit type
+		Unit type<br />
 	</td>
+	<% end -%>
+	<% if hasPrimary %>
 	<td class="list-title-center">
 		Primary Investigators<br/>
 	</td>
+	<% end -%>
 	<td class="list-title-center">
+		<% if hasPrimary %>
 		Associated Investigators<br/>
+		<% else %>
+		Members<br/>
+		<% end %>
 	</td>
 	<td class="list-title-center">
 		Total publications<br/>
 	</td>
 	<td class="list-title-center">
-		Intra-unit<br/>
+		Per investigator <br/>
 	</td>
 	<td class="list-title-center">
-		Inter-unit<br/>
+		Intra-<%=  multipleUnits ? "unit" : unitType.downcase -%><br/>
+	</td>
+	<td class="list-title-center">
+		Inter-<%=  multipleUnits ? "unit" : unitType.downcase -%><br/>
 	</td>
 </tr>
 
@@ -35,23 +56,30 @@ The following is a list of the total publications, number of publications with i
 		<td>
 			<%= unit.name %>
 		</td>
+		<% if multipleUnits %>
 		<td>
 			<%= unit.type %>
 		</td>
+		<% end -%>
+		<% if hasPrimary %>
 		<td class="list-title-center">
 			<%= unit.primary_faculty.length %>
 		</td>
+		<% end -%>
 		<td class="list-title-center">
 			<%= unit.associated_faculty.length %>
 		</td>
 		<td class="list-title-center">
-			<%= unit.abstracts.length %>
+			<%= unit.publications.length %>
 		</td>
 		<td class="list-title-center">
-			<%= (unit.pi_intra_abstracts.length) %> (<%= unit.abstracts.length > 0 ? (100*(unit.pi_intra_abstracts.length)/unit.abstracts.length) : 0 %>%)<br/>
+			<%= ((unit.publications.length*10/(unit.primary_faculty.length+unit.associated_faculty.length)).to_f / 10)  %>
 		</td>
 		<td class="list-title-center">
-			<%= unit.pi_inter_abstracts.length %> (<%= unit.abstracts.length > 0 ? (100*unit.pi_inter_abstracts.length/unit.abstracts.length) : 0 %>%) <br/>
+			<%= (unit.pi_intra_abstracts.length) %> (<%= unit.publications.length > 0 ? (100*(unit.pi_intra_abstracts.length)/unit.publications.length) : 0 %>%)<br/>
+		</td>
+		<td class="list-title-center">
+			<%= unit.pi_inter_abstracts.length %> (<%= unit.publications.length > 0 ? (100*unit.pi_inter_abstracts.length/unit.publications.length) : 0 %>%) <br/>
 		</td>
 	</tr>
 	<% end %>

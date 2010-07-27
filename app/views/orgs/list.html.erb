@@ -4,7 +4,7 @@
 
 <div id="listing">
   
-  <% for unit in @head_node.children %>
+  <% for unit in @head_node.children.sort_by(&:abbreviation) %>
 	<table cellpadding="2" cellspacing="0" width="900" class="borderless"> 
 	<tr valign="bottom" colspan="3">
 	<td class="list-title-center">

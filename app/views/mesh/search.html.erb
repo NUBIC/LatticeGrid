@@ -1,0 +1,2 @@
+<h1>All MeSH terms matching <i><%= params[:id] %></i> (<%= @tags.length %>) </h1>
+<p><%= @tags.collect(&:name).join(", ") %></p>

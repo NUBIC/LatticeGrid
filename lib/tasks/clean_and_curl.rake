@@ -12,7 +12,7 @@ namespace :cache do
   task :clear => :environment do
     block_timing("cache:clear") {
     if File.directory?(public_path) then
-        directories= %w{graphs abstracts investigators programs orgs member_nodes org_nodes copublications graphviz}
+        directories= %w{graphs abstracts investigators programs orgs member_nodes org_nodes copublications graphviz mesh}
       directories.each do |name|
         name="#{public_path}/#{name}"
         if File.directory?(name) then
@@ -20,7 +20,7 @@ namespace :cache do
           system("rm -r #{name}")
         end
       end
-        files = %w{programs.html orgs.html}
+        files = %w{programs.html orgs.html mesh.html}
       files.each do |name|
         name="#{public_path}/#{name}"
         if File.exist?(name) then

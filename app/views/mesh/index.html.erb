@@ -1,0 +1,4 @@
+<h1>All MeSH terms (<%= @tags.length %>)</h1>
+<p>
+<%= @tags.collect(&:name).join(", ") %>
+</p>

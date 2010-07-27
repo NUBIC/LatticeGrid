@@ -1,5 +1,5 @@
 class InvestigatorsController < ApplicationController
-  caches_page :show, :full_show, :list_all, :tag_cloud_side, :tag_cloud, :show_all_tags if CachePages()
+  caches_page( :show, :full_show, :list_all, :tag_cloud_side, :tag_cloud, :show_all_tags) if CachePages()
   helper :sparklines
   require 'ldap_utilities' #specific ldap methods
 
