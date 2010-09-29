@@ -85,7 +85,7 @@ def FindPubMedIDs (all_investigators, options, number_years, limit_to_institutio
       repeatCnt +=1
     end 
     # leaving perform_esearch
-    investigator["entries"] = []
+    investigator["entries"] = entries
     if entries.length < 1 then
       puts "No publications found for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords}" if debug
     elsif entries.length > (expected_max_pubs_per_year*number_years) then
@@ -143,7 +143,7 @@ def GetPubsForInvestigators(investigators)
 end
 
 
-def InsertInvestigatorPublication (abstract_id, investigator_id, is_first_author=false, is_last_author=false)
+def InsertInvestigatorPublication(abstract_id, investigator_id, is_first_author=false, is_last_author=false)
   puts "InsertInvestigatorPublication: this shouldn't happen - abstract_id was nil" if abstract_id.nil?
   return if abstract_id.nil?
   puts "InsertInvestigatorPublication: this shouldn't happen - investigator_id was nil" if investigator_id.nil?
@@ -152,7 +152,7 @@ def InsertInvestigatorPublication (abstract_id, investigator_id, is_first_author
            :conditions => ["abstract_id = :abstract_id and investigator_id = :investigator_id", {:abstract_id => abstract_id, :investigator_id => investigator_id} ] )
   if thePIPub.nil? then
     begin 
-       thePIPub = InvestigatorAbstract.create! (
+       thePIPub = InvestigatorAbstract.create!(
          :abstract_id     => abstract_id,
          :investigator_id => investigator_id,
          :is_first_author => is_first_author,
@@ -168,13 +168,13 @@ def InsertInvestigatorPublication (abstract_id, investigator_id, is_first_author
    thePIPub.id
 end
 
-def UpdateCitationInvestigatorInformation (abstract_id, investigator_ids, first_author_id, last_author_id)
+def UpdateCitationInvestigatorInformation(abstract_id, investigator_ids, first_author_id, last_author_id)
   puts "UpdateCitationInvestigatorInformation: this shouldn't happen - abstract_id was nil" if abstract_id.nil?
   return if abstract_id.nil?
   puts "UpdateCitationInvestigatorInformation: this shouldn't happen - investigator_ids was nil" if investigator_ids.nil?
   return if investigator_ids.nil?
   investigator_ids.each do |investigator_id|
-    UpdateInvestigatorPublication (abstract_id, investigator_id, !!(first_author_id == investigator_id),  !!(last_author_id == investigator_id))
+    UpdateInvestigatorPublication(abstract_id, investigator_id, !!(first_author_id == investigator_id),  !!(last_author_id == investigator_id))
    end
 end
 
@@ -192,7 +192,7 @@ def UpdateInvestigatorCitationInformation(investigator)
   investigator.save!
 end
 
-def UpdateInvestigatorPublication (abstract_id, investigator_id, is_first_author, is_last_author)
+def UpdateInvestigatorPublication(abstract_id, investigator_id, is_first_author, is_last_author)
   puts "UpdateInvestigatorPublication: this shouldn't happen - abstract_id was nil" if abstract_id.nil?
   return if abstract_id.nil?
   puts "InsertInvestigatorPublication: this shouldn't happen - investigator_id was nil" if investigator_id.nil?
@@ -215,7 +215,7 @@ def UpdateInvestigatorPublication (abstract_id, investigator_id, is_first_author
    thePIPub.id
 end
 
-def UpdateInvestigatorRecords (abstract_id, investigator_id, is_first_author, is_last_author)
+def UpdateInvestigatorRecords(abstract_id, investigator_id, is_first_author, is_last_author)
   puts "UpdateInvestigatorPublication: this shouldn't happen - abstract_id was nil" if abstract_id.nil?
   return if abstract_id.nil?
   puts "InsertInvestigatorPublication: this shouldn't happen - investigator_id was nil" if investigator_id.nil?
@@ -255,7 +255,7 @@ def AddInvestigatorsToCitation(abstract_id, investigator_ids, first_author_id, l
       end
     else
       puts "adding new investigator/abstract pair (investigator: #{Investigator.find(investigator_id).last_name}; abstract pubmed_id: #{Abstract.find(abstract_id).pubmed})" if @verbose
-      InsertInvestigatorPublication (abstract_id, investigator_id, !!(first_author_id == investigator_id),  !!(last_author_id == investigator_id))
+      InsertInvestigatorPublication(abstract_id, investigator_id, !!(first_author_id == investigator_id),  !!(last_author_id == investigator_id))
     end
   end
 end

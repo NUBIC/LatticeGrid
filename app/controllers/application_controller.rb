@@ -116,25 +116,34 @@ class ApplicationController < ActionController::Base
   end
 
   def define_keywords (keywords='', search_field='All', search_exact='0')
-    if !params[:keywords].nil? && !params[:keywords][:keywords].nil? then
-      keywords = params[:keywords][:keywords] 
-      cookies[:the_keywords] = keywords
-    else
-      keywords = cookies[:the_keywords] if !cookies[:the_keywords].blank?
-    end
-    if !params[:keywords].nil? && !params[:keywords][:search_field].nil? then
-      search_field = params[:keywords][:search_field] 
-      cookies[:search_field] = search_field
-    else
-      search_field = cookies[:search_field] if !cookies[:search_field].blank?
-    end
-    if !params[:keywords].nil? && !params[:keywords][:search_exact].nil? then
-      search_exact = params[:keywords][:search_exact] 
-      cookies[:search_exact] = search_exact
-    else
-      search_exact = cookies[:search_exact] if !cookies[:search_exact].blank?
-    end
-    @keywords = Keywords.new(keywords,search_field,search_exact)
+     if !params[:keywords].nil? && !params[:keywords][:keywords].nil? then
+       keywords = params[:keywords][:keywords] 
+       cookies[:the_keywords] = keywords
+     elsif !params[:keywords].nil? then
+       keywords = params[:keywords]  
+       cookies[:the_keywords] = keywords
+     else
+       keywords = cookies[:the_keywords] if !cookies[:the_keywords].blank?
+     end
+     if !params[:keywords].nil? && !params[:keywords][:search_field].nil? then
+       search_field = params[:keywords][:search_field] 
+       cookies[:search_field] = search_field
+     elsif !params[:search_field].nil? then
+       search_field = params[:search_field] 
+       cookies[:search_field] = search_field
+     else
+       search_field = cookies[:search_field] if !cookies[:search_field].blank?
+     end
+     if !params[:keywords].nil? && !params[:keywords][:search_exact].nil? then
+       search_exact = params[:keywords][:search_exact] 
+       cookies[:search_exact] = search_exact
+     elsif !params[:search_exact].nil? then
+       search_exact = params[:search_exact] 
+       cookies[:search_exact] = search_exact
+     else
+       search_exact = cookies[:search_exact] if !cookies[:search_exact].blank?
+     end
+     @keywords = Keywords.new(keywords,search_field,search_exact)
   end
 
 end

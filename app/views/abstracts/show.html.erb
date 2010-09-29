@@ -33,6 +33,14 @@
 		<b>Note</b><br/>
 		Automated medline import. Electronic deposit: <%= @publication.deposited_date %>.Electronic publication: <%= @publication.electronic_publication_date %>. Publication Date: <%= @publication.publication_date %>. Publication status: <%= @publication.publication_status %>. Status: <%= @publication.status %>. <br/>
 	</div>
+	<div id="pmid">
+		<b>PubMed ID</b><br/>
+		<%= @publication.pubmed %>
+	</div>
+	<div id="pmcid">
+		<b>PubMed Central ID</b><br/>
+		<%= @publication.pubmedcentral.blank? ? "N/A" : @publication.pubmedcentral %>
+	</div>
 	<div id="linkout">
 		<%= link_to 'Go to PubMed entry', @publication.url  %>
 	</div>

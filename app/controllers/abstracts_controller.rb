@@ -1,6 +1,6 @@
 class AbstractsController < ApplicationController
 #removed :full_tagged_abstracts and :tagged_abstracts - too many cached pages
-  caches_page( :year_list, :full_year_list, :tag_cloud, :endnote, :tag_cloud_by_year, :endnote, :show)  if CachePages()
+  caches_page( :year_list, :full_year_list, :tag_cloud, :endnote, :journal_list, :tagged_abstracts, :full_tagged_abstracts, :tag_cloud_by_year, :endnote, :show)  if CachePages()
   
   require 'bio' #require bioruby!
 #  require 'utilities' #all the helper methods
@@ -17,7 +17,7 @@ class AbstractsController < ApplicationController
   
   def current
     params[:id]=@starting_year.to_s
-    pre_year_list
+    pre_list(@starting_year.to_s)
     @abstracts = Abstract.display_data( params[:id], params[:page] )
     list_heading(params[:id])
     @do_pagination = "1"
@@ -32,6 +32,11 @@ class AbstractsController < ApplicationController
       journal = Journal.find(params[:id])
       @abstracts = journal.publications
       journal_heading(capitalize_words(journal.journal_abbreviation))
+      @include_mesh = false
+      @include_graph_link = false
+      @show_paginator = false
+      @include_investigators=true 
+      @include_pubmed_id = true 
     end
   end
 
@@ -83,7 +88,7 @@ class AbstractsController < ApplicationController
      @tags = Abstract.tag_counts(:limit => tag_limit, :order => "count desc")
   end
   
-  def tagged_abstracts #abstracts tagged with this tab
+  def tagged_abstracts #abstracts tagged with this tag
     redirect=false
     if params[:page].nil? then
       params[:page] = "1"
@@ -127,6 +132,11 @@ class AbstractsController < ApplicationController
     @abstracts = Abstract.display_all_investigator_data_include_deleted(@investigator.id)
     heading_base="Publication listing for investigator #{@investigator.name}."
     @heading="#{heading_base} Uncheck boxes to remove these publications from <i>any</i> listing."
+    @include_mesh = false
+    @include_graph_link = false
+    @show_paginator = false
+    @include_investigators=true 
+    @include_pubmed_id = true 
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @abstracts }
@@ -177,25 +187,24 @@ class AbstractsController < ApplicationController
 
   def search 
     logger.error "entering search action"
-     if !@keywords.keywords.blank? then
- #      @tags = Abstract.tag_counts(:limit => 150, :order => "count desc")
+    if !@keywords.keywords.blank? then
+  #      @tags = Abstract.tag_counts(:limit => 150, :order => "count desc")
       @do_pagination="1"
-       @abstracts = Abstract.display_search(@keywords, @do_pagination, params[:page])
-       if @do_pagination != '0'
-         total_entries=@abstracts.total_entries
-       else
-         total_entries=@abstracts.length
-       end
-       @heading = "There were #{total_entries} matches to search term <i>"+ @keywords.keywords.downcase + "</i>"
-       @include_mesh=false
-     else 
-        logger.error "search did not have a defined keyword"
-        pre_year_list
-        year_list
-     end 
-     render :action => 'year_list'
-  end 
-  
+      @abstracts = Abstract.display_search(@keywords, @do_pagination, params[:page])
+      if @do_pagination != '0'
+        total_entries=@abstracts.total_entries
+      else
+        total_entries=@abstracts.length
+      end
+      @heading = "There were #{total_entries} matches to search term <i>"+ @keywords.keywords.downcase + "</i>"
+      @include_mesh=false
+      render :action => 'year_list'
+    else 
+      logger.error "search did not have a defined keyword"
+      year_list  # includes a render
+    end 
+   end
+
   def show
     if params[:id].include?("search") then
       redirect_to :action => 'search'
@@ -219,12 +228,24 @@ class AbstractsController < ApplicationController
     render :text => ""
   end
 
+  def set_investigator_abstract_end_date
+    @investigatorabstract = InvestigatorAbstract.find(params[:id])
+    if @investigatorabstract.end_date.blank?
+      @investigatorabstract.end_date = Date.today
+    else
+      @investigatorabstract.end_date = nil
+    end
+    @investigatorabstract.save
+    render :text => ""
+  end
+
   def endnote
     show
   end
   
   def add_abstracts
   end
+  
   def add_pubmed_ids
     #should be an ajax call
     @abstracts=Abstract.find(:all, :conditions => ["pubmed in (:pubmed_ids)", {:pubmed_ids=>params[:pubmed_ids].split}])
@@ -250,7 +271,7 @@ class AbstractsController < ApplicationController
         #sped this up by only processing the intersection
         if !(new_ids == [] ) then
           new_ids.each do |investigator_id|
-            InsertInvestigatorPublication (abstract.id, investigator_id)
+            InsertInvestigatorPublication(abstract.id, investigator_id)
           end
           abstract.reload()
         end

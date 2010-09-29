@@ -19,10 +19,11 @@ class OrganizationalUnit < ActiveRecord::Base
     :foreign_key => "home_department_id"
   has_many :primary_faculty_abstracts,  
     :source => :investigator_abstracts,
+    :conditions => ['investigator_abstracts.end_date is null'],
     :through => :primary_faculty
   has_many :associated_faculty,  
     :source => :investigator,
-    :order => "last_name, first_name",
+    :order => "lower(last_name), lower(first_name)",
     :through => :investigator_appointments
   has_many :joint_faculty,  
     :source => :investigator,
@@ -77,6 +78,16 @@ class OrganizationalUnit < ActiveRecord::Base
     def all_faculty
       (all_primary_faculty + all_associated_faculty).uniq
     end
+
+    def all_faculty_publications
+      faculty = (all_primary_faculty + all_associated_faculty).uniq
+      faculty.collect(&:abstracts).flatten.uniq
+    end
+
+    def all_faculty_publications_by_date( start_date, end_date )
+      faculty = (all_primary_faculty + all_associated_faculty).uniq
+      faculty.collect{|f| f.abstracts.abstracts_by_date(start_date, end_date)}.flatten.uniq
+    end
     
     
     def abstract_data( page=1 )
@@ -88,7 +99,7 @@ class OrganizationalUnit < ActiveRecord::Base
     def display_year_data( year=2008 )
       self.abstracts.find(:all,
         :order => "investigators.last_name ASC,authors ASC",
-        :include => [:investigator_abstracts, :investigators],
+        :include => [:investigators],
     		:conditions => ['year = :year', 
      		      {:year => year }])
     end
@@ -96,7 +107,7 @@ class OrganizationalUnit < ActiveRecord::Base
     def display_data_by_date( start_date, end_date )
       self.abstracts.find(:all,
         :order => "year DESC, investigators.last_name ASC,authors ASC",
-        :include => [:investigator_abstracts, :investigators],
+        :include => [:investigators],
     		:conditions => [' publication_date between :start_date and :end_date or electronic_publication_date between :start_date and :end_date ', 
      		      {:start_date => start_date, :end_date => end_date }])
     end
@@ -146,7 +157,7 @@ class OrganizationalUnit < ActiveRecord::Base
     abstractids=abstracts.collect(&:id)
     orgs.each do |org|
       org.collaboration_matrix = Hash.new if org.collaboration_matrix.nil?
-      org.collaboration_matrix[org.id] = abstractids & org.primary_faculty_abstracts.collect(&:abstract_id)
+      org.collaboration_matrix[org.id] = abstractids & org.all_faculty_publications.collect(&:abstract_id)
     end
   end
   def self.build_matrix(orgs)

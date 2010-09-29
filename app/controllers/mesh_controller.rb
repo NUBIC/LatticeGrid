@@ -1,5 +1,8 @@
 class MeshController < ApplicationController
   caches_page(:index, :search, :investigators, :investigator) if CachePages()
+
+  include ApplicationHelper
+  include MeshHelper
   
   def index
     @tags = Tag.all
@@ -11,7 +14,7 @@ class MeshController < ApplicationController
   end
 
   def search
-    do_search(params[:id])
+    do_mesh_search(params[:id])
     respond_to do |format|
       format.html { render }
       format.json { render :layout => false, :json => @tags.to_json() }
@@ -20,7 +23,7 @@ class MeshController < ApplicationController
   end
 
   def investigators
-    do_search(params[:id])
+    do_mesh_search(params[:id])
     @investigators = Investigator.find_tagged_with(@tags.collect(&:name))
     # , :order => 'lower(last_name),lower(first_name)'
     respond_to do |format|
@@ -41,15 +44,4 @@ class MeshController < ApplicationController
     end
   end
 
-private
-  def do_search(search_terms)
-    search_terms = search_terms.downcase
-    search_terms = search_terms.split(" ").collect{ |term| "%"+term+"%" }
-    case search_terms.length
-    when 1 : @tags = Tag.find(:all, :conditions=>["lower(name) like :name", {:name=>search_terms}])
-    when 2 : @tags = Tag.find(:all, :conditions=>["lower(name) like ? and lower(name) like ?", search_terms[0],search_terms[1] ])
-    when 3 : @tags = Tag.find(:all, :conditions=>["lower(name) like ? and lower(name) like ? and lower(name) like ?", search_terms[0], search_terms[1], search_terms[2] ])
-    when 4 : @tags = Tag.find(:all, :conditions=>["lower(name) like ? and lower(name) like ? and lower(name) like ? and lower(name) like ?", search_terms[0], search_terms[1], search_terms[2], search_terms[3] ])
-    end
-  end
 end

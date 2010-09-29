@@ -1,4 +1,5 @@
 require 'pubmed_config' #look here to change the default time spans
+require 'utilities'
 
 require 'rubygems'
 

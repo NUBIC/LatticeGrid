@@ -5,6 +5,10 @@ class Journal < ActiveRecord::Base
     :readonly => true,
     :order => "year DESC, authors ASC"
 
+  def all_publications( )
+    Abstract.from_journal_include_deleted(journal_abbreviation.downcase)
+  end
+
   def publications( )
     Abstract.from_journal_include_deleted(journal_abbreviation.downcase)
   end

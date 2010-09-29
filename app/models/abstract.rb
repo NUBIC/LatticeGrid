@@ -2,8 +2,10 @@ class Abstract < ActiveRecord::Base
   has_many :journals, :foreign_key => "journal_abbreviation", :primary_key =>  "journal_abbreviation", :readonly => true
   has_many :investigator_abstracts
   has_many :investigators, :through => :investigator_abstracts,
-    :conditions => ['investigators.end_date is null or investigators.end_date >= :now', {:now => Date.today }]
-  has_many :investigator_appointments, :through => :investigator_abstracts
+    :conditions => ['(investigators.end_date is null or investigators.end_date >= :now) and investigator_abstracts.end_date is null', {:now => Date.today }]
+  has_many :investigator_appointments, :through => :investigator_abstracts,
+    :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', 
+      {:now => Date.today }]
   has_many :organization_abstracts,
         :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
   has_many :organizational_units, :through => :organization_abstracts
@@ -13,8 +15,13 @@ class Abstract < ActiveRecord::Base
   has_many :organization_abstracts,
         :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
   named_scope :abstracts_last_five_years, 
-   :conditions => ['(publication_date >= :start_date or electronic_publication_date  >= :start_date)', 
-   		      {:start_date => 5.years.ago }]
+        :conditions => ['(publication_date >= :start_date or electronic_publication_date  >= :start_date)', 
+          {:start_date => 5.years.ago }]
+  named_scope :abstracts_by_date, lambda { |*dates|
+      {:conditions => 
+          [' publication_date between :start_date and :end_date or electronic_publication_date between :start_date and :end_date ', 
+            {:start_date => dates.first, :end_date => dates.last } ] }
+    }
   default_scope :conditions => 'abstracts.deleted_at is null'
 
 
@@ -45,8 +52,14 @@ class Abstract < ActiveRecord::Base
     end
   end
   
+  def self.from_journal(journal_abbreviation)
+      find(:all,
+          :conditions => ['lower(journal_abbreviation) = :journal_abbreviation',{:journal_abbreviation => journal_abbreviation}],
+          :order => "year DESC, authors ASC" )
+  end
+  
   def self.co_authors(abstracts)
-    author_ids=abstracts.collect{|ab| ab.investigator_abstracts.collect(&:investigator_id)}.flatten.sort.uniq
+    author_ids=abstracts.collect{|ab| ab.investigators.collect(&:id)}.flatten.sort.uniq
     Investigator.find(:all, :conditions =>  ["id IN (:author_ids)", 
       {:author_ids => author_ids }], :order => "lower(last_name), lower(first_name)" )
   end
@@ -79,7 +92,7 @@ class Abstract < ActiveRecord::Base
     find(:all,
       :order => "investigators.last_name ASC, authors ASC",
       :include => [:investigators, :investigator_abstracts],
- 		  :conditions => ['year = :year', 
+ 		  :conditions => ['year = :year and investigator_abstracts.end_date is null', 
   		      {:year => year }])
   end
   
@@ -87,22 +100,22 @@ class Abstract < ActiveRecord::Base
     paginate(:page => page,
       :per_page => 20, 
       :order => "year DESC, authors ASC",
-      :joins => [:investigator_abstracts],
-      :conditions => ["investigator_abstracts.investigator_id = :investigator_id", {:investigator_id => investigator_id}])
+      :joins => [:investigators],
+      :conditions => ["investigators.id = :investigator_id", {:investigator_id => investigator_id}])
   end
 
   def self.display_all_investigator_data( investigator_id )
     find(:all,
       :order => "year DESC, authors ASC",
-      :joins => :investigator_abstracts,
-      :conditions => ["investigator_abstracts.investigator_id = :investigator_id", {:investigator_id => investigator_id}])
+      :joins => [:investigators],
+    :conditions => ["investigators.id = :investigator_id", {:investigator_id => investigator_id}])
   end
   
   def self.investigator_publications( investigators, number_years=5)
     cutoff_date=number_years.years.ago
     find(:all,
        :joins => [:investigators, :investigator_abstracts],
-  		  :conditions => ['(publication_date >= :start_date or electronic_publication_date  >= :start_date) and investigator_abstracts.investigator_id IN (:investigators)', 
+  		  :conditions => ['(publication_date >= :start_date or electronic_publication_date  >= :start_date) and investigator_abstracts.investigator_id IN (:investigators) and investigator_abstracts.end_date is null', 
    		      {:start_date => cutoff_date, :investigators => investigators }])
   end
   
@@ -127,17 +140,19 @@ class Abstract < ActiveRecord::Base
   end
 
   def self.display_search_paginated(keywords, lc_keywords, page)
+    terms = keywords.keywords.downcase.split(" ",3) + Array.new(2, "")
+    terms[2] = terms[0] if terms[2].blank?
+    terms[1] = terms[0] if terms[1].blank?
+    terms[0] = "%"+terms[0]+"%"
+    terms[1] = "%"+terms[1]+"%"
+    terms[2] = "%"+terms[2]+"%"
     if keywords.search_field.include?("Abstract")
       paginate(:page => page,
         :per_page => 20, 
         :order => "year DESC, authors ASC",
-        :conditions => ["lower(abstract) like :search_term",
-           {:search_term => lc_keywords}])
+        :conditions => ["lower(abstract) like :term1 and lower(abstract) like :term2 and lower(abstract) like :term3",
+           {:term1 => terms[0], :term2 => terms[1], :term3 => terms[2]} ])
     elsif keywords.search_field.include?("Author")
-       terms = keywords.keywords.downcase.split(" ",2) + Array.new(1, "")
-       terms[1] = terms[0] if terms[1].blank?
-       terms[0] = "%"+terms[0]+"%"
-       terms[1] = "%"+terms[1]+"%"
        paginate(:page => page,
           :per_page => 20, 
           :order => "year DESC, authors ASC",
@@ -147,8 +162,8 @@ class Abstract < ActiveRecord::Base
        paginate(:page => page,
           :per_page => 20, 
           :order => "year DESC, authors ASC",
-          :conditions => ["lower(title) like :search_term",
-             {:search_term => lc_keywords}])
+          :conditions => ["lower(title) like :term1 and lower(title) like :term2 and lower(title) like :term3",
+             {:term1 => terms[0], :term2 => terms[1], :term3 => terms[2]}])
     elsif keywords.search_field.include?("Journal")
        paginate(:page => page,
           :per_page => 20, 
@@ -159,8 +174,8 @@ class Abstract < ActiveRecord::Base
       paginate(:page => page,
           :per_page => 20, 
           :order => "year DESC, authors ASC",
-          :conditions => ["lower(abstract) like :search_term OR lower(title) like :search_term OR lower(journal) like :search_term OR lower(authors) like :search_term",
-             {:search_term => lc_keywords}])
+          :conditions => ["(lower(abstract) like :term1 and lower(abstract) like :term2 and lower(abstract) like :term3) OR (lower(title) like :term1 and lower(title) like :term2 and lower(title) like :term3) OR (lower(journal) like :term1 and lower(journal) like :term2 and lower(journal) like :term3 ) OR (lower(authors) like :term1 AND lower(authors) like :term2 AND lower(authors) like :term3 )",
+             {:term1 => terms[0], :term2 => terms[1], :term3 => terms[2]} ])
     end
   end
 

@@ -11,6 +11,10 @@
 	<% params[:stringency] ||= "2000" %>
 	<% params[:stringency] = "2000" if params[:stringency].to_i < 500 %>
 <% end %>
+<% if params[:analysis] == "mesh" %>
+	<% params[:stringency] ||= "1" %>
+	<% params[:distance]   ||= "0" %>
+<% end %>
 <% params[:id] ||= "str" %>
 <% params[:format] ||= "svg" %>
 <% params[:distance] ||= "1" %>
@@ -33,7 +37,7 @@
 			options_for_select([["pdf", "pdf"], ["png", "png"], ["svg", "svg"]], [params[:format]]),  
 		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans') }
 	) %>
-	<% if params[:analysis].include?("org")%>
+	<% if params[:analysis].include?("org") or params[:analysis] == "mesh" %>
 	Distance: <%= select_tag(:distance, 
 			options_for_select([["Zero","0"],["One","1"], ["Two","2"]], [params[:distance]]),  
 		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans') }

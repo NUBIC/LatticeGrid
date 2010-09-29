@@ -1,3 +1,6 @@
 <td class="list-left"> 
 	<%= link_to( publication.pubmed, "http://www.ncbi.nlm.nih.gov/pubmed/"+publication.pubmed, :target => '_blank', :title=>'PubMed ID') %>
 </td> 
+<td class="list-left"> 
+	<%= (publication.pubmedcentral.blank? ? 'N/A' : link_to( publication.pubmedcentral, "http://www.ncbi.nlm.nih.gov/pmc/articles/"+publication.pubmedcentral, :target => '_blank', :title=>'PubMed Central ID') ) %>
+</td> 

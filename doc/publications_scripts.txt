@@ -1,6 +1,8 @@
 # look in the file 'update_publications.sh' for an example of a file you can run nightly as a cron job
 # don't forget to customize the environment information for your server!
 
+# you are now ready to start loading data
+
 # load data using the insertAbstracts rake task
 rake insertAbstracts
 rake RAILS_ENV=production insertAbstracts
@@ -24,7 +26,6 @@ rake RAILS_ENV=production associateAbstractsWithInvestigators
 rake updateAbstractInvestigators
 rake RAILS_ENV=production updateAbstractInvestigators
 
-
 #update publication information for each investigator, include collaboration information
 # runs in about 6 minutes for FSM
 rake updateInvestigatorInformation
@@ -39,6 +40,12 @@ rake RAILS_ENV=production updateOrganizationAbstractInformation
 # runs these tasks: :insertAbstracts, :associateAbstractsWithInvestigators, :updateAbstractInvestigators, :updateInvestigatorInformation, :tagAbstractsWithMeshTerms, :updateOrganizationAbstractInformation
 rake nightlyBuild
 rake RAILS_ENV=production nightlyBuild
+
+# once a month (or after a number of nightly builds) run monthlyBuild
+# monthlyBuild runs these tasks:  :tagAbstractsWithMeshTerms, :tagInvestigatorsWithMeshTerms, :attachMeshInformationContent, :buildInvestigatorColleaguesMesh, :normalizeInvestigatorColleaguesMesh
+
+rake monthlyBuild
+rake RAILS_ENV=production monthlyBuild
 
 #create tags from MeSH data for each abstract
 # runs in 50 minutes
@@ -70,15 +77,15 @@ rake RAILS_ENV=production buildInvestigatorColleagues
 # something to do weekly and several times during the initial build is:
 
 # if you have the current user set up as superuser:
-vacuumdb -fz latticegrid_development
+vacuumdb -fz cancerpublications_development
 # to run as the rails user
-vacuumdb -fz latticegrid_development -U latticegrid
+vacuumdb -fz cancerpublications_development -U cancerpublications
 # to run as the rails user in production
-vacuumdb -fz latticegrid_production -U latticegrid
+vacuumdb -fz cancerpublications_production -U cancerpublications
 
 # logging in to psql
-psql latticegrid_development -U latticegrid
-psql latticegrid_production -U latticegrid
+psql cancerpublications_development -U cancerpublications
+psql cancerpublications_production -U cancerpublications
 
 
 #all the mesh associations are run with this command

@@ -1,8 +1,7 @@
 class Investigator < ActiveRecord::Base
   acts_as_taggable  # for MeSH terms
 
-  has_many :investigator_abstracts,
-         :conditions => ['investigator_abstracts.end_date is null or investigator_abstracts.end_date >= :now', {:now => Date.today }]
+  has_many :investigator_abstracts
   has_many :investigator_colleagues
   has_many :similar_investigators, 
       :class_name => "InvestigatorColleague", 
@@ -20,7 +19,8 @@ class Investigator < ActiveRecord::Base
       :conditions => ['investigator_colleagues.publication_cnt>0'], 
       :order=>'investigator_colleagues.publication_cnt desc'
   has_many :colleagues, :through => :investigator_colleagues
-  has_many :abstracts, :through => :investigator_abstracts
+  has_many :abstracts, :through => :investigator_abstracts,
+         :conditions => ['investigator_abstracts.end_date is null or investigator_abstracts.end_date >= :now', {:now => Date.today }]
 #  has_many :investigator_abstracts_meshes
 #  has_many :meshes, :through => :investigator_abstracts_meshes
   has_many :investigator_appointments,
@@ -44,11 +44,28 @@ class Investigator < ActiveRecord::Base
   named_scope :investigator_only, :conditions => "appointment_track = 'Investigator'"
   named_scope :clinician, :conditions => "appointment_track like '%Clinician%'"
   named_scope :clinician_only, :conditions => "appointment_track = 'Clinician'"
+  
+  named_scope :for_tag_ids, lambda { |*ids|
+      {:joins => [:taggings], 
+       :conditions => ['taggings.tag_id IN (:ids) ', {:ids => ids.first}] }
+    }
+    
+  default_scope :conditions => '(investigators.deleted_at is null and investigators.end_date is null)'
 #  default_scope :include => :abstracts
   #default_scope :order => 'lower(investigators.last_name),lower(investigators.first_name)'
 
   validates_uniqueness_of :username
   validates_presence_of :username
+
+  def self.include_deleted( id=nil )
+    with_exclusive_scope do
+      if id.blank?
+        find(:all)
+      else
+        find(id)
+      end
+    end
+  end
 
   def name
     [first_name, last_name].join(' ')
@@ -121,13 +138,13 @@ class Investigator < ActiveRecord::Base
 
   def first_author_publications_cnt()
     self.investigator_abstracts.find(:all,
-       :conditions => ["is_first_author = :is_first_author",
+       :conditions => ["is_first_author = :is_first_author and end_date is null",
             {:is_first_author => true}] ).length
   end 
 
   def last_author_publications_cnt()
     self.investigator_abstracts.find(:all,
-        :conditions => [" is_last_author = :is_last_author",
+        :conditions => [" is_last_author = :is_last_author and end_date is null",
             {:is_last_author => true}] ).length
   end 
 
@@ -135,7 +152,7 @@ class Investigator < ActiveRecord::Base
    is_first_author = true
    self.investigator_abstracts.find(:all,
       :joins => [:abstract],
-      :conditions => ["(publication_date >= :pub_date or electronic_publication_date >= :pub_date) and is_first_author = :is_first_author",
+      :conditions => ["(publication_date >= :pub_date or electronic_publication_date >= :pub_date) and is_first_author = :is_first_author and end_date is null",
            {:pub_date => Investigator.generate_date(), :is_first_author => is_first_author}] ).length
   end 
 
@@ -143,7 +160,7 @@ class Investigator < ActiveRecord::Base
     is_last_author = true
     self.investigator_abstracts.find(:all,
      :joins => [:abstract],
-         :conditions => ["(publication_date >= :pub_date or electronic_publication_date >= :pub_date) and is_last_author = :is_last_author",
+         :conditions => ["(publication_date >= :pub_date or electronic_publication_date >= :pub_date) and is_last_author = :is_last_author and end_date is null",
              {:pub_date => Investigator.generate_date(), :is_last_author => is_last_author}] ).length
   end 
 
@@ -155,7 +172,8 @@ class Investigator < ActiveRecord::Base
          "  AND a.publication_date > '#{generate_date}' "+
          " AND ia.abstract_id = ia2.abstract_id "+
          " AND ia.investigator_id <> ia2.investigator_id " +
-         " AND ia2.investigator_id = i2.id")
+         " AND ia2.investigator_id = i2.id" +
+         " AND ia.end_date is null AND ia2.end_date is null")
    end 
 
   def self.collaborators_cnt(investigator_id)
@@ -167,11 +185,13 @@ class Investigator < ActiveRecord::Base
         "  FROM abstracts a, investigator_abstracts ia, investigator_appointments ip, investigator_abstracts ia2, investigator_appointments ip2 "+
         " WHERE ia.investigator_id  = #{investigator_id} "+
         "  AND ia.abstract_id = a.id "+
+        "  AND ia.end_date is null " +
         "   AND ia.investigator_id = ip.investigator_id  "+
         "   AND ip.organizational_unit_id = ip2.organizational_unit_id "+
         "   AND ip2.investigator_id = ia2.investigator_id "+
         "   AND ia.abstract_id = ia2.abstract_id "+
-        "   AND ia.investigator_id <> ia2.investigator_id "
+        "   AND ia.investigator_id <> ia2.investigator_id " +
+        "   AND ia2.end_date is null "
     ).length
   end 
  
@@ -180,7 +200,9 @@ class Investigator < ActiveRecord::Base
       "  FROM  abstracts a, investigator_abstracts ia, investigator_abstracts ia2 "+
       " WHERE ia.investigator_id = #{investigator_id} "+
       "   AND ia.abstract_id = a.id "+
+      "   AND ia.end_date is null " +
       "   AND ia.abstract_id = ia2.abstract_id "+
+      "   AND ia2.end_date is null " +
       "   AND ia.investigator_id <> ia2.investigator_id "+
       "   AND NOT EXISTS ( SELECT 'X' FROM investigator_appointments ip, investigator_appointments ip2 "+
       "                     WHERE  ip2.investigator_id = ia2.investigator_id "+
@@ -194,11 +216,13 @@ class Investigator < ActiveRecord::Base
         "  FROM abstracts a, investigator_abstracts ia, investigator_appointments ip, investigator_abstracts ia2, investigator_appointments ip2 "+
         " WHERE ia.investigator_id  = #{investigator_id} "+
         "  AND ia.abstract_id = a.id "+
+        "   AND ia.end_date is null " +
          "  AND a.publication_date > '#{generate_date}' "+
         "   AND ia.investigator_id = ip.investigator_id  "+
         "   AND ip.organizational_unit_id = ip2.organizational_unit_id "+
         "   AND ip2.investigator_id = ia2.investigator_id "+
         "   AND ia.abstract_id = ia2.abstract_id "+
+        "   AND ia2.end_date is null " +
         "   AND ia.investigator_id <> ia2.investigator_id "
     ).length
   end 
@@ -208,8 +232,10 @@ class Investigator < ActiveRecord::Base
       "  FROM  abstracts a, investigator_abstracts ia, investigator_abstracts ia2 "+
       " WHERE ia.investigator_id = #{investigator_id} "+
       "   AND ia.abstract_id = a.id "+
+      "   AND ia.end_date is null " +
       "   AND a.publication_date > '#{generate_date}' "+
       "   AND ia.abstract_id = ia2.abstract_id "+
+      "   AND ia2.end_date is null " +
       "   AND ia.investigator_id <> ia2.investigator_id "+
       "   AND NOT EXISTS ( SELECT 'X' FROM investigator_appointments ip, investigator_appointments ip2 "+
       "                     WHERE  ip2.investigator_id = ia2.investigator_id "+
@@ -252,7 +278,7 @@ class Investigator < ActiveRecord::Base
 
   def self.add_collaborations_to_investigator(investigator_abstracts, investigator, investigators_in_unit ) 
     investigator_abstracts.each do |ia|
-      add_collaboration_to_investigator(ia, investigator, investigators_in_unit)
+      add_collaboration_to_investigator(ia, investigator, investigators_in_unit) if ia.end_date.blank?
     end 
   end 
 

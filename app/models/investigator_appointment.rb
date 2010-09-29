@@ -1,6 +1,8 @@
 class InvestigatorAppointment < ActiveRecord::Base
   belongs_to :investigator
-  belongs_to :organizational_unit
+  belongs_to :organizational_unit, 
+    :conditions => ['(end_date is null or end_date >= :now) ',
+     {:now => Date.today }]
   belongs_to :center, :foreign_key => :organizational_unit_id
   belongs_to :organizational_unit
   has_many :investigator_abstracts, :through => :investigator 

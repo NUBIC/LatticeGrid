@@ -36,6 +36,9 @@ rake environment RAILS_ENV=production importDepartments file=db/imports/departme
 rake importOrganizations file=db/imports/division_lookup.txt
 rake environment RAILS_ENV=production importOrganizations file=db/imports/division_lookup.txt
 
+# for EAB temp orgs
+rake importOrganizations file=db/imports/division_lookup_EAB_2010_temp.txt
+
 # sets any missing division_ids appropriately
 rake cleanUpOrganizations
 rake environment RAILS_ENV=production cleanUpOrganizations
@@ -64,6 +67,12 @@ rake environment RAILS_ENV=production importInvestigators file=db/imports/stanfo
 # build the investigator/program relationships. Use the following file as an example
 rake importProgramMembership  file=db/imports/RHLCCCProgramMemberships.txt
 rake environment RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCCProgramMemberships.txt
+
+# build the investigator/program relationships. For the RHLCCC EAB meeting July 2010 for instance
+rake importInvestigators file=db/imports/new_faculty_temp.txt
+rake RAILS_ENV=production importInvestigators file=db/imports/new_faculty_temp.txt
+rake importProgramMembership  file=db/imports/RHLCCCProgramMemberships_EAB_2010_temp.txt
+
 
 
 #load investigators with additional data

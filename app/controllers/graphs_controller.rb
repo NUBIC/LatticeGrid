@@ -25,8 +25,8 @@ class GraphsController < ApplicationController
     if !params[:id].blank? then
      @investigator = Investigator.find( :first,
         :include => ['investigator_appointments'],
-        :conditions => ['investigators.username = :username',
-           {:username => params[:id]}] )
+        :conditions => ['investigators.username = :username and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :now)',
+           {:now => Date.today, :username => params[:id]}] )
      Investigator.get_investigator_connections(@investigator, 25)
 
      @heading = "Interaction graph for Investigator #{@investigator.first_name} #{@investigator.last_name}"

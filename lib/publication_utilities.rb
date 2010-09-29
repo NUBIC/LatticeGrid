@@ -123,18 +123,25 @@ end
 
 # takes an array of PubMed records
 def InsertPubmedRecords(publications)
-  row_iterator(publications) { |publication|
+  publications.each do |publication|
     abstract = InsertPublication(publication)
-  }
+  end
 end
 
+def updateAbstractWithPMCID(pubmed_record)
+  InsertPublication(pubmed_record, true)
+end
+
+
 # takes a PubMed record, hashed, as an inputs
-def InsertPublication(publication)
+def InsertPublication(publication, update_if_pmc_exists=false)
   puts "InsertPublication: this shouldn't happen - publication was nil" if publication.nil?
   raise "InsertPublication: this shouldn't happen - publication was nil" if publication.nil?
   thePub = nil
   medline = Bio::MEDLINE.new(publication) # convert retrieved format into the medline format
   reference = medline.reference
+  pubmed_central_id = medline.pubmed_central
+  pubmed_central_id = nil if pubmed_central_id.blank?
   thePub = Abstract.find_by_pubmed(reference.pubmed)
   begin 
     if thePub.nil? || thePub.id < 1 then
@@ -152,16 +159,17 @@ def InsertPublication(publication)
         :publication_type => medline.publication_type[0],
         :journal => medline.full_journal[0..253],
         :journal_abbreviation => medline.ta, #journal Title Abbreviation
-         :volume  => reference.volume,
+        :volume  => reference.volume,
         :issue   => reference.issue,
         :pages   => reference.pages,
         :year    => reference.year,
         :pubmed  => reference.pubmed,
+        :pubmedcentral  => pubmed_central_id,
         :url     => reference.url,
         :mesh    => reference.mesh.join(";\n")
       )
     else
-      if thePub.publication_date != medline.publication_date || thePub.status != medline.status || thePub.publication_status != medline.publication_status then
+      if thePub.publication_date != medline.publication_date || thePub.status != medline.status || thePub.publication_status != medline.publication_status || (update_if_pmc_exists and ! pubmed_central_id.blank?) then
           thePub.endnote_citation = reference.endnote
           thePub.publication_date = medline.publication_date
           thePub.electronic_publication_date = medline.electronic_publication_date
@@ -173,6 +181,7 @@ def InsertPublication(publication)
           thePub.pages   = reference.pages
           thePub.year    = reference.year
           thePub.pubmed  = reference.pubmed
+          thePub.pubmedcentral  = pubmed_central_id
           thePub.url     = reference.url
           thePub.mesh    = reference.mesh.join(";\n")
           thePub.save!

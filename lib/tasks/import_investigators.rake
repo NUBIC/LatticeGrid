@@ -76,9 +76,15 @@ task :cleanInvestigatorsUsername => :environment do
    }
 end
 
+task :purgeOldMemberships => :environment do
+   block_timing("purgeOldMemberships") {
+      prune_program_memberships_not_updated()
+   }
+end
+
 task :purgeNonMembers => :getAllInvestigatorsWithoutMembership do
    block_timing("purgeNonMembers") {
-     purgeNonMembers(@InvestigatorsWithoutMembership)
+     purgeInvestigators(@InvestigatorsWithoutMembership)
    }
 end
 

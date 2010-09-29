@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title>RHLCCC Faculty Publications: <%= controller.action_name %></title>
+  <title>LatticeGrid: <%= controller.action_name %></title>
 	<%= javascript_include_tag :defaults, 'FusionCharts', 'ddsmoothmenu', 'jquery.min' %> 
 	<%= stylesheet_link_tag 'publications','ddsmoothmenu', 'ddsmoothmenu-v'   %>
 	<%= render :partial => "shared/menu_scripts", :locals => { :menu_nodes => @menu_nodes } %>
@@ -25,14 +25,13 @@
     </div>
 <% end %>
 <div id="main" class="autoclear">
-	<div id="banner"><a href="http://www.cancer.northwestern.edu" ><%= image_tag "pageheader.jpg", options={:alt=>"The Robert H. Lurie Comprehensive Cancer Center of Northwestern University"} %></a></div>
+	<div id="banner"><a href="http://www.cancer.northwestern.edu" ><%= image_tag "pageheader.jpg", options={:alt=>"LatticeGrid Publications"} %></a></div>
 	<div id="results" class="notice"><%= flash[:notice] %> 	<%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %> </div>
 	<div id="title">Cancer Center Member Publications and Abstracts Site</div>
 	<div id="search">
-		<% form_for :keywords, :url => {:controller => 'abstracts', :action => "search"}  do |form| %> 
-		 	<%= form.text_field :keywords, :size => 20 %> Search
-	      	<%= form.select(:search_field, %w{ Author Title Journal Abstract All}) %> Enter term and hit return. 
-	 		Use '*' for as a wildcard. 
+		<% form_tag(abstracts_search_url, :method => :get) do %>
+		  <%= text_field_tag(:keywords, params[:keywords], :size => 20) %> Search 
+		  <%= select_tag("search_field",options_for_select(%w{ Author Title Journal Abstract All},params[:search_field]), {:class => "dropdown"}) %> Enter term and hit return. Use '*' as a wildcard.
 		<% end %> 
 	</div>
 	<div id="side">
@@ -45,7 +44,7 @@
 		</div>
 		<br/>
 		<div id="nubic">
-			<%= link_to( image_tag( 'nubic-logo.gif', :size => "167x55" ), "http://www.nucats.northwestern.edu/centers/nubic/index.html") %> 
+			<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://www.nucats.northwestern.edu/centers/nubic/index.html") %> 
 		 	<%= link_to( "Sponsored by NUBIC", "http://www.nucats.northwestern.edu/centers/nubic/index.html") %>
 		</div>
 		<p></p>

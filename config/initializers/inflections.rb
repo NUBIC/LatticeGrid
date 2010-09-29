@@ -11,5 +11,5 @@
 
 ActiveSupport::Inflector.inflections do |inflect| 
   inflect.uncountable("information", "public") 
-  inflect.uncountable %w( mesh )
+  inflect.uncountable %w( mesh, cytoscape )
 end 

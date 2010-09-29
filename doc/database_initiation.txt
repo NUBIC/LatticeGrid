@@ -18,8 +18,10 @@ CREATE USER latticegrid with createdb;
 
 #if you need to add the createdb role to user, do it like this:
 ALTER USER latticegrid with createdb;
+ALTER USER latticegrid with superuser;
 ALTER USER latticegrid with login;
 ALTER USER latticegrid with superuser;
+
 
 -- you can also specify a user and password:
 

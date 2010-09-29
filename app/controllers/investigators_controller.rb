@@ -10,7 +10,7 @@ class InvestigatorsController < ApplicationController
   skip_before_filter  :define_keywords, :only => [:tag_cloud_side, :tag_cloud]
   
   def index
-    redirect_to( year_list_abstracts_path )
+    redirect_to( current_abstracts_path )
   end
   def list_all
     @investigators = Investigator.find(:all, :include=>[:home_department,:appointments], :conditions => ['investigators.end_date is null or investigators.end_date >= :now', {:now => Date.today }], :order => "last_name, first_name")   

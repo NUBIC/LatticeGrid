@@ -9,6 +9,7 @@ class GraphvizController < ApplicationController
   require 'graph_generator'
   helper :all
   include GraphvizHelper
+  include MeshHelper # for do_mesh_search
 
   def show_member
     @investigator = Investigator.find_by_username(params[:id])
@@ -19,6 +20,14 @@ class GraphvizController < ApplicationController
   def show_member_mesh
     @investigator = Investigator.find_by_username(params[:id])
     params[:analysis]="member_mesh"
+    show_core
+  end 
+
+  def show_mesh
+    @name = params[:id]
+    mesh_terms = do_mesh_search(params[:id])
+    @name=mesh_terms.collect(&:name).join(', ')
+    params[:analysis]="mesh"
     show_core
   end 
 
@@ -86,6 +95,7 @@ class GraphvizController < ApplicationController
     graph = case analysis
           when "member"      :  build_member_graph( graph, program, id, distance, stringency, include_orphans)
           when "member_mesh" :  build_member_mesh_graph( graph, program, id, distance, stringency, include_orphans)
+          when "mesh"        :  build_mesh_graph( graph, program, id, distance, stringency, include_orphans)
           when "org"         :  build_org_graph( graph, program, id, distance, stringency, include_orphans)
           when "org_mesh"    :  build_org_mesh_graph( graph, program, id, distance, stringency, include_orphans)
           else                  graph_no_data(graph, "Option #{analysis} was not found")
@@ -130,6 +140,37 @@ class GraphvizController < ApplicationController
     end
     graph
   end
+
+  def build_mesh_graph(graph, program, id, distance, stringency, include_orphans)
+    mesh_terms = do_mesh_search(id)
+    mesh_ids = mesh_terms.collect(&:id)
+    colleagues=Investigator.for_tag_ids(mesh_ids)
+    if colleagues.nil?
+      graph = graph_no_data(graph, "No mesh_ids found: #{mesh_terms.collect(&:name)}")
+     else
+      colleagues.each do |colleague|
+        co_authors = colleague.co_authors.shared_pubs(1)
+        if  distance == "0"
+          co_authors = co_authors.collect{|ic| colleagues.include?(ic.colleague) ? ic : nil }.compact
+        end
+        if include_orphans == "1" or co_authors.length > 0
+          graph_secondaryroot(graph, colleague) 
+          graph = graph_add_nodes(program, graph, co_authors) if co_authors.length > 0
+          if distance == "2"
+            opts = {}
+            opts[:fillcolor] = "#E0ECF8"
+            co_authors.each do |inner_colleague|
+              inner_coauthors=inner_colleague.colleague.co_authors.shared_pubs(stringency)
+              graph = graph_add_nodes(program, graph, inner_coauthors, false, opts)
+            end
+          end
+        end
+      end
+    end
+    graph
+  end
+
+
  
   def build_org_graph(graph, program, id, distance, stringency,include_orphans)
     colleagues = get_colleagues(id)

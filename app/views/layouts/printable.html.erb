@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title>RHLCCC Faculty Publications: <%= controller.action_name %></title>
+  <title>LatticeGrid: <%= controller.action_name %></title>
   <style type="text/css">
   <%= File.read("#{RAILS_ROOT}/public/stylesheets/publications.css") %>
   </style>
@@ -23,7 +23,7 @@
     </div>
 <% end %>
 <div id="main" class="autoclear">
-	<div id="banner"><a href="http://www.cancer.northwestern.edu" ><%= image_tag "pageheader.jpg", options={:alt=>"The Robert H. Lurie Comprehensive Cancer Center of Northwestern University"} %></a></div>
+	<div id="banner"><a href="http://www.cancer.northwestern.edu" ><%= image_tag "pageheader.jpg", options={:alt=>"LatticeGrid Publications"} %></a></div>
 	<div id="results" class="notice"><%= flash[:notice] %> 	<%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %> </div>
 	<div id="title">Cancer Center Member Publications and Abstracts Site</div>
 	<div id="niceline"></div>

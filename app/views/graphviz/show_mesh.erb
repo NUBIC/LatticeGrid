@@ -1,0 +1,8 @@
+<h1>Graphviz MeSH term interaction graph for MeSH terms '<i><%= @name %></i>'</h1>
+
+<%= render :partial => "shared/investigator_bio", :locals => { :investigator => @investigator } %>
+
+<%= render( :partial => "graphviz_template" ) %>
+
+<p>This graph shows the interaction graph for faculty members based on shared MeSH terms between publications. Stringency is a unit-less score based on the number of MeSH terms shared between publications associated with the graphed individuals. Distance is the allows you to set the number of 'degrees of separation' between the faculty member and the rest of the organization. Only 1st and 2nd degrees of separation are currently supported. There are five different graphing options supported - neato, dot, circo, twopi and fdp. Please experiment with them. Finally, you can select the type of output generated. SVG is the default (an xml vector-based, open web image interface). png (another open image format) and pdf images can also be generated and will be either saved to your local disk or displayed in your browser, depending on how you have configured your browser. </p>
+

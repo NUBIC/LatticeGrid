@@ -1,5 +1,6 @@
 require 'find'
 require 'date'
+require 'utilities' # was row_iterator and other methods
 #require 'fileutils'
 #require 'bio' #require bioruby!
 require 'publication_utilities' #all the helper methods

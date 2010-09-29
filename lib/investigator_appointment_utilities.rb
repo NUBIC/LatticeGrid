@@ -52,6 +52,7 @@ def CreateInvestigatorFromHash(data_row)
     pi.username=pi.last_name+pi.first_name
   end
   pi.username = pi.username.split('.')[0]
+  pi.username = pi.username.split('(')[0]
   pi.username = pi.username.gsub(/[' \t]+/,'')
   pi.username.downcase!
   
@@ -62,42 +63,63 @@ def CreateInvestigatorFromHash(data_row)
     existing_pi = Investigator.find_by_username(pi.username)
     if existing_pi.blank? then
       if pi.home_department_id.blank?
-        puts "unable to set home_department_id for #{data_row}"
+        puts "unable to set home_department_id for #{data_row}" if @verbose
       end
       pi.save!
     else
+      # override existing record ?
+      override=true
       existing_pi.employee_id = pi.employee_id if existing_pi.employee_id.blank?
       if existing_pi.first_name != pi.first_name
-        puts "Existing first name and new first name different: existing: #{existing_pi.name}, new: #{pi.name}"
+        puts "Existing first name and new first name different: existing: #{existing_pi.name}, new: #{pi.name} with username #{pi.username}"
+        override=false
       end
-      existing_pi.title = pi.title if existing_pi.title.blank?
-      existing_pi.campus = pi.campus if existing_pi.campus.blank?
-      existing_pi.appointment_type = pi.appointment_type if existing_pi.appointment_type.blank?
-      existing_pi.appointment_track = pi.appointment_track if existing_pi.appointment_track.blank?
-#      existing_pi.secondary = pi.secondary if existing_pi.secondary.blank?
-#      existing_pi.division = pi.division if existing_pi.division.blank?
-      existing_pi.email = pi.email if existing_pi.email.blank?
-      existing_pi.employee_id = pi.employee_id if existing_pi.employee_id.blank?
-      existing_pi.home_department_id = pi.home_department_id if existing_pi.home_department_id.blank?
-      existing_pi.pubmed_search_name = pi.pubmed_search_name if existing_pi.pubmed_search_name.blank?
-      existing_pi.pubmed_limit_to_institution = pi.pubmed_limit_to_institution if existing_pi.pubmed_limit_to_institution.blank?
+      if override
+        existing_pi.title = pi.title if !pi.title.blank?
+        existing_pi.campus = pi.campus if !pi.campus.blank?
+        existing_pi.appointment_type = pi.appointment_type if !pi.appointment_type.blank?
+        existing_pi.appointment_track = pi.appointment_track if !pi.appointment_track.blank?
+  #      existing_pi.secondary = pi.secondary if existing_pi.secondary.blank?
+  #      existing_pi.division = pi.division if existing_pi.division.blank?
+        existing_pi.email = pi.email if !pi.email.blank?
+        existing_pi.employee_id = pi.employee_id if !pi.employee_id.blank?
+        existing_pi.home_department_id = pi.home_department_id if !pi.home_department_id.blank?
+        existing_pi.pubmed_search_name = pi.pubmed_search_name if !pi.pubmed_search_name.blank?
+        existing_pi.pubmed_limit_to_institution = pi.pubmed_limit_to_institution if !pi.pubmed_limit_to_institution.blank?
+      else
+        existing_pi.title = pi.title if existing_pi.title.blank?
+        existing_pi.campus = pi.campus if existing_pi.campus.blank?
+        existing_pi.appointment_type = pi.appointment_type if existing_pi.appointment_type.blank?
+        existing_pi.appointment_track = pi.appointment_track if existing_pi.appointment_track.blank?
+  #      existing_pi.secondary = pi.secondary if existing_pi.secondary.blank?
+  #      existing_pi.division = pi.division if existing_pi.division.blank?
+        existing_pi.email = pi.email if existing_pi.email.blank?
+        existing_pi.employee_id = pi.employee_id if existing_pi.employee_id.blank?
+        existing_pi.home_department_id = pi.home_department_id if existing_pi.home_department_id.blank?
+        existing_pi.pubmed_search_name = pi.pubmed_search_name if existing_pi.pubmed_search_name.blank?
+        existing_pi.pubmed_limit_to_institution = pi.pubmed_limit_to_institution if existing_pi.pubmed_limit_to_institution.blank?
+      end
       existing_pi.save
       pi = existing_pi
-     end
+    end
     if ! data_row['program'].blank? then
       theProgram = CreateProgramFromName(data_row['program'])
       if theProgram.blank? then
         throw "unable to match program #{data_row['program']} for user #{pi.username}"
       end
       # replace this logic with a STI model of 'member??'
-      membership = InvestigatorAppointment.find(:all, 
+      membership = InvestigatorAppointment.find(:first, 
           :conditions=>['investigator_id=:investigator_id and organizational_unit_id=:program_id and type in (:types)', 
             {:program_id => theProgram.id, :investigator_id => pi.id, :types => ["Member"]}])
-      if membership.length == 0
+      if membership.blank?
         Member.create :organizational_unit_id => theProgram.id, :investigator_id => pi.id, :start_date => Time.now
       else
-        membership[0].save  # update the record
+        membership.end_date = nil
+        membership.updated_at = Time.now
+        membership.save!  # update the record
       end
+    else
+      puts 'no program datarow'
 	  end
 	end
 end
@@ -249,8 +271,10 @@ def CreateProgramMembershipsFromHash(data_row, type='Member')
 def prune_investigators_without_programs(investigators)
   investigators.each do |investigator|
     if investigator.investigator_appointments.nil?
-      puts "deleting investigator #{investigator.name}" if @verbose
-      investigator.delete 
+      puts "pruning (setting deleted_at and end_date) for investigator #{investigator.name}" if @verbose
+		investigator.deleted_at = 2.days.ago
+		investigator.end_date = 2.days.ago
+		investigator.save
     end
   end
 end
@@ -259,23 +283,31 @@ def prune_program_memberships_not_updated()
   memberships = InvestigatorAppointment.all
   memberships.each do |membership|
     if membership.updated_at < 1.hour.ago
-      puts "deleting membership entry for #{membership.investigator.name} in program #{membership.organizational_unit.name}" if @verbose
-      membership.delete 
+      puts "deleting membership entry for #{membership.investigator.name} username #{membership.investigator.username} in program #{membership.organizational_unit.name}" if @verbose
+      membership.end_date = 2.days.ago
+      membership.save! 
     end
   end
 end
 
 def doCleanInvestigators(investigators)
+  puts "cleaning #{investigators.length} investigators" if @verbose
   investigators.each do |pi|
-    pi.username = pi.username.split('.')[0]
-    pi.username = pi.username.split('(')[0]
-    pi.save!
+    begin
+      pi.username = pi.username.split('.')[0]
+      pi.username = pi.username.split('(')[0]
+      pi.save!
+    rescue
+      puts "could not change #{pi.name} username to #{pi.username}"
+    end
   end
 end
 
-def purgeNonMembers(investigators)
-  investigators.each do |pi|
-    pi.delete
+def purgeInvestigators(investigators_to_purge)
+  investigators_to_purge.each do |pi|
+    pi.deleted_at = 2.days.ago
+    pi.end_date = 2.days.ago
+    pi.save
   end
 end
   

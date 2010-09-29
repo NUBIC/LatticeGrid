@@ -68,5 +68,12 @@ module Bio
         end
         alias full_journal jt
 
+        # PMC - Pubmed central ID
+        def pmc
+            @pubmed['PMC'].strip
+        end
+        alias pmcid pmc
+        alias pubmed_central pmc
+
   end
 end
