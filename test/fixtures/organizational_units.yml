@@ -1,31 +1,38 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
+  id: 1
+  parent_id: 3
   name: MyString
   search_name: MyString
   abbreviation: MyString
   organization_url: MyString
-  organization_type: MyString
+  type: Program
   organization_classification: MyString
   organization_phone: MyString
-  dept_id: 1
+  department_id: 1
   division_id: 1
-  has_appointments: false
-  is_center: false
-  is_school: false
-  is_department: false
 
 two:
-  name: MyString
-  search_name: MyString
-  abbreviation: MyString
+  name: MyString2
+  search_name: MyString2
+  abbreviation: MyString2
+  organization_url: MyString2
+  type: Department
+  organization_classification: MyString2
+  organization_phone: MyString2
+  department_id: 2
+  division_id: 2
+
+three:
+  id: 3
+  name: MyString3
+  search_name: MyString3
+  abbreviation: headnode
   organization_url: MyString
-  organization_type: MyString
+  type: Program
   organization_classification: MyString
   organization_phone: MyString
-  dept_id: 1
-  division_id: 1
-  has_appointments: false
-  is_center: false
-  is_school: false
-  is_department: false
+  department_id: 1
+  division_id: 3
+

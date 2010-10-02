@@ -24,8 +24,12 @@ class GraphvizController < ApplicationController
   end 
 
   def show_mesh
-    @name = params[:id]
-    mesh_terms = do_mesh_search(params[:id])
+    id=params[:id]
+    if  id.to_i.to_s == id
+      mesh_terms = Tag.find_all_by_id(id)
+    else
+      mesh_terms = do_mesh_search(id)
+    end
     @name=mesh_terms.collect(&:name).join(', ')
     params[:analysis]="mesh"
     show_core
@@ -142,7 +146,11 @@ class GraphvizController < ApplicationController
   end
 
   def build_mesh_graph(graph, program, id, distance, stringency, include_orphans)
-    mesh_terms = do_mesh_search(id)
+    if  id.to_i.to_s == id
+      mesh_terms = Tag.find_all_by_id(id)
+    else
+      mesh_terms = do_mesh_search(id)
+    end
     mesh_ids = mesh_terms.collect(&:id)
     colleagues=Investigator.for_tag_ids(mesh_ids)
     if colleagues.nil?

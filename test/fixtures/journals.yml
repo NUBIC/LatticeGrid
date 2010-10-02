@@ -3,7 +3,7 @@
 one:
   journal_name: MyString
   journal_abbreviation: MyString
-  ISSN: MyString
+  issn: MyString
   score_year: 1
   total_cites: 1
   impact_factor: 1.5
@@ -16,7 +16,7 @@ one:
 two:
   journal_name: MyString
   journal_abbreviation: MyString
-  ISSN: MyString
+  issn: MyString
   score_year: 1
   total_cites: 1
   impact_factor: 1.5

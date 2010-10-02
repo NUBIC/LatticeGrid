@@ -18,24 +18,22 @@ class InvestigatorTest < ActiveSupport::TestCase
   def test_investigator_similar
     first_pi = Investigator.find(1)
     pi_abstract = first_pi.investigator_abstracts[0]
-    assert(Investigator.similar_investigators(first_pi.id).length == 0)
+    assert(first_pi.similar_investigators.length == 0)
     assert(Investigator.generate_date == Investigator.generate_date(5))
     assert(Investigator.generate_date != Investigator.generate_date(1))
-    assert(Investigator.distinct_departments.length == 1 )
-    assert(Investigator.distinct_departments == Investigator.distinct_departments_with_divisions )
-    assert(Investigator.program_members(1).length == 1)
-    assert(Investigator.program_members(1,first_pi.id).length == 0)
-    assert(Investigator.program_members(1,first_pi).length == 0)
-    assert(Investigator.publications_cnt(first_pi) == 1)
-    assert(Investigator.last_author_publications_cnt(first_pi) == 0)
-    assert(Investigator.first_author_publications_cnt(first_pi) == 0)
-    assert(Investigator.collaborators(first_pi.id).length == 0)
-    assert(Investigator.collaborators(first_pi.id).length == Investigator.collaborators_cnt(first_pi.id))
-    assert(Investigator.publications_with_program_members_cnt(first_pi.id) == 0)
-    assert(Investigator.intramural_collaborators_cnt(first_pi.id) == 0)
-    assert(Investigator.other_collaborators_cnt(first_pi.id) == 0)
-    assert_not_nil(Investigator.add_collaboration(first_pi,pi_abstract)  )
-    assert_not_nil(Investigator.get_investigator_connections(first_pi) )
+    assert(Investigator.distinct_primary_appointments.length == 1 )
+    assert(first_pi.home_department_id == 1)
+    assert(first_pi.investigator_appointments.length == first_pi.member_appointments.length)
+    assert(first_pi.memberships[0] == first_pi.home_department)
+    assert(first_pi.investigator_appointments.length == first_pi.appointments.length)
+    if (first_pi.joints.length > 0)
+      assert(first_pi.joints.length == first_pi.joint_appointments.length)
+    end
+    if (first_pi.secondaries.length > 0)
+      assert(first_pi.secondaries.length == first_pi.secondary_appointments.length)
+    end
+    assert(first_pi.member_appointments.length == first_pi.memberships.length)
+    assert(first_pi.abstracts.length >= 1)
   end
 
 

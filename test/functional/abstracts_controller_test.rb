@@ -5,11 +5,13 @@ class AbstractsControllerTest < ActionController::TestCase
 
   test "should get index" do
     get :index
-    assert_redirected_to abstracts_by_year_path(:id => '2009', :page => '1')
+    assert_redirected_to abstracts_by_year_path(:id => '2010', :page => '1')
 #    assert_not_nil assigns(:abstracts)
   end
 
   test "should show abstract" do
+    OrganizationalUnit.rebuild!
+    @head_node = OrganizationalUnit.head_node("headnode")
     get :show, :id => abstracts(:one).to_param
     assert_response :success
   end
@@ -17,12 +19,14 @@ class AbstractsControllerTest < ActionController::TestCase
 
   def test_index
     get :index
-    assert_redirected_to abstracts_by_year_path(:id => '2009', :page => '1')
+    assert_redirected_to abstracts_by_year_path(:id => '2010', :page => '1')
 #    assert_template 'year_list'
   end
 
   def test_year_list
     #year list needs an id and page or it is redirected
+    OrganizationalUnit.rebuild!
+    @head_node = OrganizationalUnit.head_node("headnode")
     get :year_list, {:id => '2009', :page => '1'}
 
     assert_response :success
@@ -40,6 +44,8 @@ class AbstractsControllerTest < ActionController::TestCase
   end
 
   def test_show
+    OrganizationalUnit.rebuild!
+    @head_node = OrganizationalUnit.head_node("headnode")
     get :show, :id => abstracts(:one).id
 
     assert_response :success

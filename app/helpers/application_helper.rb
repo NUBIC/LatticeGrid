@@ -180,27 +180,6 @@ module ApplicationHelper
     authors
   end
   
-  def markProgramMembership(citation, programID)
-    if citation.investigators.length > 1 then
-      getMembershipMarker(citation,programID)
-    end
-  end
-
-  def getMembershipMarker(citation,programID)
-    intra=0
-    inter=0
-    marker=""
-    citation.investigators.each do |investigator|
-      if investigator.investigator_programs.has_program(programID) then
-        intra+=1
-      else
-        inter+=1
-      end
-    end
-    marker="*" if intra > 1
-    marker=marker+" §" if inter > 0
-    return marker
-  end
   
   def link_to_primary_department(investigator)
     return link_to( investigator.home_department.name, show_investigators_org_url(investigator.home_department_id), :title => "Show investigators in #{investigator.home_department.name}" ) if !investigator.home_department_id.nil?

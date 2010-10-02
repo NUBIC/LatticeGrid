@@ -49,7 +49,7 @@
 	 ) %>
 	<% end %>
 	
-	<% if params[:analysis].include?("mesh")%>
+	<% if params[:analysis].include?("mesh") and not params[:analysis] == "mesh" %>
 		MeSH Stringency: <%= select_tag(:stringency, 
 			options_for_select([[">500","500"], [">1,000","1000"],  [">1,500","1500"], [">2,000","2000"],  [">2,500","2500"], [">3,000","3000"], [">4,000","4000"], [">5,000","5000"], [">6,000","6000"]],
 				 [params[:stringency]]),  
