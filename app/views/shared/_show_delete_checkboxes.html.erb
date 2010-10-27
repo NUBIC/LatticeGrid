@@ -1,0 +1,12 @@
+<td class="list-left"> 
+	<%= check_box_tag(publication.id, publication.id, publication.deleted_at.blank?, :onclick => remote_function( :url =>  set_deleted_date_abstract_path(publication.id),
+	:before => "Element.show('spinner')", :complete => "Element.hide('spinner')"
+	)) %>
+</td> 
+<% if show_cancer_related_checkbox %>
+<td class="list-left"> 
+	<%= check_box_tag(publication.id, publication.id, publication.is_cancer, :onclick => remote_function( :url =>  set_is_cancer_abstract_path(publication.id),
+	:before => "Element.show('spinner')", :complete => "Element.hide('spinner')"
+	)) %>
+</td> 
+<% end %>
