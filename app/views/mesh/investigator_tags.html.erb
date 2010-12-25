@@ -1,0 +1,7 @@
+<h1>All Taggings for investigator <i><%= params[:id] %></i> </h1>
+<h3>Taggings (<%= @taggings.length %>)</h3>
+<table>
+<% @taggings.each do |tagging| %>
+<tr><td><%= tagging.tag.name %></td><td><%= tagging.information_content %></td></tr>
+<% end %>
+</table>

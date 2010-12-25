@@ -33,6 +33,11 @@
 		  <%= text_field_tag(:keywords, params[:keywords], :size => 20) %> Search 
 		  <%= select_tag("search_field",options_for_select(%w{ Author Title Journal Abstract All},params[:search_field]), {:class => "dropdown"}) %> Enter term and hit return. Use '*' as a wildcard.
 		<% end %> 
+		<% if allow_profile_edits? %>
+		<div style="float:right;">
+			<%= link_to("login", profiles_path) %>
+		</div>
+		<% end %>
 	</div>
 	<div id="side">
 		<div id="sideinfo">

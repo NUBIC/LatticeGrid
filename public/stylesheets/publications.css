@@ -344,6 +344,9 @@ div.notice {
     font-size: 12px;
     background-color: #339;
 }
+#search a { padding: 4px; padding-top: 2px; color: white; text-decoration:none; }
+#search a:hover { background-color: #709fc7; }
+
 
 #niceline {
   padding-left: 50px;
@@ -361,7 +364,7 @@ div.notice {
   overflow:hidden;
 }
 
-#collaborators {
+#collaborators, #similar_investigators {
   padding:1px;
   margin:0px;
   line-height: 15px;
@@ -370,12 +373,12 @@ div.notice {
   overflow:hidden;
 }
 
-#collaborators a {
+#collaborators a, #similar_investigators a {
 	text-decoration: none;
 	color: #229;
 }
-#collaborators a:visited { color: #88C; }
-#collaborators a:hover { color: #fff; background-color:#888; }
+#collaborators a:visited, #similar_investigators a:visited { color: #88C; }
+#collaborators a:hover, #similar_investigators a:hover { color: #fff; background-color:#888; }
 
 
 #OrgGraph, #MemberGraph {

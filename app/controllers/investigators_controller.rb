@@ -1,7 +1,7 @@
 class InvestigatorsController < ApplicationController
   caches_page( :show, :full_show, :list_all, :tag_cloud_side, :tag_cloud, :show_all_tags) if CachePages()
-  helper :sparklines
-  require 'ldap_utilities' #specific ldap methods
+  helper :all
+  include InvestigatorsHelper
 
   skip_before_filter  :find_last_load_date, :only => [:tag_cloud_side, :tag_cloud]
   skip_before_filter  :handle_year, :only => [:tag_cloud_side, :tag_cloud]
@@ -13,7 +13,7 @@ class InvestigatorsController < ApplicationController
     redirect_to( current_abstracts_path )
   end
   def list_all
-    @investigators = Investigator.find(:all, :include=>[:home_department,:appointments], :conditions => ['investigators.end_date is null or investigators.end_date >= :now', {:now => Date.today }], :order => "last_name, first_name")   
+    @investigators = Investigator.find(:all, :include=>[:home_department,:appointments], :order => "last_name, first_name")   
     respond_to do |format|
       format.html { render :layout => 'printable'}
       format.xml  { render :xml => @units }
@@ -27,14 +27,36 @@ class InvestigatorsController < ApplicationController
       params.delete(:page)
       redirect_to params
     else
-      handle_member_name
+      handle_member_name # converts params[:id] to params[:investigator_id]
       @do_pagination = "0"
       @abstracts = Abstract.display_all_investigator_data(params[:investigator_id])
       @all_abstracts=@abstracts
       @total_entries=@abstracts.length
-      render :action => 'show'
+      respond_to do |format|
+        format.html { render :action => 'show' }
+        format.xml  { render :layout => false, :xml  => @abstracts.to_xml() }
+      end
     end
   end
+  
+  def publications
+    # set variables used in show
+    @investigator = Investigator.find_by_username(params[:id])
+    @do_pagination = "0"
+    @abstracts = Abstract.display_all_investigator_data(@investigator.id)
+    @all_abstracts=@abstracts
+    @total_entries=@abstracts.length
+
+    respond_to do |format|
+      format.html { render :action => 'show' }
+      format.json do
+        render :layout => false, :json => @abstracts.to_json() 
+      end
+      format.xml  { render :layout => false, :xml  => @abstracts.to_xml() }
+    end
+    
+  end
+  
   def show 
     if params[:id].nil? then
       redirect_to( year_list_abstracts_path)
@@ -46,6 +68,7 @@ class InvestigatorsController < ApplicationController
       @do_pagination = "1"
       @abstracts = Abstract.display_investigator_data(params[:investigator_id],params[:page] )
       @all_abstracts = Abstract.display_all_investigator_data(params[:investigator_id])
+      @include_pubmed_id = true unless params[:include_pubmed_id].blank?
       @total_entries=@abstracts.total_entries
     end
   end 
@@ -70,7 +93,7 @@ class InvestigatorsController < ApplicationController
   end 
 
   def tag_cloud_side
-    investigator = Investigator.find(params[:id])
+    investigator = Investigator.include_deleted(params[:id])
     tags = investigator.abstracts.tag_counts(:limit => 15, :order => "count desc")
     respond_to do |format|
       format.html { render :template => "shared/tag_cloud", :locals => {:tags => tags, :investigator => investigator}}
@@ -78,42 +101,24 @@ class InvestigatorsController < ApplicationController
     end
   end 
   def tag_cloud
-    investigator = Investigator.find(params[:id])
+    investigator = Investigator.include_deleted(params[:id])
     tags = investigator.abstracts.tag_counts( :order => "count desc")
     respond_to do |format|
       format.html { render :template => "shared/tag_cloud", :locals => {:tags => tags}}
       format.js  { render  :partial => "shared/tag_cloud", :locals => {:tags => tags}  }
     end
   end 
+  
+  # Differs from above because the Investigator is found by username instead of id
+  # Then it will send a json response to the requester
+  def tag_cloud_list
+    investigator = Investigator.find_by_username_including_deleted(params[:username])
+    result = []
+    tags = investigator.abstracts.tag_counts(:limit => 15, :order => "count desc")
+    tags.each { |tag| result << [tag.name, tag.count] }
+    render :json => result.to_json
+  end
 
   private
-  def handle_member_name
-    return if params[:id].blank?
-    if !params[:format].blank? then #reassemble the username
-      params[:id]=params[:id]+"."+params[:format]
-    end
-    if params[:name].blank? then
-      @investigator = Investigator.find_by_username(params[:id])
-      if @investigator
-        params[:investigator_id] = @investigator.id
-        params[:name] =  @investigator.first_name + " " + @investigator.last_name
-        begin
-          pi_data = GetLDAPentry(@investigator.username)
-          if pi_data.nil?
-            logger.warn("Probable error reaching the LDAP server in GetLDAPentry: GetLDAPentry returned null for #{params[:name]} using netid #{@investigator.username}.")
-          else
-            ldap_rec=CleanPIfromLDAP(pi_data)
-            @investigator=MergePIrecords(@investigator,ldap_rec)
-          end
-         rescue Exception => error
-          logger.error("Probable error reaching the LDAP server in GetLDAPentry: #{error.message}")
-        end
-       else
-        logger.error("Attempt to access invalid username (netid) #{params[:id]}") 
-        flash[:notice] = "Sorry - invalid username <i>#{params[:id]}</i>"
-        params.delete(:id)
-      end
-    end
-  end
 
 end

@@ -1,8 +1,7 @@
 class InvestigatorAppointment < ActiveRecord::Base
   belongs_to :investigator
   belongs_to :organizational_unit, 
-    :conditions => ['(end_date is null or end_date >= :now) ',
-     {:now => Date.today }]
+    :conditions => ['end_date is null']
   belongs_to :center, :foreign_key => :organizational_unit_id
   belongs_to :organizational_unit
   has_many :investigator_abstracts, :through => :investigator 
@@ -11,8 +10,8 @@ class InvestigatorAppointment < ActiveRecord::Base
 
   def self.has_appointment(unit_id ) 
     appointments = self.find :all, 
-         :conditions => ['organizational_unit_id = :unit_id  and (end_date is null or end_date >= :now) ',
-         {:now => Date.today, :unit_id => unit_id }] 
+         :conditions => ['organizational_unit_id = :unit_id  and end_date is null ',
+         {:unit_id => unit_id }] 
     return appointments.length > 0
   end 
 

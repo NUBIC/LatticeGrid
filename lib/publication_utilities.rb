@@ -142,7 +142,7 @@ def InsertPublication(publication, update_if_pmc_exists=false)
   reference = medline.reference
   pubmed_central_id = medline.pubmed_central
   pubmed_central_id = nil if pubmed_central_id.blank?
-  thePub = Abstract.find_by_pubmed(reference.pubmed)
+  thePub = Abstract.find_by_pubmed_include_deleted(reference.pubmed)
   begin 
     if thePub.nil? || thePub.id < 1 then
       thePub = Abstract.create!(
@@ -166,10 +166,10 @@ def InsertPublication(publication, update_if_pmc_exists=false)
         :pubmed  => reference.pubmed,
         :pubmedcentral  => pubmed_central_id,
         :url     => reference.url,
-        :mesh    => reference.mesh.join(";\n")
+        :mesh    => reference.mesh.is_a?(String) ? reference.mesh : reference.mesh.join(";\n")
       )
     else
-      if thePub.publication_date != medline.publication_date || thePub.status != medline.status || thePub.publication_status != medline.publication_status || (update_if_pmc_exists and ! pubmed_central_id.blank?) then
+      if thePub.publication_date != medline.publication_date || thePub.status != medline.status || thePub.publication_status != medline.publication_status || (thePub.pubmedcentral != pubmed_central_id) then
           thePub.endnote_citation = reference.endnote
           thePub.publication_date = medline.publication_date
           thePub.electronic_publication_date = medline.electronic_publication_date
@@ -183,15 +183,15 @@ def InsertPublication(publication, update_if_pmc_exists=false)
           thePub.pubmed  = reference.pubmed
           thePub.pubmedcentral  = pubmed_central_id
           thePub.url     = reference.url
-          thePub.mesh    = reference.mesh.join(";\n")
+          thePub.mesh    = reference.mesh.is_a?(String) ? reference.mesh : reference.mesh.join(";\n")
           thePub.save!
         end
         # HandleMeshTerms(thePub.mesh, thePub.id)
     end
-  rescue ActiveRecord::RecordInvalid
+  rescue ActiveRecord::RecordInvalid  => exc
      if thePub.nil? then # something bad happened
-      puts "InsertPublication: unable to find or insert reference with the pubmed id of '#{reference.pubmed}"
-      raise "InsertPublication: unable to find or insert reference with the pubmed id of  '#{reference.pubmed}"
+      puts "InsertPublication: unable to find or insert reference with the pubmed id of '#{reference.pubmed}. error message: #{exc.message}"
+      raise "InsertPublication: unable to find or insert reference with the pubmed id of  '#{reference.pubmed}. error message: #{exc.message}"
     end
   end 
   thePub

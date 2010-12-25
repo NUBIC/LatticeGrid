@@ -1,8 +1,9 @@
 #toggle @ldap_search to true or false to turn off ldap searching
 
-def ldap_perform_search
-  true
+def ldap_perform_search?
+  false
 end
+
 def ldap_host
   "directory.northwestern.edu"
 end

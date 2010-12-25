@@ -44,6 +44,10 @@ def ReadProgramMembershipData(file_name)
   read_data_handler(InvestigatorAppointment,file_name) {|data| row_iterator(data) {|data| CreateProgramMembershipsFromHash(data, 'Member')} }
 end
 
+def ReadInvestigatorDescriptionData(file_name)
+  read_data_handler(Investigator,file_name) {|data| row_iterator(data) {|data| MergeInvestigatorDescriptionsFromHash(data)} }
+end
+
 def ReadInvestigatorPubmedData(file_name)
   read_data_handler(Abstract,file_name) { |data| 
     CreateAbstractsFromArrayHash(data) 
@@ -61,4 +65,8 @@ end
 
 def ReadAwardData(file_name)
   read_data_handler(Proposal,file_name) {|data| row_iterator(data) {|data| CreateAwardData(data)} }
+end
+
+def ReadUsers(file_name)
+  read_data_handler(Investigator,file_name) {|data| row_iterator(data) {|data| ValidateUser(data)} }
 end

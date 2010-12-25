@@ -1,3 +1,5 @@
+require 'graph_generator'
+
 def build_graphviz_restfulpath(gparams, format='svg')
   # map to restful order
   # 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:program.:format',
@@ -9,7 +11,7 @@ def build_graphviz_filepath(gparams)
    # map to restful order
    # 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:program.:format',
 
-   "graphs/#{gparams[:id]}/#{gparams[:analysis]}/#{gparams[:distance]}/#{gparams[:stringency]}/#{gparams[:include_orphans]}/"
+   "graphs/#{clean_filename(gparams[:id])}/#{gparams[:analysis]}/#{gparams[:distance]}/#{gparams[:stringency]}/#{gparams[:include_orphans]}/"
  end
 
  # was handle_graphviz_params
@@ -18,13 +20,21 @@ def build_graphviz_filepath(gparams)
    gparams[:program] ||= "neato" 
    gparams[:analysis] ||= "member"
    gparams[:format] ||= "svg"
+   if gparams[:analysis].include?("org_org")
+     gparams[:stringency] ||= "10"
+   end
    if gparams[:analysis].include?("org")
      gparams[:distance] ||= "0"
      gparams[:stringency] ||= "3"
    end
-   if gparams[:analysis].include?("mesh")
+   if gparams[:analysis].include?("mesh") and gparams[:analysis] != "mesh"
      gparams[:stringency] ||= "2000"
      gparams[:stringency] = "2000" if gparams[:stringency].to_i < 500
+   end
+   if gparams[:analysis] == "mesh"
+     gparams[:distance] ||= "0"
+     gparams[:stringency] ||= "4"
+     gparams[:include_orphans] ||= "1"
    end
    gparams[:distance] ||= "1"
    gparams[:stringency] ||= "1"

@@ -1,5 +1,8 @@
 <% params[:program] ||= "fdp" %>
 <% params[:analysis] ||= "member" %>
+<% if params[:analysis].include?("org_org") %>
+	<% params[:stringency] ||= "10" %>
+<% end %>
 <% if params[:analysis].include?("org") and params[:analysis].include?("mesh") %>
 	<% params[:stringency] ||= "2000" %>
 <% end %>
@@ -14,6 +17,7 @@
 <% if params[:analysis] == "mesh" %>
 	<% params[:stringency] ||= "1" %>
 	<% params[:distance]   ||= "0" %>
+	<% params[:include_orphans] ||= "1" %>
 <% end %>
 <% params[:id] ||= "str" %>
 <% params[:format] ||= "svg" %>
@@ -55,9 +59,15 @@
 				 [params[:stringency]]),  
 		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans') }
 	 ) %>
+	<% elsif params[:analysis].include?("org_org") %>
+	Stringency: <%= select_tag(:stringency, 
+			options_for_select([["One","1"], ["Two","2"], ["Three","3"], ["Five","5"], ["Seven","7"], ["Ten","2"], ["Twenty","20"], ["Fifty","50"]],
+				[params[:stringency]]),  
+		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans') }
+	 ) %>
 	<% else %>
 	Stringency: <%= select_tag(:stringency, 
-			options_for_select([["One","1"], ["Two","2"], ["Three","3"], ["Four","4"], ["Five","5"], ["Six","6"], ["Seven","7"], ["Eight","8"]],
+			options_for_select([["One","1"], ["Two","2"], ["Three","3"], ["Four","4"], ["Five","5"], ["Six","6"], ["Seven","7"], ["Eight","8"], ["Nine","9"], ["Ten","10"], ["Twelve","12"], ["Fifteen","15"]],
 				[params[:stringency]]),  
 		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans') }
 	 ) %>

@@ -14,10 +14,10 @@ Rails::Initializer.run do |config|
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
 
-  config.gem 'mislav-will_paginate',
-            :lib => 'will_paginate',
-            :source => 'http://gems.github.com',
-            :version => '~> 2.3.6'
+  # config.gem 'mislav-will_paginate',
+  #          :lib => 'will_paginate',
+  #          :source => 'http://gems.github.com',
+  #          :version => '~> 2.3.6'
   
   # Specify gems that this application depends on and have them installed with rake gems:install
   # config.gem "bj"
@@ -31,7 +31,7 @@ Rails::Initializer.run do |config|
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
-  config.plugins = [ :awesome_nested_set, :princely, :acts_as_taggable_on_steroids ]
+  # config.plugins = [ :awesome_nested_set, :princely, :acts_as_taggable_on_steroids, :all ]
 
   # Skip frameworks you're not going to use. To use Rails without a database,
   # you must remove the Active Record framework.
@@ -48,7 +48,7 @@ Rails::Initializer.run do |config|
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
   # config.i18n.default_locale = :de
   config.action_controller.session = {
-    :session_key => '_test_session',
+    :session_key => '_latticegrid_session',
     :secret      => 'this is a  2.0 rails requirement'
   }
   
@@ -78,12 +78,6 @@ require 'taggable_pagination'
 require 'taggable_information'
 
 
-begin
-  require 'PDFRender'
-  ActionView::Template.register_template_handler 'rpdf', ActionView::PDFRender
-rescue NameError, LoadError
-  puts "PDFRender didn't load properly"
-end
 begin
   require 'RMagick'
 rescue NameError, LoadError

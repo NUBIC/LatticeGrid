@@ -14,9 +14,9 @@ one:
   article_influence_score: 1.5
 
 two:
-  journal_name: MyString
-  journal_abbreviation: MyString
-  issn: MyString
+  journal_name: MyString2
+  journal_abbreviation: MyString2
+  issn: MyString2
   score_year: 1
   total_cites: 1
   impact_factor: 1.5

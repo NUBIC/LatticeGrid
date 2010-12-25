@@ -1,4 +1,6 @@
 class Abstract < ActiveRecord::Base
+  include MeshHelper
+  
   has_many :journals, :foreign_key => "journal_abbreviation", :primary_key =>  "journal_abbreviation", :readonly => true
   has_many :investigator_abstracts
   has_many :investigators, :through => :investigator_abstracts,
@@ -21,6 +23,15 @@ class Abstract < ActiveRecord::Base
       {:conditions => 
           [' publication_date between :start_date and :end_date or electronic_publication_date between :start_date and :end_date ', 
             {:start_date => dates.first, :end_date => dates.last } ] }
+  }
+  named_scope :ccsg_abstracts_by_date, lambda { |*dates|
+      {:conditions => 
+          ['is_cancer = true and (publication_date between :start_date and :end_date or electronic_publication_date between :start_date and :end_date) ', 
+            {:start_date => dates.first, :end_date => dates.last } ] }
+    }
+
+  named_scope :by_ids, lambda { |*ids|
+      {:conditions => ['id IN (:ids) ', {:ids => ids.first}] }
     }
   default_scope :conditions => 'abstracts.deleted_at is null'
 
@@ -32,6 +43,12 @@ class Abstract < ActiveRecord::Base
       else
         find(id)
       end
+    end
+  end
+
+  def self.find_by_pubmed_include_deleted( val )
+    with_exclusive_scope do
+        find_by_pubmed(val)
     end
   end
 
@@ -170,12 +187,47 @@ class Abstract < ActiveRecord::Base
           :order => "year DESC, authors ASC",
           :conditions => ["lower(journal) like :search_term OR lower(journal_abbreviation) like :search_term",
              {:search_term => lc_keywords}])
+    elsif keywords.search_field.include?("Summary")
+        paginate(:page => page,
+           :include => [:taggings,:investigators],
+           :per_page => 20, 
+           :order => "year DESC, authors ASC",
+           :conditions => ["lower(investigators.faculty_keywords) like :search_term OR lower(investigators.faculty_research_summary) like :search_term  OR lower(investigators.faculty_interests) like :search_term",
+              {:search_term => lc_keywords }])
+    elsif keywords.search_field.include?("Keywords")
+        # @tags will contain tags to include
+        # do_mesh_search is in the MeshHelper 
+        mesh_terms = MeshHelper.do_mesh_search(lc_keywords)
+        mesh_ids = mesh_terms.collect(&:id)
+        
+        paginate(:page => page,
+           :include => [:taggings,:investigators],
+           :per_page => 20, 
+           :order => "year DESC, authors ASC",
+           :conditions => ["lower(investigators.faculty_keywords) like :search_term OR lower(investigators.faculty_research_summary) like :search_term  OR lower(investigators.faculty_interests) like :search_term  OR taggings.tag_id in (:tag_ids)",
+              {:search_term => lc_keywords, :tag_ids => mesh_ids }])
+    elsif keywords.search_field.include?("MeSH")
+        # @tags will contain tags to include
+        # do_mesh_search is in the MeshHelper 
+        mesh_terms = MeshHelper.do_mesh_search(lc_keywords)
+        mesh_ids = mesh_terms.collect(&:id)
+
+        paginate(:page => page,
+           :include => [:taggings,:investigators],
+           :per_page => 20, 
+           :order => "year DESC, authors ASC",
+           :conditions => ["taggings.tag_id in (:tag_ids)",
+              {:search_term => lc_keywords, :tag_ids => mesh_ids }])
     else
+      mesh_terms = MeshHelper.do_mesh_search(lc_keywords)
+      mesh_ids = mesh_terms.collect(&:id)
+      
       paginate(:page => page,
           :per_page => 20, 
+          :include => [:taggings,:investigators],
           :order => "year DESC, authors ASC",
-          :conditions => ["(lower(abstract) like :term1 and lower(abstract) like :term2 and lower(abstract) like :term3) OR (lower(title) like :term1 and lower(title) like :term2 and lower(title) like :term3) OR (lower(journal) like :term1 and lower(journal) like :term2 and lower(journal) like :term3 ) OR (lower(authors) like :term1 AND lower(authors) like :term2 AND lower(authors) like :term3 )",
-             {:term1 => terms[0], :term2 => terms[1], :term3 => terms[2]} ])
+          :conditions => ["(lower(abstracts.abstract) like :term1 and lower(abstracts.abstract) like :term2 and lower(abstracts.abstract) like :term3) OR (lower(abstracts.title) like :term1 and lower(abstracts.title) like :term2 and lower(abstracts.title) like :term3) OR (lower(abstracts.journal) like :term1 and lower(abstracts.journal) like :term2 and lower(abstracts.journal) like :term3 ) OR (lower(abstracts.authors) like :term1 AND lower(abstracts.authors) like :term2 AND lower(abstracts.authors) like :term3 ) OR lower(investigators.faculty_keywords) like :search_term OR lower(investigators.faculty_research_summary) like :search_term  OR lower(investigators.faculty_interests) like :search_term  or taggings.tag_id in (:tag_ids)",
+             {:term1 => terms[0], :term2 => terms[1], :term3 => terms[2], :search_term => lc_keywords, :tag_ids => mesh_ids } ])
     end
   end
 

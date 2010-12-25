@@ -1,4 +1,6 @@
 # -*- ruby -*-
+require 'pubmed_config'
+
 
 def BuildPISearch(pi, full_first_name=true, limit_to_institution=true)
   result = ""
@@ -287,7 +289,8 @@ def BuildCoauthors(investigator)
   coauthor_ids = investigator.abstracts.collect{|x| x.investigator_abstracts.collect(&:investigator_id)}.flatten.uniq
   coauthor_ids.delete(investigator.id)
   coauthor_ids.each do |coauthor_id|
-    colleague=Investigator.find(coauthor_id)
+    colleague=Investigator.include_deleted(coauthor_id)
+    next if !colleague.deleted_at.nil?
     citation_overlap = investigator.abstracts.collect{|x| x.id}.flatten & colleague.abstracts.collect{|x| x.id}.flatten
     citation_overlap = citation_overlap.uniq.compact
     InsertUpdateInvestigatorColleague(investigator.id,coauthor_id,citation_overlap)

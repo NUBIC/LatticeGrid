@@ -29,7 +29,7 @@ task :tagAbstractsWithMeshTerms => [:getAbstracts] do
 end
 
 task :tagInvestigatorsWithMeshTerms => [:getInvestigators] do
-  # tag all invesigator with associated MeSH terms from all abstracts
+  # tag all investigators with associated MeSH terms from all abstracts
   # about 15 minutes laptop, 20 minutes staging with 2100 investigators and 46000 abstracts
   # for RHLCCC about 10 minutes with 7800 abstracts and 280 investigators
   investigator_tag_count = Tagging.count(:conditions=>"taggable_type='Investigator'")
@@ -43,6 +43,21 @@ task :tagInvestigatorsWithMeshTerms => [:getInvestigators] do
   }
   investigator_tag_count = Tagging.count(:conditions=>"taggable_type='Investigator'")
   puts "count of all investigator MeSH tags is #{investigator_tag_count}" if @verbose
+end
+
+task :tagInvestigatorsWithKeywords => [:getInvestigators] do
+  # tag all investigator with faculty_keywords and faculty_interests
+  investigator_tag_count = Tagging.count(:conditions=>"taggable_type='Investigator'")
+  puts "count of all investigator tags is #{investigator_tag_count}" if @verbose
+  start = Time.now
+
+  block_timing("tagInvestigatorsWithKeywords") {
+    row_iterator(@AllInvestigators, 0, 100, start) do |investigator|
+      TagInvestigatorWithKeywords(investigator)
+    end
+  }
+  investigator_tag_count = Tagging.count(:conditions=>"taggable_type='Investigator'")
+  puts "count of all investigator  tags is #{investigator_tag_count}" if @verbose
 end
 
 task :calculateTagCounts => [:getTags, :getInvestigators, :getAbstracts] do
@@ -181,6 +196,6 @@ task :nightlyBuild => [:insertAbstracts, :updateAbstractInvestigators, :buildCoa
    puts "task nightlyBuild completed. Includes the tasks :insertAbstracts, :updateAbstractInvestigators, :buildCoauthors, :updateInvestigatorInformation, :updateOrganizationAbstractInformation" if @verbose
 end
 
-task :monthlyBuild => [ :tagAbstractsWithMeshTerms, :tagInvestigatorsWithMeshTerms, :attachMeshInformationContent, :buildInvestigatorColleaguesMesh, :normalizeInvestigatorColleaguesMesh] do
-  puts "task monthlyBuild completed. Includes the tasks :tagAbstractsWithMeshTerms, :tagInvestigatorsWithMeshTerms, :attachMeshInformationContent, :buildInvestigatorColleaguesMesh, :normalizeInvestigatorColleaguesMesh" if @verbose
+task :monthlyBuild => [ :tagAbstractsWithMeshTerms, :tagInvestigatorsWithMeshTerms, :tagInvestigatorsWithKeywords, :attachMeshInformationContent, :buildInvestigatorColleaguesMesh, :normalizeInvestigatorColleaguesMesh] do
+  puts "task monthlyBuild completed. Includes the tasks :tagAbstractsWithMeshTerms, :tagInvestigatorsWithMeshTerms, :tagInvestigatorsWithKeywords, :attachMeshInformationContent, :buildInvestigatorColleaguesMesh, :normalizeInvestigatorColleaguesMesh" if @verbose
 end

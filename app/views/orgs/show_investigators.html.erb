@@ -3,19 +3,18 @@
 <p style="float:right; margin-right:20px; margin-top:12px;">
 <%= link_to_unless(params[:format] == "pdf", "Download as pdf", show_investigators_org_url(@unit.id,"pdf")) %>
 </p>
-<p><%= link_to( "Graph co-publications by faculty members in <i>#{@unit.name}</i>", show_org_graph_url(@unit.id)) + " &nbsp; &nbsp; " +  link_to( "GraphViz version of this graph", show_org_graphviz_url(@unit.id)) + " &nbsp; &nbsp; " + link_to( "MeSH similarities version of this graph", show_org_mesh_graphviz_url(@unit.id)) %></p>
-
+<p><%= link_to( "Authorship graph in <i>#{@unit.name}</i>", show_org_graph_url(@unit.id)) + " &nbsp; &nbsp; " +  link_to( "Authorship network diagram", show_org_graphviz_url(@unit.id)) + " &nbsp; &nbsp; " + link_to( "MeSH-based network diagram", show_org_mesh_graphviz_url(@unit.id)) + " &nbsp; &nbsp; " + link_to( "Unit-to-Unit co-authorship network diagram", show_org_org_graphviz_url(@unit.id)) %></p>
 <h2><%= link_to( "Show all #{@unit.name} publications", org_url(@unit.id)) %></h2>
 
 <h1><%= @heading %></i></h1>
 
 Click on the investigator to find all publications attributed to that investigator. <br/>
 
-<%= render( :partial=>"investigator_listing.html", :locals => { :investigators => @unit.primary_faculty, :heading => "Primary appointments" }) if @unit.primary_faculty.length > 0 %> 
-<%= render( :partial=>"investigator_listing.html", :locals => { :investigators => @unit.joint_faculty, :heading => "Joint appointments" }) if @unit.joint_faculty.length > 0 %> 
-<%= render( :partial=>"investigator_listing.html", :locals => { :investigators => @unit.secondary_faculty, :heading => "Secondary appointments" }) if @unit.secondary_faculty.length > 0 %> 
+<%= render( :partial=>"investigator_listing.html", :locals => { :investigators => @unit.all_primary_faculty, :heading => "Primary appointments" }) if @unit.primary_faculty.length > 0 %> 
+<%= render( :partial=>"investigator_listing.html", :locals => { :investigators => @unit.all_joint_faculty, :heading => "Joint appointments" }) if @unit.joint_faculty.length > 0 %> 
+<%= render( :partial=>"investigator_listing.html", :locals => { :investigators => @unit.all_secondary_faculty, :heading => "Secondary appointments" }) if @unit.secondary_faculty.length > 0 %> 
 <% if @unit.kind_of?(Center) or @unit.kind_of?(Program) %>
-<%= render :partial=>"investigator_listing.html", :locals => { :investigators => @unit.members, :heading => "Members" } %> 
+<%= render :partial=>"investigator_listing.html", :locals => { :investigators => @unit.all_members, :heading => "Members" } %> 
 <% end %>
 <% if include_mesh %>
 <h3><%= "MeSH cloud from publications in <i>#{@unit.name}</i>" %></h3>

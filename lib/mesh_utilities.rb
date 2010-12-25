@@ -1,5 +1,6 @@
 # -*- ruby -*-
 
+# added downcase to make sure all terms are atomic and not multi-cased!
 def RearrangeTermsWithCommas(term)
   a = term.split(",").collect{|x| x.strip}
   if a.length > 1 then
@@ -7,7 +8,7 @@ def RearrangeTermsWithCommas(term)
     a.shift
     a[0]=d
   end
-  return a.join("-").sub(/(.*)( as Topic)(.*)/i,'\1\3\2')
+  return a.join("-").sub(/(.*)( as Topic)(.*)/i,'\1\3\2').strip.downcase
 end
   
 def CleanMeshTerm(mesh_term)
@@ -25,7 +26,7 @@ def CleanMeshTerms(mesh_array)
 end
 
 def AddMeshTermstoObject(obj, mesh_array)
-  obj.tag_list = mesh_array
+  obj.tag_list = obj.tag_list | mesh_array
   obj.save
 end
 
@@ -34,7 +35,21 @@ def TagAbstractWithMeSH(abstract)
 end
 
 def TagInvestigatorWithMeSH(investigator)
-  AddMeshTermstoObject(investigator,investigator.abstracts.collect(&:tag_list).flatten.uniq)
+  invpubs = (investigator.investigator_abstracts.first_author_publications + investigator.investigator_abstracts.last_author_publications).uniq
+  if (invpubs.length > 7)
+    AddMeshTermstoObject(investigator,Abstract.by_ids(invpubs.collect(&:abstract_id)).collect(&:tag_list).flatten.uniq)
+  else
+    AddMeshTermstoObject(investigator,investigator.abstracts.collect(&:tag_list).flatten.uniq)
+  end
+end
+
+def TagInvestigatorWithKeywords(investigator)
+  if ! investigator.faculty_keywords.blank?
+    AddMeshTermstoObject(investigator,investigator.faculty_keywords.split(",").collect{|kw| kw.strip.downcase })
+  end
+  if ! investigator.faculty_interests.blank?
+    AddMeshTermstoObject(investigator,investigator.faculty_interests.split(",").collect{|kw| kw.strip.downcase })
+  end
 end
 
 def GetTag(name)
@@ -186,14 +201,14 @@ def AnalyzeInvestigatorColleague(investigator, update_only=true)
   ic_tags.each do |ic_tag|
     next if ic_tag.taggable_id.to_i <= investigator.id.to_i
     return if ic_tag.total.to_i < 250
-    colleague = Investigator.find(ic_tag.taggable_id)
-    BuildInvestigatorColleague(investigator, colleague, update_only)
+    colleague = Investigator.include_deleted(ic_tag.taggable_id)
+    BuildInvestigatorColleague(investigator, colleague, update_only) if colleague.deleted_at.nil?
   end
 end
 
 
 def BuildInvestigatorColleague(investigator, colleague, update_only=true)
-  
+  return if investigator.id == colleague.id
   if update_only && !InvestigatorColleague.find( :first,
     :conditions => [" investigator_id = :investigator_id AND colleague_id = :colleague_id",
         {:investigator_id => investigator.id, :colleague_id => colleague.id}]).nil?
@@ -222,6 +237,7 @@ def BuildInvestigatorColleague(investigator, colleague, update_only=true)
 end
 
 def InsertUpdateInvestigatorColleague(investigator_id,colleague_id,citation_overlap,mesh_overlap=nil,mesh_information_content=nil )
+  return if investigator_id == colleague_id
   ir = InvestigatorColleague.find( :first,
     :conditions => [" investigator_id = :investigator_id AND colleague_id = :colleague_id",
         {:investigator_id => investigator_id, :colleague_id => colleague_id}])

@@ -10,7 +10,8 @@
 <% for unit in @units %>
 	<% multipleUnits = true if unit.type != unitType %>
 <% end %>
-The following is a list of the total publications, number of publications with intra-<%= multipleUnits ? "unit" : unitType.downcase -%> sharing, and inter-<%= multipleUnits ? "unit" : unitType.downcase -%> sharing, broken down by <%= multipleUnits ? "organizational unit" : unitType  -%>. <br/>
+The following is a list of the total publications, number of publications with intra-<%= multipleUnits ? "unit" : unitType.downcase -%> sharing, and inter-<%= multipleUnits ? "unit" : unitType.downcase -%> sharing, broken down by <%= multipleUnits ? "organizational unit" : unitType  -%>.
+<% if show_cancer_related_checkbox? %>The publication statistics only include publications that are deemed to be "cancer relevant" according to the criteria of the NCI and the judgement of the coordinator's office. <% end %><br/>
 
 <div id="listing">
   

@@ -4,5 +4,8 @@
 <% @investigators_in_unit = [] if @investigators_in_unit.nil? %>
 <% @show_paginator = false if @show_paginator.nil? %>
 <% @show_delete_checkboxes = true if @show_delete_checkboxes.nil? %>
+<% @link_abstract_to_pubmed = false if @link_abstract_to_pubmed.nil? %>
 
-<%= render :partial => "shared/abstract_listing.html", :locals => { :abstracts => @abstracts, :investigators_in_unit => @investigators_in_unit, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker, :include_investigators => @include_investigators, :show_delete_checkboxes => @show_delete_checkboxes, :show_paginator => @show_paginator, :heading => @heading } %>
+
+<%= render :partial => "shared/abstract_listing.html", 
+	:locals => { :abstracts => @abstracts, :investigators_in_unit => @investigators_in_unit, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker, :include_investigators => @include_investigators, :show_delete_checkboxes => @show_delete_checkboxes, :show_paginator => @show_paginator, :heading => @heading, :link_abstract_to_pubmed => @link_abstract_to_pubmed } %>

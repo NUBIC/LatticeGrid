@@ -28,7 +28,7 @@ def CreateInvestigatorAbstractsFromHash(data_row)
      puts "pubmed_id or employee_id was blank or missing. datarow="+data_row.inspect
      return
   end  
-  abstract = Abstract.find_by_pubmed(pubmed_id)
+  abstract = Abstract.find_by_pubmed_include_deleted(pubmed_id)
   investigator = Investigator.find_by_employee_id(employee_id)
   if  abstract.blank? then
      puts "Could not find Abstract. datarow="+data_row.inspect

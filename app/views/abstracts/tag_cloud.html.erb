@@ -1,7 +1,11 @@
 <h1><%= @heading %></h1>
 <p>
 <% tag_cloud @tags, %w(nube1 nube2 nube3 nube4 nube5) do |tag, css_class| %>
-   <%= link_to tag.name, tagged_abstracts_abstract_url(URI.escape(tag.name)), :class => css_class, :title => "Total of #{tag.count} tags" %>
+	<% begin %>
+	<%= link_to tag.name, tagged_abstracts_abstract_url(URI.escape(tag.name)), :class => css_class, :title => "Click to see the #{tag.count} publications tagged with '#{tag.name}'" -%><%= link_to image_tag( "base.gif", :width=>"18px", :height=>"18px", :style=>"margin-bottom:-3px;" ), show_mesh_graphviz_url(tag.id), :class => css_class, :title => "Graph investigators tagged with MeSH term '#{tag.name}'" -%>; 
+	<% rescue %>
+	<%= tag.name %>
+	<% end %>
 <% end %>
 </p>
 <br/>

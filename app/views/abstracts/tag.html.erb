@@ -1,5 +1,10 @@
 <% include_mesh=true if include_mesh.nil? %>
-<%= render :partial => "shared/abstract_listing", :locals => { :abstracts => @abstracts, :do_pagination => @do_pagination, :heading => @heading  } %>
+<% @include_investigators=false if @include_investigators.nil? %>
+
+<% if ! params[:id].blank? %>
+<%= link_to "Graph investigators tagged with MeSH term '#{params[:id]}'", show_mesh_graphviz_url(params[:id]), :title => "Graph investigators tagged with MeSH term '#{params[:id]}'" -%>;
+<% end %>
+<%= render :partial => "shared/abstract_listing", :locals => { :abstracts => @abstracts, :do_pagination => @do_pagination, :heading => @heading, :include_investigators => @include_investigators  } %>
 
 <% if include_mesh %>
 <h3><%= "MeSH cloud from publications including the MeSH term <i>#{params[:id]}</i>" %></h3>

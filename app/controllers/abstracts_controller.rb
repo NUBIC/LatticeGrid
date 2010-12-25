@@ -1,6 +1,10 @@
 class AbstractsController < ApplicationController
 #removed :full_tagged_abstracts and :tagged_abstracts - too many cached pages
-  caches_page( :year_list, :full_year_list, :tag_cloud, :endnote, :journal_list, :tagged_abstracts, :full_tagged_abstracts, :tag_cloud_by_year, :endnote, :show)  if CachePages()
+  caches_page( :year_list, :full_year_list, :tag_cloud, :endnote, :tagged_abstracts, :full_tagged_abstracts, :tag_cloud_by_year, :endnote, :show)  if CachePages()
+  
+  include AbstractsHelper
+  include ApplicationHelper
+  include MeshHelper  #for the do_mesh_search method
   
   require 'bio' #require bioruby!
 #  require 'utilities' #all the helper methods
@@ -101,7 +105,11 @@ class AbstractsController < ApplicationController
     else
       @do_pagination = "1"
       params[:id] = URI.unescape(params[:id])
-      @abstracts = Abstract._paginate_tagged_with(params[:id],
+      mesh_terms = MeshHelper.do_mesh_search(params[:id])
+      mesh_names = mesh_terms.collect(&:name)
+      #colleagues=Investigator.for_tag_ids(mesh_ids)
+      
+      @abstracts = Abstract._paginate_tagged_with(mesh_names,
                                         :order => 'year DESC, authors ASC',
                                         :page => params[:page],
                                         :per_page => 20)
@@ -113,8 +121,10 @@ class AbstractsController < ApplicationController
   def full_tagged_abstracts
     @do_pagination = "0"
     params[:id] = URI.unescape(params[:id])
-    @abstracts = Abstract.find_tagged_with(params[:id], :order => 'year DESC, authors ASC')
-    tag_heading(params[:id],@abstracts)
+    mesh_terms = MeshHelper.do_mesh_search(params[:id])
+    mesh_names = mesh_terms.collect(&:name)
+    @abstracts = Abstract.find_tagged_with(mesh_names, :order => 'year DESC, authors ASC')
+    tag_heading(mesh_names.join(", "),@abstracts)
     render :action => 'tag'
   end
 
@@ -124,34 +134,35 @@ class AbstractsController < ApplicationController
   end
 
   def investigator_listing
-    if params[:id] =~ /^\d+$/
-      @investigator = Investigator.find(params[:id])
-    else
-      @investigator = Investigator.find_by_username(params[:id])
-    end
-    @abstracts = Abstract.display_all_investigator_data_include_deleted(@investigator.id)
-    heading_base="Publication listing for investigator #{@investigator.name}."
-    @heading="#{heading_base} Uncheck boxes to remove these publications from <i>any</i> listing."
-    @include_mesh = false
-    @include_graph_link = false
-    @show_paginator = false
-    @include_investigators=true 
-    @include_pubmed_id = true 
+    prepare_edit_investigator_listing
     respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @abstracts }
-      format.xls  { send_data(render(:template => 'abstracts/investigator_listing', :layout => "excel"),
+      format.html { 
+      	@abstracts = Abstract.display_all_investigator_data_include_deleted(@investigator.id) 
+      	render
+      }
+      format.xml  { 
+        @abstracts = Abstract.display_all_investigator_data(@investigator.id)
+        render :xml => @abstracts }
+      format.xls  { 
+        @link_abstract_to_pubmed = true
+        @abstracts = Abstract.display_all_investigator_data(@investigator.id)
+        send_data(render(:template => 'abstracts/investigator_listing', :layout => "excel"),
         :filename => "investigator_listing_for_#{@investigator.first_name}_#{@investigator.last_name}.xls",
         :type => 'application/vnd.ms-excel',
         :disposition => 'attachment') }
-      format.doc  { send_data(render(:template => 'abstracts/investigator_listing.xls', :layout => "excel"),
+      format.doc  { 
+        @link_abstract_to_pubmed = true
+        @abstracts = Abstract.display_all_investigator_data(@investigator.id)
+        send_data(render(:template => 'abstracts/investigator_listing.xls', :layout => "excel"),
         :filename => "investigator_listing_for_#{@investigator.first_name}_#{@investigator.last_name}.doc",
         :type => 'application/msword',
         :disposition => 'attachment') }
       format.pdf do
-        @heading="#{heading_base}"
-         @show_delete_checkboxes = false
-         render( :pdf => "Publication Listing for " + @investigator.name, 
+        @link_abstract_to_pubmed = true
+        @abstracts = Abstract.display_all_investigator_data(@investigator.id)
+        @heading=@heading_base
+        @show_delete_checkboxes = false
+        render( :pdf => "Publication Listing for " + @investigator.name, 
             :stylesheets => "pdf", 
             :template => "abstracts/investigator_listing.html",
             :layout => "pdf")
@@ -224,7 +235,18 @@ class AbstractsController < ApplicationController
       @publication.deleted_at = nil
     end
     @publication.deleted_ip = request.remote_ip
-    @publication.save
+    @publication.save!
+    render :text => ""
+  end
+
+  def set_is_cancer
+    @publication = Abstract.include_deleted(params[:id])
+    if @publication.is_cancer.blank? or ! @publication.is_cancer
+      @publication.is_cancer = true
+    else
+      @publication.is_cancer = false
+    end
+    @publication.save!
     render :text => ""
   end
 
@@ -235,7 +257,7 @@ class AbstractsController < ApplicationController
     else
       @investigatorabstract.end_date = nil
     end
-    @investigatorabstract.save
+    @investigatorabstract.save!
     render :text => ""
   end
 

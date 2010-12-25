@@ -1,0 +1,8 @@
+<h1>Organization-level interaction graph for <%= @name %></h1>
+
+<p><%= link_to( "Publications", org_url(:id=>params[:id], :page=>1) ) + " &nbsp; &nbsp; " + link_to( "Co-authorship version of this diagram", show_org_graphviz_url(params[:id])) + " &nbsp; &nbsp; " + link_to( "MeSH similarities network diagram", show_org_mesh_graphviz_url(params[:id])) %> </p>
+
+<%= render( :partial => "graphviz_template" ) %>
+
+<p>This graph shows the network diagram for faculty in a unit based on co-authored publications with faculty in other units. Stringency is the number of co-publications between faculty members. Setting a stringency of 5, for instance, will remove all interactions involving fewer than 5 co-publications. There are five different graphing options supported - neato, dot, circo, twopi and fdp. Please experiment with them. Finally, you can select the type of output generated. SVG is the default (an xml vector-based, open web image interface). png (another open image format) and pdf images can also be generated and will be either saved to your local disk or displayed in your browser, depending on how you have configured your browser.</p>
+

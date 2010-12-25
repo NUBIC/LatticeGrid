@@ -3,6 +3,7 @@
 <% include_all_mesh=false if include_all_mesh.nil? %>
 <% include_graph_link=true if include_graph_link.nil? %>
 <% show_paginator=true if show_paginator.nil? %>
+<% all_abstracts=all_abstracts || nil %>
 
 <% include_investigators=false if include_investigators.nil? %>
 <% include_pubmed_id = false if include_pubmed_id.nil? %>
@@ -13,19 +14,12 @@
 <table class="borderless">
 <tr valign="top">
 	<td width="800px">
-		<%= render :partial => "shared/investigator_bio", :locals => { :investigator => investigator } %>
+		<%= render :partial => "shared/investigator_bio", :locals => { :investigator => investigator, :all_abstracts => all_abstracts } %>
 		<%= render( :partial => "shared/abstract_listing", :locals => { :abstracts => abstracts, :do_pagination => do_pagination, :heading => "Publications (#{total_entries})", :show_paginator => show_paginator, :include_investigators => include_investigators, :include_pubmed_id => include_pubmed_id, :include_collab_marker => include_collab_marker}) if !abstracts.blank? %>
 		<%= render :partial => "shared/all_tags", :locals => { :investigator => investigator } if include_all_mesh %>
 		
 	</td>
 	<td>
-		<h3> <%= investigator.name %> <a href='' title="citations per year"> <%= sparkline_tag( abstracts_per_year(all_abstracts, year_array.sort), :type => 'bar') if ! all_abstracts.nil? && all_abstracts.length > 10 %></a>
-		</h3>
-		
-		<h3><%= link_to('Graph Interactions', show_member_graph_url(params[:id]) ) %> <br/>
-		<%= link_to( "New GraphViz Interactions", show_member_graphviz_url(params[:id]) ) %> <br/>
-			<%= link_to( "MeSH similarities Graph", show_member_mesh_graphviz_url(params[:id])) %>
-		</h3>
 		<% if investigator.co_authors.length > 0 %>
 		<h3>Co-Authors:</h3> 
 		<div id="collaborators">

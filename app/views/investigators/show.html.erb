@@ -8,48 +8,13 @@
 <% @include_pubmed_id = false if @include_pubmed_id.nil? %>
 <% @include_collab_marker = false if @include_collab_marker.nil? %>
 
-<% if ! @investigator.nil? %>
+<% @abstracts = nil if @abstracts.nil? %>
+<% @all_abstracts = nil if @all_abstracts.nil? %>
+<% @total_entries = nil if @total_entries.nil? %>
+<% @investigator = nil if @investigator.nil? %>
+<% @year_array = [] if @year_array.nil? %>
+<% @do_pagination = false if @do_pagination.blank? %>
 
-<table class="borderless">
-<tr valign="top">
-	<td width="800px">
-		<%= render :partial => "shared/investigator_bio", :locals => { :investigator => @investigator } %>
-		<%= render :partial => "all_tags", :locals => { :investigator => @investigator } if @include_all_mesh %>
-		<%= render :partial => "shared/abstract_listing", :locals => { :abstracts => @abstracts, :do_pagination => @do_pagination, :heading => "Publications (#{@total_entries})", :show_paginator => @show_paginator, :include_investigators => @include_investigators, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker  } %>
-		
-	</td>
-	<td>
-		<h3> <%= @investigator.name %> <a href='' title="citations per year"> <%= sparkline_tag( abstracts_per_year(@all_abstracts, @year_array.sort), :type => 'bar') if ! @all_abstracts.nil? && @all_abstracts.length > 10 %></a>
-		</h3>
-		
-		<h3><%= link_to('Graph Interactions', show_member_graph_url(params[:id]) ) %> <br/>
-		<%= link_to( "New GraphViz Interactions", show_member_graphviz_url(params[:id]) ) %> <br/>
-			<%= link_to( "MeSH similarities Graph", show_member_mesh_graphviz_url(params[:id])) %>
-		</h3>
-		<% if @investigator.co_authors.length > 0 %>
-		<h3>Co-Authors:</h3> 
-		<div id="collaborators">
-		<%= link_to_coauthors(@investigator.co_authors, "<br/>") %>
-		</div>
-		<% end %>
-		<% similar_investigators=@investigator.similar_investigators %>
-		<% if similar_investigators.length > 0 %>
-			<h3>Similar Investigators:</h3> 
-			<div id="collaborators">
-			<%= link_to_similar_investigators(similar_investigators, "<br/>") %>
-			</div>
-		<% end %>
-		<br/>
-		<% if @include_mesh %>
-		<h3>Keywords (MeSH):</h3>
-		<div id="tag_cloud_side"></div>
-		<script language="javascript">
-		<%= remote_function(:url => tag_cloud_side_investigator_path( @investigator.id), :method => :get, :before => "Element.show('spinner')", 
-		:complete => "Element.hide('spinner')" ) %> 
-		</script>
-		<% end %>
-		<br/>
-	</td>
-</tr>
-</table>
+<% if ! @investigator.nil? %>
+<%= render :partial => "investigators/show_investigator", :locals => { :investigator => @investigator, :include_mesh => @include_mesh, :include_all_mesh => @include_all_mesh, :include_graph_link => @include_graph_link, :show_paginator => @show_paginator, :include_investigators => @include_investigators, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker, :abstracts => @abstracts, :all_abstracts => @all_abstracts, :total_entries => @total_entries, :investigator => @investigator, :year_array => @year_array, :do_pagination => @do_pagination, } %>
 <% end %>

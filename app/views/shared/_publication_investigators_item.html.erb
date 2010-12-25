@@ -1,6 +1,5 @@
-<% show_delete_checkboxes = false if show_delete_checkboxes.nil? %>
-<td class="list-title-right">
-  <% if show_delete_checkboxes %>
+<td class="list-title-left">
+  <% if show_delete_checkboxes and publication.investigator_abstracts.length > 1 %>
 	<% for investigator_abstract in publication.investigator_abstracts %>
 		<%= check_box_tag(investigator_abstract.id, investigator_abstract.id, investigator_abstract.end_date.blank?, :onclick => remote_function( :url =>  set_investigator_abstract_end_date_abstract_path(investigator_abstract.id),
 		:before => "Element.show('spinner')", :complete => "Element.hide('spinner')"

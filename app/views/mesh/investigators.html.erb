@@ -1,8 +1,8 @@
-<h1>All Investigators tagged with terms matching <i><%= params[:id] %></i> </h1>
+<h1>All Investigators tagged with terms matching both <i><%= params[:id] %></i> </h1>
 <h3>Terms (<%= @tags.length %>)</h3>
-<p><%= @tags.collect(&:name).join(", ") %></p>
+<p><%= @tags.collect{|tag| tag.name+" ("+tag.id.to_s+")"}.join(", ") %></p>
 
 <h3>Investigators  (<%= @investigators.length %>)</h3>
 <p>
-<%= @investigators.collect(&:name).join(", ") %>
+<%= @investigators.collect{|inv| inv.name+" ("+inv.id.to_s+")"}.join(", ") %>
 </p>

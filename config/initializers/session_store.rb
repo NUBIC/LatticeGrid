@@ -5,8 +5,8 @@
 # Make sure the secret is at least 30 characters and all random, 
 # no regular words or you'll be exposed to dictionary attacks.
 ActionController::Base.session = {
-  :key         => '_isb_colleagues_session',
-  :secret      => '7a645c541df5c7345369bc637bac7d1f44b357a82e35c4e59643958d16944b7aa0227040a3c9569a198869a25d5ade893862644b3e3d20327bc46c7729d6023a'
+  :key         => '_latticegrid_session',
+  :secret      => '7a645c541df5c7345369bc637bac7d1f44b357a82e35c4e59643958d16944b7aa0227040a3c9569a198869a25d5ade893862644b3e3d20327bc46cacd123d6023a'
 }
 
 # Use the database for sessions instead of the cookie-based default,

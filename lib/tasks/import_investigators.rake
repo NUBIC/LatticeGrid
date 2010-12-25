@@ -60,6 +60,10 @@ task :importProgramMembership => :getInvestigators do
   prune_program_memberships_not_updated()
 end
 
+task :importInvestigatorDescriptions => :getInvestigators do
+  read_file_handler("importInvestigatorDescriptions" ) {|filename| ReadInvestigatorDescriptionData(filename)}
+end
+
 task :buildProgramsFromInvestigators => [:getInvestigators,:getPrimaryAppointments,:getAllOrganizationsWithInvestigators] do
   block_timing("buildProgramsFromInvestigators") {
     puts "number of investigatorPrograms = #{InvestigatorProgram.find(:all).length}"
@@ -90,5 +94,9 @@ end
 
 task :importAwardData => :getInvestigators do
   read_file_handler("importAwardData" ) {|filename| ReadAwardData(filename)}
+end
+
+task :validateUsers => :environment do
+  read_file_handler("ValidateUsers" ) {|filename| ReadUsers(filename)}
 end
 

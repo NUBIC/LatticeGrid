@@ -227,7 +227,7 @@ class OrgsController < ApplicationController
       unit["pi_intra_abstracts"] = Array.new
       unit["pi_inter_abstracts"] = Array.new
       unit_pis = (unit.associated_faculty+unit.primary_faculty).collect{|x| x.id}
-      unit["publications"]=unit.all_faculty_publications_by_date( params[:start_date], params[:end_date] )
+      unit["publications"]=unit.all_ccsg_faculty_publications_by_date( params[:start_date], params[:end_date] )
       unit.publications.each do |abstract| 
         abstract_investigators = abstract.investigators.collect{|x| x.id}
         intra_collaborators_arr = abstract_investigators & unit_pis  # intersection of the two sets
@@ -253,7 +253,7 @@ class OrgsController < ApplicationController
       unit["pi_intra_abstracts"] = Array.new
       unit["pi_inter_abstracts"] = Array.new
       unit_pis = (unit.associated_faculty+unit.primary_faculty).collect{|x| x.id}
-      unit["publications"]=unit.all_faculty_publications_by_date( params[:start_date], params[:end_date] )
+      unit["publications"]=unit.all_ccsg_faculty_publications_by_date( params[:start_date], params[:end_date] )
       unit.publications.each do |abstract| 
         abstract_investigators = abstract.investigators.collect{|x| x.id}
         intra_collaborators_arr = abstract_investigators & unit_pis  # intersection of the two sets
@@ -298,14 +298,14 @@ class OrgsController < ApplicationController
   def list_abstracts_during_period_rjs
     handle_start_and_end_date
     @unit = OrganizationalUnit.find(params[:id])
-    @abstracts = @unit.all_faculty_publications_by_date( params[:start_date], params[:end_date] )
+    @abstracts = @unit.all_ccsg_faculty_publications_by_date( params[:start_date], params[:end_date] )
   end
 
   def abstracts_during_period
     # for printing
     handle_start_and_end_date
     @unit = OrganizationalUnit.find(params[:id])
-    @abstracts = @unit.all_faculty_publications_by_date( params[:start_date], params[:end_date] )
+    @abstracts = @unit.all_ccsg_faculty_publications_by_date( params[:start_date], params[:end_date] )
     @investigators_in_unit = (@unit.primary_faculty+@unit.associated_faculty).collect(&:id)
 
     @do_pagination = "0"

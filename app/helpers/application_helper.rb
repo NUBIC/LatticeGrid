@@ -6,7 +6,7 @@ module ApplicationHelper
     puts "unable to load TagsHelper. Tagging plugin installed?"
   end
   require 'config'
-    
+
   def build_menu(nodes, org_type=nil, &block)
     out="<ul>"
 		for unit in nodes
@@ -40,14 +40,6 @@ module ApplicationHelper
     string.downcase.gsub(/\b\w/) { $&.upcase } 
   end 
   
-  def  trunc_and_join_array(array, count=20, delimiter=", ")
-    if array.length > count.to_i
-      array[0,count.to_i].join(delimiter)+'…'
-    else
-      array.join(delimiter)
-    end
-  end
-
   def truncate_words(phrase, count=20) 
     re = Regexp.new('^(.{'+count.to_s+'}\w*)(.*)', Regexp::MULTILINE)
     phrase.gsub(re) {$2.empty? ? $1 : $1 + '...'}
@@ -55,10 +47,12 @@ module ApplicationHelper
 
   def abstracts_per_year(abstracts, year_array)
     years=Array.new(year_array.length, 0)
-    first_year = year_array[0]
+    first_year = year_array[0].to_i
     abstracts.each do |abs|
-      pos = abs.year.to_i - first_year.to_i
-      years[pos]=years[pos]+1 if pos >= 0
+      if !abs.nil? and !abs.year.nil?
+        pos = abs.year.to_i - first_year
+        years[pos] = years[pos]+1 if pos >= 0 and pos < year_array.length
+      end
     end
     years
   end   
@@ -96,19 +90,19 @@ module ApplicationHelper
   def link_to_coauthors(coauthors, delimiter=", ")
     coauthors.collect{|coauthor| link_to( coauthor.colleague.name, 
       show_investigator_url(:id=>coauthor.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
-        :title => " #{coauthor.colleague.abstract_count} pubs, "+(coauthor.colleague.num_intraunit_collaborators+coauthor.colleague.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
+        :title => " #{coauthor.colleague.abstract_count} pubs, "+(coauthor.colleague.num_intraunit_collaborators+coauthor.colleague.num_extraunit_collaborators).to_s+" collaborators") if coauthor.colleague.deleted_at.blank? }.compact.join(delimiter)
   end
 
   def link_to_collaborators(collaborators, delimiter=", ")
     collaborators.collect{|investigator| link_to( investigator.name, 
       show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
-        :title => " #{investigator.abstract_count} pubs, "+(investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
+        :title => " #{investigator.abstract_count} pubs, "+(investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators")  if investigator.deleted_at.blank? }.compact.join(delimiter)
   end
   
   def link_to_similar_investigators(relationships, delimiter=", ")
     relationships.collect{|relationship| link_to( "#{relationship.colleague.name} <span class='simularity'>#{relationship.mesh_tags_ic.round}</span>", 
       show_investigator_url(:id=>relationship.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
-        :title => " #{relationship.colleague.abstract_count} pubs, "+(relationship.colleague.num_intraunit_collaborators+relationship.colleague.num_extraunit_collaborators).to_s+" collaborators")}.join(delimiter)
+        :title => " #{relationship.colleague.abstract_count} pubs, "+(relationship.colleague.num_intraunit_collaborators+relationship.colleague.num_extraunit_collaborators).to_s+" collaborators") if relationship.colleague.deleted_at.blank?}.compact.join(delimiter)
   end
   
   def link_to_investigator(citation, investigator, name=nil, isMember=false) 
@@ -150,37 +144,7 @@ module ApplicationHelper
     end
     return nil
   end
-
-  def author_name(author)
-    author.last_name+',  '+author.first_name.at(0)+(author.middle_name.blank? ? '' : author.middle_name.at(0) )
-  end
-  
-  def highlightMemberInvestigator(citation,memberArray=nil)
-    if memberArray.blank?
-      authors = highlightInvestigator(citation)
-    else
-      authors = citation.authors.gsub("\n","; ")
-      authors = highlightInvestigator(citation,authors,memberArray)
-      
-    end
-    authors
-  end
-  
-  def highlightInvestigator(citation, authorList=nil,memberArray=nil)
-    if authorList.blank?
-      authors = citation.authors.gsub("\n","; ")
-    else
-      authors = authorList.gsub("\n","; ")
-    end
-    citation.investigators.each do |investigator|
-      re = Regexp.new('('+investigator.last_name.downcase+', '+investigator.first_name.at(0).downcase+'[^;]+)', Regexp::IGNORECASE)
-      isMember = (!memberArray.blank? and memberArray.include?(investigator.id))
-      authors.gsub!(re){|match| link_to_investigator(citation, investigator, author_name(investigator), isMember)}
-    end
-    authors
-  end
-  
-  
+    
   def link_to_primary_department(investigator)
     return link_to( investigator.home_department.name, show_investigators_org_url(investigator.home_department_id), :title => "Show investigators in #{investigator.home_department.name}" ) if !investigator.home_department_id.nil?
     begin
@@ -192,9 +156,12 @@ module ApplicationHelper
   end
   
   def link_to_units(appointments, delimiter="<br/>")
-      appointments.collect{ |appointment| 
-          link_to( appointment.name, show_investigators_org_url(appointment.id), 
-          :title => "Show investigators in #{appointment.name}")}.join(delimiter)
+      appointments.collect{ |appointment| link_to_unit(appointment)}.join(delimiter)
+  end
+  
+  def link_to_unit(unit)
+    link_to( unit.name, show_investigators_org_url(unit.id), 
+          :title => "Show investigators in #{unit.name}")
   end
   
   def handle_tr_format(title, object, re="", replacement="")
@@ -212,6 +179,8 @@ module ApplicationHelper
 	
 	def email_link(email)
 	  return "" if email.blank?
+	  return ""  if email.kind_of?(Array) and email.length == 0
+	  email = email[0] if email.kind_of?(Array) and email.length > 0
 	  return mail_to(email, email.split("@").join(" at "), 
           		:subject => email_subject(),
           		:encode => "javascript") 
@@ -249,5 +218,10 @@ module ApplicationHelper
       abs_path = "#{request.protocol}#{request.host_with_port}#{abs_path}"
     end
    abs_path
+  end
+  
+  def link_to_pubmed(text, abstract, tooltip=nil)
+    tooltip ||= text 
+    link_to( text, ((abstract.url.blank?) ? "http://www.ncbi.nlm.nih.gov/pubmed/"+abstract.pubmed : abstract.url), :target => '_blank', :title=>tooltip) 
   end
 end

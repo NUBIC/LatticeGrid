@@ -2,6 +2,7 @@ module GraphvizHelper
 
   require 'graphviz_config'
   include TagsHelper
+  include MeshHelper
   include ActionView::Helpers::AssetTagHelper #or whatever helpers you want
 
   def iphone_user_agent?
@@ -107,4 +108,176 @@ module GraphvizHelper
        graph_output( graph, graph_dir, params[:program], @output_format )
      end
    end
+   
+   def build_graph(analysis, program, id, distance, stringency, include_orphans)
+     # logger.warn "analysis=#{analysis}, program=#{program}, username=#{id}, distance=#{distance}, stringency=#{stringency}, include_orphans=#{include_orphans}"
+     @graph_edges=[]
+     #include_orphans = "0" if include_orphans.to_s != "1"
+     graph = graph_new(program)
+
+     graph = case analysis
+           when "member"      :  build_member_graph( graph, program, id, distance, stringency, include_orphans)
+           when "member_mesh" :  build_member_mesh_graph( graph, program, id, distance, stringency, include_orphans)
+           when "mesh"        :  build_mesh_graph( graph, program, id, distance, stringency, include_orphans)
+           when "org"         :  build_org_graph( graph, program, id, distance, stringency, include_orphans)
+           when "org_org"     :  build_org_org_graph( graph, program, id, distance, stringency, include_orphans)
+           when "org_mesh"    :  build_org_mesh_graph( graph, program, id, distance, stringency, include_orphans)
+           else                  graph_no_data(graph, "Option #{analysis} was not found")
+     end
+     graph
+   end
+
+   def build_member_graph(graph, program, id, distance, stringency, include_orphans)
+     @investigator = Investigator.find_by_username(id)
+     if @investigator.nil?
+       graph = graph_no_data(graph, "Investigator id #{id} was not found")
+     else
+       graph_newroot(graph, @investigator)
+       co_authors = @investigator.co_authors.shared_pubs(stringency)
+       graph = graph_add_nodes(program, graph, co_authors)
+       if distance != "1"
+         opts = {}
+         opts[:fillcolor] = "#E0ECF8"
+         co_authors.each do |co_author|
+            graph = graph_add_nodes(program, graph, co_author.colleague.co_authors.shared_pubs(stringency), false, opts)
+         end
+       end
+     end
+     graph
+   end
+
+   def build_member_mesh_graph(graph, program, id, distance, stringency, include_orphans)
+     @investigator = Investigator.find_by_username(id)
+     if @investigator.nil?
+       graph = graph_no_data(graph, "Investigator id #{id} was not found")
+     else
+       graph_newroot(graph, @investigator)
+       similar_investigators = @investigator.all_similar_investigators.mesh_ic(stringency)
+       graph = graph_add_nodes(program, graph, similar_investigators, true)
+       if distance == "2"
+         opts = {}
+         opts[:fillcolor] = "#E0ECF8"
+         similar_investigators.each do |similar|
+           graph = graph_add_nodes(program, graph, similar.colleague.all_similar_investigators.mesh_ic(stringency), true, opts)
+         end
+       end
+     end
+     graph
+   end
+
+   def build_mesh_graph(graph, program, id, distance, stringency, include_orphans)
+     mesh_terms = MeshHelper.do_mesh_search(id)
+     mesh_names = mesh_terms.collect(&:name)
+     colleagues=Investigator.find_tagged_with(mesh_names, :match_all => :true)
+     if colleagues.nil? or colleagues.length == 0
+       return graph_no_data(graph, "No investigators with a primary tag (or tags) of #{mesh_terms.collect(&:name)} were found")
+     end
+     filtered_colleagues = []
+     colleagues.each do |colleague|
+       filtered_colleagues << colleague if colleague.abstracts.find_tagged_with('adverse effects').length.to_i >= stringency.to_i
+     end
+     if filtered_colleagues.length == 0
+       return graph_no_data(graph, "No investigators had at least #{stringency} publications tagged with #{mesh_terms.collect(&:name)}")
+     else
+       filtered_colleagues.each do |colleague|
+         co_authors = colleague.co_authors.shared_pubs(1)
+         if  distance == "0"
+           co_authors = co_authors.collect{|ic| filtered_colleagues.include?(ic.colleague) ? ic : nil }.compact
+         end
+         if include_orphans == "1" or co_authors.length > 0
+           graph_secondaryroot(graph, colleague) 
+           graph = graph_add_nodes(program, graph, co_authors) if co_authors.length > 0
+           if distance == "2"
+             opts = {}
+             opts[:fillcolor] = "#E0ECF8"
+             co_authors.each do |inner_colleague|
+               inner_coauthors=inner_colleague.colleague.co_authors.shared_pubs(stringency)
+               graph = graph_add_nodes(program, graph, inner_coauthors, false, opts)
+             end
+           end
+         end
+       end
+     end
+     graph
+   end
+
+
+
+   def build_org_graph(graph, program, id, distance, stringency,include_orphans)
+     colleagues = get_colleagues(id)
+     #slogger.info "colleagues: #{colleagues.length}"
+     if colleagues.nil?
+       graph = graph_no_data(graph, "No colleagues found in #{org.name}")
+     else
+       colleagues.each do |colleague|
+         co_authors = colleague.co_authors.shared_pubs(stringency)
+         if  distance == "0"
+           co_authors = co_authors.collect{|ic| colleagues.include?(ic.colleague) ? ic : nil }.compact
+         end
+         if include_orphans == "1" or co_authors.length > 0
+           graph_secondaryroot(graph, colleague) 
+           graph = graph_add_nodes(program, graph, co_authors) if co_authors.length > 0
+           if distance == "2"
+             opts = {}
+             opts[:fillcolor] = "#E0ECF8"
+             co_authors.each do |inner_colleague|
+               inner_coauthors=inner_colleague.colleague.co_authors.shared_pubs(stringency)
+               graph = graph_add_nodes(program, graph, inner_coauthors, false, opts)
+             end
+           end
+         end
+       end
+     end
+     graph
+   end
+
+   def build_org_org_graph(graph, program, id, distance, stringency, include_orphans)
+     orgs = get_orgs(id)
+     all_orgs = OrganizationalUnit.all - orgs
+     #slogger.info "colleagues: #{colleagues.length}"
+     if orgs.nil?
+       graph = graph_no_data(graph, "No orgs found")
+     else
+       orgs.each do |org|
+         all_orgs.each do |intersecting_org|
+           shared_pubs = org.shared_with_org(intersecting_org)
+           if shared_pubs.length >= stringency.to_i
+             graph_secondaryroot(graph, org, {:URL=>show_org_graphviz_url(org.id), :tooltip=>"Total publications: #{org.organization_abstracts.length}; Faculty: #{org.all_faculty.length}, Members: #{org.all_members.length}" }) 
+             graph = graph_add_org_node(program, graph, org, intersecting_org, shared_pubs, false, {:URL=>show_org_org_graphviz_url(intersecting_org.id), :tooltip=>"Total publications: #{intersecting_org.organization_abstracts.length}; Faculty: #{intersecting_org.all_faculty.length}, Members: #{intersecting_org.all_members.length}"}) if shared_pubs.length > 0
+           end
+         end
+       end
+     end
+     graph
+   end
+
+
+   def build_org_mesh_graph(graph, program, id, distance, stringency, include_orphans)
+     colleagues = get_colleagues(id)
+     # logger.info "colleagues: #{colleagues.length}"
+     if colleagues.nil?
+       graph = graph_no_data(graph, "No colleagues found in #{org.name}")
+     else
+       colleagues.each do |colleague|
+         similar_investigators = colleague.all_similar_investigators.mesh_ic(stringency)
+         if  distance == "0"
+           similar_investigators = similar_investigators.collect{|ic| colleagues.include?(ic.colleague) ? ic : nil }.compact
+         end
+         if include_orphans == "1" or similar_investigators.length > 0
+           graph_secondaryroot(graph, colleague)
+           graph = graph_add_nodes(program, graph, similar_investigators, true) if similar_investigators.length > 0
+           if distance == "2"
+             opts = {}
+             opts[:fillcolor] = "#E0ECF8"
+             similar_investigators.each do |similar|
+               inner_similar_investigators = similar.colleague.all_similar_investigators.mesh_ic(stringency)
+               graph = graph_add_nodes(program, graph, inner_similar_investigators, true, opts)
+             end
+           end
+         end
+       end
+     end
+     graph
+   end
+   
 end

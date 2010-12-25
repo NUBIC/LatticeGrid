@@ -42,10 +42,10 @@
 		<%= @publication.pubmedcentral.blank? ? "N/A" : @publication.pubmedcentral %>
 	</div>
 	<div id="linkout">
-		<%= link_to 'Go to PubMed entry', @publication.url  %>
+		<%= link_to_pubmed('Go to PubMed entry', @publication) %>
 	</div>
 	<div id="linkout">
-		<%= link_to 'View citation formatted for EndNote', endnote_abstract_url(@publication)  %>
+		<%= link_to('View citation formatted for EndNote', endnote_abstract_url(@publication) ) %>
 	</div>
 </div>
 

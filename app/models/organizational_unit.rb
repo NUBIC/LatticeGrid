@@ -15,27 +15,22 @@ class OrganizationalUnit < ActiveRecord::Base
       :conditions => ["investigator_appointments.type = 'Member' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :now)", {:now => Date.today }]
   has_many :primary_faculty,  
     :class_name => "Investigator",
-    :order => "lower(last_name), lower(first_name)",
     :foreign_key => "home_department_id"
-  has_many :primary_faculty_abstracts,  
+  has_many :primary_faculty_publications,  
     :source => :investigator_abstracts,
     :conditions => ['investigator_abstracts.end_date is null'],
     :through => :primary_faculty
   has_many :associated_faculty,  
     :source => :investigator,
-    :order => "lower(last_name), lower(first_name)",
-    :through => :investigator_appointments
+     :through => :investigator_appointments
   has_many :joint_faculty,  
     :source => :investigator,
-    :order => "last_name, first_name",
     :through => :joint_appointments
   has_many :secondary_faculty,  
     :source => :investigator,
-    :order => "last_name, first_name",
     :through => :secondary_appointments
   has_many :members,
      :source => :investigator,
-     :order => "lower(last_name), lower(first_name)",
      :through => :memberships
   has_many :organization_abstracts,
         :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
@@ -59,24 +54,32 @@ class OrganizationalUnit < ActiveRecord::Base
     end
     
     def all_members
-      self.self_and_descendants.collect{|unit| unit.members}.flatten.uniq
+      self.self_and_descendants.collect{|unit| unit.members}.flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
     end
 
     def faculty
-      (self.primary_faculty + self.associated_faculty).uniq
+      (self.primary_faculty + self.associated_faculty).sort {|x,y| x.sort_name <=> y.sort_name }.uniq
     end
 
     def all_primary_faculty
-      self.self_and_descendants.collect(&:primary_faculty).flatten
+      self.self_and_descendants.collect(&:primary_faculty).flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    end
+
+    def all_joint_faculty
+      self.self_and_descendants.collect(&:joint_faculty).flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    end
+
+    def all_secondary_faculty
+      self.self_and_descendants.collect(&:secondary_faculty).flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
     end
 
     # associated_faculty includes joint, secondary and members
     def all_associated_faculty
-      self.self_and_descendants.collect(&:associated_faculty).flatten
+      self.self_and_descendants.collect(&:associated_faculty).flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
     end
 
     def all_faculty
-      (all_primary_faculty + all_associated_faculty).uniq
+      (all_primary_faculty + all_associated_faculty).sort {|x,y| x.sort_name <=> y.sort_name }.uniq
     end
 
     def all_faculty_publications
@@ -88,8 +91,17 @@ class OrganizationalUnit < ActiveRecord::Base
       faculty = (all_primary_faculty + all_associated_faculty).uniq
       faculty.collect{|f| f.abstracts.abstracts_by_date(start_date, end_date)}.flatten.uniq
     end
-    
-    
+
+    def all_ccsg_faculty_publications_by_date( start_date, end_date )
+      faculty = (all_primary_faculty + all_associated_faculty).uniq
+      faculty.collect{|f| f.abstracts.ccsg_abstracts_by_date(start_date, end_date)}.flatten.uniq
+    end
+
+    def shared_with_org( org_id )
+       abs = self.abstracts.all
+       OrganizationalUnit.find(org_id).abstracts.all & abs
+    end
+      
     def abstract_data( page=1 )
        self.abstracts.paginate(:page => page,
         :per_page => 20, 
@@ -144,7 +156,7 @@ class OrganizationalUnit < ActiveRecord::Base
     end
     primary_orgs = find(:all, :include => [:primary_faculty], :conditions => [' investigators.id > 0'])
     orgs=find(:all, :order => "id", 
-      :include => [:primary_faculty_abstracts], 
+      :include => [:primary_faculty_publications], 
       :conditions => [' id IN (:org_ids) ', 
  		      {:org_ids => primary_orgs.collect(&:id) }])
     init_matrix(orgs,abstracts)

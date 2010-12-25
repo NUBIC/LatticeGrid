@@ -39,9 +39,9 @@
 <% for unit in units %>
 	<tr valign="bottom" colspan="3">
 		<td>
-			<%= link_to( image_tag("base.gif"), show_org_graph_url(unit.id), :title => "Flash graph of collaborations through co-authored publications ") %> 
-			<%= link_to( image_tag("base.gif"), show_org_graphviz_url(unit.id), :title => "Graphviz graph of collaborations through co-authored publications ") %> 
-			<%= link_to( image_tag("base.gif"), show_org_mesh_graphviz_url(unit.id), :title => "MeSH similarities graph for investigators ") %> 
+			<%= link_to( image_tag("base.gif"), show_org_graph_url(unit.id), :title => "Authorship graph ") %> 
+			<%= link_to( image_tag("cluster_icon_16.png"), show_org_graphviz_url(unit.id), :title => "Authorship network diagram ") %> 
+			<%= link_to( image_tag("cluster_icon_16.png"), show_org_mesh_graphviz_url(unit.id), :title => "MeSH similarities network diagram") %> 
 			<%= link_to( unit.name, org_url(unit.id), :title => "List publications by faculty members") %>
 		</td>
 		<% if show_unit_type %>

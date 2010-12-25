@@ -48,7 +48,7 @@
 		<% form_for( :abstract, :url => {:controller => :abstracts, :action => :investigator_listing}, :html => { :method => :post, :class => "p" })  do |form| %> 
 		<p>Select an investigator to get a list of publications associated with that investigator. You can use this report to remove a publication from all lists.</p>
 
-	  	<p><%= collection_select '', 'id', @investigators, :id, :name  %> Select investigator </p>
+	  	<p><%= collection_select '', 'id', @investigators, :username, :sort_name, {}, :size=>"30"  %> Select investigator </p>
 		<p><%= select_tag(:format, 
 				options_for_select([["HTML","html"], ["XML", "xml"],["PDF", "pdf"],["Excel", "xls"], ["Word", "doc"]], [params[:format]])  
 				) %> select format </p>

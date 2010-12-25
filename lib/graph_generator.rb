@@ -38,16 +38,23 @@ end
 
 def graph_output( g, path, file_name, output_format )
   output_format = 'svg' if output_format == 'xml'
+  file_name = clean_filename(file_name)
+#  logger.info "graph_output( #{g}, #{path}, #{file_name}, #{output_format} )"
+  graph_output_format = path+file_name+"."+output_format
   check_path(path)
   begin
     Dir.entries(path)
-    g.output( output_format => path+file_name+"."+output_format )
+    g.output( output_format => graph_output_format )
   rescue Exception => error
     logger.error("graph_output error: #{error.message}")
     logger.error("path is #{path}; filename is #{file_name}, outputformat is #{output_format}.")
     puts "unable to link to directory #{path} or write out file"
   end
 
+end
+
+def clean_filename(filename)
+  filename.downcase.gsub(/[^a-z0-9]+/,'_')
 end
 
 def check_path(path)
@@ -156,15 +163,15 @@ end
 
 def graph_addedge(graph, parent, child, url, tooltip, label, weight )
   gedge = graph.add_edge( parent, child,
-              :edgeURL => url, 
+              :edgeURL => "#{url}", 
               :edgetarget=>'_top', 
               :edgetooltip => tooltip, 
               :minlen => '0.15',
-              :label => label, 
+              :label => "#{label}", 
               :labelURL => url, 
               :labeltarget=>'_top', 
               :labeltooltip => tooltip, 
-              :weight => weight  )
+              :weight => "#{weight}"  )
 end
 
 def edge_label(connection, root, leaf)
@@ -173,29 +180,70 @@ def edge_label(connection, root, leaf)
   "tags: "+ trunc_and_join_array((root.tag_list & leaf.tag_list))
 end
 
+def org_edge_label(root, leaf, shared_pubs)
+  "#{shared_pubs.length} shared publications between #{leaf.name} and #{root.name}; " 
+end
+
+def graph_add_org_node(program, g, root, leaf, shared_pubs, mesh_only=false, node_opts={}, edege_opts={} )
+#    g.add_node(plant[0]).label = plant[1]+"\\n"+ plant[2]+", "+plant[3]+"\\n("+plant[0]+")"
+  @graph_edges ||= {}
+  return g if leaf.nil?
+  root_node = g.get_node( root.id.to_s )
+  return g if root_node.nil?
+  if ! @graph_edges.include?("#{root.id.to_s}_#{leaf.id.to_s}") 
+    leaf_node = g.get_node( leaf.id.to_s )
+    nopts = node_opts.dup
+    leaf_node = graph_addleaf(g, leaf, nopts) if leaf_node.nil?  # leaf_node = graph_addleaf(g, leaf, node_opts)
+    @graph_edges << "#{root.id.to_s}_#{leaf.id.to_s}"
+    @graph_edges << "#{leaf.id.to_s}_#{root.id.to_s}"
+    tooltiptext = org_edge_label(root, leaf, shared_pubs)
+    label = shared_pubs.length.to_s
+    weight = shared_pubs.length.to_s
+    this_edge = graph_addedge(g, root_node, leaf_node, show_org_org_graphviz_url(leaf.id), tooltiptext, label, weight )
+  end
+  return g
+end
+
+def graph_add_node(program, g, root, connection, mesh_only=false, node_opts={}, edege_opts={} )
+#    g.add_node(plant[0]).label = plant[1]+"\\n"+ plant[2]+", "+plant[3]+"\\n("+plant[0]+")"
+  @graph_edges ||= {}
+  return g if connection.nil?
+  root_node = g.get_node( root.id.to_s )
+  return g if root_node.nil?
+  if ! @graph_edges.include?("#{root.id.to_s}_#{connection.colleague_id.to_s}") 
+    leaf = connection.colleague
+    leaf_node = g.get_node( leaf.id.to_s )
+    nopts = node_opts.dup
+    leaf_node = graph_addleaf(g, leaf, nopts) if leaf_node.nil?  # leaf_node = graph_addleaf(g, leaf, node_opts)
+    @graph_edges << "#{root.id.to_s}_#{leaf.id.to_s}"
+    @graph_edges << "#{leaf.id.to_s}_#{root.id.to_s}"
+    tooltiptext = edge_label(connection, root, leaf)
+    label = connection.publication_cnt
+    weight = (mesh_only or connection.publication_cnt == 0) ? 3000/(connection.mesh_tags_ic+500) : connection.publication_cnt
+    this_edge = graph_addedge(g, root_node, leaf_node, investigator_colleagues_copublication_url(connection.id), tooltiptext, label, weight )
+  end
+  return g
+end
+
 def graph_add_nodes(program, g, connections, mesh_only=false, node_opts={}, edege_opts={} )
 #    g.add_node(plant[0]).label = plant[1]+"\\n"+ plant[2]+", "+plant[3]+"\\n("+plant[0]+")"
   @graph_edges ||= {}
   return g if connections.nil? or connections.length == 0
   root = connections[0].investigator
   root_node = g.get_node( root.id.to_s )
-  if root_node.nil? then
-    return g
-  end
+  return g if root_node.nil?
   connections.each do |connection|
-    if ! @graph_edges.include?("#{root.id}_#{connection.colleague_id}") 
-      leaf = connection.colleague
-      leaf_node = g.get_node( leaf.id.to_s )
-      nopts = node_opts.dup
-      leaf_node = graph_addleaf(g, leaf, nopts) if leaf_node.nil?  # leaf_node = graph_addleaf(g, leaf, node_opts)
-      @graph_edges << "#{root.id}_#{leaf.id}"
-      @graph_edges << "#{leaf.id}_#{root.id}"
-      tooltiptext = edge_label(connection, root, leaf)
-      label = connection.publication_cnt
-      weight = (mesh_only or connection.publication_cnt == 0) ? 3000/(connection.mesh_tags_ic+500) : connection.publication_cnt
-      this_edge = graph_addedge(g, root_node, leaf_node, investigator_colleagues_copublication_url(connection.id), tooltiptext, label, weight )
-    end
+    g = graph_add_node(program, g, root, connection, mesh_only=false, node_opts={}, edege_opts={} )
   end
   return g
 end
+
+def  trunc_and_join_array(array, count=20, delimiter=", ")
+  if array.length > count.to_i
+    array[0,count.to_i].join(delimiter)+'…'
+  else
+    array.join(delimiter)
+  end
+end
+
 

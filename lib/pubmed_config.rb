@@ -1,3 +1,11 @@
+require 'bio' #require bioruby!
+require 'pubmedext'
+begin
+  Bio::NCBI.default_email = "wakibbe@me.com"
+rescue
+  puts "using old bioruby"
+end
+
 # LatticeGrid prefs:
 # turn on lots of output
 @debug = false

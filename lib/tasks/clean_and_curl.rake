@@ -20,7 +20,7 @@ namespace :cache do
           system("rm -r #{name}")
         end
       end
-        files = %w{programs.html orgs.html mesh.html}
+        files = %w{programs.html orgs.html mesh.html mesh.json mesh.xml}
       files.each do |name|
         name="#{public_path}/#{name}"
         if File.exist?(name) then

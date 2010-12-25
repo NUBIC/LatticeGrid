@@ -2,12 +2,12 @@ class GraphvizController < ApplicationController
 
   caches_page( :show_member, :show_member_mesh, :show_org, :show_org_mesh) if CachePages()
 
-  # GET /admins
-  # GET /admins.xml
   require 'graphviz_config'
   require 'csv_generator'
   require 'graph_generator'
+
   helper :all
+
   include GraphvizHelper
   include MeshHelper # for do_mesh_search
 
@@ -24,12 +24,7 @@ class GraphvizController < ApplicationController
   end 
 
   def show_mesh
-    id=params[:id]
-    if  id.to_i.to_s == id
-      mesh_terms = Tag.find_all_by_id(id)
-    else
-      mesh_terms = do_mesh_search(id)
-    end
+    mesh_terms = MeshHelper.do_mesh_search(params[:id])
     @name=mesh_terms.collect(&:name).join(', ')
     params[:analysis]="mesh"
     show_core
@@ -40,6 +35,12 @@ class GraphvizController < ApplicationController
     params[:analysis]="org"
     show_core
    end 
+
+   def show_org_org
+     @name = get_org_name(params[:id])
+     params[:analysis]="org_org"
+     show_core
+    end 
 
   def show_org_mesh
     @name = get_org_name(params[:id])
@@ -78,7 +79,7 @@ class GraphvizController < ApplicationController
   
   def show_core
     params[:program] ||= "neato"
-     set_graphviz_defaults(params)
+    set_graphviz_defaults(params)
     
     params[:format] =  nil
     if !params[:id].blank? then
@@ -89,153 +90,7 @@ class GraphvizController < ApplicationController
       redirect_to show_org_graph_path(1)
     end 
   end 
-    
-  def build_graph(analysis, program, id, distance, stringency, include_orphans)
-    # logger.warn "analysis=#{analysis}, program=#{program}, username=#{id}, distance=#{distance}, stringency=#{stringency}, include_orphans=#{include_orphans}"
-    @graph_edges=[]
-    #include_orphans = "0" if include_orphans.to_s != "1"
-    graph = graph_new(program)
-    
-    graph = case analysis
-          when "member"      :  build_member_graph( graph, program, id, distance, stringency, include_orphans)
-          when "member_mesh" :  build_member_mesh_graph( graph, program, id, distance, stringency, include_orphans)
-          when "mesh"        :  build_mesh_graph( graph, program, id, distance, stringency, include_orphans)
-          when "org"         :  build_org_graph( graph, program, id, distance, stringency, include_orphans)
-          when "org_mesh"    :  build_org_mesh_graph( graph, program, id, distance, stringency, include_orphans)
-          else                  graph_no_data(graph, "Option #{analysis} was not found")
-    end
-    graph
-  end
-  
-  def build_member_graph(graph, program, id, distance, stringency, include_orphans)
-    @investigator = Investigator.find_by_username(id)
-    if @investigator.nil?
-      graph = graph_no_data(graph, "Investigator id #{id} was not found")
-    else
-      graph_newroot(graph, @investigator)
-      co_authors = @investigator.co_authors.shared_pubs(stringency)
-      graph = graph_add_nodes(program, graph, co_authors)
-      if distance != "1"
-        opts = {}
-        opts[:fillcolor] = "#E0ECF8"
-        co_authors.each do |co_author|
-           graph = graph_add_nodes(program, graph, co_author.colleague.co_authors.shared_pubs(stringency), false, opts)
-        end
-      end
-    end
-    graph
-  end
-
-  def build_member_mesh_graph(graph, program, id, distance, stringency, include_orphans)
-    @investigator = Investigator.find_by_username(id)
-    if @investigator.nil?
-      graph = graph_no_data(graph, "Investigator id #{id} was not found")
-    else
-      graph_newroot(graph, @investigator)
-      similar_investigators = @investigator.all_similar_investigators.mesh_ic(stringency)
-      graph = graph_add_nodes(program, graph, similar_investigators, true)
-      if distance == "2"
-        opts = {}
-        opts[:fillcolor] = "#E0ECF8"
-        similar_investigators.each do |similar|
-          graph = graph_add_nodes(program, graph, similar.colleague.all_similar_investigators.mesh_ic(stringency), true, opts)
-        end
-      end
-    end
-    graph
-  end
-
-  def build_mesh_graph(graph, program, id, distance, stringency, include_orphans)
-    if  id.to_i.to_s == id
-      mesh_terms = Tag.find_all_by_id(id)
-    else
-      mesh_terms = do_mesh_search(id)
-    end
-    mesh_ids = mesh_terms.collect(&:id)
-    colleagues=Investigator.for_tag_ids(mesh_ids)
-    if colleagues.nil?
-      graph = graph_no_data(graph, "No mesh_ids found: #{mesh_terms.collect(&:name)}")
-     else
-      colleagues.each do |colleague|
-        co_authors = colleague.co_authors.shared_pubs(1)
-        if  distance == "0"
-          co_authors = co_authors.collect{|ic| colleagues.include?(ic.colleague) ? ic : nil }.compact
-        end
-        if include_orphans == "1" or co_authors.length > 0
-          graph_secondaryroot(graph, colleague) 
-          graph = graph_add_nodes(program, graph, co_authors) if co_authors.length > 0
-          if distance == "2"
-            opts = {}
-            opts[:fillcolor] = "#E0ECF8"
-            co_authors.each do |inner_colleague|
-              inner_coauthors=inner_colleague.colleague.co_authors.shared_pubs(stringency)
-              graph = graph_add_nodes(program, graph, inner_coauthors, false, opts)
-            end
-          end
-        end
-      end
-    end
-    graph
-  end
-
-
- 
-  def build_org_graph(graph, program, id, distance, stringency,include_orphans)
-    colleagues = get_colleagues(id)
-    #slogger.info "colleagues: #{colleagues.length}"
-    if colleagues.nil?
-      graph = graph_no_data(graph, "No colleagues found in #{org.name}")
-    else
-      colleagues.each do |colleague|
-        co_authors = colleague.co_authors.shared_pubs(stringency)
-        if  distance == "0"
-          co_authors = co_authors.collect{|ic| colleagues.include?(ic.colleague) ? ic : nil }.compact
-        end
-        if include_orphans == "1" or co_authors.length > 0
-          graph_secondaryroot(graph, colleague) 
-          graph = graph_add_nodes(program, graph, co_authors) if co_authors.length > 0
-          if distance == "2"
-            opts = {}
-            opts[:fillcolor] = "#E0ECF8"
-            co_authors.each do |inner_colleague|
-              inner_coauthors=inner_colleague.colleague.co_authors.shared_pubs(stringency)
-              graph = graph_add_nodes(program, graph, inner_coauthors, false, opts)
-            end
-          end
-        end
-      end
-    end
-    graph
-  end
-  
-  def build_org_mesh_graph(graph, program, id, distance, stringency, include_orphans)
-    colleagues = get_colleagues(id)
-    # logger.info "colleagues: #{colleagues.length}"
-    if colleagues.nil?
-      graph = graph_no_data(graph, "No colleagues found in #{org.name}")
-    else
-      colleagues.each do |colleague|
-        similar_investigators = colleague.all_similar_investigators.mesh_ic(stringency)
-        if  distance == "0"
-          similar_investigators = similar_investigators.collect{|ic| colleagues.include?(ic.colleague) ? ic : nil }.compact
-        end
-        if include_orphans == "1" or similar_investigators.length > 0
-          graph_secondaryroot(graph, colleague)
-          graph = graph_add_nodes(program, graph, similar_investigators, true) if similar_investigators.length > 0
-          if distance == "2"
-            opts = {}
-            opts[:fillcolor] = "#E0ECF8"
-            similar_investigators.each do |similar|
-              inner_similar_investigators = similar.colleague.all_similar_investigators.mesh_ic(stringency)
-              graph = graph_add_nodes(program, graph, inner_similar_investigators, true, opts)
-            end
-          end
-        end
-      end
-    end
-    graph
-  end
-  
+   
   def get_org_name(id)
     # logger.info "id: #{id}"
     ids=id.split(",")
@@ -243,6 +98,15 @@ class GraphvizController < ApplicationController
       OrganizationalUnit.find(:all, :conditions => ["id in (:ids)", {:ids=>ids }]).collect(&:name).join(", ")
     else
       OrganizationalUnit.find(id).name
+    end
+  end
+  
+  def get_orgs(id)
+    ids=id.split(",")
+    if ids.length > 1
+      OrganizationalUnit.find(:all, :conditions => ["id in (:ids)", {:ids=>ids }])
+    else
+      OrganizationalUnit.find_all_by_id(id)
     end
   end
   

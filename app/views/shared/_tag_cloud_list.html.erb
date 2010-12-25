@@ -1,15 +1,16 @@
 <% include_breaks ||= false %>
+<% include_more_link ||= true %>
 <% tag_classes ||= %w(tagcloud1 tagcloud2 tagcloud3 tagcloud4 tagcloud6) %>
 <% if ! tags.nil? %>
 	<% tag_cloud tags, tag_classes do |tag, css_class| %>
 		<% begin %>
-		<%= link_to tag.name, tagged_abstracts_abstract_url(URI.escape(tag.name)), :class => css_class, :title => "Total of #{tag.count} tags" %>
+		<%= link_to tag.name, tagged_abstracts_abstract_url(URI.escape(tag.name)), :class => css_class, :title => "Click to see all publications tagged with '#{tag.name}'" -%><%= link_to image_tag( "base.gif", :width=>"18px", :height=>"18px", :style=>"margin-bottom:-3px;" ), show_mesh_graphviz_url(tag.id), :class => css_class, :title => "Graph investigators tagged with MeSH term '#{tag.name}'" -%>; 
 		<% rescue %>
 		<%= tag.name %>
 		<% end %>
 		<%= "<br/>" if include_breaks %>
 	<% end %>
-	<% if controller.controller_name and ! investigator.nil? %> 
+	<% if controller.controller_name and ! investigator.nil? and include_more_link %> 
 		<%= link_to "&#8230;more", show_all_tags_investigator_url(investigator.username), :class => "tagcloud4" %> 
 	<% end %>
 <% end %>

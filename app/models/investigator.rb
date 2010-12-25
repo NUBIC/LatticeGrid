@@ -20,7 +20,7 @@ class Investigator < ActiveRecord::Base
       :order=>'investigator_colleagues.publication_cnt desc'
   has_many :colleagues, :through => :investigator_colleagues
   has_many :abstracts, :through => :investigator_abstracts,
-         :conditions => ['investigator_abstracts.end_date is null or investigator_abstracts.end_date >= :now', {:now => Date.today }]
+         :conditions => ['investigator_abstracts.end_date is null']
 #  has_many :investigator_abstracts_meshes
 #  has_many :meshes, :through => :investigator_abstracts_meshes
   has_many :investigator_appointments,
@@ -35,7 +35,11 @@ class Investigator < ActiveRecord::Base
   has_many :joint_appointments, :source => :organizational_unit, :through => :joints
   has_many :secondary_appointments, :source => :organizational_unit, :through => :secondaries
   has_many :memberships, :source => :organizational_unit, :through => :member_appointments
-  belongs_to :home_department, :class_name => 'OrganizationalUnit'
+  # foreign_key is a fix for an issue in rails 2.3.5 and earlier
+  belongs_to :home_department, :class_name => 'OrganizationalUnit', :foreign_key => 'home_department_id'
+
+  accepts_nested_attributes_for :investigator_appointments
+  accepts_nested_attributes_for :member_appointments
 
   named_scope :full_time, :conditions => "appointment_basis = 'FT'"
   named_scope :tenure_track, :conditions => "appointment_type = 'Regular'"
@@ -44,7 +48,8 @@ class Investigator < ActiveRecord::Base
   named_scope :investigator_only, :conditions => "appointment_track = 'Investigator'"
   named_scope :clinician, :conditions => "appointment_track like '%Clinician%'"
   named_scope :clinician_only, :conditions => "appointment_track = 'Clinician'"
-  
+  named_scope :by_name, :order => "lower(last_name), lower(first_name)"
+
   named_scope :for_tag_ids, lambda { |*ids|
       {:joins => [:taggings], 
        :conditions => ['taggings.tag_id IN (:ids) ', {:ids => ids.first}] }
@@ -54,8 +59,8 @@ class Investigator < ActiveRecord::Base
 #  default_scope :include => :abstracts
   #default_scope :order => 'lower(investigators.last_name),lower(investigators.first_name)'
 
-  validates_uniqueness_of :username
   validates_presence_of :username
+  validates_uniqueness_of :username
 
   def self.include_deleted( id=nil )
     with_exclusive_scope do
@@ -67,8 +72,28 @@ class Investigator < ActiveRecord::Base
     end
   end
 
+  def self.find_by_username_including_deleted( val )
+    with_exclusive_scope do
+        find_by_username(val)
+    end
+  end
+
+  def self.find_by_email_including_deleted( val )
+    with_exclusive_scope do
+        find_by_email(val)
+    end
+  end
+
   def name
     [first_name, last_name].join(' ')
+  end
+
+  def full_name
+     (degrees.blank?) ? [first_name, middle_name, last_name].join(' ') : [[first_name, middle_name, last_name].join(' '), degrees].join(', ')
+  end
+
+  def sort_name
+     [[last_name, first_name].join(', '), middle_name].join(' ')
   end
 
   def abstract_count
@@ -114,7 +139,7 @@ class Investigator < ActiveRecord::Base
   end
 
   def self.distinct_memberships()
-      find(:all, :joins => [:investigator_appointments], :select => 'DISTINCT organizational_unit_id', :conditions=>"type='Member'").collect(&:organizational_unit_id)
+      find(:all, :joins => [:member_appointments], :select => 'DISTINCT organizational_unit_id').collect(&:organizational_unit_id)
   end
 
   def self.distinct_other_appointments_or_memberships()
@@ -126,7 +151,7 @@ class Investigator < ActiveRecord::Base
   end
   
   def self.all_members()
-      find(:all, :joins => [:investigator_appointments], :conditions=>"type='Member'")
+      find(:all, :joins => [:member_appointments])
   end
 
   def self.not_members()

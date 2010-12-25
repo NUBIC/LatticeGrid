@@ -1,6 +1,7 @@
 class InvestigatorColleague < ActiveRecord::Base
   belongs_to :investigator
-  belongs_to :colleague, :class_name => 'Investigator'
+  #need this for a bug in Rails 2.3.5
+  belongs_to :colleague, :class_name => 'Investigator', :foreign_key => 'colleague_id'
   
   def publications()
     Abstract.find(:all, 

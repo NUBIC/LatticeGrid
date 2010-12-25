@@ -8,9 +8,9 @@
 <% @bold_members = true if @bold_members.nil? %>
 
 
-<h1><%= @unit.name %> Overview <a href='' title="citations per year"> <%= sparkline_tag( abstracts_per_year(@all_abstracts, @year_array.sort), :type => 'bar') if ! @all_abstracts.nil? && @all_abstracts.length > 10 %></a></h1>
+<h1><%= @unit.name %> Overview <a href='' title="publications per year"> <%= sparkline_tag( abstracts_per_year(@all_abstracts, @year_array.sort), :type => 'bar') if ! @all_abstracts.nil? && @all_abstracts.length > 10 %></a></h1>
 <% if @include_graph_link %>
-<p><%= link_to( "Graph co-publications by faculty members in <i>#{@unit.name}</i>", show_org_graph_url(@unit.id)) + " &nbsp; &nbsp; " +  link_to( "GraphViz version of this graph", show_org_graphviz_url(@unit.id)) + " &nbsp; &nbsp; " + link_to( "MeSH similarities version of this graph", show_org_mesh_graphviz_url(@unit.id)) %></p>
+<p><%= link_to( "Authorship graph in <i>#{@unit.name}</i>", show_org_graph_url(@unit.id)) + " &nbsp; &nbsp; " +  link_to( "Authorship network diagram", show_org_graphviz_url(@unit.id)) + " &nbsp; &nbsp; " + link_to( "MeSH-based network diagram", show_org_mesh_graphviz_url(@unit.id)) + " &nbsp; &nbsp; " + link_to( "Unit-to-Unit co-authorship network diagram", show_org_org_graphviz_url(@unit.id)) %></p>
 
 <% end %>
 

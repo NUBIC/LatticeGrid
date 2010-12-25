@@ -1,12 +1,75 @@
 require 'net/ldap'
+require 'config' # has cleanup_campus method
 require 'ldap_config'
+require 'investigator_appointment_utilities'
+
+def ValidateUser(data_row)
+  # assumed header values
+  # username | netid
+  # Last Name
+  # First Name
+  # Email
+
+  # look for netid based on email or name
+  pi_data = []
+  user = Investigator.new
+  user = SetInvestigatorIdentity(user,data_row)
+  if !user.username.blank?
+    pi_data = GetLDAPentry(user.username)
+  end
+  if pi_data.length != 1 and !user.email.blank?
+    pi_data = GetLDAPentryFromEmail(user.email)
+  end
+  if pi_data.length != 1 and !user.last_name.blank?
+    given = user.first_name.split(". ").first
+    if given == user.first_name 
+      pi_data = GetLDAPentryFromName(given+" "+user.last_name)
+    else
+      pi_data = GetLDAPentryFromName(given+"* "+user.last_name)
+    end
+  end
+  if pi_data.length != 1 and !user.last_name.blank?
+    given = user.first_name.split(". ").first
+    pi_data = GetLDAPentryFromName(given+"* "+user.last_name)
+  end
+  if pi_data.length == 1
+    begin
+      ldap_rec=CleanPIfromLDAP(pi_data)
+      user_ldap = BuildPIobject(ldap_rec)
+      user_ldap.email = "" if user_ldap.email.blank?
+      puts user.first_name+"\t"+user.last_name+"\t"+user.email+"\t"+user_ldap.first_name + "\t" + user_ldap.last_name + "\t"+user_ldap.email + "\t"+user_ldap.username
+    rescue   Exception => exc
+      puts "#{exc.message}: error trying to output record: #{user_ldap.inspect}"
+    end
+  else
+    puts user.first_name+"\t"+user.last_name+"\t"+user.email+"\t"+ "NO MATCH"+"\t"+ "NO MATCH"+"\t"+ "NO MATCH"+"\t"+ "NO MATCH"
+  end
+end
+
+
 
 def GetLDAPentry(uid)
-  return nil if ldap_perform_search().blank? 
+  return nil if !ldap_perform_search? 
   return nil if uid.blank? 
   ldap_connection = Net::LDAP.new( :host => ldap_host() )
   id_filter = Net::LDAP::Filter.eq( "uid", uid)
   return ldap_connection.search( :base => ldap_treebase(), :filter => id_filter)
+end
+
+def GetLDAPentryFromEmail(email)
+  return nil if !ldap_perform_search? 
+  return nil if email.blank? 
+  ldap_connection = Net::LDAP.new( :host => ldap_host() )
+  mail_filter = Net::LDAP::Filter.eq( "mail", email)
+  return ldap_connection.search( :base => ldap_treebase(), :filter => mail_filter)
+end
+
+def GetLDAPentryFromName(name)
+  return nil if !ldap_perform_search?  
+  return nil if name.blank? 
+  ldap_connection = Net::LDAP.new( :host => ldap_host() )
+  cn_filter = Net::LDAP::Filter.eq( "cn", name)
+  return ldap_connection.search( :base => ldap_treebase(), :filter => cn_filter)
 end
 
 def CleanLDAPvalue(val)
@@ -47,10 +110,12 @@ def BuildPIobject(pi_data)
   begin 
     if thePI.nil? || thePI.id < 1 then
       thePI = Investigator.new(
-        :username => pi_data["uid"], 
-        :last_name => pi_data["sn"],
-        :middle_name => ((pi_data["displayname"].split(" ").length >2) ? pi_data["displayname"].split(" ")[1] : pi_data["numiddlename"]),
-        :first_name => pi_data["givenName"])
+        :username =>  CleanLDAPvalue(pi_data["uid"]), 
+        :last_name => CleanLDAPvalue(pi_data["sn"]),
+        :middle_name => ((CleanLDAPvalue(pi_data["displayname"]).split(" ").length > 2) ? pi_data["displayname"].split(" ")[1] : pi_data["numiddlename"]),
+        :first_name => CleanLDAPvalue(pi_data["givenName"]),
+        :email => CleanLDAPvalue(pi_data["mail"])
+        )
     end
   rescue ActiveRecord::RecordInvalid => error
     puts "BuildPIobject: raised an error for an investigator with the id of '#{pi_data.uid} with an error of #{error.inspect}"
@@ -66,21 +131,18 @@ def MergePIrecords(thePI, pi_data)
   # trust LDAP
   # this database does not have a campus_address field
   if ! pi_data.blank?
-    thePI.title = pi_data["title"] || thePI.title
-    thePI.business_phone = pi_data["telephoneNumber"] || thePI.business_phone
-    thePI.employee_id = pi_data["employeeNumber"] || thePI.employee_id
-    thePI.address1 = pi_data["postalAddress"] || thePI.address1
+    thePI.title = CleanLDAPvalue(pi_data["title"]) || thePI.title
+    thePI.business_phone = CleanLDAPvalue(pi_data["telephoneNumber"]) || thePI.business_phone
+    thePI.employee_id = CleanLDAPvalue(pi_data["employeeNumber"]) || thePI.employee_id
+    thePI.address1 = CleanLDAPvalue(pi_data["postalAddress"]) || thePI.address1
     thePI.address1 = thePI.address1.split("$").join(13.chr) if !  thePI.address1.blank?
-    thePI.campus = pi_data["postalAddress"].split("$").last || thePI.campus if ! pi_data["postalAddress"].blank?
+    thePI.campus = CleanLDAPvalue(pi_data["postalAddress"]).split("$").last || thePI.campus if ! pi_data["postalAddress"].blank?
     # home_department is no longer a string
     thePI["home"] = pi_data.ou  if pi_data.ou !~ /People/
     #trust the internal system first
-    thePI.email ||= pi_data["mail"]
-    thePI.fax ||= pi_data["facsimiletelephonenumber"]
-    #clean up the campus data
-    thePI.campus = (thePI.campus =~ /CH|Chicago/) ? 'Chicago' : thePI.campus
-    thePI.campus = (thePI.campus =~ /EV|Evanston/) ? 'Evanston' : thePI.campus
-    thePI.campus = (thePI.campus =~ /CMH|Children/) ? 'CMH' : thePI.campus
+    thePI.email ||= CleanLDAPvalue(pi_data["mail"])
+    thePI.fax ||= CleanLDAPvalue(pi_data["facsimiletelephonenumber"])
+    thePI = cleanup_campus(thePI)
   end
   thePI
 end
@@ -101,7 +163,7 @@ def MakePIfromLDAP(pi_data)
     thePI = BuildPIobject(clean_rec)
     thePI=MergePIrecords(thePI, clean_rec)
     begin
-     # logger.info "#{thePI.id}  #{thePI.username} #{thePI.last_name} #{thePI.first_name}"
+     logger.info "MakePIfromLDAP: #{thePI.id}  #{thePI.username} #{thePI.last_name} #{thePI.first_name}"
      # logger.info pi_data.inspect
       #logger.info thePI.inspect
     rescue Exception => error

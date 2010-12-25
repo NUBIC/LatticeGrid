@@ -56,8 +56,8 @@ class OrganizationalUnitTest < ActiveSupport::TestCase
     first_unit = organizational_units(:one)
     assert(first_unit.primary_faculty.length > 0)
     assert(first_unit.members.length > 0)
-    abstracts = first_unit.primary_faculty_abstracts
-    assert(first_unit.primary_faculty_abstracts.length > 0)
+    abstracts = first_unit.primary_faculty_publications
+    assert(first_unit.primary_faculty_publications.length > 0)
     # tree traversal is not working
 #    assert(first_unit.all_faculty.length > 0)
 #    abstracts=first_unit.all_faculty_publications()

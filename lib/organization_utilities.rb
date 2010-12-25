@@ -177,10 +177,19 @@ def GetParentOrg(org)
   return FindDepartment(org.department_id,'')
  end
 
+ def HasDepartment(datarow)
+   return true if ! datarow["department"].blank? 
+   return true if (! datarow["division_id"].blank? ) || (!datarow["DIVISION_ID"].blank?)
+   return true if (! datarow["dept_id"].blank?) || (! datarow["department_id"].blank?) || (! datarow["DEPT_ID"].blank?) || (! datarow["DEPARTMENT_ID"].blank?)
+
+   return false
+ end
 
 # process the somewhat arbitrary syntax of the way home departments, secondary appointments, and department divisions are handled.
 # do I need to handle single quotes? .gsub(/\'/. '')
 def SetDepartment(pi, datarow)
+  # dept_id || department_id
+  # division_id
   return HandleDepartment(pi,datarow) if ! datarow["department"].blank? 
   division_id = datarow["division_id"] || datarow["DIVISION_ID"]
   department_id=datarow["dept_id"] || datarow["department_id"] || datarow["DEPT_ID"] || datarow["DEPARTMENT_ID"]
@@ -190,14 +199,28 @@ def SetDepartment(pi, datarow)
 end
 
 def HandleDepartment(pi, datarow)
+  # department
   return pi if datarow["department"].blank? 
   department=datarow["department"]
   temp, joint = department.split("/")
   department, division = temp.split("-")
   temp, joint = joint.split("=") if ! joint.blank?
-  pi.secondary = joint.strip if ! joint.blank?
-  pi.division = division.strip if ! division.blank?
-  pi.home_department = department.strip
+  # this needs to be rewritten to use home_department_id
+  home_department = nil
+  if !division.blank? 
+    home_department = OrganizationalUnit.find_by_name(division) 
+    home_department = OrganizationalUnit.find_by_search_name(division) if home_department.blank?
+    home_department = OrganizationalUnit.find_by_abbreviation(division)  if home_department.blank?
+  end
+  if !department.blank? and home_department.blank?
+    home_department = OrganizationalUnit.find_by_name(department) 
+    home_department = OrganizationalUnit.find_by_search_name(department) if home_department.blank?
+    home_department = OrganizationalUnit.find_by_abbreviation(department)  if home_department.blank?
+  end
+  pi.home_department_id = home_department.id if !home_department.blank?
+  #pi.secondary = joint.strip if ! joint.blank?
+  #pi.division = division.strip if ! division.blank?
+  #pi.home_department = department.strip
   return pi
 end
 
@@ -227,26 +250,26 @@ def CreateProgramFromName(department)
       theProgram = Program.find_by_abbreviation(department) ||
             Program.find_by_search_name(department) ||
             Program.find_by_name(department) ||
-             Program.find_by_abbreviation(department.upcase)
-             Program.find_by_search_name(department.upcase) ||
-             Program.find_by_name(department.upcase)
+             Program.find(:first, :conditions => ["lower(name) = :name or lower(search_name) = :name or lower(abbreviation) = :name", {:name=>department.downcase }])
       puts "Could not find program #{department}" if  theProgram.blank?
       if theProgram.blank? && !department.blank? then
-        max_program_number_q = Program.find(:first, :select => 'max(sort_order) as sort_order')
-        if max_program_number_q.blank? || max_program_number_q.program_number.blank?
+        max_program_number_q = Program.maximum(:program_number)
+        if max_program_number_q.blank? 
           max_program_number = 0
         else
-          max_program_number = max_program_number_q.program_number
+          max_program_number = max_program_number_q
         end
         max_program_number += 1
         puts max_program_number
         theProgram = Program.create!(
-           :name  => department,
+          :name  => department,
+          :search_name  => department,
+          :abbreviation  => department,
            :sort_order => max_program_number
         )
       end
     rescue Exception => error
-     puts "something happened"+$!.message
+     puts "something happened"+error.message
      throw department.inspect
   end
   theProgram

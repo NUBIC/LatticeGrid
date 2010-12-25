@@ -2,10 +2,9 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
-  helper :all, :application
-  include ApplicationHelper
-  # Pick a unique cookie name to distinguish our session data from others'
-#  session :session_key => '_nucatspublications_session_id'
+  helper :all # include all helpers, all the time
+  protect_from_forgery # See ActionController::RequestForgeryProtection for details
+
   before_filter  :find_last_load_date 
   before_filter  :handle_year
   before_filter  :get_organizations
