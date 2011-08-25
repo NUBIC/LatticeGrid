@@ -1,6 +1,6 @@
 class GraphvizController < ApplicationController
 
-  caches_page( :show_member, :show_member_mesh, :show_org, :show_org_mesh) if CachePages()
+  caches_page( :show_member, :show_member_mesh, :show_org, :show_org_mesh, :investigator_wheel, :investigator_wheel_data, :org_wheel, :org_wheel_data) if LatticeGridHelper.CachePages()
 
   require 'graphviz_config'
   require 'csv_generator'
@@ -8,14 +8,65 @@ class GraphvizController < ApplicationController
 
   helper :all
 
+  include ApplicationHelper
   include GraphvizHelper
   include MeshHelper # for do_mesh_search
 
   def show_member
     @investigator = Investigator.find_by_username(params[:id])
-     params[:analysis]="member"
+    params[:analysis]="member"
     show_core
   end 
+
+  def show_member_awards
+    @investigator = Investigator.find_by_username(params[:id])
+    params[:analysis]="member_awards"
+    show_core
+  end 
+
+  def investigator_wheel
+    @investigator = Investigator.find_by_username(params[:id])
+    @page_title = "Wheel graph for #{@investigator.name}"
+    @title = "Wheel graph showing the co-publications for #{@investigator.name}"
+    @wheel_json_data = 'investigator_wheel_data.js'
+    @wheel_action = 'investigator_wheel'
+    render :layout=>'wheel_graph', :action=>'wheel_graph'
+  end 
+  
+  def investigator_wheel_data
+    @investigator = Investigator.find_by_username(params[:id])
+    the_array = []
+    if (@investigator)
+      co_authors=@investigator.co_authors
+      the_array << wheel_graph_hash(@investigator, co_authors.collect(&:colleague_id))
+      co_authors.each do |co_author|
+        the_array << wheel_graph_hash(co_author.colleague, co_authors.collect(&:colleague_id)<<@investigator.id)
+      end
+    end
+    render :json => the_array.as_json()
+  end
+
+  def org_wheel
+    @org = OrganizationalUnit.find_by_id(params[:id])
+    @page_title = "Wheel graph for #{@org.name}"
+    @title = "Wheel graph showing the interconnections between faculty in #{@org.name}"
+    @wheel_json_data = 'org_wheel_data.js'
+    @wheel_action = 'investigator_wheel'
+    render :layout=>'wheel_graph', :action=>'wheel_graph'
+  end 
+    
+  def org_wheel_data
+    @org = OrganizationalUnit.find_by_id(params[:id])
+    the_array = []
+    if (@org)
+      faculty=@org.all_faculty
+      faculty.each do |pi|
+        the_array << wheel_graph_hash(pi, faculty.collect(&:id))
+      end
+    end
+    render :json => the_array.as_json()
+  end
+   
 
   def show_member_mesh
     @investigator = Investigator.find_by_username(params[:id])
@@ -67,6 +118,16 @@ class GraphvizController < ApplicationController
 
   private  
   
+  def wheel_graph_hash(user, allowed_connections)
+      co_authors=user.co_authors
+      {
+          "connections" => co_authors.collect{|pair| [pair.colleague.username, pair.publication_cnt] if allowed_connections.include?(pair.colleague_id) }.compact,
+          "text"=> user.name,
+          "id" => user.username,
+          "title" => "replace this text"
+      }
+  end
+  
   def handle_graphviz_setup
     # in 'graphviz_config'
     params[:program] ||= "neato"
@@ -87,12 +148,11 @@ class GraphvizController < ApplicationController
         format.html { render }
       end
     else 
-      redirect_to show_org_graph_path(1)
+      redirect_to show_org_graph_url(1)
     end 
   end 
    
   def get_org_name(id)
-    # logger.info "id: #{id}"
     ids=id.split(",")
     if ids.length > 1
       OrganizationalUnit.find(:all, :conditions => ["id in (:ids)", {:ids=>ids }]).collect(&:name).join(", ")

@@ -1,0 +1,8 @@
+xml.instruct!
+
+xml.tag! 'aggregation-result' do
+  xml.count @search_length.to_s
+  xml.tag! 'population-type', "Faculty"
+  xml.tag! 'preview-URL', preview_investigator_url(params[:id])
+  xml.tag! 'search-results-URL', search_investigator_url(params[:id])
+end

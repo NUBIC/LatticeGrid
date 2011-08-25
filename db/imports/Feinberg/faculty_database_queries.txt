@@ -1,0 +1,12 @@
+#FSM faculty database queries
+
+select  * from nubic_faculty_appointment@nubic_faculty_link;
+select   * from nubic_joint@nubic_faculty_link;
+select   * from nubic_secondary@nubic_faculty_link;
+select   * from nubic_centers@nubic_faculty_link;
+select   * from nubic_pmid@nubic_faculty_link;
+
+select * from nubic_descriptions@nubic_faculty_link;
+
+select * from nubic_interests@nubic_faculty_link;
+select * from nubic_degree_lookup@nubic_faculty_link;

@@ -3,13 +3,17 @@
 
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
+  include ApplicationHelper
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
-  before_filter  :find_last_load_date 
-  before_filter  :handle_year
-  before_filter  :get_organizations
-  before_filter  :handle_pagination
-  before_filter  :define_keywords 
+  require 'config'
+
+
+  before_filter  :find_last_load_date, :except => [:set_investigator_abstract_end_date]
+  before_filter  :handle_year, :except => [:set_investigator_abstract_end_date]
+  before_filter  :get_organizations, :except => [:set_investigator_abstract_end_date]
+  before_filter  :handle_pagination, :except => [:set_investigator_abstract_end_date]
+  before_filter  :define_keywords, :except => [:set_investigator_abstract_end_date]
 
   def  total_length(query) 
     return if query.nil?
@@ -52,19 +56,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_organizations
-    @head_node = OrganizationalUnit.head_node(menu_head_abbreviation)
-  end
-
-  def handle_year (year=nil)
-    @starting_year=Time.now.year
-    @year_array = (@starting_year-9 .. @starting_year).to_a
-    @year_array.reverse!
-    @year = @starting_year.to_s
-    @year = cookies[:the_year] if !cookies[:the_year].blank?
-    if !year.blank? then
-      cookies[:the_year] = year
-      @year = year
-    end
+    @head_node = OrganizationalUnit.head_node(LatticeGridHelper.menu_head_abbreviation())
   end
 
   def handle_start_and_end_date

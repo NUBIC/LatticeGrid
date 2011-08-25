@@ -1,6 +1,7 @@
 class OrgsController < ApplicationController
-  caches_page(:show, :index, :departments, :centers, :programs, :show_investigators, :stats, :full_show, :tag_cloud, :short_tag_cloud) if CachePages()
+  caches_page(:show, :index, :departments, :centers, :programs, :show_investigators, :stats, :full_show, :tag_cloud, :short_tag_cloud) if LatticeGridHelper.CachePages()
   helper :sparklines
+  include ApplicationHelper
 
   require 'fastercsv' # for department_collaborations
 
@@ -155,7 +156,7 @@ class OrgsController < ApplicationController
 
   def show_investigators
     if params[:id].nil? then
-      redirect_to index_orgs_path
+      redirect_to index_orgs_url
     else
       @unit = OrganizationalUnit.find(params[:id])
       @heading = "Faculty Listing for '#{@unit.name}'"
@@ -183,7 +184,7 @@ class OrgsController < ApplicationController
       redirect=true
     end
     if params[:id].nil? then
-      redirect_to index_orgs_path
+      redirect_to index_orgs_url
     elsif redirect then
       redirect_to params
     else
@@ -203,7 +204,7 @@ class OrgsController < ApplicationController
   def full_show
     redirect=false
     if params[:id].nil? then
-      redirect_to index_orgs_path
+      redirect_to index_orgs_url
     elsif !params[:page].nil? then
       params.delete(:page)
       redirect_to params
@@ -222,12 +223,15 @@ class OrgsController < ApplicationController
     # then get the number of intra-unit collaborations and the number of inter-unit collaborations
     handle_start_and_end_date
     @heading = "Publication Statistics by Org from #{params[:start_date]} to #{params[:end_date]} "
+    @exclude_letters = ! params[:exclude_letters].blank?
     @units = @head_node.children.sort_by(&:abbreviation)
+    @faculty_affiliation_types = params[:affiliation_types]
     @units.each do |unit|
       unit["pi_intra_abstracts"] = Array.new
       unit["pi_inter_abstracts"] = Array.new
-      unit_pis = (unit.associated_faculty+unit.primary_faculty).collect{|x| x.id}
-      unit["publications"]=unit.all_ccsg_faculty_publications_by_date( params[:start_date], params[:end_date] )
+      unit_faculty = unit.get_faculty_by_types(params[:affiliation_types])
+      unit_pis = unit_faculty.collect{|x| x.id}
+      unit["publications"]=unit.all_ccsg_publications_by_date( unit_faculty, params[:start_date], params[:end_date], @exclude_letters )
       unit.publications.each do |abstract| 
         abstract_investigators = abstract.investigators.collect{|x| x.id}
         intra_collaborators_arr = abstract_investigators & unit_pis  # intersection of the two sets
@@ -247,13 +251,16 @@ class OrgsController < ApplicationController
     params[:start_date]=5.years.ago
     params[:end_date]=Date.tomorrow
     handle_start_and_end_date
+    @exclude_letters = ! params[:exclude_letters].blank?
     @heading = "Publication Statistics by Org for the past five years"
     @units = @head_node.children.sort_by(&:abbreviation)
+    @faculty_affiliation_types = params[:affiliation_types]
     @units.each do |unit|
       unit["pi_intra_abstracts"] = Array.new
       unit["pi_inter_abstracts"] = Array.new
-      unit_pis = (unit.associated_faculty+unit.primary_faculty).collect{|x| x.id}
-      unit["publications"]=unit.all_ccsg_faculty_publications_by_date( params[:start_date], params[:end_date] )
+      unit_faculty = unit.get_faculty_by_types(params[:affiliation_types])
+      unit_pis = unit_faculty.collect{|x| x.id}
+      unit["publications"]=unit.all_ccsg_publications_by_date( unit_faculty, params[:start_date], params[:end_date], @exclude_letters )
       unit.publications.each do |abstract| 
         abstract_investigators = abstract.investigators.collect{|x| x.id}
         intra_collaborators_arr = abstract_investigators & unit_pis  # intersection of the two sets
@@ -298,15 +305,21 @@ class OrgsController < ApplicationController
   def list_abstracts_during_period_rjs
     handle_start_and_end_date
     @unit = OrganizationalUnit.find(params[:id])
-    @abstracts = @unit.all_ccsg_faculty_publications_by_date( params[:start_date], params[:end_date] )
+    @faculty = @unit.get_faculty_by_types(params[:affiliation_types])
+    @exclude_letters = ! params[:exclude_letters].blank?
+    @faculty_affiliation_types = params[:affiliation_types]
+    @abstracts = @unit.all_ccsg_publications_by_date(@faculty, params[:start_date], params[:end_date], @exclude_letters )
   end
 
   def abstracts_during_period
     # for printing
     handle_start_and_end_date
     @unit = OrganizationalUnit.find(params[:id])
-    @abstracts = @unit.all_ccsg_faculty_publications_by_date( params[:start_date], params[:end_date] )
-    @investigators_in_unit = (@unit.primary_faculty+@unit.associated_faculty).collect(&:id)
+    @faculty = @unit.get_faculty_by_types(params[:affiliation_types])
+    @exclude_letters = ! params[:exclude_letters].blank?
+    @faculty_affiliation_types = params[:affiliation_types]
+    @abstracts = @unit.all_ccsg_publications_by_date(@faculty, params[:start_date], params[:end_date], @exclude_letters )
+    @investigators_in_unit = @faculty.collect(&:id)
 
     @do_pagination = "0"
     @heading = "#{@abstracts.length} publications. Publication Listing  "
@@ -319,6 +332,53 @@ class OrgsController < ApplicationController
     @include_pubmed_id = true 
     @include_collab_marker = true
     @bold_members = true
+    @include_impact_factor = true
+    @simple_links = true
+
+    respond_to do |format|
+      format.html { render :layout => 'printable', :controller=> :orgs, :action => :show }# show.html.erb
+      format.xml  { render :xml => @abstracts }
+      format.pdf do
+         render :pdf => "Abstracts for " + @unit.name, 
+            :stylesheets => "pdf", 
+            :template => "orgs/show.html.erb",
+            :layout => "pdf"
+      end
+      format.xls  { send_data(render(:template => 'orgs/show.html', :layout => "excel"),
+        :filename => "Abstracts for #{@unit.name}.xls",
+        :type => 'application/vnd.ms-excel',
+        :disposition => 'attachment') }
+      format.doc  { send_data(render(:template => 'orgs/show.html', :layout => "excel"),
+        :filename => "Abstracts for #{@unit.name}.doc",
+        :type => 'application/msword',
+        :disposition => 'attachment') }
+    end
+  end
+
+  def investigator_abstracts_during_period
+    # for printing
+    handle_start_and_end_date
+    @exclude_letters = ! params[:exclude_letters].blank?
+    @unit = OrganizationalUnit.new(:name=>'Ad hoc unit', :abbreviation=>'Ad hoc')
+    @investigators_in_unit = Investigator.find_investigators_in_list(params[:investigator_ids])
+    if @exclude_letters
+      @abstracts = Abstract.exclude_letters.investigator_publications_by_date( @investigators_in_unit, params[:start_date], params[:end_date])
+    else
+      @abstracts = Abstract.investigator_publications_by_date( @investigators_in_unit, params[:start_date], params[:end_date])
+    end
+    @do_pagination = "0"
+    @heading = "#{@abstracts.length} publications. Selected publications  "
+    @heading = @heading + " from #{@start_date} " if !params[:start_date].blank?
+    @heading = @heading + " to #{@end_date}" if !params[:end_date].blank?
+    @heading = @heading + " <br/>Investigators explicitly included: #{@investigators_in_unit.collect{|pi| pi.name unless pi.blank?}.uniq.join(', ')}" if @investigators_in_unit.length > 0
+    @include_mesh = false
+    @include_graph_link = false
+    @show_paginator = false
+    @include_investigators=true 
+    @include_pubmed_id = true 
+    @include_collab_marker = true
+    @bold_members = true
+    @include_impact_factor = true
 
     respond_to do |format|
       format.html { render :layout => 'printable', :controller=> :orgs, :action => :show }# show.html.erb

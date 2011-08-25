@@ -1,0 +1,8 @@
+- change the color based on title/rank
+ - change the shaped based on program/organization
+ - show program to program interactions
+- show program in the mouseover for individual investigators
+- add cytoscape visualization to LatticeGrid
+
+-- Thursday, July 14, 2011 1:27  From Sorena Nadaf
+-- Possible to have an "INTRA AND INTER" PROGRAMMATICS lattice grid visual map? besides listing them and ranks?

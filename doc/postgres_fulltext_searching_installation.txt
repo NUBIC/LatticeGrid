@@ -1,0 +1,56 @@
+# for adding tsearch2 methods to LatticeGrid
+
+# http://code.google.com/p/acts-as-tsearch/
+# info at http://code.google.com/p/acts-as-tsearch/wiki/MultiVectorSearching
+
+
+# run this in Postgres as the database owner 
+-- CREATE TEXT SEARCH CONFIGURATION public.default ( COPY = pg_catalog.english )
+# try using PostgreSQL Full Text Search:
+CREATE TEXT SEARCH CONFIGURATION public.default ( COPY = pg_catalog.english );
+
+script/plugin install git://github.com/pka/acts_as_tsearch.git
+
+
+# add acts_as_tsearch method to the class Abstract
+class Abstract < ActiveRecord::Base
+  acts_as_tsearch :vectors => {:fields => ["abstract","authors", "full_authors", "title", "journal", "journal_abbreviation", "mesh"]},
+                  :author_vector => {:fields => ["authors", "full_authors"]},
+                  :abstract_vector => {:fields => ["abstract", "title"]},
+                  :mesh_vector => {:fields => ["mesh"]},
+                  :journal_vector => {:fields => ["journal","journal_abbreviation"]}
+
+# add acts_as_tsearch method to the class Investigator 
+class Investigator < ActiveRecord::Base
+  acts_as_tsearch :fields => ["first_name","last_name", "username"]
+
+# add a migration to support tsearch2 and acts_as_tsearch
+	script/generate migration tsearch_vectors
+
+# and put in it
+Abstract.create_vector  #doesn't hurt to try, even if it exists
+Abstract.update_vector
+Investigator.create_vector  #doesn't hurt to try, even if it exists
+Investigator.update_vector
+
+
+
+#example searches:
+
+pis = Investigator.find_by_tsearch("kibbe")
+pis = Investigator.find_by_tsearch("brain", {:include=>"abstracts"}, {:vector => "with_abstracts_vector"})
+pis = Investigator.find_by_tsearch("kibbe", {:include=>"abstracts"}, {:vector => "with_abstracts_vector"})
+
+
+
+abs = Abstract.find_by_tsearch("kibbe")
+abs = Abstract.find_by_tsearch("genetics")
+abs = Abstract.find_by_tsearch("brain", nil, {:vector => "mesh_vector"})
+
+abs = Abstract.find_by_tsearch("jovanovic", nil, {:vector => "author_vector"})
+abs = Abstract.find_by_tsearch("genetics", nil, {:vector => "abstract_vector"})
+abs = Abstract.find_by_tsearch("pharmacology", nil, {:vector => "mesh_vector"})
+
+abs = Abstract.find_by_tsearch("genetics", :select => 'ID')
+abs = Abstract.find_by_tsearch("genetics", {:select => 'ID'}, {:vector => "abstract_vector"})
+

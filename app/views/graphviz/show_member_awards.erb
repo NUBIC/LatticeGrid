@@ -1,0 +1,13 @@
+<% if @investigator.blank? %>
+<h1>Investigator was not found</h1>
+<% else %>
+<h1>Award network diagram for <%= @investigator.name %></h1>
+<div id="investigator_title">
+<% all_abstracts = @all_abstracts || nil -%>
+<%= investigator_bio_heading(@investigator, all_abstracts) %>
+</div>
+
+<%= render( :partial => "graphviz_template" ) %>
+
+<p>This graph shows the network diagram for a faculty member based on funding awards with other faculty members. Distance allows you to set the number of 'degrees of separation' between the faculty member and the rest of the organization. Only 1st and 2nd degrees of separation are currently supported. There are five different graphing options supported - neato, dot, circo, twopi and fdp. Please experiment with them. Finally, you can select the type of output generated. SVG is the default (an xml vector-based, open web image interface). png (another open image format) and pdf images can also be generated and will be either saved to your local disk or displayed in your browser, depending on how you have configured your browser. </p>
+<% end %>

@@ -1,27 +1,24 @@
 class AbstractsController < ApplicationController
 #removed :full_tagged_abstracts and :tagged_abstracts - too many cached pages
-  caches_page( :year_list, :full_year_list, :tag_cloud, :endnote, :tagged_abstracts, :full_tagged_abstracts, :tag_cloud_by_year, :endnote, :show)  if CachePages()
+
+  caches_page( :year_list, :full_year_list, :current, :tag_cloud, :endnote, :tagged_abstracts, :full_tagged_abstracts, :tag_cloud_by_year, :endnote, :show)  if LatticeGridHelper.CachePages()
   
   include AbstractsHelper
   include ApplicationHelper
+  include ProfilesHelper
   include MeshHelper  #for the do_mesh_search method
   
-  require 'bio' #require bioruby!
-#  require 'utilities' #all the helper methods
   require 'publication_utilities' #all the helper methods
-  require 'pubmed_utilities' #all the helper methods
-#  require 'pubmed_config' #look here to change the default time spans
-  require 'pubmedext' #my extensions to grab other dates and full author names
-  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  # verify :method => :post, :only => [ :search ], :redirect_to => :current_abstracts_path
+  require 'pubmed_utilities'  #loads including 'pubmed_config'  'bio' (bioruby) and 
 
   def index
-    redirect_to abstracts_by_year_path(:id => @year, :page => '1')
+    year = handle_year()
+    redirect_to abstracts_by_year_url(:id => year, :page => '1')
   end
   
   def current
-    params[:id]=@starting_year.to_s
-    pre_list(@starting_year.to_s)
+    params[:id]=LatticeGridHelper.year_array[0].to_s
+    pre_list(params[:id])
     @abstracts = Abstract.display_data( params[:id], params[:page] )
     list_heading(params[:id])
     @do_pagination = "1"
@@ -29,6 +26,7 @@ class AbstractsController < ApplicationController
   end
   
   def journal_list
+    params[:page]||=1
     pre_list(1)
     if @redirect then
       redirect_to params
@@ -45,44 +43,40 @@ class AbstractsController < ApplicationController
   end
 
   def year_list
-    pre_list(@year)
-    handle_pre_year(@year)
+    year = handle_year(params[:id])
+    pre_list(year)
     if @redirect then
       redirect_to params
     else
-      @abstracts = Abstract.display_data( @year, params[:page] )
-      list_heading(@year)
+      @abstracts = Abstract.display_data( year, params[:page] )
+      list_heading(year)
       @do_pagination = "1"
     end
   end
 
   def full_year_list
+    year = handle_year(params[:id])
     if params[:id].nil? then
-      redirect_to abstracts_by_year_path(:id => @year, :page => '1')
+      redirect_to abstracts_by_year_url(:id => year, :page => '1')
     elsif !params[:page].nil? then
       params.delete(:page)
       redirect_to params
     else
       @redirect = false
-      handle_pre_year(@year)
-      @abstracts = Abstract.display_all_data( @year )
-      list_heading(@year)
+      @abstracts = Abstract.display_all_data( year )
+      list_heading(year)
       @do_pagination = "0"
       render :action => 'year_list'
     end
   end
 
   def tag_cloud_by_year
-    if params[:id].nil?
-      year = @year
-    else
-      year = params[:id]
-    end
-    tags = Abstract.tag_counts(:limit => 150, :order => "count desc", 
+    year = handle_year(params[:id])
+    @tags = Abstract.tag_counts(:limit => 150, :order => "count desc", 
                   :conditions => ["abstracts.year in (:year)", {:year=>year }])
     respond_to do |format|
-      format.html { render :template => "shared/tag_cloud", :locals => {:tags => tags}}
-      format.js  { render  :partial => "shared/tag_cloud", :locals => {:tags => tags}  }
+      format.html { render :template => "shared/tag_cloud", :locals => {:tags => @tags}}
+      format.js  { render  :partial => "shared/tag_cloud", :locals => {:tags => @tags}  }
     end
   end
 
@@ -99,7 +93,8 @@ class AbstractsController < ApplicationController
       redirect=true
     end
     if params[:id].nil? then
-      redirect_to abstracts_by_year_path(:id => @year, :page => '1')
+      year = handle_year()
+      redirect_to abstracts_by_year_url(:id => year, :page => '1')
     elsif redirect then
       redirect_to params
     else
@@ -128,60 +123,30 @@ class AbstractsController < ApplicationController
     render :action => 'tag'
   end
 
-  def ccsg
-    @date_range = DateRange.new(1.year.ago,Time.now)
-    @investigators = Investigator.find(:all, :order=>"last_name, first_name")
-  end
-
-  def investigator_listing
-    prepare_edit_investigator_listing
-    respond_to do |format|
-      format.html { 
-      	@abstracts = Abstract.display_all_investigator_data_include_deleted(@investigator.id) 
-      	render
-      }
-      format.xml  { 
-        @abstracts = Abstract.display_all_investigator_data(@investigator.id)
-        render :xml => @abstracts }
-      format.xls  { 
-        @link_abstract_to_pubmed = true
-        @abstracts = Abstract.display_all_investigator_data(@investigator.id)
-        send_data(render(:template => 'abstracts/investigator_listing', :layout => "excel"),
-        :filename => "investigator_listing_for_#{@investigator.first_name}_#{@investigator.last_name}.xls",
-        :type => 'application/vnd.ms-excel',
-        :disposition => 'attachment') }
-      format.doc  { 
-        @link_abstract_to_pubmed = true
-        @abstracts = Abstract.display_all_investigator_data(@investigator.id)
-        send_data(render(:template => 'abstracts/investigator_listing.xls', :layout => "excel"),
-        :filename => "investigator_listing_for_#{@investigator.first_name}_#{@investigator.last_name}.doc",
-        :type => 'application/msword',
-        :disposition => 'attachment') }
-      format.pdf do
-        @link_abstract_to_pubmed = true
-        @abstracts = Abstract.display_all_investigator_data(@investigator.id)
-        @heading=@heading_base
-        @show_delete_checkboxes = false
-        render( :pdf => "Publication Listing for " + @investigator.name, 
-            :stylesheets => "pdf", 
-            :template => "abstracts/investigator_listing.html",
-            :layout => "pdf")
-      end
-    end
-  end
-
   
   def impact_factor
     params[:year]||=""
     params[:sortby]||="article_influence_score desc"
     @journals = Journal.journal_publications([params[:year]], params[:sortby])
-    @missing_journals = Abstract.missing_publications([params[:year]], @journals)
-    @high_impact = Journal.high_impact()
-    @high_impact_pubs = Journal.with_publications([params[:year]], @high_impact)
+    @missing_journals = Abstract.missing_impact_factors([params[:year]])
+    #@high_impact = Journal.high_impact()
+    @high_impact_pubs = Journal.high_impact_publications([params[:year]])
     @all_pubs = Abstract.annual_data([params[:year]])
     
     respond_to do |format|
       format.html {render :layout => 'printable'}
+      format.xml  { 
+         render :xml => @all_pubs }
+      format.xls  { 
+        send_data(render(:template => 'abstracts/impact_factor.html', :layout => "excel"),
+        :filename => "impact_factor_for_year_#{params[:year]}.xls",
+        :type => 'application/vnd.ms-excel',
+        :disposition => 'attachment') }
+      format.doc  { 
+         send_data(render(:template => 'abstracts/impact_factor.html', :layout => "excel"),
+        :filename => "impact_factor_for_year_#{params[:year]}.doc",
+        :type => 'application/msword',
+        :disposition => 'attachment') }
       format.pdf do
          render( :pdf => "High Impact publications for " + params[:year], 
             :stylesheets => "pdf", 
@@ -197,11 +162,10 @@ class AbstractsController < ApplicationController
   end
 
   def search 
-    logger.error "entering search action"
     if !@keywords.keywords.blank? then
   #      @tags = Abstract.tag_counts(:limit => 150, :order => "count desc")
       @do_pagination="1"
-      @abstracts = Abstract.display_search(@keywords, @do_pagination, params[:page])
+      @abstracts = Abstract.display_tsearch(@keywords, @do_pagination, params[:page])
       if @do_pagination != '0'
         total_entries=@abstracts.total_entries
       else
@@ -209,6 +173,7 @@ class AbstractsController < ApplicationController
       end
       @heading = "There were #{total_entries} matches to search term <i>"+ @keywords.keywords.downcase + "</i>"
       @include_mesh=false
+      @speed_display=true
       render :action => 'year_list'
     else 
       logger.error "search did not have a defined keyword"
@@ -220,27 +185,27 @@ class AbstractsController < ApplicationController
     if params[:id].include?("search") then
       redirect_to :action => 'search'
     elsif params[:id].nil? || params[:id].include?("tag") then
-      redirect_to abstracts_by_year_path(:id => @year, :page => '1')
+      year = handle_year()
+      redirect_to abstracts_by_year_url(:id => year, :page => '1')
     else
-      @publication = Abstract.include_deleted(params[:id])
+      @publication = Abstract.include_invalid(params[:id])
     end
   end
 
   def set_deleted_date
-    @publication = Abstract.include_deleted(params[:id])
-    if @publication.deleted_at.blank?
-      @publication.deleted_at = Date.today
+    @publication = Abstract.include_invalid(params[:id])
+    if @publication.is_valid
+      @publication.is_valid = false
     else
-      @publication.deleted_id = "prev: #{@publication.deleted_ip} on #{@publication.deleted_at}"
-      @publication.deleted_at = nil
+      @publication.is_valid = true
     end
-    @publication.deleted_ip = request.remote_ip
+    before_abstract_save(@publication)
     @publication.save!
     render :text => ""
   end
 
   def set_is_cancer
-    @publication = Abstract.include_deleted(params[:id])
+    @publication = Abstract.include_invalid(params[:id])
     if @publication.is_cancer.blank? or ! @publication.is_cancer
       @publication.is_cancer = true
     else
@@ -252,11 +217,12 @@ class AbstractsController < ApplicationController
 
   def set_investigator_abstract_end_date
     @investigatorabstract = InvestigatorAbstract.find(params[:id])
-    if @investigatorabstract.end_date.blank?
-      @investigatorabstract.end_date = Date.today
+    if @investigatorabstract.is_valid then
+      @investigatorabstract.is_valid = false
     else
-      @investigatorabstract.end_date = nil
+      @investigatorabstract.is_valid = true
     end
+    before_abstract_save(@investigatorabstract)
     @investigatorabstract.save!
     render :text => ""
   end
@@ -327,20 +293,15 @@ class AbstractsController < ApplicationController
     end
   end
   
-  def handle_pre_year(id)
-    if ! @redirect
-      handle_year(params[:id]) if params[:id] != id
-    end
-  end
-
   def journal_heading(journal_name)
     total_entries = total_length(@abstracts) 
     @heading = "Publication Listing for <i>#{journal_name}</i>  (#{total_entries} publications)"
   end
 
   def list_heading(year)
-    @tags = Abstract.tag_counts(:limit => 150, :order => "count desc", 
-                  :conditions => ["abstracts.year in (:year)", {:year=>year }])
+    # tags do not seem to be necessary
+#    @tags = Abstract.tag_counts(:limit => 150, :order => "count desc", 
+#                  :conditions => ["abstracts.year in (:year)", {:year=>year }])
     total_entries = total_length(@abstracts) 
     @heading = "Publication Listing for #{year}  (#{total_entries} publications)"
   end

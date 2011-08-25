@@ -1,0 +1,540 @@
+last_name	first_name	middle_name	degrees	rank	department	Program Num	program	pubmed_search_name	pubmed_limit_to_institution	email	username	employee_id
+Allen	Benjamin		PhD	Assistant Professor	Cell and Developmental Biology	2	Cancer Cell Biology		Y	benallen@umich.edu	benallen	53848100
+An	Lawrence		MD	Associate Professor	Internal Medicine	13	Socio-Behavioral		Y	lcan@umich.edu	lcan	74968958
+An	Lawrence		MD	Associate Professor	Internal Medicine	7	Breast Oncology		Y	lcan@umich.edu	lcan	74968958
+Anderson	Michelle		MD	Assistant Professor	Gastroenterology	14	Biomedical Prevention		Y	maaander@umich.edu	maaander	15236850
+Anderson	Michelle		MD	Assistant Professor	Gastroenterology	9	Gastrointestinal Oncology		Y	maaander@umich.edu	maaander	15236850
+Antonuk	Larry	E.	PhD	Professor	Radiation Oncology	4	Radiation Sciences		Y	antonuk@umich.edu	antonuk	75551641
+Appelman	Henry		MD	Professor	Pathology	14	Biomedical Prevention		Y	appelman@umich.edu	appelman	8473836
+Appelman	Henry		MD	Professor	Pathology	15	Thoracic		Y	appelman@umich.edu	appelman	8473836
+Arenberg	Douglas	A.	MD	Associate Professor	Internal Medicine	2	Cancer Cell Biology		Y	darenber@umich.edu	darenber	31438069
+Arenberg	Douglas	A.	MD	Associate Professor	Internal Medicine	15	Thoracic		Y	darenber@umich.edu	darenber	31438069
+Baker	James	R	MD	Professor & Chief, Allergy & Clinical Immunology	Internal Medicine	3	Experimental Therapeutics		Y	jbakerjr@umich.edu	jbakerjr	26403015
+Baker	James	R	MD	Professor & Chief, Allergy & Clinical Immunology	Internal Medicine	7	Breast Oncology		Y	jbakerjr@umich.edu	jbakerjr	26403015
+Baker	Laurence		DO	Professor	Internal Medicine and Pharmacology	3	Experimental Therapeutics		Y	bakerl@umich.edu	bakerl	89038758
+Balter	James		PhD	Professor	Radiation Oncology	4	Radiation Sciences		Y	jbalter@umich.edu	jbalter	98526178
+Banerjee	Mousumi		PhD	Research Professor	Biostatistics	7	Breast Oncology		Y	mousumib@umich.edu	mousumib	46431302
+Banerjee	Mousumi		PhD	Research Professor	Biostatistics	14	Biomedical Prevention		Y	mousumib@umich.edu	mousumib	46431302
+Barolo	Scott		PhD	Assistant Professor	Cellular & Developmental Biology	1	Cancer Genetics		Y	sbarolo@umich.edu	sbarolo	10670060
+Beer	David	G.	PhD	Professor	Surgery	1	Cancer Genetics		Y	dgbeer@umich.edu	dgbeer	34765672
+Beer	David	G.	PhD	Professor	Surgery	14	Biomedical Prevention		Y	dgbeer@umich.edu	dgbeer	34765672
+Ben-Josef	Edgar		MD	Professor	Radiation Oncology	9	Gastrointestinal Oncology		Y	edgarb@umich.edu	edgarb	87112315
+Bernal-Mizrachi	Ernesto		MD	Associate Professor	Metabolism, Endocrinology & Diabetes	2	Cancer Cell Biology		Y	ebernal@umich.edu	ebernal	29376552
+Bernal-Mizrachi	Ernesto		MD	Associate Professor	Metabolism, Endocrinology & Diabetes	9	Gastrointestinal Oncology		Y	ebernal@umich.edu	ebernal	29376552
+Birkmeyer	John		MD	Professor	Surgery	13	Socio-Behavioral		Y	jbirkmey@umich.edu	jbirkmey	63804656
+Bixby	Dale	Lee	MD, PhD	Assistant Professor	Internal Medicine-Hem/Onc	12	Hematologic Malignancies/BMT		Y	dbixby@umich.edu	dbixby	68597320
+Bochar	Daniel	A.	PhD	Assistant Professor	Biological Chemistry	1	Cancer Genetics		Y	dbochar@umich.edu	dbochar	35540192
+Bradford	Carol	R.	MD	Professor and Chair	Otolaryngology	11	Head & Neck Oncology		Y	cbradfor@umich.edu	cbradfor	68494981
+Braun	Thomas	M.	PhD	Associate Professor	Biostatistics	12	Hematologic Malignancies/BMT		Y	tombraun@umich.edu	tombraun	94358083
+Brenner	Dean		MD	Professor	Internal Medicine/Pharmacology	14	Biomedical Prevention		Y	dbrenner@umich.edu	dbrenner	86990392
+Brenner	Dean		MD	Professor	Internal Medicine/Pharmacology	9	Gastrointestinal Oncology		Y	dbrenner@umich.edu	dbrenner	86990392
+Breslin	Tara		MD	Assistant Professor	Surgery	13	Socio-Behavioral		Y	tarabres@umich.edu	tarabres	75863372
+Breslin	Tara		MD	Assistant Professor	Surgery	7	Breast Oncology		Y	tarabres@umich.edu	tarabres	75863372
+Buchman	Steven		MD	Professor & Chief	Surgery	11	Head & Neck Oncology		Y	sbuchman@umich.edu	sbuchman	29869314
+Buchman	Steven		MD	Professor & Chief	Surgery	4	Radiation Sciences		Y	sbuchman@umich.edu	sbuchman	29869314
+Buckanovich	Ronald		MD, PhD	Assistant Professor	Gynecologic Oncology	16	GYN Onc		Y	ronaldbu@umich.edu	ronaldbu	58015949
+Buckanovich	Ronald		MD, PhD	Assistant Professor	Gynecologic Oncology	2	Cancer Cell Biology		Y	ronaldbu@umich.edu	ronaldbu	58015949
+Buckanovich	Ronald		MD, PhD	Assistant Professor	Gynecologic Oncology	7	Breast Oncology		Y	ronaldbu@umich.edu	ronaldbu	58015949
+Buttitta	Laura		PhD	Assistant Professor	Molecular, Cellular and Dev Biology	2	Cancer Cell Biology		Y	buttitta@umich.edu	buttitta	16391276
+Cadigan	Kenneth		PhD	Associate Professor	Biology	1	Cancer Genetics		Y	cadigan@umich.edu	cadigan	74527117
+Camper	Sally	A.	PhD	Professor & Chair	Human Genetics	1	Cancer Genetics		Y	scamper@umich.edu	scamper	90795198
+Canman	Christine		PhD	Assistant Professor	Pharmacology	4	Radiation Sciences		Y	ccanman@umich.edu	ccanman	78083069
+Canman	Christine		PhD	Assistant Professor	Pharmacology	11	Head & Neck Oncology		Y	ccanman@umich.edu	ccanman	78083069
+Cao	Yue		PhD	Associate Professor	Radiation Oncology	4	Radiation Sciences		Y	yuecao@umich.edu	yuecao	52766572
+Carethers	John		MD	Professor & Chair	Internal Medicine	1	Cancer Genetics		Y	jcarethe@umich.edu	jcarethe	53486080
+Carethers	John		MD	Professor & Chair	Internal Medicine	9	Gastrointestinal Oncology		Y	jcarethe@umich.edu	jcarethe	53486080
+Carey	Thomas		PhD	Professor	Otolaryngology	11	Head & Neck Oncology		Y	careyte@umich.edu	careyte	45713617
+Carey	Thomas		PhD	Professor	Otolaryngology	1	Cancer Genetics		Y	careyte@umich.edu	careyte	45713617
+Carlos	Ruth		MD	Associate Professor	Radiology	13	Socio-Behavioral		Y	rcarlos@umich.edu	rcarlos	24388690
+Carson	Paul		PhD	Professor	Radiology	7	Breast Oncology		Y	pcarson@umich.edu	pcarson	21182864
+Carson	Paul		PhD	Professor	Radiology	5	Molecular Imaging		Y	pcarson@umich.edu	pcarson	21182864
+Carter-Su	Christin		PhD	Professor	Molecular and Integrative Physiology	2	Cancer Cell Biology		Y	cartersu@umich.edu	cartersu	25847538
+Castle	Valerie		MD	Professor and Chair	Pediatrics	10	Childhood Cancers		Y	vcastle@umich.edu	vcastle	51098203
+Chan	Heang-Ping		PhD	Professor	Radiology	7	Breast Oncology		Y	chanhp@umich.edu	chanhp	6652329
+Chang	Alfred		MD	Hugh Cabot Professor & Head	Surgery/Surgical Oncology	9	Gastrointestinal Oncology		Y	aechang@umich.edu	aechang	34994195
+Chang	Alfred		MD	Hugh Cabot Professor & Head	Surgery/Surgical Oncology	6	Tumor Immunology & Host Response		Y	aechang@umich.edu	aechang	34994195
+Chang	Andrew		MD	Assistant Professor	Thoracic Surgery	15	Thoracic		Y	andrwchg@umich.edu	andrwchg	49801277
+Chang	Andrew		MD	Assistant Professor	Thoracic Surgery	1	Cancer Genetics		Y	andrwchg@umich.edu	andrwchg	49801277
+Chang	Cheong-Hee		PhD	Professor	Microbiology & Immunology	6	Tumor Immunology & Host Response		Y	heechang@umich.edu	heechang	23106519
+Chen	Grace		MD, PhD	Assistant Professor	Internal Medicine-Hem/Onc	6	Tumor Immunology & Host Response		Y	gchenry@umich.edu	gchenry	56900409
+Chen	Grace		MD, PhD	Assistant Professor	Internal Medicine-Hem/Onc	9	Gastrointestinal Oncology		Y	gchenry@umich.edu	gchenry	56900409
+Chenevert	Thomas	L.	PhD	Professor	Radiology	5	Molecular Imaging		Y	tlchenev@umich.edu	tlchenev	73105459
+Chenevert	Thomas	L.	PhD	Professor	Radiology	7	Breast Oncology		Y	tlchenev@umich.edu	tlchenev	73105459
+Chepeha	Douglas	B.	MD, FRCS (C)	Associate Professor	Otolaryngology	11	Head & Neck Oncology		Y	dchepeha@umich.edu	dchepeha	35103639
+Chiang	Mark		MD, PhD	Assistant Professor	Internal Medicine-Hem/Onc	12	Hematologic Malignancies/BMT		Y	markchia@umich.edu	markchia	52158439
+Chiang	Mark		MD, PhD	Assistant Professor	Internal Medicine-Hem/Onc	1	Cancer Genetics		Y	markchia@umich.edu	markchia	52158439
+Chinnaiyan	Arul	M.	MD, PhD	Professor	Pathology and Urology	8	Prostate Cancer		Y	arul@umich.edu	arul	54537277
+Chinnaiyan	Arul	M.	MD, PhD	Professor	Pathology and Urology	1	Cancer Genetics		Y	arul@umich.edu	arul	54537277
+Cho	Kathleen		MD	Professor	Pathology & Internal Medicine	1	Cancer Genetics		Y	kathcho@umich.edu	kathcho	57464885
+Choi	Seok	Ki	PhD	Res Assistant Professor	MNIMBS & Internal Medicine	3	Experimental Therapeutics		Y	skchoi@umich.edu	skchoi	14442809
+Choi	Sung		MD	Assistant Professor	Pediatrics	12	Hematologic Malignancies/BMT		Y	sungchoi@umich.edu	sungchoi	20293940
+Cierpicki	Tomasz		PhD	Assistant Professor	Pathology	3	Experimental Therapeutics		Y	tomaszc@umich.edu	tomaszc	57521638
+Cierpicki	Tomasz		PhD	Assistant Professor	Pathology	12	Hematologic Malignancies/BMT		Y	tomaszc@umich.edu	tomaszc	57521638
+Cimprich	Bernadine		PhD, RN, FAAN	Associate Professor	Nursing	13	Socio-Behavioral		Y	cimprich@umich.edu	cimprich	10742093
+Cimprich	Bernadine		PhD, RN, FAAN	Associate Professor	Nursing	7	Breast Oncology		Y	cimprich@umich.edu	cimprich	10742093
+Clinthorne	Neal	H.	BS,MS	Research Professor	Radiology/Nuclear Medicine	5	Molecular Imaging		Y	nclintho@umich.edu	nclintho	39168966
+Collins	Kathleen		MD, PhD	Associate Professor	Internal Medicine	2	Cancer Cell Biology		Y	klcollin@umich.edu	klcollin	9657620
+Cooney	Kathleen	A.	MD	Professor and Chief	Internal Medicine and Urology	8	Prostate Cancer		Y	kcooney@umich.edu	kcooney	96427122
+Cooney	Kathleen	A.	MD	Professor and Chief	Internal Medicine and Urology	14	Biomedical Prevention		Y	kcooney@umich.edu	kcooney	96427122
+Couper	Mick		PhD	Research Professor	Institute for Social Research	13	Socio-Behavioral		Y	mcouper@umich.edu	mcouper	3658352
+Couriel	Daniel		MD	Professor	Internal Medicine-Hem/Onc	12	Hematologic Malignancies/BMT		Y	dcouriel@umich.edu	dcouriel	33251344
+D'Silva	Nisha		DDS, MSD, PhD	Associate Professor	Oral MED/Path/Oncology	11	Head & Neck Oncology		Y	njdsilva@umich.edu	njdsilva	9285023
+Danciu	Theodora		DMD, DMSc	Assistant Professor	Periodontics and Oral Medicine	11	Head & Neck Oncology		Y	tdanciu@umich.edu	tdanciu	38634223
+Day	Mark		PhD	Professor	Urology	8	Prostate Cancer		Y	mday@umich.edu	mday	14385448
+Day	Mark		PhD	Professor	Urology	2	Cancer Cell Biology		Y	mday@umich.edu	mday	14385448
+Demirci	Hakan		MD	Associate Professor	Ophthamology	19	Cutaneous Oncology		Y	hdemirci@umich.edu	hdemirci	73602297
+Demirci	Hakan		MD	Associate Professor	Ophthamology	11	Head & Neck Oncology		Y	hdemirci@umich.edu	hdemirci	73602297
+Dempsey	Amanda		MD, PhD, MPH	Assistant Professor	Pediatrics	13	Socio-Behavioral		Y	adempsey@umich.edu	adempsey	59588653
+Dempsey	Peter		PhD	Associate Professor	Molecular & Integrative Physiology	2	Cancer Cell Biology		Y	petedemp@umich.edu	petedemp	17097833
+Diehl	Kathleen		MD	Clin Associate Professor	General Surgery	7	Breast Oncology		Y	kdiehl@umich.edu	kdiehl	10875256
+Divi	Vasu		MD	Clinical Lecturer	Otolaryngology	11	Head & Neck Oncology		Y	vasudivi@umich.edu	vasudivi	5093440
+Djuric	Zora		PhD	Research Professor	Family Medicine	14	Biomedical Prevention		Y	zoralong@umich.edu	zoralong	74863270
+Djuric	Zora		PhD	Research Professor	Family Medicine	7	Breast Oncology		Y	zoralong@umich.edu	zoralong	74863270
+Dlugosz	Andrzej	A.	MD	Professor	Dermatology	2	Cancer Cell Biology		Y	dlugosza@umich.edu	dlugosza	78362511
+Dlugosz	Andrzej	A.	MD	Professor	Dermatology	19	Cutaneous Oncology		Y	dlugosza@umich.edu	dlugosza	78362511
+Dolinoy	Dana		PhD	Assistant Professor	Environmental Health Sciences	14	Biomedical Prevention		Y	ddolinoy@umich.edu	ddolinoy	75456559
+Donato	Nicholas		PhD	Research Associate Professor	Hematology/Oncology	12	Hematologic Malignancies/BMT		Y	ndonato@umich.edu	ndonato	16018290
+Donato	Nicholas		PhD	Research Associate Professor	Hematology/Oncology	3	Experimental Therapeutics		Y	ndonato@umich.edu	ndonato	16018290
+Dou	Yali		PhD	Assistant Professor	Pathology	1	Cancer Genetics		Y	yalid@umich.edu	yalid	80047504
+Dou	Yali		PhD	Assistant Professor	Pathology	12	Hematologic Malignancies/BMT		Y	yalid@umich.edu	yalid	80047504
+Douglas	Julie		PhD	Associate Professor	Human Genetics	1	Cancer Genetics		Y	jddoug@umich.edu	jddoug	77446006
+Douglas	Julie		PhD	Associate Professor	Human Genetics	7	Breast Oncology		Y	jddoug@umich.edu	jddoug	77446006
+Dressler	Gregory	R.	PhD	Professor	Pathology	1	Cancer Genetics		Y	dressler@umich.edu	dressler	13533384
+Duckett	Colin	S.	PhD	Associate Professor	Pathology	2	Cancer Cell Biology		Y	colind@umich.edu	colind	37976964
+Duckett	Colin	S.	PhD	Associate Professor	Pathology	12	Hematologic Malignancies/BMT		Y	colind@umich.edu	colind	37976964
+Duffy	Sonia	A.	PhD	Associate Professor	Otolaryngology	11	Head & Neck Oncology		Y	bump@umich.edu	bump	37925766
+Duffy	Sonia	A.	PhD	Associate Professor	Otolaryngology	13	Socio-Behavioral		Y	bump@umich.edu	bump	37925766
+Dunnick	N.	Reed	MD	Professor and Chair	Radiology	5	Molecular Imaging		Y	rdunnick@umich.edu	rdunnick	71770288
+Dunnick	Wesley		PhD	Professor	Microbiology & Immunology	2	Cancer Cell Biology		Y	wesadunn@umich.edu	wesadunn	63861900
+Ehrlich	Peter		MD	Associate Professor	Pediatric Surgery	10	Childhood Cancers		Y	pehrlich@umich.edu	pehrlich	29112656
+Ehrlich	Peter		MD	Associate Professor	Pediatric Surgery	3	Experimental Therapeutics		Y	pehrlich@umich.edu	pehrlich	29112656
+Eisbruch	Avraham		MD	Professor	Radiation Oncology	11	Head & Neck Oncology		Y	eisbruch@umich.edu	eisbruch	8244256
+Elenitoba-Johnson	Kojo		MD	Professor	Pathology	12	Hematologic Malignancies/BMT		Y	kojoelen@umich.edu	kojoelen	80570255
+Elenitoba-Johnson	Kojo		MD	Professor	Pathology	2	Cancer Cell Biology		Y	kojoelen@umich.edu	kojoelen	80570255
+Elliott	Michael		PhD	Associate Professor	Biostatistics/Survey Methodology	14	Biomedical Prevention		Y	mrelliot@umich.edu	mrelliot	28604457
+El-Sayed	Mohamed		PhD	Assistant Professor	Biomedical Engineering	3	Experimental Therapeutics		Y	melsayed@umich.edu	melsayed	16318771
+El-Sayed	Mohamed		PhD	Assistant Professor	Biomedical Engineering	7	Breast Oncology		Y	melsayed@umich.edu	melsayed	16318771
+Engel	James	D.	PhD	Chair and Professor	Cell and Developmental Biology	1	Cancer Genetics		Y	engel@umich.edu	engel	342387
+Ensminger	William		MD, PhD	Professor	Internal Medicine/Pharmacology	4	Radiation Sciences		Y	ensminge@umich.edu	ensminge	96927918
+Ensminger	William		MD, PhD	Professor	Internal Medicine/Pharmacology	9	Gastrointestinal Oncology		Y	ensminge@umich.edu	ensminge	96927918
+Erba	Harry	P.	MD, PhD	Associate Professor	Internal Medicine	12	Hematologic Malignancies/BMT		Y	hperba@umich.edu	hperba	2515744
+Fagerlin	Angela		PhD	Associate Professor	Internal Medicine	7	Breast Oncology		Y	fagerlin@umich.edu	fagerlin	12490562
+Fagerlin	Angela		PhD	Associate Professor	Internal Medicine	13	Socio-Behavioral		Y	fagerlin@umich.edu	fagerlin	12490562
+Fan	Xing		MD, PhD	Assistant Professor	Neurosurgery	2	Cancer Cell Biology		Y	xingf@umich.edu	xingf	90756076
+Fan	Xing		MD, PhD	Assistant Professor	Neurosurgery	10	Childhood Cancers		Y	xingf@umich.edu	xingf	90756076
+Fearon	Eric		MD, PhD	Emanuel Maisel Professor	Internal Medicine/Human Genetics	1	Cancer Genetics		Y	fearon@umich.edu	fearon	37116850
+Fearon	Eric		MD, PhD	Emanuel Maisel Professor	Internal Medicine/Human Genetics	9	Gastrointestinal Oncology		Y	fearon@umich.edu	fearon	37116850
+Feinberg	Stephen	E	DDS, MS, PhD	Professor	Maxillofacial Surgery	3	Experimental Therapeutics		Y	sefein@umich.edu	sefein	95414806
+Feinberg	Stephen	E	DDS, MS, PhD	Professor	Maxillofacial Surgery	11	Head & Neck Oncology		Y	sefein@umich.edu	sefein	95414806
+Feng	Felix		MD	Assistant Professor	Radiation Oncology	8	Prostate Cancer		Y	ffeng@umich.edu	ffeng	41358314
+Feng	Felix		MD	Assistant Professor	Radiation Oncology	4	Radiation Sciences		Y	ffeng@umich.edu	ffeng	41358314
+Feng	Mary		MD	Assistant Professor	Radiation Oncology	9	Gastrointestinal Oncology		Y	maryfeng@umich.edu	maryfeng	89919830
+Feng	Mary		MD	Assistant Professor	Radiation Oncology	4	Radiation Sciences		Y	maryfeng@umich.edu	maryfeng	89919830
+Ferguson	David		MD, PhD	Assistant Professor	Pathology	1	Cancer Genetics		Y	daviferg@umich.edu	daviferg	17418025
+Ferguson	David		MD, PhD	Assistant Professor	Pathology	4	Radiation Sciences		Y	daviferg@umich.edu	daviferg	17418025
+Ferrara	James	L.M.	MD	Professor	Internal Medicine & Pediatrics	12	Hematologic Malignancies/BMT		Y	ferrara@umich.edu	ferrara	25961225
+Ferrara	James	L.M.	MD	Professor	Internal Medicine & Pediatrics	10	Childhood Cancers		Y	ferrara@umich.edu	ferrara	25961225
+Fessler	Jeffrey		PhD	Professor	EECS	5	Molecular Imaging		Y	fessler@umich.edu	fessler	33573306
+Figueroa	Maria		MD	Assistant Professor	Pathology	1	Cancer Genetics		Y	marfigue@umich.edu	marfigue	88275789
+Figueroa	Maria		MD	Assistant Professor	Pathology	12	Hematologic Malignancies/BMT		Y	marfigue@umich.edu	marfigue	88275789
+Fingar	Diane		PhD	Assistant Professor	Cell and Developmental Biology	2	Cancer Cell Biology		Y	dfingar@umich.edu	dfingar	28306944
+Fink	David		MD	Professor	Neurology	17	Psych Oncology		Y	djfink@umich.edu	djfink	84500103
+Fink	David		MD	Professor	Neurology	13	Socio-Behavioral		Y	djfink@umich.edu	djfink	84500103
+Fisher	Gary		PhD	Professor	Dermatology	2	Cancer Cell Biology		Y	gjfisher@umich.edu	gjfisher	5352372
+Fisher	Gary		PhD	Professor	Dermatology	11	Head & Neck Oncology		Y	gjfisher@umich.edu	gjfisher	5352372
+Fraass	Benedick		PhD	Professor	Radiation Oncology	4	Radiation Sciences		Y	bfraass@umich.edu	bfraass	46380729
+Franceschi	Renny	T.	PhD	Professor	Periodontics/Prevention/Geriatrics	2	Cancer Cell Biology		Y	rennyf@umich.edu	rennyf	53213254
+Franceschi	Renny	T.	PhD	Professor	Periodontics/Prevention/Geriatrics	8	Prostate Cancer		Y	rennyf@umich.edu	rennyf	53213254
+Francis	Isaac		MD	Professor	Radiology	9	Gastrointestinal Oncology		Y	ifrancis@umich.edu	ifrancis	13228246
+Friese	Christopher		PhD	Assistant Professor	School of Nursing	13	Socio-Behavioral		Y	cfriese@umich.edu	cfriese	83263386
+Fuller	Robert	S.	PhD	Professor	Biological Chemistry	2	Cancer Cell Biology		Y	bfuller@umich.edu	bfuller	56522366
+Galban	Craig		PhD	Assistant Professor	Radiology	5	Molecular Imaging		Y	cgalban@umich.edu	cgalban	15210285
+Galban	Stefanie		PhD	Research Investigator	Radiation Oncology	5	Molecular Imaging		Y	sgalban@umich.edu	sgalban	17578284
+Galban	Stefanie		PhD	Research Investigator	Radiation Oncology	7	Breast Oncology		Y	sgalban@umich.edu	sgalban	17578284
+Garcia	George	A.	PhD	Associate Professor	Medicinal Chemistry	3	Experimental Therapeutics		Y	gagarcia@umich.edu	gagarcia	17622372
+Gebarski	Stephen	S.	MD	Professor	Radiology	11	Head & Neck Oncology		Y	gebarski@umich.edu	gebarski	9274092
+Gebarski	Stephen	S.	MD	Professor	Radiology	3	Experimental Therapeutics		Y	gebarski@umich.edu	gebarski	9274092
+Geiger	James	D.	MD	Associate Professor	Surgery	10	Childhood Cancers		Y	jgeiger@umich.edu	jgeiger	51073212
+Geiger	James	D.	MD	Associate Professor	Surgery	6	Tumor Immunology & Host Response		Y	jgeiger@umich.edu	jgeiger	51073212
+Geng	Jian-Guo		MD, PhD	Associate Professor	Biologic and Materials Sciences	2	Cancer Cell Biology		Y	jgeng@umich.edu	jgeng	1277750
+Geng	Jian-Guo		MD, PhD	Associate Professor	Biologic and Materials Sciences	11	Head & Neck Oncology		Y	jgeng@umich.edu	jgeng	1277750
+Gestwicki	Jason		PhD	Research Assistant Professor	Pathology	3	Experimental Therapeutics		Y	gestwick@umich.edu	gestwick	8647564
+Giordano	Thomas		MD, PhD	Professor	Pathology	1	Cancer Genetics		Y	giordano@umich.edu	giordano	13205464
+Giordano	Thomas		MD, PhD	Professor	Pathology	14	Biomedical Prevention		Y	giordano@umich.edu	giordano	13205464
+Glover	Thomas		PhD	Professor	Human Genetics / Pediatrics	1	Cancer Genetics		Y	glover@umich.edu	glover	53641360
+Glover	Thomas		PhD	Professor	Human Genetics / Pediatrics	4	Radiation Sciences		Y	glover@umich.edu	glover	53641360
+Glover	Thomas		PhD	Professor	Human Genetics / Pediatrics	10	Childhood Cancers		Y	glover@umich.edu	glover	53641360
+Green	Carmen		MD	Professor	Anesthesiology	13	Socio-Behavioral		Y	carmeng@umich.edu	carmeng	16696439
+Grembecka	Jolanta		PhD	Assistant Professor	Pathology	3	Experimental Therapeutics		Y	jolantag@umich.edu	jolantag	32776859
+Grembecka	Jolanta		PhD	Assistant Professor	Pathology	12	Hematologic Malignancies/BMT		Y	jolantag@umich.edu	jolantag	32776859
+Griffith	Derek	M.	PhD	Assistant Professor	Hlth Behavior & Hlth Ed	13	Socio-Behavioral		Y	derekmg@umich.edu	derekmg	56303342
+Griggs	Jennifer		MD, MPH	Associate Professor	Hematology/Oncology	7	Breast Oncology		Y	jengrigg@umich.edu	jengrigg	31615969
+Griggs	Jennifer		MD, MPH	Associate Professor	Hematology/Oncology	13	Socio-Behavioral		Y	jengrigg@umich.edu	jengrigg	31615969
+Gruber	Stephen	B.	MD, PhD, MPH	Professor	Internal Medicine	14	Biomedical Prevention		Y	sgruber@umich.edu	sgruber	75801463
+Gruber	Stephen	B.	MD, PhD, MPH	Professor	Internal Medicine	9	Gastrointestinal Oncology		Y	sgruber@umich.edu	sgruber	75801463
+Guan	Jun-Lin		PhD	Professor	Internal Medicine	2	Cancer Cell Biology		Y	jlguan@umich.edu	jlguan	18758763
+Gumucio	Deborah	L.	PhD	Professor	Cell and Developmental Biology	9	Gastrointestinal Oncology		Y	dgumucio@umich.edu	dgumucio	82327812
+Gumucio	Deborah	L.	PhD	Professor	Cell and Developmental Biology	2	Cancer Cell Biology		Y	dgumucio@umich.edu	dgumucio	82327812
+Hadjiyski	Lubomir		PhD	Research Associate Professor	Radiology	4	Radiation Sciences		Y	lhadjisk@umich.edu	lhadjisk	32897082
+Hadjiyski	Lubomir		PhD	Research Associate Professor	Radiology	11	Head & Neck Oncology		Y	lhadjisk@umich.edu	lhadjisk	32897082
+Hadjiyski	Lubomir		PhD	Research Associate Professor	Radiology	5	Molecular Imaging		Y	lhadjisk@umich.edu	lhadjisk	32897082
+Hafez	Khalad		MD	Associate Professor	Urology	8	Prostate Cancer		Y	khafez @umich.edu	khafez	857321
+Hammer	Gary	D.	MD, PhD	Associate Professor	Internal Medicine	2	Cancer Cell Biology		Y	ghammer@umich.edu	ghammer	62429649
+Hammer	Gary	D.	MD, PhD	Associate Professor	Internal Medicine	21	Endocrine Oncology		Y	ghammer@umich.edu	ghammer	62429649
+Hamstra	Daniel		MD, PhD	Assistant Professor	Radiation Oncology	8	Prostate Cancer		Y	dhamm@umich.edu	dhamm	17841277
+Hamstra	Daniel		MD, PhD	Assistant Professor	Radiation Oncology	4	Radiation Sciences		Y	dhamm@umich.edu	dhamm	17841277
+Hamstra	Daniel		MD, PhD	Assistant Professor	Radiation Oncology	10	Childhood Cancers		Y	dhamm@umich.edu	dhamm	17841277
+Hanauer	David		MD	Assistant Professor	Pediatrics	13	Socio-Behavioral		Y	hanauer@umich.edu	hanauer	93851016
+Hassan	Khaled		MD	Clinical Lecturer	Hematology/Oncology	15	Thoracic		Y	khaledh@umich.edu	khaledh	7172606
+Hassan	Khaled		MD	Clinical Lecturer	Hematology/Oncology	2	Cancer Cell Biology		Y	khaledh@umich.edu	khaledh	7172606
+Hawley	Sarah		PhD, MPH	Research Associate Professor	General Medicine	13	Socio-Behavioral		Y	sarahawl@umich.edu	sarahawl	84070703
+Hayes	Daniel		MD	Professor	Internal Medicine Hem/Onc	7	Breast Oncology		Y	hayesdf@umich.edu	hayesdf	39618533
+Hayes	Daniel		MD	Professor	Internal Medicine Hem/Onc	14	Biomedical Prevention		Y	hayesdf@umich.edu	hayesdf	39618533
+Haymart	Megan		MD	Assistant Professor	MEND	13	Socio-Behavioral		Y	meganhay@umich.edu	meganhay	23067801
+He	Yongqun		PhD	Assistant Professor	ULAM	6	Tumor Immunology & Host Response		Y	yongqunh@umich.edu	yongqunh	98499024
+Helman	Joseph	I.	D.MD	Professor and Chair	Oral and Maxillofacial Surgery	14	Biomedical Prevention		Y	jihelman@umich.edu	jihelman	18767822
+Helvie	Mark		MD	Professor	Radiology	7	Breast Oncology		Y	mahelvie@umich.edu	mahelvie	64888040
+Henry	Norah		MD, PhD	Assistant Professor	Hematology/Oncology	7	Breast Oncology		Y	norahh@umich.edu	norahh	63004160
+Hess	Jay		MD, PhD	Carl V. Weller Professor and Chair	Pathology	2	Cancer Cell Biology		Y	jayhess@umich.edu	jayhess	42322640
+Hess	Jay		MD, PhD	Carl V. Weller Professor and Chair	Pathology	10	Childhood Cancers		Y	jayhess@umich.edu	jayhess	42322640
+Hess	Jay		MD, PhD	Carl V. Weller Professor and Chair	Pathology	12	Hematologic Malignancies/BMT		Y	jayhess@umich.edu	jayhess	42322640
+Hollenbeck	Brent		MD	Associate Professor	Urology	8	Prostate Cancer		Y	bhollen@umich.edu	bhollen	73675740
+Hollenberg	Paul		PhD	Professor and Chair	Pharmacology	14	Biomedical Prevention		Y	phollen@umich.edu	phollen	96345313
+Holz	Ronald		MD, PhD	Professor	Pharmacology	14	Biomedical Prevention		Y	holz@umich.edu	holz	47948029
+Hu	Patrick		MD, PhD	Assistant Professor	Hematology/Oncology	2	Cancer Cell Biology		Y	pathu@umich.edu	pathu	10250116
+Hu	Patrick		MD, PhD	Assistant Professor	Hematology/Oncology	9	Gastrointestinal Oncology		Y	pathu@umich.edu	pathu	10250116
+Hussain	Maha		MD, FACP	Professor	Internal Medicine	8	Prostate Cancer		Y	mahahuss@umich.edu	mahahuss	12143656
+Hutchinson	Raymond		MD	Professor	Pediatrics	10	Childhood Cancers		Y	rhutchin@umich.edu	rhutchin	15767101
+Hutchinson	Raymond		MD	Professor	Pediatrics	12	Hematologic Malignancies/BMT		Y	rhutchin@umich.edu	rhutchin	15767101
+Imperiale	Michael		PhD	Professor	Microbiology & Immunology	2	Cancer Cell Biology		Y	imperial@umich.edu	imperial	67760064
+Inoki	Ken		MD, PhD	Assistant Professor	Life Sciences Institute	2	Cancer Cell Biology		Y	inokik@umich.edu	inokik	44256194
+Jagsi	Reshma		MD	Assistant Professor	Radiation Oncology	7	Breast Oncology		Y	rjagsi@umich.edu	rjagsi	23926957
+Jagsi	Reshma		MD	Assistant Professor	Radiation Oncology	13	Socio-Behavioral		Y	rjagsi@umich.edu	rjagsi	23926957
+Jakubowiak	Andrzej	J.	MD, PhD	Associate Professor	Internal Medicine	12	Hematologic Malignancies/BMT		Y	ajakubow@umich.edu	ajakubow	88112020
+Janz	Nancy		PhD	Professor	Health Behavior/Health Education	13	Socio-Behavioral		Y	nkjanz@umich.edu	nkjanz	24936195
+Jiang	Yebin		MD, PhD	Associate Professor	Radiology	5	Molecular Imaging		Y	johjiang@umich.edu	johjiang	91017720
+Jiang	Yebin		MD, PhD	Associate Professor	Radiology	8	Prostate Cancer		Y	johjiang@umich.edu	johjiang	91017720
+Jolly	Shruti		MD	Assistant Professor	Radiation Oncology	11	Head & Neck Oncology		Y	shrutij@umich.edu	shrutij	80646396
+Kahana	Alon		MD, PhD	Assistant Professor	Ophthamology & Visual Sciences	11	Head & Neck Oncology		Y	akahana@umich.edu	akahana	53450953
+Kahana	Alon		MD, PhD	Assistant Professor	Ophthamology & Visual Sciences	2	Cancer Cell Biology		Y	akahana@umich.edu	akahana	53450953
+Kakarala	Madhuri		MD, PhD	Clin Lecturer	Internal Medicine, Hem/Onc	14	Biomedical Prevention		Y	mkakaral@umich.edu	mkakaral	52941659
+Kakarala	Madhuri		MD, PhD	Clin Lecturer	Internal Medicine, Hem/Onc	7	Breast Oncology		Y	mkakaral@umich.edu	mkakaral	52941659
+Kalantry	Sundeep		PhD	Assistant Professor	Human Genetics	1	Cancer Genetics		Y	kalantry@umich.edu	kalantry	28101023
+Kalemkerian	Gregory	P.	MD	Professor	Internal Medicine	15	Thoracic		Y	kalemker@umich.edu	kalemker	20265930
+Kalemkerian	Gregory	P.	MD	Professor	Internal Medicine	3	Experimental Therapeutics		Y	kalemker@umich.edu	kalemker	20265930
+Kaminski	Mark		MD	Professor	Internal Medicine	12	Hematologic Malignancies/BMT		Y	mkaminsk@umich.edu	mkaminsk	20209115
+Kao	John		MD	Assistant Professor	Gastroenterology	9	Gastrointestinal Oncology		Y	jykao@umich.edu	jykao	73559245
+Kapila	Yvonne		DDS, PhD	Associate Professor	Periodontics/Prev & Geriatrics	11	Head & Neck Oncology		Y	ykapila@umich.edu	ykapila	58100917
+Katapodi	Maria		PhD	Assistant Professor	Nursing	13	Socio-Behavioral		Y	mkatapo@umich.edu	mkatapo	41072905
+Katapodi	Maria		PhD	Assistant Professor	Nursing	7	Breast Oncology		Y	mkatapo@umich.edu	mkatapo	41072905
+Katz	Steven		MD, M.P.H.	Professor	General Medicine	13	Socio-Behavioral		Y	skatz@umich.edu	skatz	50344725
+Katz	Steven		MD, M.P.H.	Professor	General Medicine	7	Breast Oncology		Y	skatz@umich.edu	skatz	50344725
+Keegan	Catherine		MD, PhD	Assistant Professor	Pediatrics & Communicable Dis.	1	Cancer Genetics		Y	keeganc@umich.edu	keeganc	50254110
+Keller	Evan	T.	DVM, PhD	Professor	Pathology	8	Prostate Cancer		Y	etkeller@umich.edu	etkeller	29435581
+Keller	Evan	T.	DVM, PhD	Professor	Pathology	2	Cancer Cell Biology		Y	etkeller@umich.edu	etkeller	29435581
+Kerppola	Tom	K.	PhD	Professor	Biological Chemistry	2	Cancer Cell Biology		Y	kerppola@umich.edu	kerppola	53948211
+Kerppola	Tom	K.	PhD	Professor	Biological Chemistry	12	Hematologic Malignancies/BMT		Y	kerppola@umich.edu	kerppola	53948211
+Keshamouni	Venkateshwar		PhD	Assistant Professor	Pulmonary and Critical Care	3	Experimental Therapeutics		Y	vkeshamo@umich.edu	vkeshamo	2061812
+Kessler	Marc		PhD	Associate Professor	Radiation Oncology	4	Radiation Sciences		Y	mkessler@umich.edu	mkessler	69810521
+Khan	Gazala		MD	Assistant Professor	Hem/Onc	9	Gastrointestinal Oncology		Y	gkhan@umich.edu	gkhan	69887630
+Kim	Scott		MD, PhD	Associate Professor	Psychiatry	13	Socio-Behavioral		Y	scottkim@umich.edu	scottkim	76849074
+King	Philip		PhD	Associate Professor	Microbiology & Immunology	6	Tumor Immunology & Host Response		Y	kingp@umich.edu	kingp	30232312
+Kleer	Celina	G	MD	Associate Professor	Pathology	7	Breast Oncology		Y	kleer@umich.edu	kleer	26102989
+Koch	Alisa		MD	Professor	Internal Medicine/Rheumatology	6	Tumor Immunology & Host Response		Y	aekoch@umich.edu	aekoch	37498032
+Koch	Alisa		MD	Professor	Internal Medicine/Rheumatology	7	Breast Oncology		Y	aekoch@umich.edu	aekoch	37498032
+Kong	Feng-Ming		MD, PhD	Associate Professor	Radiation Oncology	15	Thoracic		Y	fengkong@umich.edu	fengkong	8785111
+Kong	Feng-Ming		MD, PhD	Associate Professor	Radiation Oncology	4	Radiation Sciences		Y	fengkong@umich.edu	fengkong	8785111
+Kopelman	Raoul		PhD	Professor	Chem, Physics, Biomed Eng, Chem Bio	3	Experimental Therapeutics		Y	kopelman@umich.edu	kopelman	91264331
+Kopelman	Raoul		PhD	Professor	Chem, Physics, Biomed Eng, Chem Bio	11	Head & Neck Oncology		Y	kopelman@umich.edu	kopelman	91264331
+Kumar	Anuj		PhD	Associate Professor	MCDB	2	Cancer Cell Biology		Y	anujk@umich.edu	anujk	41052389
+Kumar	Chandan		PhD	Research Assistant Professor	Pathology	9	Gastrointestinal Oncology		Y	chakumar@umich.edu	chakumar	16860060
+Lantz	Paula		PhD	Professor and Chair	Health Management & Policy	13	Socio-Behavioral		Y	plantz@umich.edu	plantz	31876804
+Lao	Christopher		MD, MPH	Clinical Assistant Professor	Hematology/Oncology	14	Biomedical Prevention		Y	clao@umich.edu	clao	34175685
+Laouar	Yasmina		PhD	Assistant Professor	Microbiology & Immunology	6	Tumor Immunology & Host Response		Y	ylaouar@umich.edu	ylaouar	5808990
+Lawlor	Elizabeth		MD, PhD	Assistant Professor	Pediatrics	2	Cancer Cell Biology		Y	elawlor@umich.edu	elawlor	68919846
+Lawlor	Elizabeth		MD, PhD	Assistant Professor	Pediatrics	10	Childhood Cancers		Y	elawlor@umich.edu	elawlor	68919846
+Lawrence	Daniel		PhD	Professor	Cardiology	3	Experimental Therapeutics		Y	dlawrenc@umich.edu	dlawrenc	29559100
+Lawrence	Ted		MD, PhD	Isadore Lampe Professor & Chair	Radiation Oncology	4	Radiation Sciences		Y	tsl@umich.edu	tsl	46208064
+Lawrence	Ted		MD, PhD	Isadore Lampe Professor & Chair	Radiation Oncology	9	Gastrointestinal Oncology		Y	tsl@umich.edu	tsl	46208064
+Lebovic	Daniel		MD	Clinical Lecturer	Internal Medicine-Hem/Onc	12	Hematologic Malignancies/BMT		Y	dlebovic@umich.edu	dlebovic	86177232
+Lee	Cheng-Yu		PhD	Assistant Professor	Life Sciences Institute	2	Cancer Cell Biology		Y	leecheng@umich.edu	leecheng	61118793
+Levine	John		MD	Professor	Pediatrics	12	Hematologic Malignancies/BMT		Y	jelevine@umich.edu	jelevine	19728888
+Li	Qing		MD, PhD	Assistant Professor	Hematology/Oncology	12	Hematologic Malignancies/BMT		Y	lqing@umich.edu	lqing	31941048
+Liebert	Monica		BS, PhD	Professor	Urology	2	Cancer Cell Biology		Y	monical@umich.edu	monical	31684092
+Lim	Megan		MD, PhD	Associate Professor	Pathology	12	Hematologic Malignancies/BMT		Y	meganlim@umich.edu	meganlim	33194806
+Lin	Erin		MD	Clin Assistant Professor	Otolaryngology	11	Head & Neck Oncology		Y	elmk@umich.edu	elmk	94176291
+Lin	Jiandie		PhD	Assistant Professor	Cell and Developmental Biology	2	Cancer Cell Biology		Y	jdlin@umich.edu	jdlin	18971222
+Lin	Jules		MD	Assistant Professor	Thoracic Surgery	1	Cancer Genetics		Y	juleslin@umich.edu	juleslin	31082592
+Lin	Jules		MD	Assistant Professor	Thoracic Surgery	15	Thoracic		Y	juleslin@umich.edu	juleslin	31082592
+Little	Roderick		PhD	Professor and Chair	Biostatistics	13	Socio-Behavioral		Y	rlittle@umich.edu	rlittle	82598619
+Liu	Rebecca	J.	MD	Associate Professor	Obstetrics & Gynecology	2	Cancer Cell Biology		Y	rliu@umich.edu	rliu	14356567
+Liu	Yan		PhD	Research Assistant Professor	Surgery	6	Tumor Immunology & Host Response		Y	liuyan@umich.edu	liuyan	36440340
+Liu	Yang		PhD	Professor	General Surgery	6	Tumor Immunology & Host Response		Y	yangl@umich.edu	yangl	32035969
+Liu	Yang		PhD	Professor	General Surgery	2	Cancer Cell Biology		Y	yangl@umich.edu	yangl	32035969
+Livant	Donna	L.	PhD	Research Assistant Professor	Radiation Oncology	3	Experimental Therapeutics		Y	dlivant@umich.edu	dlivant	17532492
+Livant	Donna	L.	PhD	Research Assistant Professor	Radiation Oncology	7	Breast Oncology		Y	dlivant@umich.edu	dlivant	17532492
+Ljungman	Mats		PhD	Associate Professor	Radiation Oncology	4	Radiation Sciences		Y	ljungman@umich.edu	ljungman	53932900
+Ljungman	Mats		PhD	Associate Professor	Radiation Oncology	9	Gastrointestinal Oncology		Y	ljungman@umich.edu	ljungman	53932900
+Lnu	Sooryanarayana		PhD	Research Investigator	Pathology	8	Prostate Cancer		Y	soory@umich.edu	soory	58280542
+Lombard	David		MD, PhD	Assistant Professor	Pathology	1	Cancer Genetics		Y	davidlom@umich.edu	davidlom	7078543
+Lombard	David		MD, PhD	Assistant Professor	Pathology	9	Gastrointestinal Oncology		Y	davidlom@umich.edu	davidlom	7078543
+Lubman	David		PhD	Professor	Surgery	14	Biomedical Prevention		Y	dmlubman@umich.edu	dmlubman	30345476
+Lubman	David		PhD	Professor	Surgery	9	Gastrointestinal Oncology		Y	dmlubman@umich.edu	dmlubman	30345476
+Lucas	Peter	C	MD, PhD	Assistant Professor	Pathology	2	Cancer Cell Biology		Y	plucas@umich.edu	plucas	69544632
+Luker	Gary		MD	Assistant Professor	Radiology	5	Molecular Imaging		Y	gluker@umich.edu	gluker	83181970
+Luker	Gary		MD	Assistant Professor	Radiology	7	Breast Oncology		Y	gluker@umich.edu	gluker	83181970
+MacDougald	Ormond	A.	PhD	Professor	Molecular and Integrative Physiology	2	Cancer Cell Biology		Y	macdouga@umich.edu	macdouga	49212454
+Macoska	Jill		PhD	Associate  Professor	Urology	8	Prostate Cancer		Y	jcoska@umich.edu	jcoska	52716506
+Macoska	Jill		PhD	Associate  Professor	Urology	2	Cancer Cell Biology		Y	jcoska@umich.edu	jcoska	52716506
+Maillard	Ivan		MD, PhD	Assistant Professor	Hematology/Oncology	6	Tumor Immunology & Host Response		Y	imaillar@umich.edu	imaillar	45987855
+Maillard	Ivan		MD, PhD	Assistant Professor	Hematology/Oncology	12	Hematologic Malignancies/BMT		Y	imaillar@umich.edu	imaillar	45987855
+Malek	Sami		MD	Assistant Professor	Hematology/Oncology	12	Hematologic Malignancies/BMT		Y	smalek@umich.edu	smalek	77728025
+Malek	Sami		MD	Assistant Professor	Hematology/Oncology	1	Cancer Genetics		Y	smalek@umich.edu	smalek	77728025
+Mapp	Anna		PhD	Professor	Chemistry	3	Experimental Therapeutics		Y	amapp@umich.edu	amapp	47709184
+Margolis	Ben		MD	Professor	Internal Medicine and Biol. Chem.	2	Cancer Cell Biology		Y	bmargoli@umich.edu	bmargoli	66660466
+Markovitz	David		MD	Professor	Internal Medicine	12	Hematologic Malignancies/BMT		Y	dmarkov@umich.edu	dmarkov	41986880
+Markovitz	David		MD	Professor	Internal Medicine	6	Tumor Immunology & Host Response		Y	dmarkov@umich.edu	dmarkov	41986880
+Marrero	Jorge		MD	Professor	Gastroenterology	14	Biomedical Prevention		Y	jmarrero@umich.edu	jmarrero	21693107
+Marrero	Jorge		MD	Professor	Gastroenterology	9	Gastrointestinal Oncology		Y	jmarrero@umich.edu	jmarrero	21693107
+Martin	Donna	M	MD, PhD	Associate Professor	Pediatrics and Communicable Diseases	10	Childhood Cancers		Y	donnamm@umich.edu	donnamm	76335074
+Martin	Donna	M	MD, PhD	Associate Professor	Pediatrics and Communicable Diseases	1	Cancer Genetics		Y	donnamm@umich.edu	donnamm	76335074
+Maybaum	Jonathan		PhD	Professor	Pharmacology	4	Radiation Sciences		Y	maybaum@umich.edu	maybaum	38424266
+McAllister-Lucas	Linda	M	MD, PhD	Assistant Professor	Pediatric Hem/Onc	10	Childhood Cancers		Y	lindaluc@umich.edu	lindaluc	20838422
+McAllister-Lucas	Linda	M	MD, PhD	Assistant Professor	Pediatric Hem/Onc	12	Hematologic Malignancies/BMT		Y	lindaluc@umich.edu	lindaluc	20838422
+McAllister-Lucas	Linda	M	MD, PhD	Assistant Professor	Pediatric Hem/Onc	2	Cancer Cell Biology		Y	lindaluc@umich.edu	lindaluc	20838422
+McCauley	Laurie	Kay	D.D.S., PhD	Professor	Dentistry	8	Prostate Cancer		Y	mccauley@umich.edu	mccauley	2143816
+McCauley	Laurie	Kay	D.D.S., PhD	Professor	Dentistry	2	Cancer Cell Biology		Y	mccauley@umich.edu	mccauley	2143816
+McHugh	Jonathan		MD	Assistant Professor	Pathology	11	Head & Neck Oncology		Y	jonamch@umich.edu	jonamch	9806725
+McLean	Scott		MD, PhD	Assistant Professor	Otolaryngology	11	Head & Neck Oncology		Y	scotmcle@umich.edu	scotmcle	76882236
+McLean	Scott		MD, PhD	Assistant Professor	Otolaryngology	19	Cutaneous Oncology		Y	scotmcle@umich.edu	scotmcle	76882236
+McShan	Daniel		PhD	Professor	Radiation Oncology	4	Radiation Sciences		Y	dlmcshan@umich.edu	dlmcshan	34217783
+Merajver	Sofia		MD, PhD	Professor	Internal Medicine	7	Breast Oncology		Y	smerajve@umich.edu	smerajve	18560197
+Merajver	Sofia		MD, PhD	Professor	Internal Medicine	14	Biomedical Prevention		Y	smerajve@umich.edu	smerajve	18560197
+Merchant	Juanita		MD, PhD	Professor	Internal Medicine & Molecular/Integrative Physiology	9	Gastrointestinal Oncology		Y	merchanj@umich.edu	merchanj	72954036
+Meyer	Charles	R.	PhD	Professor	Radiology	5	Molecular Imaging		Y	cmeyer@umich.edu	cmeyer	75438400
+Miller	David	C.	MD	Assistant Professor	Urology	8	Prostate Cancer		Y	dcmiller@umich.edu	dcmiller	62354200
+Miller	David	C.	MD	Assistant Professor	Urology	13	Socio-Behavioral		Y	dcmiller@umich.edu	dcmiller	62354200
+Miller	Douglas	L.	PhD	Research Professor	Radiology	3	Experimental Therapeutics		Y	douglm@umich.edu	douglm	44623604
+Miller	Richard		MD, PhD	Professor	Pathology	2	Cancer Cell Biology		Y	millerr@umich.edu	millerr	37946955
+Mineishi	Shin		MD	Associate Professor	Hematology/Oncology	12	Hematologic Malignancies/BMT		Y	smineish@umich.edu	smineish	8100614
+Misek	David		PhD	Research Assistant Professor	Surgery	1	Cancer Genetics		Y	dmisek@umich.edu	dmisek	76159417
+Misek	David		PhD	Research Assistant Professor	Surgery	9	Gastrointestinal Oncology		Y	dmisek@umich.edu	dmisek	76159417
+Mody	Rajen		MD	Assistant Professor	Pediatric Hem/Onc	10	Childhood Cancers		Y	rmody@umich.edu	rmody	23889712
+Mody	Rajen		MD	Assistant Professor	Pediatric Hem/Onc	3	Experimental Therapeutics		Y	rmody@umich.edu	rmody	23889712
+Montgomery	Jeffrey		MD	Assistant Professor	Urology	8	Prostate Cancer		Y	montrose@umich.edu	montrose	20552964
+Montie	James		MD	Professor & Chair	Urology	8	Prostate Cancer		Y	jmontie@umich.edu	jmontie	40048921
+Montie	James		MD	Professor & Chair	Urology	14	Biomedical Prevention		Y	jmontie@umich.edu	jmontie	40048921
+Moran	Jean		PhD	Assistant Professor	Radiation Oncology	4	Radiation Sciences		Y	jmmoran@umich.edu	jmmoran	54501153
+Moran	John	V.	PhD	Professor	Human Genetics	1	Cancer Genetics		Y	moranj@umich.edu	moranj	66500762
+Morgan	Meredith		PhD	Research Assistant Professor	Radiation Oncology	3	Experimental Therapeutics		Y	mmccrack@umich.edu	mmccrack	91721129
+Morgenstern	Hal		PhD	Professor and Director	Epidemiology	14	Biomedical Prevention		Y	halm@umich.edu	halm	21997394
+Morris	Arden		MD, MPH	Associate Professor	Surgery	9	Gastrointestinal Oncology		Y	ammsurg@umich.edu	ammsurg	14981716
+Morris	Arden		MD, MPH	Associate Professor	Surgery	13	Socio-Behavioral		Y	ammsurg@umich.edu	ammsurg	14981716
+Morrison	Sean		PhD	Professor and Director	Internal Medicine	2	Cancer Cell Biology		Y	seanjm@umich.edu	seanjm	15820900
+Morrison	Sean		PhD	Professor and Director	Internal Medicine	12	Hematologic Malignancies/BMT		Y	seanjm@umich.edu	seanjm	15820900
+Mortensen	Richard		MD, PhD	Professor	Molecular & Integrative Physiology	9	Gastrointestinal Oncology		Y	rmort@umich.edu	rmort	69053600
+Mortensen	Richard		MD, PhD	Professor	Molecular & Integrative Physiology	2	Cancer Cell Biology		Y	rmort@umich.edu	rmort	69053600
+Moseley	Richard	H.	MD	Professor	Internal Medicine - Gastro	14	Biomedical Prevention		Y	rmoseley@umich.edu	rmoseley	18491173
+Moyer	Jeffrey		MD	Assistant Professor	Otolaryngology	11	Head & Neck Oncology		Y	jmoyer@umich.edu	jmoyer	57810142
+Moyer	Jeffrey		MD	Assistant Professor	Otolaryngology	6	Tumor Immunology & Host Response		Y	jmoyer@umich.edu	jmoyer	57810142
+Mukherjee	Bhramar		PhD	Associate Professor	Biostatistics	14	Biomedical Prevention		Y	bhramar@umich.edu	bhramar	88790014
+Mukherji	Suresh	K	MD	Professor	Radiology	11	Head & Neck Oncology		Y	mukherji@umich.edu	mukherji	60555617
+Muraszko	Karin		MD	Professor & Chair	Surgery/Neuro/Peds & Comm. Dis.	10	Childhood Cancers		Y	karinm@umich.edu	karinm	95879526
+Murphy	Susan		PhD	H.E. Robbins Professor	Statistics	13	Socio-Behavioral		Y	samurphy@umich.edu	samurphy	75293641
+Mycek	Mary-Ann		PhD	Associate Professor	Biomedical Engineering	14	Biomedical Prevention		Y	mycek@umich.edu	mycek	21370256
+Neubig	Richard	R.	MD, PhD	Professor	Pharmacology	3	Experimental Therapeutics		Y	rneubig@umich.edu	rneubig	52858805
+Neubig	Richard	R.	MD, PhD	Professor	Pharmacology	8	Prostate Cancer		Y	rneubig@umich.edu	rneubig	52858805
+Newman	Lisa		MD, MPH	Professor	Surgery	7	Breast Oncology		Y	lanewman@umich.edu	lanewman	32323761
+Nikolovska-Coleska	Zaneta		PhD	Assistant Professor	Pathology	3	Experimental Therapeutics		Y	zanetan@umich.edu	zanetan	29777216
+Nor	Jacques	E.	DDS, MS, PhD	Professor	School of Dentistry	3	Experimental Therapeutics		Y	jenor@umich.edu	jenor	75800608
+Nor	Jacques	E.	DDS, MS, PhD	Professor	School of Dentistry	11	Head & Neck Oncology		Y	jenor@umich.edu	jenor	75800608
+Nor	Jacques	E.	DDS, MS, PhD	Professor	School of Dentistry	2	Cancer Cell Biology		Y	jenor@umich.edu	jenor	75800608
+Northouse	Laurel		PhD, RN	Professor	Nursing	13	Socio-Behavioral		Y	lnortho@umich.edu	lnortho	94223867
+Northouse	Laurel		PhD, RN	Professor	Nursing	8	Prostate Cancer		Y	lnortho@umich.edu	lnortho	94223867
+Northouse	Laurel		PhD, RN	Professor	Nursing	7	Breast Oncology		Y	lnortho@umich.edu	lnortho	94223867
+Nunez	Gabriel		MD	Professor	Pathology	6	Tumor Immunology & Host Response		Y	bclx@umich.edu	bclx	12148019
+Nunez	Gabriel		MD	Professor	Pathology	2	Cancer Cell Biology		Y	bclx@umich.edu	bclx	12148019
+Nyati	Mukesh		PhD	Assistant Professor	Radiation Oncology	4	Radiation Sciences		Y	nyati@umich.edu	nyati	70574662
+Nyati	Mukesh		PhD	Assistant Professor	Radiation Oncology	11	Head & Neck Oncology		Y	nyati@umich.edu	nyati	70574662
+O'Brien	Patrick		PhD	Assistant Professor	Biological Chemistry	1	Cancer Genetics		Y	pjobrien@umich.edu	pjobrien	52688269
+O'Riordan	Mary		PhD	Assistant Professor	Microbiology & Immunology	6	Tumor Immunology & Host Response		Y	oriordan@umich.edu	oriordan	39829372
+Omenn	Gil		MD, PhD	Professor	Internal Medicine, Human Genetics & Public Health	14	Biomedical Prevention		Y	gomenn@umich.edu	gomenn	56096145
+Paczesny	Sophie		MD, PhD	Assistant Professor	Pediatrics	12	Hematologic Malignancies/BMT		Y	sophiep@umich.edu	sophiep	46152385
+Palanisamy	Nallasivam		MSc, MPhil, PhD	Research Assistant Professor	Pathology	1	Cancer Genetics		Y	nallasiv@umich.edu	nallasiv	85151145
+Papagerakis	Silvana		MD, PhD	Assistant Research Professor	Otolaryngology	11	Head & Neck Oncology		Y	silvanap@umich.edu	silvanap	36508654
+di Magliano	Marina	Pasca	PhD	Assistant Professor	Surgery	9	Gastrointestinal Oncology		Y	marinapa@umich.edu	marinapa	48125306
+di Magliano	Marina	Pasca	PhD	Assistant Professor	Surgery	2	Cancer Cell Biology		Y	marinapa@umich.edu	marinapa	48125306
+Peterson	Karen		D.Sc.	Professor	Environmental Hlth Sciences	14	Biomedical Prevention		Y	null		
+Peterson	Karen		D.Sc.	Professor	Environmental Hlth Sciences	11	Head & Neck Oncology		Y	null		
+Pienta	Ken		MD	Professor	Internal Medicine/Urology	8	Prostate Cancer		Y	kpienta@umich.edu	kpienta	31216982
+Pienta	Ken		MD	Professor	Internal Medicine/Urology	2	Cancer Cell Biology		Y	kpienta@umich.edu	kpienta	31216982
+Pierce	Lori		MD	Professor	Radiation Oncology	7	Breast Oncology		Y	ljpierce@umich.edu	ljpierce	44505722
+Pierce	Penny		PhD, MSN	Associate Professor	School of Nursing	13	Socio-Behavioral		Y	pfpierce@umich.edu	pfpierce	41011632
+Piert	Morand		MD	Associate Professor	Radiology	5	Molecular Imaging		Y	mpiert@umich.edu	mpiert	20903487
+Piert	Morand		MD	Associate Professor	Radiology	8	Prostate Cancer		Y	mpiert@umich.edu	mpiert	20903487
+Polverini	Peter		DDS, DMSc	Professor and Dean	Oral Medicine	11	Head & Neck Oncology		Y	neovas@umich.edu	neovas	84628639
+Polverini	Peter		DDS, DMSc	Professor and Dean	Oral Medicine	2	Cancer Cell Biology		Y	neovas@umich.edu	neovas	84628639
+Prince	Mark		MD	Associate Professor	Otolaryngology	11	Head & Neck Oncology		Y	mepp@umich.edu	mepp	36554203
+Rae	James		PhD	Assistant Professor	Hematology/Oncology	7	Breast Oncology		Y	jimmyrae@umich.edu	jimmyrae	36566721
+Ramnath	Nithya		MD	Associate Professor	Hematology/Oncology	15	Thoracic		Y	nithyar@umich.edu	nithyar	79478633
+Ramnath	Nithya		MD	Associate Professor	Hematology/Oncology	14	Biomedical Prevention		Y	nithyar@umich.edu	nithyar	79478633
+Ray	Dipankar		PhD	Research Investigator	Radiation Oncology	4	Radiation Sciences		Y	dipray@umich.edu	dipray	42389059
+Reddy	Pavan		MD	Associate Professor	Internal Medicine	12	Hematologic Malignancies/BMT		Y	reddypr@umich.edu	reddypr	98821130
+Reddy	Pavan		MD	Associate Professor	Internal Medicine	6	Tumor Immunology & Host Response		Y	reddypr@umich.edu	reddypr	98821130
+Reddy	Rishindra		MD	Assistant Professor	Thoracic Surgery	15	Thoracic		Y	reddyrm@umich.edu	reddyrm	79840076
+Reddy	Rishindra		MD	Assistant Professor	Thoracic Surgery	3	Experimental Therapeutics		Y	reddyrm@umich.edu	reddyrm	79840076
+Redman	Bruce		D.O.	Professor	Internal Medicine	8	Prostate Cancer		Y	redmanb@umich.edu	redmanb	46681760
+Redman	Bruce		D.O.	Professor	Internal Medicine	6	Tumor Immunology & Host Response		Y	redmanb@umich.edu	redmanb	46681760
+Rehemtulla	Alnawaz		PhD	Professor	Radiation Oncology	5	Molecular Imaging		Y	alnawaz@umich.edu	alnawaz	57577113
+Rehemtulla	Alnawaz		PhD	Professor	Radiation Oncology	11	Head & Neck Oncology		Y	alnawaz@umich.edu	alnawaz	57577113
+Resnicow	Kenneth		PhD	Professor	Health Behavior & Health Education	13	Socio-Behavioral		Y	kresnic@umich.edu	kresnic	22341565
+Roberts	Scott		PhD	Assistant Professor	Health Behavior & Health Education	13	Socio-Behavioral		Y	jscottr@umich.edu	jscottr	21768990
+Roberts	Scott		PhD	Assistant Professor	Health Behavior & Health Education	17	Psych Oncology		Y	jscottr@umich.edu	jscottr	21768990
+Roberts	William		MD	Associate Professor	Urology	8	Prostate Cancer		Y	willrobe@umich.edu	willrobe	22160243
+Robertson	Patricia	L.	MD	Professor	Pediatrics/Neurology	10	Childhood Cancers		Y	prob@umich.edu	prob	29207411
+Robins	Diane		PhD	Professor	Human Genetics	1	Cancer Genetics		Y	drobins@umich.edu	drobins	9192029
+Robins	Diane		PhD	Professor	Human Genetics	8	Prostate Cancer		Y	drobins@umich.edu	drobins	9192029
+Roessler	Blake		MD	Associate Professor	Internal Medicine - Rheumatology	3	Experimental Therapeutics		Y	roessler@umich.edu	roessler	80396270
+Rosania	Gustavo	R	PhD	Associate Professor	Pharmaceutical Sciences	7	Breast Oncology		Y	grosania@umich.edu	grosania	28471806
+Ross	Brian		PhD	Professor	Radiology and Biological Chemistry	5	Molecular Imaging		Y	bdross@umich.edu	bdross	76096319
+Ross	Brian		PhD	Professor	Radiology and Biological Chemistry	7	Breast Oncology		Y	bdross@umich.edu	bdross	76096319
+Ross	Theodora	S.	MD, PhD	Associate Professor	Internal Medicine	2	Cancer Cell Biology		Y	tsross@umich.edu	tsross	9137256
+Ross	Theodora	S.	MD, PhD	Associate Professor	Internal Medicine	7	Breast Oncology		Y	tsross@umich.edu	tsross	9137256
+Rozek	Laura		PhD	Assistant Professor	Environmental Hlth Sciences	14	Biomedical Prevention		Y	rozekl@umich.edu	rozekl	34923876
+Rozek	Laura		PhD	Assistant Professor	Environmental Hlth Sciences	11	Head & Neck Oncology		Y	rozekl@umich.edu	rozekl	34923876
+Ruddon	Raymond		MD, PhD	Professor Emeritus	Pharmacology	3	Experimental Therapeutics		Y	rruddon@umich.edu	rruddon	66546610
+Ruffin	Mack		MD, M.P.H.	Professor	Family Practice/Epidemiology	14	Biomedical Prevention		Y	mruffin@umich.edu	mruffin	21039368
+Sabel	Michael	S.	MD	Associate Professor	Surgery	7	Breast Oncology		Y	msabel@umich.edu	msabel	92840000
+Saltiel	Alan	R.	PhD	Professor and Director	Life Sciences Institute	2	Cancer Cell Biology		Y	saltiel@umich.edu	saltiel	82106293
+Samuelson	Linda	C.	PhD	Professor	Physiology	9	Gastrointestinal Oncology		Y	lcsam@umich.edu	lcsam	78937600
+Sartor	Maureen		PhD	Research Assistant Professor	Center for Computational Medicine and Bioinformatics	11	Head & Neck Oncology		Y	sartorma@umich.edu	sartorma	50466680
+Scheiman	James		MD	Professor	Internal Medicine	9	Gastrointestinal Oncology		Y	jscheima@umich.edu	jscheima	59748762
+Schoenfeld	Philip		MD	Associate Professor	Gastroenterology	9	Gastrointestinal Oncology		Y	pschoenf@umich.edu	pschoenf	71785635
+Schott	Anne		MD	Associate Professor	Internal Medicine	7	Breast Oncology		Y	aschott@umich.edu	aschott	59679949
+Schuetze	Scott		MD, PhD	Associate Professor	Hematology/Oncology	18	Connective Tissue		Y	scotschu@umich.edu	scotschu	46025033
+Schuetze	Scott		MD, PhD	Associate Professor	Hematology/Oncology	3	Experimental Therapeutics		Y	scotschu@umich.edu	scotschu	46025033
+Schwartz	Jessica		PhD	Professor	Molecular & Integrative Physiology	2	Cancer Cell Biology		Y	jeschwar@umich.edu	jeschwar	1043411
+Sebolt-Leopold	Judith		PhD	Research Associate Professor	Radiology	3	Experimental Therapeutics		Y	jssl@umich.edu	jssl	88130372
+Sebolt-Leopold	Judith		PhD	Research Associate Professor	Radiology	9	Gastrointestinal Oncology		Y	jssl@umich.edu	jssl	88130372
+Sekiguchi	JoAnn		PhD	Assistant Professor	Molecular Medicine & Genetics	1	Cancer Genetics		Y	sekiguch@umich.edu	sekiguch	7665345
+Sekiguchi	JoAnn		PhD	Assistant Professor	Molecular Medicine & Genetics	4	Radiation Sciences		Y	sekiguch@umich.edu	sekiguch	7665345
+Shah	Yatrik		PhD	Assistant Professor	Molecular & Integrative Physiology	2	Cancer Cell Biology		Y	shahy@umich.edu	shahy	90824909
+Shah	Yatrik		PhD	Assistant Professor	Molecular & Integrative Physiology	9	Gastrointestinal Oncology		Y	shahy@umich.edu	shahy	90824909
+Shahinian	Vahakn		MD	Assistant Professor	Nephrology	8	Prostate Cancer		Y	vahakn@umich.edu	vahakn	55435506
+Shahinian	Vahakn		MD	Assistant Professor	Nephrology	13	Socio-Behavioral		Y	vahakn@umich.edu	vahakn	55435506
+Shayman	James		MD	Professor	Internal Medicine and Pharmacology	3	Experimental Therapeutics		Y	jshayman@umich.edu	jshayman	76534884
+Shayman	James		MD	Professor	Internal Medicine and Pharmacology	10	Childhood Cancers		Y	jshayman@umich.edu	jshayman	76534884
+Shedden	Kerby		PhD	Associate Professor	Statistics	1	Cancer Genetics		Y	kshedden@umich.edu	kshedden	46284686
+Shedden	Kerby		PhD	Associate Professor	Statistics	14	Biomedical Prevention		Y	kshedden@umich.edu	kshedden	46284686
+Sherman	David		PhD	Professor	Medicinal Chemistry	3	Experimental Therapeutics		Y	davidhs@umich.edu	davidhs	40448614
+Sherman	David		PhD	Professor	Medicinal Chemistry	14	Biomedical Prevention		Y	davidhs@umich.edu	davidhs	40448614
+Shewach	Donna		PhD	Professor	Pharmacology	4	Radiation Sciences		Y	dshewach@umich.edu	dshewach	36752397
+Shewach	Donna		PhD	Professor	Pharmacology	11	Head & Neck Oncology		Y	dshewach@umich.edu	dshewach	36752397
+Showalter	Hollis		PhD	Research Professor	Medicinal Chemistry	3	Experimental Therapeutics		Y	showalh@umich.edu	showalh	51557304
+Simeone	Diane	M.	MD	Professor	Surgery	9	Gastrointestinal Oncology		Y	simeone@umich.edu	simeone	78856336
+Simeone	Diane	M.	MD	Professor	Surgery	2	Cancer Cell Biology		Y	simeone@umich.edu	simeone	78856336
+Simeone	Diane	M.	MD	Professor	Surgery	14	Biomedical Prevention		Y	simeone@umich.edu	simeone	78856336
+Simpson	Robert	U.	PhD	Professor	Pharmacology	5	Molecular Imaging		Y	robsim@umich.edu	robsim	47310036
+Simpson	Robert	U.	PhD	Professor	Pharmacology	14	Biomedical Prevention		Y	robsim@umich.edu	robsim	47310036
+Smerage	Jeffrey		MD, PhD	Clinical Assistant Professor	Hematology/Oncology	7	Breast Oncology		Y	smerage@umich.edu	smerage	5220184
+Smith	David	C.	MD	Professor	Internal Medicine	8	Prostate Cancer		Y	dcsmith@umich.edu	dcsmith	74664655
+Smith	David	C.	MD	Professor	Internal Medicine	3	Experimental Therapeutics		Y	dcsmith@umich.edu	dcsmith	74664655
+Smith	David	E.	PhD	Professor and Chair	Pharmaceutical Sciences	4	Radiation Sciences		Y	smithb@umich.edu	smithb	29393153
+LaVoie Smith	Ellen	M	PhD	Assistant Professor	School of Nursing	13	Socio-Behavioral		Y	ellenls@umich.edu	ellenls	8649598
+LaVoie Smith	Ellen	M	PhD	Assistant Professor	School of Nursing	7	Breast Oncology		Y	ellenls@umich.edu	ellenls	8649598
+Smith	William		PhD	Professor and Chair	Biological Chemistry	14	Biomedical Prevention		Y	smithww@umich.edu	smithww	30258512
+Smith	William		PhD	Professor and Chair	Biological Chemistry	2	Cancer Cell Biology		Y	smithww@umich.edu	smithww	30258512
+Soellner	Matthew		PhD	Assistant Professor	Medicinal Chemistry	3	Experimental Therapeutics		Y	soellner@umich.edu	soellner	31930899
+Soliman	Amr	S.	MD, PhD	Associate Professor	Epidemiology	14	Biomedical Prevention		Y	asoliman@umich.edu	asoliman	78560009
+Soliman	Amr	S.	MD, PhD	Associate Professor	Epidemiology	9	Gastrointestinal Oncology		Y	asoliman@umich.edu	asoliman	78560009
+Sood	Suman		MD	Assistant Professor	Internal Medicine-Hem/Onc	14	Biomedical Prevention		Y	sumisood@umich.edu	sumisood	53012112
+Sood	Suman		MD	Assistant Professor	Internal Medicine-Hem/Onc	12	Hematologic Malignancies/BMT		Y	sumisood@umich.edu	sumisood	53012112
+Spindler	Katherine	R.	PhD	Professor	Microbiology and Immunology	2	Cancer Cell Biology		Y	krspin@umich.edu	krspin	18089715
+Squarize	Cristiane		DDS, PhD	Assistant Professor	Periodontics & Oral Med	11	Head & Neck Oncology		Y	csquariz@umich.edu	csquariz	78753360
+Stoll	Stefan		Ph.D	Research Assistant Professor	Dermatology	2	Cancer Cell Biology		Y	sstoll@umich.edu	sstoll	95304212
+Stoll	Stefan		Ph.D	Research Assistant Professor	Dermatology	19	Cutaneous Oncology		Y	sstoll@umich.edu	sstoll	95304212
+Strecher	Victor		PhD	Professor	Health Behavior/Health Education	13	Socio-Behavioral		Y	strecher@umich.edu	strecher	28150081
+Strecher	Victor		PhD	Professor	Health Behavior/Health Education	7	Breast Oncology		Y	strecher@umich.edu	strecher	28150081
+Sun	Duxin		PhD	Associate Professor	Pharmaceutical Sciences	3	Experimental Therapeutics		Y	duxins@umich.edu	duxins	4688800
+Sun	Duxin		PhD	Associate Professor	Pharmaceutical Sciences	7	Breast Oncology		Y	duxins@umich.edu	duxins	4688800
+Sun	Duxin		PhD	Associate Professor	Pharmaceutical Sciences	14	Biomedical Prevention		Y	duxins@umich.edu	duxins	4688800
+Sun	Yi		PhD	Professor	Radiation Oncology	4	Radiation Sciences		Y	sunyi@umich.edu	sunyi	83994950
+Sun	Yi		PhD	Professor	Radiation Oncology	7	Breast Oncology		Y	sunyi@umich.edu	sunyi	83994950
+Taichman	Russell		DMD, DMSc	Professor	Periodontics/Prevention/Geriatrics	8	Prostate Cancer		Y	rtaich@umich.edu	rtaich	87237089
+Taichman	Russell		DMD, DMSc	Professor	Periodontics/Prevention/Geriatrics	2	Cancer Cell Biology		Y	rtaich@umich.edu	rtaich	87237089
+Taichman	Russell		DMD, DMSc	Professor	Periodontics/Prevention/Geriatrics	12	Hematologic Malignancies/BMT		Y	rtaich@umich.edu	rtaich	87237089
+Talpaz	Moshe		MD	Professor	Hematology/Oncology	12	Hematologic Malignancies/BMT		Y	mtalpaz@umich.edu	mtalpaz	78654876
+Talpaz	Moshe		MD	Professor	Hematology/Oncology	3	Experimental Therapeutics		Y	mtalpaz@umich.edu	mtalpaz	78654876
+Taylor	Jeremy	M.G.	PhD	Professor	Biostatistics	14	Biomedical Prevention		Y	jmgt@umich.edu	jmgt	98575280
+Taylor	Jeremy	M.G.	PhD	Professor	Biostatistics	8	Prostate Cancer		Y	jmgt@umich.edu	jmgt	98575280
+Taylor	Jeremy	M.G.	PhD	Professor	Biostatistics	7	Breast Oncology		Y	jmgt@umich.edu	jmgt	98575280
+Telesnitsky	Alice		PhD	Associate Professor	Microbiology & Immunology	1	Cancer Genetics		Y	ateles@umich.edu	ateles	73829645
+Telesnitsky	Alice		PhD	Associate Professor	Microbiology & Immunology	12	Hematologic Malignancies/BMT		Y	ateles@umich.edu	ateles	73829645
+TenHaken	Randall		PhD	Professor	Radiation Oncology	4	Radiation Sciences		Y	rth@umich.edu	rth	36243345
+Terrell	Jeffrey		MD	Professor	Otorhinolaryngology	13	Socio-Behavioral		Y	terrelj@umich.edu	terrelj	78161666
+Terrell	Jeffrey		MD	Professor	Otorhinolaryngology	11	Head & Neck Oncology		Y	terrelj@umich.edu	terrelj	78161666
+Tesmer	John		PhD	Associate Professor	Pharmacology	2	Cancer Cell Biology		Y	tesmerjj@umich.edu	tesmerjj	60587904
+Thomas	Dafydd	G.	PhD, MD	Research Investigator	Pathology	10	Childhood Cancers		Y	thomasda@umich.edu	thomasda	85345421
+Thomas	Dafydd	G.	PhD, MD	Research Investigator	Pathology	7	Breast Oncology		Y	thomasda@umich.edu	thomasda	85345421
+Todisco	Andrea	A.	MD	Associate Professor	Internal Medicine Gastroenterology	9	Gastrointestinal Oncology		Y	atodisco@umich.edu	atodisco	22208943
+Trievel	Raymond		PhD	Associate Professor	Biological Chemistry	2	Cancer Cell Biology		Y	rtrievel@umich.edu	rtrievel	88832300
+Tsien	Christina		MD	Associate Professor	Radiation Oncology	11	Head & Neck Oncology		Y	ctsien@umich.edu	ctsien	30595856
+Tsien	Christina		MD	Associate Professor	Radiation Oncology	5	Molecular Imaging		Y	ctsien@umich.edu	ctsien	30595856
+Tsodikov	Alex		PhD	Professor	Biostatistics	8	Prostate Cancer		Y	tsodikov@umich.edu	tsodikov	9637530
+Tsodikov	Alex		PhD	Professor	Biostatistics	14	Biomedical Prevention		Y	tsodikov@umich.edu	tsodikov	9637530
+Turgeon	D.	Kim	MD	Associate Professor	Internal Medicine - GI	14	Biomedical Prevention		Y	kturgeon@umich.edu	kturgeon	98246486
+Turgeon	D.	Kim	MD	Associate Professor	Internal Medicine - GI	9	Gastrointestinal Oncology		Y	kturgeon@umich.edu	kturgeon	98246486
+Urba	Susan		MD	Professor	Internal Medicine Hem/Onc	11	Head & Neck Oncology		Y	surba@umich.edu	surba	48709256
+Urba	Susan		MD	Professor	Internal Medicine Hem/Onc	15	Thoracic		Y	surba@umich.edu	surba	48709256
+Dort	Marcian	Van	M.S., PhD	Research Associate Professor	Radiology	5	Molecular Imaging		Y	mvandort@umich.edu	mvandort	34345255
+Poznak	Catherine	Van	MD	Assistant Professor	Hematology/Oncology	7	Breast Oncology		Y	cvanpoz@umich.edu	cvanpoz	55456638
+Poznak	Catherine	Van	MD	Assistant Professor	Hematology/Oncology	5	Molecular Imaging		Y	cvanpoz@umich.edu	cvanpoz	55456638
+Varani	James		PhD	Professor	Pathology	2	Cancer Cell Biology		Y	varani@umich.edu	varani	65270370
+Vojtek	Anne		PhD	Associate Professor	Biological Chemistry	2	Cancer Cell Biology		Y	avojtek@umich.edu	avojtek	86473942
+Wang	Shaomeng		PhD	Professor	Internal Medicine	3	Experimental Therapeutics		Y	shaomeng@umich.edu	shaomeng	56501266
+Wang	Shaomeng		PhD	Professor	Internal Medicine	7	Breast Oncology		Y	shaomeng@umich.edu	shaomeng	56501266
+Wang	Shaomeng		PhD	Professor	Internal Medicine	8	Prostate Cancer		Y	shaomeng@umich.edu	shaomeng	56501266
+Wang	Su	He	PhD	Research Assistant Professor	Allergy	3	Experimental Therapeutics		Y	shidasui@umich.edu	shidasui	74965361
+Wang	Su	He	PhD	Research Assistant Professor	Allergy	11	Head & Neck Oncology		Y	shidasui@umich.edu	shidasui	74965361
+Wang	Thomas		MD, PhD	Assistant Professor	Gastrenterology	5	Molecular Imaging		Y	thomaswa@umich.edu	thomaswa	82831753
+Wang	Thomas		MD, PhD	Assistant Professor	Gastrenterology	14	Biomedical Prevention		Y	thomaswa@umich.edu	thomaswa	82831753
+Wang	Xiaoju		PhD	Research Investigator	Pathology	8	Prostate Cancer		Y	xiaojuw@umich.edu	xiaojuw	74831822
+Ward	Brent	B	MD	Assistant Professor	Oral and Maxillofacial Surgery	11	Head & Neck Oncology		Y	bward@umich.edu	bward	27818192
+Ward	Brent	B	MD	Assistant Professor	Oral and Maxillofacial Surgery	3	Experimental Therapeutics		Y	bward@umich.edu	bward	27818192
+Warner	Kenneth		PhD	Professor & Dean	Health Management & Policy / School of Public Health	13	Socio-Behavioral		Y	kwarner@umich.edu	kwarner	2244767
+Wei	John	T.	MD	Professor	Urology	8	Prostate Cancer		Y	jtwei@umich.edu	jtwei	52361633
+Wei	John	T.	MD	Professor	Urology	13	Socio-Behavioral		Y	jtwei@umich.edu	jtwei	52361633
+Weiss	Stephen		MD	Professor and Chief	Internal Medicine - Molecular Medicine	2	Cancer Cell Biology		Y	sjweiss@umich.edu	sjweiss	45619977
+Weiss	Stephen		MD	Professor and Chief	Internal Medicine - Molecular Medicine	7	Breast Oncology		Y	sjweiss@umich.edu	sjweiss	45619977
+Wellik	Deneen		PhD	Assistant Professor	Molecular Medicine & Genetics	1	Cancer Genetics		Y	dwellik@umich.edu	dwellik	35257653
+Wellik	Deneen		PhD	Assistant Professor	Molecular Medicine & Genetics	8	Prostate Cancer		Y	dwellik@umich.edu	dwellik	35257653
+III	Theodore	Welling	MD	Assistant Professor	Surgery	9	Gastrointestinal Oncology		Y	twelling@umich.edu	twelling	29094523
+Welsh	Michael		PhD	Professor	Cell and Developmental Biology	3	Experimental Therapeutics		Y	welsh@umich.edu	welsh	44603076
+Wicha	Max		MD	Professor & Director	Internal Medicine/UMCCC	7	Breast Oncology		Y	mwicha@umich.edu	mwicha	3235336
+Wicha	Max		MD	Professor & Director	Internal Medicine/UMCCC	2	Cancer Cell Biology		Y	mwicha@umich.edu	mwicha	3235336
+Wilson	Thomas		MD, PhD	Associate Professor	Pathology	4	Radiation Sciences		Y	wilsonte@umich.edu	wilsonte	34140646
+Wolf	Gregory		MD	Professor	Otolaryngology	11	Head & Neck Oncology		Y	gregwolf@umich.edu	gregwolf	21352064
+Wong	Sandra		MD	Assistant Professor	Surgery	9	Gastrointestinal Oncology		Y	wongsl@umich.edu	wongsl	28280142
+Wood	David		MD	Professor	Urology	8	Prostate Cancer		Y	davwood@umich.edu	davwood	6884462
+Worden	Francis		MD	Assistant Professor	Hematology/Oncology	11	Head & Neck Oncology		Y	fworden@umich.edu	fworden	90419235
+Xu	Haoxing		PhD	Assistant Professor	MCDB	2	Cancer Cell Biology		Y	haoxingx@umich.edu	haoxingx	11844349
+Xu	Shawn		PhD	Assistant Professor	Molecular and Integrative Physiology	1	Cancer Genetics		Y	shawnxu@umich.edu	shawnxu	86030920
+Xu	Yiru		PhD	Research Assistant Professor	Dermatology	11	Head & Neck Oncology		Y	xuyiru@umich.edu	xuyiru	19307580
+Yang	Victor		PhD	Professor	Pharmaceutical Sciences	3	Experimental Therapeutics		Y	vcyang@umich.edu	vcyang	12350529
+Yanik	Gregory	A.	MD	Professor	Pediatrics	10	Childhood Cancers		Y	gyanik@umich.edu	gyanik	43252763
+Yanik	Gregory	A.	MD	Professor	Pediatrics	12	Hematologic Malignancies/BMT		Y	gyanik@umich.edu	gyanik	43252763
+Young	Matthew		PhD	Assistant Professor	Biological Chemistry	3	Experimental Therapeutics		Y	youngmat@umich.edu	youngmat	6023739
+Yu	Xiaochun		MD, PhD	Assistant Professor	Molecular Medicine & Genetics	1	Cancer Genetics		Y	xiayu@umich.edu	xiayu	98865100
+Yu	Xiaochun		MD, PhD	Assistant Professor	Molecular Medicine & Genetics	7	Breast Oncology		Y	xiayu@umich.edu	xiayu	98865100
+Zalupski	Mark	M.	MD	Professor	Internal Medicine	9	Gastrointestinal Oncology		Y	zalupski@umich.edu	zalupski	9260858
+Zebrack	Bradley		PhD	Associate Professor	Social Work	13	Socio-Behavioral		Y	zebrack@umich.edu	zebrack	94494099
+Zhang	Yi		MD, PhD	Assistant Professor	Hematology/Oncology	6	Tumor Immunology & Host Response		Y	yizha@umich.edu	yizha	91926689
+Zhang	Yi		MD, PhD	Assistant Professor	Hematology/Oncology	12	Hematologic Malignancies/BMT		Y	yizha@umich.edu	yizha	91926689
+Zheng	Pan		MD, PhD	Associate Professor	Surgery	6	Tumor Immunology & Host Response		Y	panz@umich.edu	panz	84486495
+Zheng	Pan		MD, PhD	Associate Professor	Surgery	8	Prostate Cancer		Y	panz@umich.edu	panz	84486495
+Zhu	Yuan		PhD	Assistant Professor	Molecular Medicine & Genetics	1	Cancer Genetics		Y	yuanzhu@umich.edu	yuanzhu	74913582
+Zick	Suzie		MD, MPH	Research Assistant Professor	Family Medicine	14	Biomedical Prevention		Y	szick@umich.edu	szick	22146270
+Zick	Suzie		MD, MPH	Research Assistant Professor	Family Medicine	7	Breast Oncology		Y	szick@umich.edu	szick	22146270
+Zikmund-Fisher	Brian		PhD	Assistant Professor	Hlth Behavior & Hlth Ed	13	Socio-Behavioral		Y	bzikmund@umich.edu	bzikmund	91818570
+Zou	Weiping		MD, PhD	Professor	Surgery	6	Tumor Immunology & Host Response		Y	wzou@umich.edu	wzou	97254155
+Zou	Weiping		MD, PhD	Professor	Surgery	9	Gastrointestinal Oncology		Y	wzou@umich.edu	wzou	97254155

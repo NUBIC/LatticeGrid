@@ -1,0 +1,70 @@
+pg_dump -Fc fsmpublications_development -U fsmpublications -h pdev > fsmpublications_dev_20110512.dmp
+pg_restore -d fsmpublications_production -U fsmpublications -h pprod fsmpublications_dev_20110512.dmp
+
+pg_dump -Fc fsm_latticegrid_production -U fsm_latticegrid -h pprod > fsmpublications_prod_20110306.dmp
+
+pg_dump -Fc cinjcancerpublications_development -U cinjcancerpublications > cinjpublications_dev_20110410.dmp
+
+# from my laptop
+
+pg_dump -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev_20110512.dmp
+
+# through a ssh connection
+
+#set up a tunnel from my laptop to rails2-staging routing localhost port 5433 to pprod port 5432 (standard postgres port)
+ssh -f wakibbe@rails-staging2.nubic.northwestern.edu -L 5433:pstage.bioinformatics.northwestern.edu:5432 -N
+
+#run pg_restore to get the data from my laptop into production. -O tells it to use the connection postgres user, not the one I extracted from
+pg_restore -c -O -d fsm_latticegrid_staging -U fsm_latticegrid -h localhost -p 5433 fsmpublications_dev_20110512.dmp
+
+
+#set up a tunnel from my laptop to rails2-prod routing localhost port 5433 to pprod port 5432 (standard postgres port)
+ssh -f wakibbe@rails-prod2.nubic.northwestern.edu -L 5433:pprod.bioinformatics.northwestern.edu:5432 -N
+
+#run pg_restore to get the data from my laptop into production. -O tells it to use the connection postgres user, not the one I extracted from
+pg_restore -c -O -d fsm_latticegrid_production -U fsm_latticegrid -h localhost -p 5433 fsmpublications_dev_20110512.dmp
+
+#copy it use scp
+scp fsmpublications_dev_201103306.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe
+
+scp fsmpublications_dev_20110512.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe
+
+scp fsmpublications_dev_20110614.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe
+
+#move to laptop from old rails-dev
+scp wakibbe@rails-dev.bioinformatics.northwestern.edu:/home/wakibbe/cinj_pubs/cinjpublications_dev_20110410.dmp  cinjpublications_dev_20110410.dmp
+
+
+scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/enotis/tmp/medical_services_2011-06-16_23-04-10.csv  medical_services_2011-06-16_23-04-10.csv
+
+
+#move from laptop to new rails staging
+scp cinjpublications_dev_20110410.dmp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe
+
+pg_restore -O -d cinj_latticegrid_staging -U rhlccc_latticegrid -h pstage cinjpublications_dev_20110410.dmp
+
+#now restore
+pg_restore -O -d fsm_latticegrid_production -U fsm_latticegrid -h pprod fsmpublications_dev_20110512.dmp
+
+# using ssh tunneling 
+#set up a tunnel from my laptop to rails-dev routing localhost port 5433 to pdev port 5432 (standard postgres port)
+ssh -f wakibbe@rails-dev.bioinformatics.northwestern.edu -L 5433:pdev.bioinformatics.northwestern.edu:5432 -N
+#run pg_dump to get the data onto my laptop
+pg_dump -Fc fsmpublications_development -U fsmpublications -h localhost -p 5433 > fsmpublications_dev_201012315.dmp
+
+#set up a tunnel from my laptop to rails-prodv routing localhost port 5433 to pprod port 5432 (standard postgres port)
+ssh -f wakibbe@rails-prod.nubic.northwestern.edu -L 5433:pprod.bioinformatics.northwestern.edu:5432 -N
+#run pg_restore to get the data from my laptop into production. -O tells it to use the connection postgres user, not the one I extracted from
+pg_restore -c -O -d fsm_latticegrid_production -U fsm_latticegrid -h localhost -p 5433 fsmpublications_dev_201012315.dmp
+
+# from rails2prod
+pg_dump -Fc rhlccc_latticegrid_production -U rhlccc_latticegrid -h pprod > cancer_latticegrid_prod_20110807.dmp
+
+#move to laptop from rails-prod2
+scp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/cancer_latticegrid_prod_20110807.dmp  cancer_latticegrid_prod_20110807.dmp
+#install on laptop
+pg_restore -c -O -d cancerpublications_development -U cancerpublications cancer_latticegrid_prod_20110807.dmp
+#install back on rails-prod2
+pg_restore -c -O -d rhlccc_latticegrid_production -U rhlccc_latticegrid -h pprod cancer_latticegrid_prod_20110807.dmp
+
+

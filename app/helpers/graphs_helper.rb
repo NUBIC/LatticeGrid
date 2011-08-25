@@ -95,12 +95,18 @@ module GraphsHelper
   def assignInvestigatorPositions(investigator)
     collaborator_nodes=Hash.new
     investigator.internal_collaborators.keys.each do |investigator_id|
-      collaborator_nodes[investigator_id]=Investigator.find(investigator_id)
-      collaborator_nodes[investigator_id]['isInternal'] = true
+      collaborator = Investigator.find_by_id(investigator_id)
+      if !collaborator.nil?
+        collaborator_nodes[investigator_id]=collaborator
+        collaborator_nodes[investigator_id]['isInternal'] = true
+      end
     end
     investigator.external_collaborators.keys.each do |investigator_id|
-      collaborator_nodes[investigator_id]=Investigator.find(investigator_id)
-      collaborator_nodes[investigator_id]['isInternal'] = false
+      collaborator = Investigator.find_by_id(investigator_id)
+      if !collaborator.nil?
+        collaborator_nodes[investigator_id]=collaborator
+        collaborator_nodes[investigator_id]['isInternal'] = false
+      end
     end
     return collaborator_nodes
   end

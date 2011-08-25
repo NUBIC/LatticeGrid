@@ -1,0 +1,37 @@
+<% all_abstracts = all_abstracts || nil -%>
+<% if ! investigator.nil? %>
+<div id="investigator_title">
+<%= investigator_bio_heading(investigator, all_abstracts) %>
+</div>
+<div id="biograph">
+<table>
+	<tr><td>
+	<table>
+		<%= handle_tr_format("Academic&nbsp;Title",investigator.title) %>
+		<%= handle_tr_format("Primary&nbsp;Department",link_to_primary_department(investigator)) %>
+		<%= handle_tr_format("Other&nbsp;Appointments", link_to_units(investigator.joint_appointments+investigator.secondary_appointments))%>
+		<%= handle_tr_format("Affiliations",link_to_units(investigator.memberships))%>
+		<%= handle_tr_format("Campus",investigator.campus) %>
+		<%= handle_tr_format("Address",investigator.address1, /\$/,"<br>" ) %>
+		<%= handle_tr_format("Telephone",investigator.business_phone) %>
+		<%= handle_tr_format("Fax",investigator.fax) %>
+		<%= handle_tr_format("Email",email_link(investigator.email)) %>
+		<% if defined?(LatticeGridHelper.include_summary_by_member?) and LatticeGridHelper.include_summary_by_member? %>
+			<% old_summary = "&nbsp;" %>
+			<% investigator.member_appointments.each do |appointment| %>
+				<% research_summary = (appointment.research_summary || investigator.faculty_research_summary || "").chomp %>
+				<% research_summary = "&nbsp;" if research_summary == old_summary %>
+				<% old_summary = research_summary if ((!research_summary.blank?) and (research_summary != "&nbsp;")) %>
+				<%= handle_tr_format("Research in #{link_to_unit(appointment.organizational_unit)}", research_summary )%>
+			<% end %>
+		<% else %>
+		<%= handle_tr_format("Description",investigator.faculty_research_summary||"No research description available") if LatticeGridHelper.show_research_description? %>
+		<% end %>
+		<%= handle_tr_format("Keywords",investigator.faculty_keywords) %>
+		<%= handle_tr_format("Interests",investigator.faculty_interests)%>
+	</table>
+	</td></tr>
+</table>
+</div>
+<% end %>
+

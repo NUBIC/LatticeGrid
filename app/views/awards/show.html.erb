@@ -1,0 +1,47 @@
+<% if @award.blank? %>
+<h3>Sorry. No data found</h3>
+<% else %>
+<div id="awardcontent">
+<div id="award">
+
+	<div id="title">
+		Award title: <%= @award.title %>
+	</div>
+	<%= render( :partial => "shared/award_note.html" ) %>
+	<%= format_object_div("keywords", @award.keywords ) %>
+	<%= format_object_div("agency", @award.agency ) %>
+	<%= format_object_div("sponsor_code", @award.sponsor_code ) %>
+	<%= format_object_div("sponsor_name", @award.sponsor_name ) %>
+	<%= format_object_div("sponsor_type", @award.sponsor_type_name ) %>
+	<%= format_object_div("sponsor_code", @award.sponsor_type_code ) %>
+	<%= format_object_div("sponsor_award_number", @award.sponsor_award_number ) %>
+	<%= format_object_div("office_of_research_award_number", @award.institution_award_number ) %>
+	<%= format_object_div("submission_date", @award.submission_date ) %>
+	<div id="project_dates">
+		<b>Project dates</b><br/>
+		<%= formatted_date(@award.project_start_date) %> to <%= formatted_date(@award.project_end_date) %>
+	</div>
+	<div id="award_dates">
+		<b>Award dates</b><br/>
+		<%= formatted_date(@award.award_start_date) %> to <%= formatted_date(@award.award_end_date) %>
+	</div>
+	<%= format_object_div("award_category", @award.award_category ) %>
+	<%= format_object_div("award_mechanism", @award.award_mechanism ) %>
+	<%= format_object_div("award_type", @award.award_type ) %>
+	<%= format_object_div("total_amount", number_to_currency( @award.total_amount, :precision => 0) ) %>
+	<div id="personnel">
+		<% if ! @award.investigator_proposals.blank? %>
+		<b>Personnel</b><br/>
+		<table cellpadding="2" cellspacing="0" class='dense'>
+			<tr class="header"><td class="list-title-left">Role</td><td class="list-title-right">Effort</td><td class="list-title-left">Investigator</td></tr>
+		<%  for inv_award in @award.investigator_proposals.by_role %>
+			<tr class="<%= cycle('even', 'odd') %>">
+			  <td class="list-left"><%= inv_award.role %></td><td class="list-right"><%= inv_award.percent_effort %>%</td><td class="list-left"><%= link_to_investigator_awards(inv_award.investigator, inv_award.investigator.full_name) %></td>
+			</tr>
+		<%  end %>
+		</table>
+		<% end %>
+	</div>
+</div>
+
+<% end %>

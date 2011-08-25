@@ -1,11 +1,13 @@
 class CopublicationsController < ApplicationController
-  caches_page( :investigator_colleagues, :tag_cloud_side, :tag_cloud) if CachePages()
+  caches_page( :investigator_colleagues, :tag_cloud_side, :tag_cloud) if LatticeGridHelper.CachePages()
+  
+  include ApplicationHelper
   
   def show
     if params[:id].include?("search") then
       redirect_to :action => 'search'
     elsif params[:id].nil? || params[:id].include?("tag") then
-      redirect_to abstracts_by_year_path(:id => @year, :page => '1')
+      redirect_to abstracts_by_year_url(:id => @year, :page => '1')
     else
       @publication = Abstract.find(params[:id])
     end

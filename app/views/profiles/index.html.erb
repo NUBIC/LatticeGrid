@@ -1,0 +1,32 @@
+
+<p>
+	<%= link_to( "Edit #{@pronoun} Research Profile", (@username.blank? ? profiles_url : edit_profile_url(@username) ) ) %> 
+	<%= link_to( "Edit #{@pronoun} Publications List", (@username.blank? ? profiles_url : edit_pubs_profile_url(@username) ) ) %>
+</p>
+
+<div id="splash_screen">
+<p>Dear Lurie Cancer Center Member,</p>
+
+<p>Profiles of Lurie Cancer Center members are essential to support the center’s activities and programs, particularly our NCI Cancer Center Support Grant (CCSG) renewals as well as other grant initiatives and the center’s website.  Responsibilities of membership include providing and/or reviewing profile information at least annually or as otherwise requested.  At this time we are requesting review of your current research profile and publication list.  We appreciate your timely response, and as we move toward our next competing CCSG application in 2012 this process will be critical as other data elements will be added for your review.</p>
+
+<p>This review and edit will need to be completed by May 31st, 2011, and we appreciate your timely response.</p>
+
+<p>1.	<%= link_to( "Research Profile", edit_profile_url(@username)) %>.  Review and update your research profile for each research program to which you are assigned.  If you are assigned to more than one research program each profile should be distinct.  If there are no changes to your research profile click "<strong>Approve profile</strong>" and this will let us know that you have reviewed and approved your research profile.  Once you’ve finalized your profile click "<strong>Approve profile</strong>" and your updates will be saved.   Otherwise once you have finalized edits to your profile, click "<strong>Approve profile</strong>" and your updates will be saved. Newer members of the cancer center may not have a current profile and will need to create one.  Examples of profiles from Senior Leadership are provided for reference, and the links for these are located on the right hand side of the page.</p>
+
+<p>2.	 <%= link_to( "Publication List", edit_pubs_profile_url(@username)) %>.  Review your publication list to determine if all cancer relevant publications during your tenure at Northwestern University are listed.  The list provided includes predominantly publications where a pubmed ID is available.
+</p> 
+<ol> 
+a.	If you have a cancer relevant publication where a PubMed ID is not shown, please input the PubMed ID.  <br/>
+b.	In the event you have one or more additional publications without a PubMed ID, and believe these have cancer relevance, please forward to <a href="mailto:mruchin@northwestern.edu">Matthew Ruchin </a>, and we will review for inclusion. <br/>
+c.	If a publication is listed, and you are not the author (i.e. same last name and initials but it is <i>not</i> yours), please delete the publication. <br/>
+</ol>
+<p>Also, if relevant, please delete all publications representing work prior to your appointment at Northwestern University.  Once you have reviewed your publications click "<strong>Approve publications list</strong>", and this will let us know you have reviewed/approved your publication list.</p>
+
+<p>If you have any questions regarding this process, please contact:</p>
+
+<p>Matthew Ruchin (<a href="mailto:mruchin@northwestern.edu">mruchin@northwestern.edu</a>)<br/>
+Sr. Grants & Contracts Administrator<br/>
+Cancer Center Support Grant <br/>
+Robert H. Lurie Comprehensive Cancer Center<br/>
+</p>
+</div>

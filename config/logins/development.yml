@@ -1,0 +1,34 @@
+users:
+  pgreenld:
+    password: pgreenld
+  admin:
+    first_name: Admin
+    last_name: Admin
+    password: admin
+  wakibbe:
+    first_name: Warren
+    last_name: Kibbe
+    password: demo
+  chisholm:
+    first_name: Rex
+    last_name: Chisholm
+    password: chisholm
+  user:
+    password: user
+    portals:
+      - FRB:
+        - Faculty
+  jab155:
+    first_name: Jim
+    last_name: Bray
+    password: jab155
+    portals:
+      - FRB:
+        - Curator
+  cac286:
+    first_name: Cynthia
+    last_name: Csernansky
+    password: cac286
+    portals:
+      - FRB:
+        - Admin

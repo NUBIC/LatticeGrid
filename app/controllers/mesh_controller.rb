@@ -1,5 +1,5 @@
 class MeshController < ApplicationController
-  caches_page(:index, :search, :investigators, :investigator) if CachePages()
+  caches_page(:index, :search, :investigators, :investigator, :investigator_tags, :tag_count, :investigator_count) if LatticeGridHelper.CachePages()
 
   include ApplicationHelper
   include MeshHelper
@@ -39,51 +39,73 @@ class MeshController < ApplicationController
   end
   
   def tag_count
-    tags = MeshHelper.do_mesh_search(params[:id])
-    @tag_total          = Tag.count
-    @investigator_total = Investigator.count
-    @abstract_total     = Abstract.count
-    @investigator_count = 0
-    @abstract_count     = 0
-    @tag_name = params[:id]
-    if tags.length > 0
-      @investigator_count = Tagging.count(
-       :conditions => [" taggings.tag_id in (:tag_ids) and taggings.taggable_type = 'Investigator'", {:tag_ids=>tags} ]) 
-      @abstract_count = Tagging.count(
-       :conditions => [" taggings.tag_id in (:tag_ids) and taggings.taggable_type = 'Abstract'", {:tag_ids=>tags} ]) 
-      @tag_name = tags.collect(&:name).join(", ")
+    tags = MeshHelper.do_mesh_search(params[:id],true, true)
+    tag_total          = Tag.count
+    investigator_total = Investigator.count
+    abstract_total     = Abstract.count
+    investigator_count = 0
+    abstract_tag_count = 0
+    max_investigator_tag_count = 0
+    abstract_count     = 0.to_i
+    tag_name = params[:id]
+    investigators_array = []
+    
+    if (tags.length > 0)
+      investigators = Investigator.find_tagged_with(tags.collect(&:name), :match_all => true)
+      investigator_count = investigators.length
+      tagged_abstracts = Tagging.all(:conditions => [" taggings.tag_id in (:tag_ids) and taggings.taggable_type = 'Abstract'", {:tag_ids=>tags} ])
+      investigator_abstracts = InvestigatorAbstract.all(:conditions => ["investigator_abstracts.abstract_id in (:abstract_ids)", {:abstract_ids=>tagged_abstracts.collect(&:taggable_id)} ])
+      abstract_tag_count = tagged_abstracts.length
+      tag_name_array = tags.collect(&:name)
+      tag_name = tag_name_array.join(", ")
+      if (investigator_count > 0) then
+        investigators_array = investigators.collect{ |inv| 
+          tag_count = investigator_abstracts.collect{|ia| (ia.investigator_id == inv.id)?ia.abstract_id : nil }.compact.length
+          max_investigator_tag_count = tag_count if (tag_count.to_i > max_investigator_tag_count.to_i)
+          {"username" => inv.username, "tag_count" => tag_count, "abstract_count" => inv.total_pubs} 
+        }
+      end
     end
     respond_to do |format|
-      format.html { render :text => "Tagging count for <i>#{@tag_name}</i> (total tags: #{@tag_total})<br/>
-      Investigators: (#{@investigator_count} out of #{@investigator_total})<br/>
-      Abstracts: (#{@abstract_count} out of #{@abstract_total})"}
-      format.json { render :layout => false, :json => {"Tag_name" => @tag_name, "Tag_total" => @tag_total, "Investigator_total" => @investigator_total, "Abstract_total" => @abstract_total, "Investigator_count" => @investigator_count, "Abstract_count" => @abstract_count }.as_json() }
-      format.xml  { render :layout => false, :xml => {"Tag_name" => @tag_name, "Tag_total" => @tag_total, "Investigator_total" => @investigator_total, "Abstract_total" => @abstract_total, "Investigator_count" => @investigator_count, "Abstract_count" => @abstract_count }.to_xml() }
+      format.html { render :text => "Tagging count for <i>#{tag_name}</i> (total tags: #{tag_total}; tags found: #{tags.length} )<br/>
+      Investigators: (#{investigator_count} out of #{investigator_total})<br/>
+      Abstracts: (#{abstract_tag_count} out of #{abstract_total})"}
+      format.json { render :layout => false, :json => {"Tag_name" => tag_name, "Tag_total" => tag_total, "Investigator_total" => investigator_total, "Abstract_total" => abstract_total, "Investigator_count" => investigator_count, "Abstract_count" => abstract_tag_count, "investigators" => investigators_array, "max_investigator_tag_count" => max_investigator_tag_count }.as_json() }
+      format.xml  { render :layout => false, :xml => {"Tag_name" => tag_name, "Tag_total" => tag_total, "Investigator_total" => investigator_total, "Abstract_total" => abstract_total, "Investigator_count" => investigator_count, "Abstract_count" => abstract_tag_count, "max_investigator_tag_count" => max_investigator_tag_count, "investigators" => investigators_array }.to_xml() }
     end
   end
 
   def investigator_count
-    tags = MeshHelper.do_mesh_search(params[:id])
-    @investigator_count = 0
-    @investigator_count = Tagging.count(
+    tags = MeshHelper.do_mesh_search(params[:id],false,true)
+    investigator_count = 0
+    investigator_count = Tagging.count(
        :conditions => [" taggings.tag_id in (:tag_ids) and taggings.taggable_type = 'Investigator'", {:tag_ids=>tags} ]) if tags.length > 0
     respond_to do |format|
-      format.html { render :text => "Investigator count for #{params[:id]} is #{@investigator_count}" }
-      format.json { render :layout => false, :json => {"Investigator_count" => @investigator_count}.as_json() }
-      format.xml  { render :layout => false, :xml => {"Investigator_count" => @investigator_count}.to_xml() }
+      format.html { render :text => "Investigator count for #{params[:id]} is #{investigator_count} and tag count is #{tags.length}" }
+      format.json { render :layout => false, :json => {"Investigator_count" => investigator_count}.as_json() }
+      format.xml  { render :layout => false, :xml => {"Investigator_count" => investigator_count}.to_xml() }
     end
   end
 
   def investigators
-    @tags = MeshHelper.do_mesh_search(params[:id])    
-    investigators = Investigator.find_tagged_with(@tags.collect(&:name), :match_all => :true)
-    @investigators = Investigator.find(:all,
-      :joins => [:tags,:taggings],
-      :conditions => ["investigators.id in (:investigators) and taggings_investigators.tag_id in (:tags)", {:investigators=>investigators, :tags => @tags}]).uniq
+    tags = MeshHelper.do_mesh_search(params[:id],false,true)    
+    
+    tag_array = tags.collect{ |tag|
+      tagged_abstracts = Tagging.all(:conditions => [" taggings.tag_id = :tag_id and taggings.taggable_type = 'Abstract'", {:tag_id=>tag.id} ])
+      investigator_abstracts = InvestigatorAbstract.all(:conditions => ["investigator_abstracts.abstract_id in (:abstract_ids)", {:abstract_ids=>tagged_abstracts.collect(&:taggable_id)} ])
+      investigators = Investigator.find_tagged_with(tag.name)
+      investigators_array = investigators.collect{ |inv| 
+        abstract_count = inv.total_pubs
+        tag_count = investigator_abstracts.collect{|ia| (ia.investigator_id == inv.id)?ia.abstract_id : nil }.compact.length
+        {"username" => inv.username, "tag_count" => tag_count, "abstract_count" => abstract_count} 
+      }
+      {"name" => tag.name, "investigators" => investigators_array}
+    }
+    
     respond_to do |format|
-      format.html { render }
-      format.json { render :layout => false, :json => @investigators.to_json() }
-      format.xml  { render :layout => false, :xml => @investigators.to_xml() }
+      format.html { render :text => "Tags found: (#{tags.length}); Tags: #{tag_array}"}
+      format.json { render :layout => false, :json => {"tags" => tag_array}.as_json() }
+      format.xml  { render :layout => false, :xml => {"tags" => tag_array}.to_xml() }
     end
   end
   

@@ -7,35 +7,30 @@ module ApplicationHelper
   end
   require 'config'
 
-  def build_menu(nodes, org_type=nil, &block)
-    out="<ul>"
-		for unit in nodes
-		  if org_type.nil? or unit.kind_of?(org_type)
-    		out+="<li>"
-    		out+=link_to( truncate(unit.name.gsub(/\'/, ""),:length=>80), yield(unit.id))
-        out+=build_menu(unit.children, nil, &block) if ! unit.leaf?
-    		out+="</li>"
-  		end
-		end
-		out+="</ul>"
-		out
-	end
-  
-  def build_year_menu
-    out="<ul>"
-		for the_year in @year_array
-			if  controller.action_name.match('year_list') != nil && the_year.to_s == @year
-				out+="<li class='current'>"
-			else
-    		out+="<li>"
-			end
-			out+=link_to( the_year, abstracts_by_year_url(:id => the_year, :page=> 1))
-   		out+="</li>"
-		end
-		out+="</ul>"
-		out
-	end
-	
+  def handle_year(the_year=nil)
+    return @year if !@year.blank? and the_year.blank?
+    year_array = LatticeGridHelper.year_array()
+    @year = year_array[0].to_s
+    @year = cookies[:the_year] if !cookies[:the_year].blank?
+    if !the_year.blank? then
+      cookies[:the_year] = the_year
+      @year = the_year
+    end
+    @year
+  end
+
+  def allowed_ip(this_ip)
+     ips = LatticeGridHelper.allowed_ips() # from config.rb in project lib directory
+     ips.each do |ip|
+       if this_ip =~ /^#{ip}$/ then
+         logger.warn "allowed_ip passed with #{this_ip}"
+         return true
+       end
+     end
+     logger.warn "allowed_ip failed #{this_ip}"
+     return false  #disallowed
+  end
+
   def capitalize_words(string) 
     string.downcase.gsub(/\b\w/) { $&.upcase } 
   end 
@@ -57,94 +52,78 @@ module ApplicationHelper
     years
   end   
 
-  def isInvestigatorFirstAuthor(citation,investigator)
-    if getFirstAuthorForCitation(citation) == investigator
-      return true
-    end
-    return false
+  def abstracts_per_year_as_string(all_abstracts)
+    abstracts_per_year(all_abstracts, LatticeGridHelper.year_array.sort).join(",")
   end
-
-  def isInvestigatorLastAuthor(citation,investigator)
-    if getLastAuthorForCitation(citation) == investigator
-      return true
-    end
-    return false
-   end
   
-  def setInvestigatorClass(citation,investigator, isMember=false)
-    if isMember
-      if isInvestigatorLastAuthor(citation,investigator) : "member_last_author" 
-      elsif isInvestigatorFirstAuthor(citation,investigator) : "member_first_author"
-      else
-        "member_author"
-      end
-    else
-      if isInvestigatorLastAuthor(citation,investigator) : "last_author" 
-      elsif isInvestigatorFirstAuthor(citation,investigator) : "first_author"
-      else
-        "author"
-      end
-    end
+  def link_to_faculty(faculty, delimiter=", ")
+    faculty.collect{|pi| link_to( pi.name,
+      show_investigator_url(:id=>pi.username, :page=>1), # can't use this form for usernames including non-ascii characters
+      :title => " Go to #{pi.name}; #{pi.total_pubs} pubs")
+      }.compact.join(delimiter)
   end
 
-  def link_to_coauthors(coauthors, delimiter=", ")
-    coauthors.collect{|coauthor| link_to( coauthor.colleague.name, 
-      show_investigator_url(:id=>coauthor.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
-        :title => " #{coauthor.colleague.abstract_count} pubs, "+(coauthor.colleague.num_intraunit_collaborators+coauthor.colleague.num_extraunit_collaborators).to_s+" collaborators") if coauthor.colleague.deleted_at.blank? }.compact.join(delimiter)
+  def link_to_coauthors(co_authors, delimiter=", ")
+    co_authors.collect{|co_author| link_to( coauthor_span_class(co_author.colleague.name, co_author.publication_cnt),
+     show_investigator_url(:id=>co_author.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
+      :title => "#{co_author.publication_cnt} shared pubs, #{co_author.colleague.total_pubs} pubs, "+(co_author.colleague.num_intraunit_collaborators+co_author.colleague.num_extraunit_collaborators).to_s+" collaborators") if co_author.colleague.deleted_at.blank? }.compact.join(delimiter)
   end
 
   def link_to_collaborators(collaborators, delimiter=", ")
     collaborators.collect{|investigator| link_to( investigator.name, 
       show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
-        :title => " #{investigator.abstract_count} pubs, "+(investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators")  if investigator.deleted_at.blank? }.compact.join(delimiter)
+        :title => " #{investigator.total_pubs} pubs, "+(investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators")  if investigator.deleted_at.blank? }.compact.join(delimiter)
   end
-  
+
   def link_to_similar_investigators(relationships, delimiter=", ")
-    relationships.collect{|relationship| link_to( "#{relationship.colleague.name} <span class='simularity'>#{relationship.mesh_tags_ic.round}</span>", 
+    relationships.collect{|relationship| 
+      link_to( similarity_span_class(relationship.colleague.name, relationship.mesh_tags_ic.round), 
       show_investigator_url(:id=>relationship.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
-        :title => " #{relationship.colleague.abstract_count} pubs, "+(relationship.colleague.num_intraunit_collaborators+relationship.colleague.num_extraunit_collaborators).to_s+" collaborators") if relationship.colleague.deleted_at.blank?}.compact.join(delimiter)
+        :title => "#{relationship.mesh_tags_ic.round} similarity score, #{relationship.publication_cnt} shared pubs, #{relationship.colleague.total_pubs} total pubs, "+(relationship.colleague.num_intraunit_collaborators+relationship.colleague.num_extraunit_collaborators).to_s+" collaborators") if relationship.colleague.deleted_at.blank?}.compact.join(delimiter)
+  end
+ 
+  def coauthor_span_class(link_out, score)
+    similarity_class = case score
+    when 41..100000
+      'similarity1'
+    when 20..40
+      'similarity2'
+    when 13..19
+      'similarity3'
+    when 7..12
+      'similarity4'
+    when 3..6
+      'similarity5'
+    when 1..2
+      'similarity6'
+    else
+      'similarity7'
+    end
+    "<span class='#{similarity_class}'>#{link_out}</span>"
   end
   
-  def link_to_investigator(citation, investigator, name=nil, isMember=false) 
-    name=investigator.last_name if name.blank?
-    link_to name, 
-      show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
-      :class => setInvestigatorClass(citation, investigator, isMember),
-      :title => "Go to #{name}: #{investigator.abstract_count} pubs, "+(investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators"
+  
+  def similarity_span_class(link_out, score)
+    similarity_class = case score
+    when 6000..100000
+      'similarity1'
+    when 5000..6000
+      'similarity2'
+    when 4000..5000
+      'similarity3'
+    when 3000..4000
+      'similarity4'
+    when 2500..3000
+      'similarity5'
+    when 2000..2500
+      'similarity6'
+    else
+      'similarity7'
+    end
+    "<span class='#{similarity_class}'>#{link_out}</span>"
   end
   
-  def getFirstAuthorIDForCitation(citation)
-    citation.investigator_abstracts.each do |investigator_abstract|
-      return investigator_abstract.investigator_id if investigator_abstract.is_first_author
-    end
-    return nil
-  end
-
-  def getFirstAuthorForCitation(citation)
-    author_id = getFirstAuthorIDForCitation(citation)
-    return nil if author_id.blank?
-    citation.investigators.each do |investigator|
-      return investigator if investigator.id == author_id
-    end
-    return nil
-  end
-
-  def getLastAuthorIDForCitation(citation)
-    citation.investigator_abstracts.each do |investigator_abstract|
-      return investigator_abstract.investigator_id if investigator_abstract.is_last_author
-    end
-    return nil
-  end
-
-  def getLastAuthorForCitation(citation)
-    author_id = getLastAuthorIDForCitation(citation)
-    return nil if author_id.blank?
-    citation.investigators.each do |investigator|
-      return investigator if investigator.id == author_id
-    end
-    return nil
-  end
-    
+   
   def link_to_primary_department(investigator)
     return link_to( investigator.home_department.name, show_investigators_org_url(investigator.home_department_id), :title => "Show investigators in #{investigator.home_department.name}" ) if !investigator.home_department_id.nil?
     begin
@@ -177,18 +156,20 @@ module ApplicationHelper
 		return output
 	end
 	
-	def email_link(email)
+	def email_link(email, name="")
 	  return "" if email.blank?
 	  return ""  if email.kind_of?(Array) and email.length == 0
 	  email = email[0] if email.kind_of?(Array) and email.length > 0
-	  return mail_to(email, email.split("@").join(" at "), 
-          		:subject => email_subject(),
+	  name = email.split("@").join(" at ") if name.blank?
+	  return mail_to(email, name, 
+          		:subject => LatticeGridHelper.email_subject(),
           		:encode => "javascript") 
   end
   
   def handle_ldap(applicant)
+    return applicant if applicant.blank? or applicant.username.blank?
     begin
-      pi_data = GetLDAPentry(applicant.username)
+      pi_data = GetLDAPentry(applicant.username) 
      # logger.warn("dump of pi_data: #{pi_data.inspect}")
       if pi_data.nil?
         logger.warn("Probable error reaching the LDAP server in GetLDAPentry: GetLDAPentry returned null using netid #{applicant.username}.")
@@ -219,6 +200,15 @@ module ApplicationHelper
     end
    abs_path
   end
+ 
+  def format_bool_yn(obj)
+    if obj.nil? or obj.blank? or !obj
+      "No"
+    else
+      "Yes"
+    end
+  end
+  
   
   def link_to_pubmed(text, abstract, tooltip=nil)
     tooltip ||= text 

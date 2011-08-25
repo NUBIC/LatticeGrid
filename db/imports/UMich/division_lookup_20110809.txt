@@ -1,0 +1,24 @@
+APPOINT_FLAG	CENTER_FLAG	DEPT_ID	DIVISION_ID	DV_ABBR	DV_NAME	DV_TYPE	DV_URL	LABEL_NAME	SEARCH_NAME
+1	1	401000	401010	UMCCC	University of Michigan Comprehensive Cancer Center	Clinical	http://www.cancer.med.umich.edu/	University of Michigan Comprehensive Cancer Center	University of Michigan Comprehensive Cancer Center
+0	0	401000	1	CG	Cancer Genetics	Basic Science		Cancer Genetics	Cancer Genetics
+0	0	401000	2	CCB	Cancer Cell Biology	Basic Science		Cancer Cell Biology	Cancer Cell Biology
+0	0	401000	3	MT	Experimental Therapeutics	Basic Science		Experimental Therapeutics	Experimental Therapeutics
+0	0	401000	4	RS	Radiation Sciences	Basic Science		Radiation Sciences	Radiation Sciences
+0	0	401000	5	MI	Molecular Imaging	Basic Science		Molecular Imaging	Molecular Imaging
+0	0	401000	6	TIHR	Tumor Immunology & Host Response	Basic Science		Tumor Immunology & Host Response	Tumor Immunology & Host Response
+0	0	401000	7	BO	Breast Oncology	Clinical Science		Breast Oncology	Breast Oncology
+0	0	401000	8	PC	Prostate Cancer	Clinical Science		Prostate Cancer	Prostate Cancer
+0	0	401000	9	GO	Gastrointestinal Oncology	Clinical Science		Gastrointestinal Oncology	Gastrointestinal Oncology
+0	0	401000	10	CC	Childhood Cancers	Developing		Childhood Cancers	Childhood Cancers
+0	0	401000	11	HNO	Head & Neck Oncology	Clinical Science		Head & Neck Oncology	Head & Neck Oncology
+0	0	401000	12	LLBMT	Hematologic Malignancies/BMT	Clinical Science		Hematologic Malignancies/BMT	Hematologic Malignancies/BMT
+0	0	401000	13	SB	Socio-Behavioral	Cancer Prevention & Control		Socio-Behavioral	Socio-Behavioral
+0	0	401000	14	BP	Biomedical Prevention	Cancer Prevention & Control		Biomedical Prevention	Biomedical Prevention
+0	0	401000	15	T	Thoracic	Developing		Thoracic	Thoracic
+0	0	401000	16	G	GYN Onc	Developing		GYN Onc	GYN Onc
+0	0	401000	17	PO	Psych Oncology	Developing		Psych Oncology	Psych Oncology
+0	0	401000	18	CT	Connective Tissue	Developing		Connective Tissue	Connective Tissue
+0	0	401000	19	CO	Cutaneous Oncology	Developing		Cutaneous Oncology	Cutaneous Oncology
+0	0	401000	20	NO	Neuro-Oncology	Developing		Neuro-Oncology	Neuro-Oncology
+0	0	401000	21	EO	Endocrine Oncology	Developing		Endocrine Oncology	Endocrine Oncology
+0	0	401000	22	BC	Bladder Cancer	Developing		Bladder Cancer	Bladder Cancer

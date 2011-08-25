@@ -1,0 +1,38 @@
+<p>
+	<%= link_to( "Home", profiles_url ) %>
+	<%= link_to( "Edit #{@pronoun} Research Profile", (@username.blank? ? profiles_url : edit_profile_url(@username) ) ) %> 
+</p>
+
+
+<% @include_pubmed_id = false if @include_pubmed_id.nil? %>
+<% @include_collab_marker = false if @include_collab_marker.nil? %>
+<% @include_investigators = false if @include_investigators.nil? %>
+<% @investigators_in_unit = [] if @investigators_in_unit.nil? %>
+<% @show_paginator = false if @show_paginator.nil? %>
+<% @show_valid_checkboxes = true if @show_valid_checkboxes.nil? %>
+<% @link_abstract_to_pubmed = false if @link_abstract_to_pubmed.nil? %>
+<% @include_impact_factor = false if @include_impact_factor.nil? %>
+
+<p>Paste in one or more pubmed_ids to add to LatticeGrid.</p>
+<div id="pubmed_addition">
+<% form_remote_tag( :url => {:controller => :abstracts, :action => :add_pubmed_ids}, 
+	:html => {:action => {:controller => :abstracts, :action => :add_pubmed_ids}}, 
+	:before => "Element.show('spinner')", 
+	:complete => "Element.hide('spinner')" ) do %> 
+	<%= text_area_tag(:pubmed_ids, nil, :rows => 5, :cols => 15) %>
+	<%= submit_tag 'Add Pubmed_ids' %>
+<% end %> 
+</div>
+<ul id="added_pubmed_ids">
+</ul>
+
+
+<%= render :partial => "shared/abstract_listing.html", 
+	:locals => { :abstracts => @abstracts, :investigators_in_unit => @investigators_in_unit, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker, :include_investigators => @include_investigators, :show_valid_checkboxes => @show_valid_checkboxes, :show_paginator => @show_paginator, :heading => @heading, :link_abstract_to_pubmed => @link_abstract_to_pubmed, :include_impact_factor => @include_impact_factor } %>
+
+
+<div id="accept">
+	<% form_tag(profile_url(@investigator.id), :method => :put) do %>
+	  <%= submit_tag 'Approve publications list' %>
+	<% end %> 
+</div>

@@ -1,0 +1,21 @@
+
+<p>
+	<%= link_to( "Home", profiles_url ) %>
+	<%= link_to( "Edit #{@pronoun} Publications List", (@username.blank? ? profiles_url : edit_pubs_profile_url(@username) ) ) %>
+</p>
+
+<h2>Faculty Profile for <%= @investigator.name %></h2>
+<h3>Please review/edit your information</h3>
+
+
+<% form_for(@investigator, 
+	:url => profile_url(@investigator.id), 
+	:html => { :multipart => true, :method => :put }) do |investigator_form| %>
+	<!-- f and submission are existing variables passed in -->
+	<table  class="lined">
+	  <%= render(:partial => 'profile_form', :locals=>{:investigator_form=>investigator_form, :investigator=>@investigator}) %>
+	  <tr><td colspan="3" align="center" class="submit">
+	    <%= investigator_form.submit( 'Approve profile' ) %>
+	  </td></tr>
+	</table>
+<% end %>

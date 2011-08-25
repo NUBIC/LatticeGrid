@@ -1,0 +1,25 @@
+# from rails2prod
+pg_dump -Fc rhlccc_latticegrid_production -U rhlccc_latticegrid -h pprod > cancer_latticegrid_prod_20110807.dmp
+
+#move to laptop from rails-prod2
+scp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/cancer_latticegrid_prod_20110807.dmp  cancer_latticegrid_prod_20110807.dmp
+#install on laptop
+pg_restore -c -O -d cancerpublications_development -U cancerpublications cancer_latticegrid_prod_20110807.dmp
+#install back on rails-prod2
+pg_restore -c -O -d rhlccc_latticegrid_production -U rhlccc_latticegrid -h pprod cancer_latticegrid_prod_20110807.dmp
+
+rake RAILS_ENV=production db:migrate
+
+rake RAILS_ENV=production importOrganizations file=db/imports/RHLCCC/division_lookup_0811.txt
+rake RAILS_ENV=production cleanUpOrganizations
+rake RAILS_ENV=production getAllOrganizationsNotUpdated
+rake RAILS_ENV=production importInvestigators file=db/imports/RHLCCC/new_faculty_Aug2011.txt
+rake RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsAug2011.txt
+rake RAILS_ENV=production cleanInvestigatorsUsername
+rake RAILS_ENV=production getAllInvestigatorsWithoutMembership
+rake RAILS_ENV=production checkValidAbstracts
+rake RAILS_ENV=production checkDeletedAbstractsWithActiveInvestigators
+rake RAILS_ENV=production reports:mark_abstracts_approved
+rake RAILS_ENV=production reports:investigator_abstracts_reviewed
+rake RAILS_ENV=production insertAllAbstracts
+rake RAILS_ENV=production importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_June2011.txt

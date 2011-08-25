@@ -1,7 +1,7 @@
 module GraphvizHelper
 
   require 'graphviz_config'
-  include TagsHelper
+#  include TagsHelper
   include MeshHelper
   include ActionView::Helpers::AssetTagHelper #or whatever helpers you want
 
@@ -82,7 +82,7 @@ module GraphvizHelper
     remote_function( :update =>  {:success => div_id, :failure => 'flash_notice'},
             :before => "new Element.update('#{div_id}','<p>Loading graph ...</p>')",
             :complete => "new Effect.Highlight('#{div_id}');",
-            :url => restless_graphviz_url(),
+            :url => restless_graphviz_path(),
             :with => "'program='+encodeURIComponent( $('"+program_name.to_s+"').getValue())+'&format='+encodeURIComponent( $('"+format_name.to_s+"').getValue())+'&distance='+encodeURIComponent( $('"+distance_name.to_s+"').getValue())+'&stringency='+encodeURIComponent( $('"+stringency_name.to_s+"').getValue())+'&id='+encodeURIComponent( $('"+id_name.to_s+"').getValue())+'&analysis='+encodeURIComponent( $('"+analysis_name.to_s+"').getValue())+'&include_orphans='+encodeURIComponent( $('"+include_orphans_name.to_s+"').getValue())",
             :method => :get)
 	end
@@ -118,6 +118,7 @@ module GraphvizHelper
      graph = case analysis
            when "member"      :  build_member_graph( graph, program, id, distance, stringency, include_orphans)
            when "member_mesh" :  build_member_mesh_graph( graph, program, id, distance, stringency, include_orphans)
+           when "member_awards" :  build_member_awards_graph( graph, program, id, distance, stringency, include_orphans)
            when "mesh"        :  build_mesh_graph( graph, program, id, distance, stringency, include_orphans)
            when "org"         :  build_org_graph( graph, program, id, distance, stringency, include_orphans)
            when "org_org"     :  build_org_org_graph( graph, program, id, distance, stringency, include_orphans)
@@ -137,7 +138,7 @@ module GraphvizHelper
        graph = graph_add_nodes(program, graph, co_authors)
        if distance != "1"
          opts = {}
-         opts[:fillcolor] = "#E0ECF8"
+         opts[:fillcolor] = LatticeGridHelper.second_degree_other_fill_color # super pale green
          co_authors.each do |co_author|
             graph = graph_add_nodes(program, graph, co_author.colleague.co_authors.shared_pubs(stringency), false, opts)
          end
@@ -156,7 +157,7 @@ module GraphvizHelper
        graph = graph_add_nodes(program, graph, similar_investigators, true)
        if distance == "2"
          opts = {}
-         opts[:fillcolor] = "#E0ECF8"
+         opts[:fillcolor] = LatticeGridHelper.second_degree_other_fill_color # super pale green
          similar_investigators.each do |similar|
            graph = graph_add_nodes(program, graph, similar.colleague.all_similar_investigators.mesh_ic(stringency), true, opts)
          end
@@ -165,20 +166,38 @@ module GraphvizHelper
      graph
    end
 
+   def build_member_awards_graph(graph, program, id, distance, stringency, include_orphans)
+     @investigator = Investigator.find_by_username(id)
+     if @investigator.nil?
+       graph = graph_no_data(graph, "Investigator id #{id} was not found")
+     else
+       graph_newroot(graph, @investigator)
+       awards = @investigator.proposals
+       graph = graph_add_award_nodes(program, graph, @investigator, awards)
+       opts = {}
+       opts[:fillcolor] = LatticeGridHelper.second_degree_other_fill_color # super pale green
+       awards.each do |award|
+          graph = graph_add_investigator_nodes(program, graph, award, award.investigators, false, opts)
+       end
+     end
+     graph
+   end
+
    def build_mesh_graph(graph, program, id, distance, stringency, include_orphans)
      mesh_terms = MeshHelper.do_mesh_search(id)
      mesh_names = mesh_terms.collect(&:name)
-     colleagues=Investigator.find_tagged_with(mesh_names, :match_all => :true)
+     colleagues=Investigator.find_tagged_with(mesh_names, :match_all => false)
      if colleagues.nil? or colleagues.length == 0
-       return graph_no_data(graph, "No investigators with a primary tag (or tags) of #{mesh_terms.collect(&:name)} were found")
+       return graph_no_data(graph, "No investigators with a primary tag (or tags) of #{mesh_names} were found")
      end
      filtered_colleagues = []
      colleagues.each do |colleague|
-       filtered_colleagues << colleague if colleague.abstracts.find_tagged_with('adverse effects').length.to_i >= stringency.to_i
+       filtered_colleagues << colleague if colleague.abstracts.find_tagged_with(mesh_names, :match_all => false).length.to_i >= stringency.to_i
      end
      if filtered_colleagues.length == 0
-       return graph_no_data(graph, "No investigators had at least #{stringency} publications tagged with #{mesh_terms.collect(&:name)}")
+       return graph_no_data(graph, "No investigators had at least #{stringency} publications tagged with #{mesh_names}")
      else
+       #first pass to add all primaries
        filtered_colleagues.each do |colleague|
          co_authors = colleague.co_authors.shared_pubs(1)
          if  distance == "0"
@@ -187,9 +206,20 @@ module GraphvizHelper
          if include_orphans == "1" or co_authors.length > 0
            graph_secondaryroot(graph, colleague) 
            graph = graph_add_nodes(program, graph, co_authors) if co_authors.length > 0
-           if distance == "2"
+         end
+       end
+       #now catch distance 2
+       if distance == "2"
+         filtered_colleagues.each do |colleague|
+           co_authors = colleague.co_authors.shared_pubs(1)
+           if  distance == "0"
+             co_authors = co_authors.collect{|ic| filtered_colleagues.include?(ic.colleague) ? ic : nil }.compact
+           end
+           if include_orphans == "1" or co_authors.length > 0
+             graph_secondaryroot(graph, colleague) 
+             graph = graph_add_nodes(program, graph, co_authors) if co_authors.length > 0
              opts = {}
-             opts[:fillcolor] = "#E0ECF8"
+             opts[:fillcolor] = LatticeGridHelper.second_degree_other_fill_color # super pale green
              co_authors.each do |inner_colleague|
                inner_coauthors=inner_colleague.colleague.co_authors.shared_pubs(stringency)
                graph = graph_add_nodes(program, graph, inner_coauthors, false, opts)
@@ -209,6 +239,7 @@ module GraphvizHelper
      if colleagues.nil?
        graph = graph_no_data(graph, "No colleagues found in #{org.name}")
      else
+       #doing this twice so we don't miscolor the primaries
        colleagues.each do |colleague|
          co_authors = colleague.co_authors.shared_pubs(stringency)
          if  distance == "0"
@@ -217,9 +248,20 @@ module GraphvizHelper
          if include_orphans == "1" or co_authors.length > 0
            graph_secondaryroot(graph, colleague) 
            graph = graph_add_nodes(program, graph, co_authors) if co_authors.length > 0
-           if distance == "2"
+         end
+       end
+       # now adding the secondaries, if any
+       if distance == "2"
+         colleagues.each do |colleague|
+           co_authors = colleague.co_authors.shared_pubs(stringency)
+           if  distance == "0"
+             co_authors = co_authors.collect{|ic| colleagues.include?(ic.colleague) ? ic : nil }.compact
+           end
+           if include_orphans == "1" or co_authors.length > 0
+             graph_secondaryroot(graph, colleague) 
+             graph = graph_add_nodes(program, graph, co_authors) if co_authors.length > 0
              opts = {}
-             opts[:fillcolor] = "#E0ECF8"
+             opts[:fillcolor] = LatticeGridHelper.second_degree_other_fill_color # super pale green
              co_authors.each do |inner_colleague|
                inner_coauthors=inner_colleague.colleague.co_authors.shared_pubs(stringency)
                graph = graph_add_nodes(program, graph, inner_coauthors, false, opts)
@@ -258,6 +300,7 @@ module GraphvizHelper
      if colleagues.nil?
        graph = graph_no_data(graph, "No colleagues found in #{org.name}")
      else
+       # do two passes to color nodes properly
        colleagues.each do |colleague|
          similar_investigators = colleague.all_similar_investigators.mesh_ic(stringency)
          if  distance == "0"
@@ -266,9 +309,20 @@ module GraphvizHelper
          if include_orphans == "1" or similar_investigators.length > 0
            graph_secondaryroot(graph, colleague)
            graph = graph_add_nodes(program, graph, similar_investigators, true) if similar_investigators.length > 0
-           if distance == "2"
+         end
+       end
+       # second pass if the distance is two
+       if distance == "2"
+         colleagues.each do |colleague|
+           similar_investigators = colleague.all_similar_investigators.mesh_ic(stringency)
+           if  distance == "0"
+             similar_investigators = similar_investigators.collect{|ic| colleagues.include?(ic.colleague) ? ic : nil }.compact
+           end
+           if include_orphans == "1" or similar_investigators.length > 0
+             graph_secondaryroot(graph, colleague)
+             graph = graph_add_nodes(program, graph, similar_investigators, true) if similar_investigators.length > 0
              opts = {}
-             opts[:fillcolor] = "#E0ECF8"
+             opts[:fillcolor] = LatticeGridHelper.second_degree_other_fill_color # super pale green
              similar_investigators.each do |similar|
                inner_similar_investigators = similar.colleague.all_similar_investigators.mesh_ic(stringency)
                graph = graph_add_nodes(program, graph, inner_similar_investigators, true, opts)

@@ -1,0 +1,1 @@
+APPT_ENTITY_ABBR	APPT_ENTITY_ID	APPT_ENTITY_NAME	APPT_ENTITY_SCHOOLUM	600000	University of Michigan	UMUMCCC	401000	University of Michigan Comprehensive Cancer Center	UM

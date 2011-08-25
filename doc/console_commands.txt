@@ -1,0 +1,51 @@
+# for console
+Log.logins.collect{|login| puts login.created_at.to_s + " " + ( if (! login.investigator.blank?) then  login.investigator.name else "" end)  }
+
+Log.logins.collect{|login| puts login.created_at.to_s + " \t" + ( if (! login.investigator.blank?) then  login.investigator.name + " \t https://latticegrid.cancer.northwestern.edu/investigators/" + login.investigator.username + "/show/1" else "" end)  }
+
+Log.all(:conditions=>"updated_at > '1-APR-2011' and action_name='update'").collect{|login| puts login.created_at.to_s + " \t" + ( if (! login.investigator.blank?) then  login.investigator.name + " \thttps://latticegrid.cancer.northwestern.edu/investigators/" + login.investigator.username + "/show/1" else "" end)  }
+
+roles = InvestigatorProposal.all(:select => 'DISTINCT role')
+
+InvestigatorProposal.count
+Proposal.count
+investigatorproposals = InvestigatorProposal.all
+investigatorproposals.collect{|inv_prop| inv_prop.delete}
+
+props = Proposal.all
+props.collect{|inv_prop| inv_prop.delete}
+
+InvestigatorProposal.count
+Proposal.count
+
+logs.collect(&:activity).uniq
+
+logs.collect(&:investigator_id).uniq
+
+logs.collect(&:investigator_id).uniq.length
+
+logs.collect(&:activity).uniq
+#=> ["login", "profiles:index", "profiles:update", "profiles:show"]
+logs = Log.all(:conditions=>"activity = 'profiles:update'")
+logs = Log.all(:conditions=>"activity = 'profiles:update' and params like '%publications%'")
+
+Log.count(:group=>"activity")
+
+
+Log.count(:conditions=>"activity = 'profiles:update' and params like '%publications%'", :group=>"created_at")
+
+InvestigatorAbstract.count(:group=>"last_reviewed_ip")
+InvestigatorAbstract.count(:group=>"last_reviewed_id")
+InvestigatorAbstract.count(:group=>"last_reviewed_at")
+
+InvestigatorAbstract.count(:conditions=>"last_reviewed_id=0", :group=>"investigator_id")
+
+ias = InvestigatorAbstract.all(:conditions=>"last_reviewed_id=0")
+
+InvestigatorAbstract.count(:conditions=>"last_reviewed_id=0", :group=>"is_valid")
+
+
+ias = InvestigatorAbstract.all(:select=> "distinct abstract_id", :conditions=>"last_reviewed_id > 0")
+abstract_ids = ias.map(&:abstract_id).uniq
+
+ias = InvestigatorAbstract.all(:conditions=>["last_reviewed_id=0 and abstract_id not in (:ids)", {:ids=>abstract_ids}])

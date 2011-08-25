@@ -1,0 +1,75 @@
+<div id="listing">
+	<div style="width:100%; text-align:right;">
+		<%= link_to( "as pdf",list_all_investigators_url('pdf')) if !defined?(@pdf) and ! @pdf %>
+	</div>
+  <table cellpadding="2" cellspacing="0" class="borderless"> 
+	<% cnt = 0 %>
+	<tr valign="bottom" class="header">
+		<td class="list-title-left">
+			#
+		</td>
+		<td class="list-title-left">
+			Name
+		</td>
+		<td class="list-title-left">
+			Degrees
+		</td>
+		<td class="list-title-left">
+			Email
+		</td>
+		<td class="list-title-left">
+			Home department
+		</td>
+		<td class="list-title-left">
+			Appointments (joint, secondary, centers)
+		</td>
+		<td class="list-title-left" colspan="2">
+			Publications
+		</td>
+		<td class="list-title-left">
+			PubMed search term
+		</td>
+		<td class="list-title-left">
+			Institution only
+		</td>
+	</tr>
+  <% for investigator in @investigators %>
+	<tr class="<%= cycle('even', 'odd') %>">
+		<td class="list-left">
+			<% cnt+=1 %>
+			<%= cnt %>
+		</td>
+		<td class="list-left">
+			<%= link_to(investigator.last_name+", "+(investigator.first_name||"")+" "+(investigator.middle_name||""), investigator_url(investigator.username))  %>
+		</td>
+		<td class="list-left">
+			<%= investigator.degrees %>
+		</td>
+		<td class="list-left">
+			<%= email_link(investigator.email) %>
+		</td>
+		<td class="list-left">
+			<%= investigator.home_department.abbreviation if (! investigator.home_department_id.blank?) and (! investigator.home_department.blank?) %>
+		</td>
+		<td class="list-left">
+			<%= link_to_units(investigator.appointments) %>
+		</td>
+		<td class="list-left">
+			<%=  investigator.abstracts.count %>
+		</td>
+		<td class="list-left">
+			<%= link_to "link", investigator_listing_profile_url(investigator.username) %>
+		</td>
+		<td class="list-left">
+			<%= (investigator.pubmed_search_name || investigator.last_name + ' ' + investigator.first_name.first + (investigator.middle_name || ' ').first)  %>
+			<!-- in_place_editor_field :investigator, :pubmed_search_name, {}, :rows => 1 -->
+		</td>
+		<td class="list-left">
+			<%= format_bool_yn(limit_to_institution(investigator)) %>
+		</td>
+	</tr>
+  <% end %>
+  </table>
+
+<br/>
+</div>

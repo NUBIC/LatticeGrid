@@ -1,13 +1,15 @@
 class GraphsController < ApplicationController
-  caches_page( :show_org, :show_member, :member_nodes, :org_nodes) if CachePages()
+  caches_page( :show_org, :show_member, :member_nodes, :org_nodes) if LatticeGridHelper.CachePages()
+  
+  include ApplicationHelper
   
   def index
-    redirect_to show_org_graph_path(1)
+    redirect_to show_org_graph_url(1)
   end
 
   def show_org
     if params[:id].blank? then
-      redirect_to show_org_graph_path(1)
+      redirect_to show_org_graph_url(1)
     end
   end
 
@@ -16,8 +18,9 @@ class GraphsController < ApplicationController
      if !params[:format].blank? then #reassemble the username
        params[:id]=params[:id]+'.'+params[:format]
      end
+     @investigator = Investigator.find_by_username(params[:id])
    else 
-     redirect_to show_org_graph_path(1)
+     redirect_to show_org_graph_url(1)
    end 
   end 
 

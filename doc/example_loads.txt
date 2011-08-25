@@ -1,0 +1,270 @@
+# August 2011 loads
+rake importDepartments file=db/imports/Feinberg/department_lookup_Dec2010.txt 
+rake importOrganizations file=db/imports/Feinberg/division_lookup_Aug2011.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/Feinberg/faculty_Aug2011.txt 
+rake importInvestigators file=db/imports/Feinberg/faculty_Aug2011b.txt 
+rake importJointAppointments file=db/imports/Feinberg/joint_appointments_Aug2011.txt
+rake importSecondaryAppointments file=db/imports/Feinberg/secondary_appointments_Aug2011.txt 
+rake importCenterMemberships file=db/imports/Feinberg/center_memberships_Aug2011.txt 
+rake importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_Aug2011.txt 
+rake awards:importData file=db/imports/Feinberg/award_data_20110818b.txt
+rake awards:cleanPIassignments
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalImpact file=db/imports/jcr_recs_2009.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake updateJournalISSNsFromPubmed
+rake cleanJournalISSNentries
+rake findAbstractswithoutJCRentries
+rake findAbstractswithJCRentries
+
+rake cleanInvestigatorsUsername
+rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_interests_Aug2011.txt
+rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_descriptions_Aug2011.txt
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+#June 2011 loads for BTI and Digestive Disease Program
+rake importCenterMemberships file=db/imports/Feinberg/additional_memberships_Apr2011.txt 
+
+# June 2011 loads
+rake importDepartments file=db/imports/department_lookup_Dec2010.txt 
+rake importOrganizations file=db/imports/division_lookup_June2011.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/faculty_June2011.txt 
+rake importJointAppointments file=db/imports/joint_appointments_June2011.txt
+rake importSecondaryAppointments file=db/imports/secondary_appointments_June2011.txt 
+rake importCenterMemberships file=db/imports/center_memberships_June2011.txt 
+rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids_June2011.txt 
+rake importAwardData file=db/imports/award_data_20110612.txt
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalImpact file=db/imports/jcr_recs_2009.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake updateJournalISSNsFromPubmed
+rake cleanJournalISSNentries
+rake findAbstractswithoutJCRentries
+rake findAbstractswithJCRentries
+
+rake cleanInvestigatorsUsername
+rake importInvestigatorDescriptions file=db/imports/faculty_interests_June2011.txt
+rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_June2011.txt
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+#June 2011 loads for BTI and Digestive Disease Program
+rake importCenterMemberships file=db/imports/additional_memberships_Apr2011.txt 
+
+# April 2011 loads
+rake importDepartments file=db/imports/department_lookup_Dec2010.txt 
+rake importOrganizations file=db/imports/division_lookup_Apr2011.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/faculty_Apr2011.txt 
+rake importJointAppointments file=db/imports/joint_appointments_Feb_2011.txt  #unchanged
+rake importSecondaryAppointments file=db/imports/secondary_appointments_Apr2011.txt 
+rake importCenterMemberships file=db/imports/center_memberships_Apr2011.txt 
+rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids_Apr2011.txt 
+rake importAwardData file=db/imports/Cognos_Awards.txt
+rake importAwardData file=db/imports/award_data_20110417.txt
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalImpact file=db/imports/jcr_recs_2009.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake updateJournalISSNsFromPubmed
+rake cleanJournalISSNentries
+rake findAbstractswithoutJCRentries
+rake findAbstractswithJCRentries
+
+rake cleanInvestigatorsUsername
+rake importInvestigatorDescriptions file=db/imports/faculty_interests_Apr2011.txt
+rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_Apr2011.txt
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+#April 2011 loads for BTI and Digestive Disease Program
+rake importCenterMemberships file=db/imports/additional_memberships_Apr2011.txt 
+
+# April 2011 loads
+rake RAILS_ENV=staging importDepartments file=db/imports/department_lookup_Dec2010.txt 
+rake RAILS_ENV=staging  importOrganizations file=db/imports/division_lookup_Apr2011.txt 
+rake RAILS_ENV=staging  cleanUpOrganizations
+rake RAILS_ENV=staging  log:clear
+rake RAILS_ENV=staging  importInvestigators file=db/imports/faculty_Apr2011.txt 
+rake RAILS_ENV=staging  importJointAppointments file=db/imports/joint_appointments_Feb_2011.txt  #unchanged
+rake RAILS_ENV=staging  importSecondaryAppointments file=db/imports/secondary_appointments_Apr2011.txt 
+rake RAILS_ENV=staging  importCenterMemberships file=db/imports/center_memberships_Apr2011.txt 
+rake RAILS_ENV=staging  importInvestigatorPubmedIDs file=db/imports/pubmed_ids_Apr2011.txt 
+rake RAILS_ENV=staging  importAwardData file=db/imports/Cognos_Awards.txt
+rake RAILS_ENV=staging  importAwardData file=db/imports/award_data_20110417.txt
+rake RAILS_ENV=staging  importJournalImpact file=db/imports/jcr_recs.txt
+rake RAILS_ENV=staging  importJournalImpact file=db/imports/jcr_recs_2009.txt
+rake RAILS_ENV=staging  importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake RAILS_ENV=staging  updateJournalISSNsFromPubmed
+rake RAILS_ENV=staging  cleanJournalISSNentries
+rake RAILS_ENV=staging  findAbstractswithoutJCRentries
+rake RAILS_ENV=staging  findAbstractswithJCRentries
+
+rake RAILS_ENV=staging  cleanInvestigatorsUsername
+rake RAILS_ENV=staging  importInvestigatorDescriptions file=db/imports/faculty_interests_Apr2011.txt
+rake RAILS_ENV=staging  importInvestigatorDescriptions file=db/imports/faculty_descriptions_Apr2011.txt
+rake RAILS_ENV=staging  db:vacuum  #added a custom rake method for this
+rake RAILS_ENV=staging  log:clear
+
+#April 2011 loads for BTI and Digestive Disease Program
+rake RAILS_ENV=staging  importCenterMemberships file=db/imports/additional_memberships_Apr2011.txt 
+
+
+# April 2011 loads
+rake RAILS_ENV=production importDepartments file=db/imports/department_lookup_Dec2010.txt 
+rake RAILS_ENV=production  importOrganizations file=db/imports/division_lookup_Apr2011.txt 
+rake RAILS_ENV=production  cleanUpOrganizations
+rake RAILS_ENV=production  log:clear
+rake RAILS_ENV=production  importInvestigators file=db/imports/faculty_Apr2011.txt 
+rake RAILS_ENV=production  importJointAppointments file=db/imports/joint_appointments_Feb_2011.txt  #unchanged
+rake RAILS_ENV=production  importSecondaryAppointments file=db/imports/secondary_appointments_Apr2011.txt 
+rake RAILS_ENV=production  importCenterMemberships file=db/imports/center_memberships_Apr2011.txt 
+rake RAILS_ENV=production  importInvestigatorPubmedIDs file=db/imports/pubmed_ids_Apr2011.txt 
+rake RAILS_ENV=production  importAwardData file=db/imports/Cognos_Awards.txt
+rake RAILS_ENV=production  importAwardData file=db/imports/award_data_20110417.txt
+rake RAILS_ENV=production  importJournalImpact file=db/imports/jcr_recs.txt
+rake RAILS_ENV=production  importJournalImpact file=db/imports/jcr_recs_2009.txt
+rake RAILS_ENV=production  importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake RAILS_ENV=production  updateJournalISSNsFromPubmed
+rake RAILS_ENV=production  cleanJournalISSNentries
+rake RAILS_ENV=production  findAbstractswithoutJCRentries
+rake RAILS_ENV=production  findAbstractswithJCRentries
+
+rake RAILS_ENV=production  cleanInvestigatorsUsername
+rake RAILS_ENV=production  importInvestigatorDescriptions file=db/imports/faculty_interests_Apr2011.txt
+rake RAILS_ENV=production  importInvestigatorDescriptions file=db/imports/faculty_descriptions_Apr2011.txt
+rake RAILS_ENV=production  db:vacuum  #added a custom rake method for this
+rake RAILS_ENV=production  log:clear
+
+#April 2011 loads for BTI and Digestive Disease Program
+rake RAILS_ENV=production  importCenterMemberships file=db/imports/additional_memberships_Apr2011.txt 
+
+
+
+# February 2011 loads
+rake importDepartments file=db/imports/department_lookup_Dec2010.txt 
+rake importOrganizations file=db/imports/division_lookup_Feb2011.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/faculty_Feb2011.txt 
+rake importJointAppointments file=db/imports/joint_appointments_Feb_2011.txt 
+rake importSecondaryAppointments file=db/imports/secondary_appointments_Feb2011.txt 
+rake importCenterMemberships file=db/imports/center_memberships_Feb2011.txt 
+rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids_Feb2011.txt 
+rake importAwardData file=db/imports/Cognos_Awards.txt
+rake importAwardData file=db/imports/award_data_20110417.txt
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake cleanInvestigatorsUsername
+rake importInvestigatorDescriptions file=db/imports/faculty_interests_Feb2011.txt
+rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_Feb2011.txt
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+
+# December 2010 loads
+rake importDepartments file=db/imports/department_lookup_Dec2010.txt 
+rake importOrganizations file=db/imports/division_lookup_Dec2010.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/faculty_Dec2010.txt 
+rake importJointAppointments file=db/imports/joint_appointments_Dec2010.txt 
+rake importSecondaryAppointments file=db/imports/secondary_appointments_Dec2010.txt 
+rake importCenterMemberships file=db/imports/center_memberships_Dec2010.txt 
+rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids_Dec2010.txt 
+rake importAwardData file=db/imports/Cognos_Awards.txt
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake cleanInvestigatorsUsername
+rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_Dec2010.txt
+rake importInvestigatorDescriptions file=db/imports/faculty_interests_Dec2010.txt
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+
+rake importDepartments file=db/imports/department_lookup_October2010.txt 
+rake importOrganizations file=db/imports/division_lookup_October2010.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/faculty_October2010.txt 
+rake importJointAppointments file=db/imports/joint_appointments_October2010.txt 
+rake importSecondaryAppointments file=db/imports/secondary_appointments_October2010.txt 
+rake importCenterMemberships file=db/imports/center_memberships_October2010.txt 
+rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids_October2010.txt 
+rake importAwardData file=db/imports/Cognos_Awards.txt
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake cleanInvestigatorsUsername
+rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_October2010.txt
+rake importInvestigatorDescriptions file=db/imports/faculty_interests_October2010.txt
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+rake environment RAILS_ENV=production  db:drop
+rake environment RAILS_ENV=production  db:create
+rake environment RAILS_ENV=production  db:migrate
+rake environment RAILS_ENV=production  db:vacuum  #added a custom rake method for this
+rake environment RAILS_ENV=production  importDepartments file=db/imports/department_lookup_October2010.txt 
+rake environment RAILS_ENV=production  importOrganizations file=db/imports/division_lookup_October2010.txt 
+rake environment RAILS_ENV=production  cleanUpOrganizations
+rake log:clear
+rake environment RAILS_ENV=production  importInvestigators file=db/imports/faculty_October2010.txt 
+rake environment RAILS_ENV=production  importJointAppointments file=db/imports/joint_appointments_October2010.txt 
+rake environment RAILS_ENV=production  importSecondaryAppointments file=db/imports/secondary_appointments_October2010.txt 
+rake environment RAILS_ENV=production  importCenterMemberships file=db/imports/center_memberships_October2010.txt 
+rake environment RAILS_ENV=production  importInvestigatorPubmedIDs file=db/imports/pubmed_ids_October2010.txt 
+rake environment RAILS_ENV=production  importAwardData file=db/imports/Cognos_Awards.txt
+rake environment RAILS_ENV=production  importJournalImpact file=db/imports/jcr_recs.txt
+rake environment RAILS_ENV=production  importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake environment RAILS_ENV=production  cleanInvestigatorsUsername
+rake environment RAILS_ENV=production importInvestigatorDescriptions file=db/imports/faculty_descriptions_October2010.txt
+rake environment RAILS_ENV=production importInvestigatorDescriptions file=db/imports/faculty_interests_October2010.txt
+rake environment RAILS_ENV=production  db:vacuum  #added a custom rake method for this
+rake log:clear
+
+
+# June 2010 load org and people steps
+
+rake db:drop
+rake db:create
+rake db:migrate
+rake importDepartments file=db/imports/department_lookup_June2010.txt 
+rake importOrganizations file=db/imports/division_lookup_June2010.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/faculty_June2010.txt 
+rake importJointAppointments file=db/imports/joint_appointments_June2010.txt 
+rake importSecondaryAppointments file=db/imports/secondary_appointments_June2010.txt 
+rake importCenterMemberships file=db/imports/center_memberships_June2010.txt 
+rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids_June2010.txt 
+rake importAwardData file=db/imports/Cognos_Awards.txt
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake cleanInvestigatorsUsername
+rake log:clear
+
+rake environment RAILS_ENV=production  db:drop
+rake environment RAILS_ENV=production  db:create
+rake environment RAILS_ENV=production  db:migrate
+rake environment RAILS_ENV=production  importDepartments file=db/imports/department_lookup_June2010.txt 
+rake environment RAILS_ENV=production  importOrganizations file=db/imports/division_lookup_June2010.txt 
+rake environment RAILS_ENV=production  cleanUpOrganizations
+rake log:clear
+rake environment RAILS_ENV=production  importInvestigators file=db/imports/faculty_June2010.txt 
+rake environment RAILS_ENV=production  importJointAppointments file=db/imports/joint_appointments_June2010.txt 
+rake environment RAILS_ENV=production  importSecondaryAppointments file=db/imports/secondary_appointments_June2010.txt 
+rake environment RAILS_ENV=production  importCenterMemberships file=db/imports/center_memberships_June2010.txt 
+rake environment RAILS_ENV=production  importInvestigatorPubmedIDs file=db/imports/pubmed_ids_June2010.txt 
+rake environment RAILS_ENV=production  importAwardData file=db/imports/Cognos_Awards.txt
+rake environment RAILS_ENV=production  importJournalImpact file=db/imports/jcr_recs.txt
+rake environment RAILS_ENV=production  importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake environment RAILS_ENV=production  cleanInvestigatorsUsername
+rake log:clear
+
+# for the irb
+rake validateUsers file=db/imports/eirb.txt

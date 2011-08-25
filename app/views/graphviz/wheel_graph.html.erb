@@ -1,0 +1,50 @@
+<script type="text/javascript">
+   window.onload = function() {
+
+		var wc = new MooWheel.Remote(false, $('canvas'), {
+			type: 'heat', 
+			width: 1000,
+			height: 1000,
+			lines: {
+			   color: 'random',
+			   lineWidth: 1
+			},
+			radialMultiplier: 3.47,
+			hover: true,
+			hoverLines: {
+			   color: '#000',
+			   lineWidth: 3
+			},
+
+
+			url: '<%= image_path("../graphviz/#{params[:id]}/#{@wheel_json_data}") %>', 
+				onItemClick: function(item, event) {
+				  // changed by Karthik Singh, July 2011
+				  // not using _path helper method to ensure asset timestamp is not appended to the link
+					var url = '../../graphviz/'+item.id+'/<%= @wheel_action -%>';
+					if (item.id == '<%= @investigator.username %>') {
+						url = '../../investigators/'+item.id+'/show/1';
+					}
+					top.location = url;
+	         	}
+		});
+
+ //      new MooWheel(wheelData, $('canvas'), {
+ //         onItemClick: function(item, e) {
+ //             var url = "/graphviz/"+item.id+"/wheel_graph";
+ //             window.open(url);
+ //          },
+ //           type: 'heat'
+ //      });
+  };
+</script>
+
+<div id="investigator_title">
+<% all_abstracts = @all_abstracts || nil -%>
+<%= investigator_bio_heading(@investigator, all_abstracts) %>
+</div>
+<div id="title">
+	<h2><%= @title || "Wheel graph showing the co-publications between faculty" -%></h2>
+</div>
+
+<div id="canvas" style="height:1000px;margin-left:40px; display:block;"><strong>Loading, please wait...</strong></div>
