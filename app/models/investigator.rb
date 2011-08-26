@@ -1,5 +1,42 @@
 class Investigator < ActiveRecord::Base
   acts_as_taggable  # for MeSH terms
+  acts_as_tsearch :vectors => {:fields => ["first_name","last_name", "username", "title"]}
+  
+  has_many :investigator_proposals
+  has_many :proposals, 
+    :through => :investigator_proposals
+
+  has_many :investigator_pi_proposals,  
+    :class_name => "InvestigatorProposal",
+    :conditions => ["investigator_proposals.role = 'PD/PI'"]
+
+  has_many :pi_proposals, 
+    :source => :proposal,
+    :through => :investigator_pi_proposals
+    
+  has_many :investigator_nonpi_proposals,  
+    :class_name => "InvestigatorProposal",
+    :conditions => ["NOT investigator_proposals.role = 'PD/PI'"]
+  
+  has_many :nonpi_proposals, 
+    :source => :proposal,
+    :through => :investigator_nonpi_proposals
+
+  has_many :current_proposals, 
+    :source => :proposal,
+    :through => :investigator_proposals,
+    :conditions => ['proposals.award_end_date >= :now', {:now => Date.today }]
+
+  has_many :current_pi_proposals, 
+    :source => :proposal,
+    :through => :investigator_pi_proposals,
+    :conditions => ['proposals.award_end_date >= :now', {:now => Date.today }]
+
+  has_many :current_nonpi_proposals, 
+    :source => :proposal,
+    :through => :investigator_nonpi_proposals,
+    :conditions => ['proposals.award_end_date >= :now', {:now => Date.today }]
+
 
   has_many :investigator_abstracts
   has_many :investigator_colleagues
@@ -20,7 +57,7 @@ class Investigator < ActiveRecord::Base
       :order=>'investigator_colleagues.publication_cnt desc'
   has_many :colleagues, :through => :investigator_colleagues
   has_many :abstracts, :through => :investigator_abstracts,
-         :conditions => ['investigator_abstracts.end_date is null']
+         :conditions => ['investigator_abstracts.is_valid = true']
 #  has_many :investigator_abstracts_meshes
 #  has_many :meshes, :through => :investigator_abstracts_meshes
   has_many :investigator_appointments,
@@ -40,6 +77,8 @@ class Investigator < ActiveRecord::Base
 
   accepts_nested_attributes_for :investigator_appointments
   accepts_nested_attributes_for :member_appointments
+
+  named_scope :with_any_role, :include=>[:investigator_proposals], :conditions => "investigator_proposals.percent_effort >= 0"
 
   named_scope :full_time, :conditions => "appointment_basis = 'FT'"
   named_scope :tenure_track, :conditions => "appointment_type = 'Regular'"
@@ -83,6 +122,16 @@ class Investigator < ActiveRecord::Base
         find_by_email(val)
     end
   end
+  
+  def colleague_coauthors
+    co_authors.collect{|ca| ca.colleague}
+  end
+  
+  def direct_coauthors
+    coauthor_ids = abstracts.collect{|x| x.investigator_abstracts.remove_invalid.collect(&:investigator_id)}.flatten.uniq
+    coauthor_ids.delete(id)
+    Investigator.find_all_by_id(coauthor_ids)
+  end
 
   def name
     [first_name, last_name].join(' ')
@@ -96,6 +145,142 @@ class Investigator < ActiveRecord::Base
      [[last_name, first_name].join(', '), middle_name].join(' ')
   end
 
+     # this is annoying to have to spell out every column but * does not work
+    # for rails 3.0
+        #all.joins("INNER JOIN investigator_proposals ON (investigators.id = investigator_proposals.investigator_id)  INNER JOIN proposals ON (proposals.id = investigator_proposals.proposal_id)  
+    #    LEFT JOIN investigator_proposals pi_proposals_investigators_join ON (investigators.id = pi_proposals_investigators_join.investigator_id)  
+    #    LEFT JOIN proposals pi_proposals_investigators ON (pi_proposals_investigators.id = pi_proposals_investigators_join.proposal_id) AND investigator_proposals.role = 'PD/PI'  
+    #    LEFT JOIN investigator_proposals nonpi_proposals_investigators_join ON (investigators.id = nonpi_proposals_investigators_join.investigator_id)  
+    #    LEFT JOIN proposals nonpi_proposals_investigators ON (nonpi_proposals_investigators.id = nonpi_proposals_investigators_join.proposal_id) AND NOT investigator_proposals.role = 'PD/PI' 
+    #    ").select( "investigators.id, investigators.username, investigators.home_department_id, investigators.last_name, investigators.first_name, investigators.middle_name, investigators.email, investigators.degrees, investigators.suffix, investigators.employee_id, investigators.title, investigators.campus, investigators.appointment_type, investigators.appointment_track, investigators.appointment_basis, investigators.pubmed_search_name, investigators.pubmed_limit_to_institution, investigators.num_first_pubs_last_five_years, investigators.num_last_pubs_last_five_years, investigators.total_pubs_last_five_years, investigators.num_intraunit_collaborators_last_five_years, investigators.num_extraunit_collaborators_last_five_years, investigators.num_first_pubs, investigators.num_last_pubs, investigators.total_pubs, investigators.num_intraunit_collaborators, investigators.num_extraunit_collaborators, investigators.last_pubmed_search, investigators.mailcode, investigators.address1, investigators.address2, investigators.city, investigators.state, investigators.postal_code, investigators.country, investigators.business_phone, investigators.home_phone, investigators.lab_phone, investigators.fax, investigators.pager, investigators.ssn, investigators.birth_date, investigators.sex, investigators.nu_start_date, investigators.start_date, investigators.end_date, investigators.faculty_keywords, investigators.faculty_research_summary, investigators.faculty_interests, sum(proposals.direct_amount) as direct_totals, sum(proposals.indirect_amount) as indirect_totals,sum(proposals.total_amount) as proposal_totals, count(proposals.*) as proposals_count, sum(pi_proposals_investigators.direct_amount) as pi_direct_totals, sum(pi_proposals_investigators.indirect_amount) as pi_indirect_totals, sum(pi_proposals_investigators.total_amount) as pi_proposal_totals, count(pi_proposals_investigators.*) as pi_proposals_count, sum(nonpi_proposals_investigators.direct_amount) as nonpi_direct_totals, sum(nonpi_proposals_investigators.indirect_amount) as nonpi_indirect_totals, sum(nonpi_proposals_investigators.total_amount) as nonpi_proposal_totals, count(nonpi_proposals_investigators.*) as nonpi_proposals_count 
+    #    ").group("investigators.id, investigators.username, investigators.home_department_id, investigators.last_name, investigators.first_name, investigators.middle_name, investigators.email, investigators.degrees, investigators.suffix, investigators.employee_id, investigators.title, investigators.campus, investigators.appointment_type, investigators.appointment_track, investigators.appointment_basis, investigators.pubmed_search_name, investigators.pubmed_limit_to_institution, investigators.num_first_pubs_last_five_years, investigators.num_last_pubs_last_five_years, investigators.total_pubs_last_five_years, investigators.num_intraunit_collaborators_last_five_years, investigators.num_extraunit_collaborators_last_five_years, investigators.num_first_pubs, investigators.num_last_pubs, investigators.total_pubs, investigators.num_intraunit_collaborators, investigators.num_extraunit_collaborators, investigators.last_pubmed_search, investigators.mailcode, investigators.address1, investigators.address2, investigators.city, investigators.state, investigators.postal_code, investigators.country, investigators.business_phone, investigators.home_phone, investigators.lab_phone, investigators.fax, investigators.pager, investigators.ssn, investigators.birth_date, investigators.sex, investigators.weekly_hours_min, investigators.nu_start_date, investigators.start_date, investigators.end_date, investigators.faculty_keywords, investigators.faculty_research_summary, investigators.faculty_interests" )
+     
+  def self.proposal_totals(limit=nil)
+    all( :joins => " INNER JOIN (investigator_proposals investigator_proposals1  INNER JOIN proposals proposals1 ON (investigator_proposals1.proposal_id = proposals1.id )) ON (investigators.id = investigator_proposals1.investigator_id) ", 
+        :select => "investigators.id, investigators.username, investigators.home_department_id, investigators.last_name, investigators.first_name, investigators.middle_name, investigators.email, investigators.degrees, investigators.suffix, investigators.employee_id, investigators.title, investigators.campus, investigators.appointment_type, investigators.appointment_track, investigators.appointment_basis, investigators.pubmed_search_name, investigators.pubmed_limit_to_institution, investigators.num_first_pubs_last_five_years, investigators.num_last_pubs_last_five_years, investigators.total_pubs_last_five_years, investigators.num_intraunit_collaborators_last_five_years, investigators.num_extraunit_collaborators_last_five_years, investigators.num_first_pubs, investigators.num_last_pubs, investigators.total_pubs, investigators.num_intraunit_collaborators, investigators.num_extraunit_collaborators, investigators.last_pubmed_search, investigators.mailcode, investigators.address1, investigators.address2, investigators.city, investigators.state, investigators.postal_code, investigators.country, investigators.business_phone, investigators.home_phone, investigators.lab_phone, investigators.fax, investigators.pager, investigators.ssn, investigators.birth_date, investigators.sex, investigators.nu_start_date, investigators.start_date, investigators.end_date, investigators.faculty_keywords, investigators.faculty_research_summary, investigators.faculty_interests, sum(proposals1.direct_amount) as directs_total, sum(proposals1.indirect_amount) as indirects_total,sum(proposals1.total_amount) as proposals_total, count(investigator_proposals1.*) as proposals_count",
+        :group => "investigators.id, investigators.username, investigators.home_department_id, investigators.last_name, investigators.first_name, investigators.middle_name, investigators.email, investigators.degrees, investigators.suffix, investigators.employee_id, investigators.title, investigators.campus, investigators.appointment_type, investigators.appointment_track, investigators.appointment_basis, investigators.pubmed_search_name, investigators.pubmed_limit_to_institution, investigators.num_first_pubs_last_five_years, investigators.num_last_pubs_last_five_years, investigators.total_pubs_last_five_years, investigators.num_intraunit_collaborators_last_five_years, investigators.num_extraunit_collaborators_last_five_years, investigators.num_first_pubs, investigators.num_last_pubs, investigators.total_pubs, investigators.num_intraunit_collaborators, investigators.num_extraunit_collaborators, investigators.last_pubmed_search, investigators.mailcode, investigators.address1, investigators.address2, investigators.city, investigators.state, investigators.postal_code, investigators.country, investigators.business_phone, investigators.home_phone, investigators.lab_phone, investigators.fax, investigators.pager, investigators.ssn, investigators.birth_date, investigators.sex, investigators.weekly_hours_min, investigators.nu_start_date, investigators.start_date, investigators.end_date, investigators.faculty_keywords, investigators.faculty_research_summary, investigators.faculty_interests",
+        :order => "proposals_total desc", :limit => limit)
+    
+  end
+
+
+  def pi_directs_total
+    pi_proposals.sum('direct_amount')
+  end
+
+  def pi_indirects_total
+    pi_proposals.sum('indirect_amount')
+  end
+
+  def pi_proposals_total
+    pi_proposals.sum('total_amount')
+  end
+
+  def pi_proposals_count
+    pi_proposals.count
+  end
+
+  def nonpi_directs_total
+    nonpi_proposals.sum('direct_amount')
+  end
+
+  def nonpi_indirects_total
+    nonpi_proposals.sum('indirect_amount')
+  end
+
+  def nonpi_proposals_total
+    nonpi_proposals.sum('total_amount')
+  end
+
+  def nonpi_proposals_count
+    nonpi_proposals.count
+  end
+
+  def current_directs_total
+    current_proposals.sum('direct_amount')
+  end
+
+  def current_indirects_total
+    current_proposals.sum('indirect_amount')
+  end
+
+  def current_proposals_total
+    current_proposals.sum('total_amount')
+  end
+
+  def current_proposals_count
+    current_proposals.count
+  end
+
+  def current_pi_directs_total
+    current_pi_proposals.sum('direct_amount')
+  end
+
+  def current_pi_indirects_total
+    current_pi_proposals.sum('indirect_amount')
+  end
+
+  def current_pi_proposals_total
+    current_pi_proposals.sum('total_amount')
+  end
+
+  def current_pi_proposals_count
+    current_pi_proposals.count
+  end
+
+  def current_nonpi_directs_total
+    current_nonpi_proposals.sum('direct_amount')
+  end
+
+  def current_nonpi_indirects_total
+    current_nonpi_proposals.sum('indirect_amount')
+  end
+
+  def current_nonpi_proposals_total
+    current_nonpi_proposals.sum('total_amount')
+  end
+
+  def current_nonpi_proposals_count
+    current_nonpi_proposals.count
+  end
+
+
+  def self.find_investigators_in_list(terms)
+    terms = terms.split(/[, ;\r\n]/).collect{|term| term.downcase.strip}.uniq
+    numeric_terms = terms.collect{|term| (term =~ /^[0-9]+$/) ? term : nil }.uniq
+    [Investigator.find_all_by_username(terms) + Investigator.all(:conditions=>[ 'lower(email) in (:terms)', {:terms=>terms}] ) + Investigator.find_all_by_employee_id(numeric_terms) ].flatten.uniq
+  end
+  
+  def self.count_all_tsearch(terms)
+    investigators = Investigator.find_by_tsearch(terms, :select => 'ID')
+    abstract_ids = Abstract.find_by_tsearch(terms, :select => 'ID')
+    investigators2 = InvestigatorAbstract.all(:select => 'DISTINCT investigator_id', :conditions=>['investigator_abstracts.abstract_id IN (:abstract_ids)', {:abstract_ids => abstract_ids.collect(&:id)}])
+    (investigators.collect(&:id)+investigators2.collect(&:investigator_id)).uniq.length
+  end
+
+  def self.investigators_tsearch(terms)
+    find_by_tsearch(terms)
+  end
+
+  def self.all_tsearch(terms)
+    investigators = find_by_tsearch(terms)
+    abstract_ids = Abstract.find_by_tsearch(terms, :select => 'ID')
+    investigators2 = all(:select => "investigators.id, investigators.username, investigators.home_department_id, investigators.last_name, investigators.first_name, investigators.middle_name, investigators.email, investigators.degrees, investigators.suffix, investigators.employee_id, investigators.title, investigators.campus, investigators.appointment_type, investigators.appointment_track, investigators.appointment_basis, investigators.pubmed_search_name, investigators.pubmed_limit_to_institution, investigators.num_first_pubs_last_five_years, investigators.num_last_pubs_last_five_years, investigators.total_pubs_last_five_years, investigators.num_intraunit_collaborators_last_five_years, investigators.num_extraunit_collaborators_last_five_years, investigators.num_first_pubs, investigators.num_last_pubs, investigators.total_pubs, investigators.num_intraunit_collaborators, investigators.num_extraunit_collaborators, investigators.last_pubmed_search, investigators.mailcode, investigators.address1, investigators.address2, investigators.city, investigators.state, investigators.postal_code, investigators.country, investigators.business_phone, investigators.home_phone, investigators.lab_phone, investigators.fax, investigators.pager, investigators.birth_date, investigators.nu_start_date, investigators.start_date, investigators.end_date, investigators.faculty_keywords, investigators.faculty_research_summary, investigators.faculty_interests,  count(investigator_abstracts.abstract_id) as the_cnt", :joins=>:investigator_abstracts, :conditions=>['investigator_abstracts.abstract_id IN (:abstract_ids)', {:abstract_ids => abstract_ids, :investigator_ids => investigators.collect(&:id)}], :group => "investigators.id, investigators.username, investigators.home_department_id, investigators.last_name, investigators.first_name, investigators.middle_name, investigators.email, investigators.degrees, investigators.suffix, investigators.employee_id, investigators.title, investigators.campus, investigators.appointment_type, investigators.appointment_track, investigators.appointment_basis, investigators.pubmed_search_name, investigators.pubmed_limit_to_institution, investigators.num_first_pubs_last_five_years, investigators.num_last_pubs_last_five_years, investigators.total_pubs_last_five_years, investigators.num_intraunit_collaborators_last_five_years, investigators.num_extraunit_collaborators_last_five_years, investigators.num_first_pubs, investigators.num_last_pubs, investigators.total_pubs, investigators.num_intraunit_collaborators, investigators.num_extraunit_collaborators, investigators.last_pubmed_search, investigators.mailcode, investigators.address1, investigators.address2, investigators.city, investigators.state, investigators.postal_code, investigators.country, investigators.business_phone, investigators.home_phone, investigators.lab_phone, investigators.fax, investigators.pager, investigators.birth_date, investigators.nu_start_date, investigators.start_date, investigators.end_date, investigators.faculty_keywords, investigators.faculty_research_summary, investigators.faculty_interests", :order => 'the_cnt desc, investigators.total_pubs desc, investigators.last_name')
+    (investigators+investigators2).uniq
+  end
+
+  def self.top_ten_tsearch(terms)
+    investigators = find_by_tsearch(terms, :limit=>10)
+    abstract_ids = Abstract.find_by_tsearch(terms, {:select => 'ID', :limit=>10})
+    investigators2 = all(:select => "DISTINCT investigators.*", :joins=>:investigator_abstracts, :limit=>10, :conditions=>['investigator_abstracts.abstract_id IN (:abstract_ids)', {:abstract_ids => abstract_ids, :investigator_ids => investigators.collect(&:id)}])
+    (investigators+investigators2).uniq
+  end
+
+
+  def self.display_tsearch(terms)
+    find_by_tsearch(terms)
+  end
+  
   def abstract_count
     abstracts.length
   end
@@ -151,25 +336,30 @@ class Investigator < ActiveRecord::Base
   end
   
   def self.all_members()
-      find(:all, :joins => [:member_appointments])
+      all( :joins => [:member_appointments])
   end
 
   def self.not_members()
     allmembers  = self.all_members()
-    find(:all, :conditions=>["id not in (:all)", {:all => allmembers}])
+    all(:conditions=>["id not in (:all)", {:all => allmembers}])
   end
+  
+  def self.no_appointments()
+    all(  :conditions => ["not exists(select 'x' from investigator_appointments where investigator_appointments.investigator_id = investigators.id )"] )
+  end
+  
   
 # used in the rake tasks to add to the investigator object attributes
 
   def first_author_publications_cnt()
     self.investigator_abstracts.find(:all,
-       :conditions => ["is_first_author = :is_first_author and end_date is null",
+       :conditions => ["investigator_abstracts.is_first_author = :is_first_author and investigator_abstracts.is_valid = true",
             {:is_first_author => true}] ).length
   end 
 
   def last_author_publications_cnt()
     self.investigator_abstracts.find(:all,
-        :conditions => [" is_last_author = :is_last_author and end_date is null",
+        :conditions => [" investigator_abstracts.is_last_author = :is_last_author and investigator_abstracts.is_valid = true",
             {:is_last_author => true}] ).length
   end 
 
@@ -177,7 +367,7 @@ class Investigator < ActiveRecord::Base
    is_first_author = true
    self.investigator_abstracts.find(:all,
       :joins => [:abstract],
-      :conditions => ["(publication_date >= :pub_date or electronic_publication_date >= :pub_date) and is_first_author = :is_first_author and end_date is null",
+      :conditions => ["(publication_date >= :pub_date or electronic_publication_date >= :pub_date) and investigator_abstracts.is_first_author = :is_first_author and investigator_abstracts.is_valid = true",
            {:pub_date => Investigator.generate_date(), :is_first_author => is_first_author}] ).length
   end 
 
@@ -185,7 +375,7 @@ class Investigator < ActiveRecord::Base
     is_last_author = true
     self.investigator_abstracts.find(:all,
      :joins => [:abstract],
-         :conditions => ["(publication_date >= :pub_date or electronic_publication_date >= :pub_date) and is_last_author = :is_last_author and end_date is null",
+         :conditions => ["(publication_date >= :pub_date or electronic_publication_date >= :pub_date) and investigator_abstracts.is_last_author = :is_last_author and investigator_abstracts.is_valid = true",
              {:pub_date => Investigator.generate_date(), :is_last_author => is_last_author}] ).length
   end 
 
@@ -198,7 +388,7 @@ class Investigator < ActiveRecord::Base
          " AND ia.abstract_id = ia2.abstract_id "+
          " AND ia.investigator_id <> ia2.investigator_id " +
          " AND ia2.investigator_id = i2.id" +
-         " AND ia.end_date is null AND ia2.end_date is null")
+         " AND ia.is_valid = true AND ia2.is_valid = true")
    end 
 
   def self.collaborators_cnt(investigator_id)
@@ -210,13 +400,13 @@ class Investigator < ActiveRecord::Base
         "  FROM abstracts a, investigator_abstracts ia, investigator_appointments ip, investigator_abstracts ia2, investigator_appointments ip2 "+
         " WHERE ia.investigator_id  = #{investigator_id} "+
         "  AND ia.abstract_id = a.id "+
-        "  AND ia.end_date is null " +
+        "  AND ia.is_valid = true " +
         "   AND ia.investigator_id = ip.investigator_id  "+
         "   AND ip.organizational_unit_id = ip2.organizational_unit_id "+
         "   AND ip2.investigator_id = ia2.investigator_id "+
         "   AND ia.abstract_id = ia2.abstract_id "+
         "   AND ia.investigator_id <> ia2.investigator_id " +
-        "   AND ia2.end_date is null "
+        "   AND ia2.is_valid = true "
     ).length
   end 
  
@@ -225,9 +415,9 @@ class Investigator < ActiveRecord::Base
       "  FROM  abstracts a, investigator_abstracts ia, investigator_abstracts ia2 "+
       " WHERE ia.investigator_id = #{investigator_id} "+
       "   AND ia.abstract_id = a.id "+
-      "   AND ia.end_date is null " +
+      "   AND ia.is_valid = true " +
       "   AND ia.abstract_id = ia2.abstract_id "+
-      "   AND ia2.end_date is null " +
+      "   AND ia2.is_valid = true " +
       "   AND ia.investigator_id <> ia2.investigator_id "+
       "   AND NOT EXISTS ( SELECT 'X' FROM investigator_appointments ip, investigator_appointments ip2 "+
       "                     WHERE  ip2.investigator_id = ia2.investigator_id "+
@@ -241,13 +431,13 @@ class Investigator < ActiveRecord::Base
         "  FROM abstracts a, investigator_abstracts ia, investigator_appointments ip, investigator_abstracts ia2, investigator_appointments ip2 "+
         " WHERE ia.investigator_id  = #{investigator_id} "+
         "  AND ia.abstract_id = a.id "+
-        "   AND ia.end_date is null " +
+        "   AND ia.is_valid = true " +
          "  AND a.publication_date > '#{generate_date}' "+
         "   AND ia.investigator_id = ip.investigator_id  "+
         "   AND ip.organizational_unit_id = ip2.organizational_unit_id "+
         "   AND ip2.investigator_id = ia2.investigator_id "+
         "   AND ia.abstract_id = ia2.abstract_id "+
-        "   AND ia2.end_date is null " +
+        "   AND ia2.is_valid = true " +
         "   AND ia.investigator_id <> ia2.investigator_id "
     ).length
   end 
@@ -257,10 +447,10 @@ class Investigator < ActiveRecord::Base
       "  FROM  abstracts a, investigator_abstracts ia, investigator_abstracts ia2 "+
       " WHERE ia.investigator_id = #{investigator_id} "+
       "   AND ia.abstract_id = a.id "+
-      "   AND ia.end_date is null " +
+      "   AND ia.is_valid = true " +
       "   AND a.publication_date > '#{generate_date}' "+
       "   AND ia.abstract_id = ia2.abstract_id "+
-      "   AND ia2.end_date is null " +
+      "   AND ia2.is_valid = true " +
       "   AND ia.investigator_id <> ia2.investigator_id "+
       "   AND NOT EXISTS ( SELECT 'X' FROM investigator_appointments ip, investigator_appointments ip2 "+
       "                     WHERE  ip2.investigator_id = ia2.investigator_id "+
@@ -303,7 +493,7 @@ class Investigator < ActiveRecord::Base
 
   def self.add_collaborations_to_investigator(investigator_abstracts, investigator, investigators_in_unit ) 
     investigator_abstracts.each do |ia|
-      add_collaboration_to_investigator(ia, investigator, investigators_in_unit) if ia.end_date.blank?
+      add_collaboration_to_investigator(ia, investigator, investigators_in_unit) if ia.is_valid == true
     end 
   end 
 

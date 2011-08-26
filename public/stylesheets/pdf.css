@@ -73,6 +73,18 @@ table {
 	border: 1px indigo solid;
 }
 
+tr.header {
+	background:   #709fc7;
+}
+
+tr.even {
+	background:   white;
+}
+
+tr.odd {
+	background:   silver;
+}
+
 td,th {
 	padding-top: 0.25em;
 	padding-bottom: 0.25em;
@@ -90,6 +102,10 @@ table.borderless {
 #biograph table tr td table {
 	padding-left: 2em;
 	border: 0px;
+}
+
+#biograph table tr td table tr th {
+	vertical-align:middle;
 }
 
 #biograph table tr th {
@@ -191,6 +207,8 @@ td.list-title-right {
 	background:   yellow;
 	padding-bottom: 0.5em;
 }
+
+
 
 /* Styles for psd */
 
@@ -312,16 +330,16 @@ td.list-title-right {
  	margin-top: 15px;
 }
 
-span.intra_unit, a.intra_unit {
+.intra_unit {
 	background-color: #AFD8F8;
 	text-decoration: none;
 }
-span.inter_unit, a.inter_unit {
+.inter_unit {
 	background-color: #FFCC33;
 	text-decoration: none;
 }
 
-span.no_intra_unit, a.no_intra_unit {
+.no_intra_unit {
 	background-color: #FF99FF;
 	text-decoration: none;
 }

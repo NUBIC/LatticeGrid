@@ -8,12 +8,36 @@ require 'investigator_appointment_utilities'
 require 'investigator_abstract_utilities'
 require 'organization_utilities'
 
+
+def read_file_handler(taskname="taskname")
+  if ENV["file"].nil?
+    puts "couldn't find a file in the calling parameters. Please call as 'rake #{taskname} file=filewithpath'" 
+  else
+    block_timing(taskname) {
+      puts "file: "+ENV["file"]
+      ENV["file"].split(',').each do | filename |
+        p1 = Pathname.new(filename) 
+        if p1.file? then
+          yield filename
+        else
+          puts "unable to open file #{filename}"
+        end
+      end
+    }
+  end
+end
+  
 def read_data_handler(model_name, file_name, column_separator="\t")
   errors = ""
   data = FasterCSV.read(file_name, :col_sep => column_separator, :headers => :first_row)
   puts model_name.find(:all).length
   yield(data)
   puts model_name.find(:all).length
+end
+
+
+def ReadNetIDgenerateReport(file_name)
+  read_data_handler(Investigator,file_name) {|data| row_iterator(data) {|data| GenerateNetIDReport(data)} }
 end
 
 def ReadInvestigatorData(file_name)
@@ -49,9 +73,7 @@ def ReadInvestigatorDescriptionData(file_name)
 end
 
 def ReadInvestigatorPubmedData(file_name)
-  read_data_handler(Abstract,file_name) { |data| 
-    CreateAbstractsFromArrayHash(data) 
-  }
+  read_data_handler(Abstract,file_name) { |data| CreateAbstractsFromArrayHash(data) }
   read_data_handler(InvestigatorAbstract,file_name) { |data|  row_iterator(data) {|data| CreateInvestigatorAbstractsFromHash(data)} }
 end
 

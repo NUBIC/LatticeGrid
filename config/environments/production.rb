@@ -26,3 +26,11 @@ config.action_view.cache_template_loading            = true
 
 # Enable threaded mode
 # config.threadsafe!
+config.after_initialize do
+  Bcsec.configure do
+    ui_mode :form
+    api_mode :http_basic
+    authority :netid
+    central '/etc/nubic/bcsec-prod.yml'
+  end
+end

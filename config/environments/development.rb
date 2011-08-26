@@ -15,7 +15,21 @@ config.whiny_nils = true
 config.action_controller.consider_all_requests_local = true
 config.action_view.debug_rjs                         = true
 config.action_controller.perform_caching             = true
-config.action_controller.relative_url_root			 = '/latticegrid' if ENV["HOME"] =~ /home/
+config.action_controller.relative_url_root           = '/cancer' if ENV["HOME"] =~ /home/
 
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
+
+config.after_initialize do
+  Bcsec.configure do
+    if RAILS_ROOT =~ /Users/ 
+      login_config = File.join(RAILS_ROOT, %w(config logins development.yml))
+      authority Bcsec::Authorities::Static.from_file(login_config)
+      puts "loading local static bcsec file"
+    else
+      authority :netid
+      central '/etc/nubic/bcsec-prod.yml'
+    end
+  end
+end
+

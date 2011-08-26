@@ -3,26 +3,26 @@ class OrganizationalUnit < ActiveRecord::Base
   attr_accessor :collaboration_matrix
 
   has_many :investigator_appointments,
-      :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
+      :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :today', {:today => Date.today }]
   has_many :joint_appointments,
       :class_name => "InvestigatorAppointment",
-      :conditions => ["investigator_appointments.type = 'Joint' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :now)", {:now => Date.today }]
+      :conditions => ["investigator_appointments.type = 'Joint' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
   has_many :secondary_appointments,
       :class_name => "InvestigatorAppointment",
-      :conditions => ["investigator_appointments.type = 'Secondary' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :now)", {:now => Date.today }]
+      :conditions => ["investigator_appointments.type = 'Secondary' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
   has_many :memberships,
       :class_name => "InvestigatorAppointment",
-      :conditions => ["investigator_appointments.type = 'Member' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :now)", {:now => Date.today }]
+      :conditions => ["investigator_appointments.type = 'Member' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
   has_many :primary_faculty,  
     :class_name => "Investigator",
     :foreign_key => "home_department_id"
   has_many :primary_faculty_publications,  
     :source => :investigator_abstracts,
-    :conditions => ['investigator_abstracts.end_date is null'],
+    :conditions => ['investigator_abstracts.is_valid = true'],
     :through => :primary_faculty
   has_many :associated_faculty,  
     :source => :investigator,
-     :through => :investigator_appointments
+    :through => :investigator_appointments
   has_many :joint_faculty,  
     :source => :investigator,
     :through => :joint_appointments
@@ -30,12 +30,12 @@ class OrganizationalUnit < ActiveRecord::Base
     :source => :investigator,
     :through => :secondary_appointments
   has_many :members,
-     :source => :investigator,
-     :through => :memberships
+    :source => :investigator,
+    :through => :memberships
   has_many :organization_abstracts,
-        :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
+    :conditions => ['organization_abstracts.end_date is null']
   has_many :abstracts,
-        :through => :organization_abstracts
+    :through => :organization_abstracts
 
     # cache this query in a class instance
     @@all_units = nil
@@ -53,6 +53,18 @@ class OrganizationalUnit < ActiveRecord::Base
       @@menu_nodes ||= (OrganizationalUnit.find_by_abbreviation( node_name ) || OrganizationalUnit.find_by_name( node_name )).self_and_descendants
     end
     
+    def all_organization_abstracts
+      self.self_and_descendants.collect{|unit| unit.organization_abstracts}.flatten.sort_by(&:abstract_id).uniq
+    end
+
+    def all_abstract_ids
+      self.self_and_descendants.collect{|unit| unit.organization_abstracts.map(&:abstract_id)}.flatten.uniq
+    end
+
+    def all_abstracts
+      self.self_and_descendants.collect{|unit| unit.abstracts}.flatten.sort {|x,y| y.year <=> x.year }.uniq
+    end
+
     def all_members
       self.self_and_descendants.collect{|unit| unit.members}.flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
     end
@@ -82,34 +94,51 @@ class OrganizationalUnit < ActiveRecord::Base
       (all_primary_faculty + all_associated_faculty).sort {|x,y| x.sort_name <=> y.sort_name }.uniq
     end
 
+    def get_faculty_by_types(affiliation_types=nil, ranks=nil)
+      #have not implemented rank selectors yet
+      if affiliation_types.blank? or affiliation_types.length == 0
+        faculty = (all_primary_faculty + all_associated_faculty).uniq
+        faculty.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+      elsif affiliation_types.length == 1
+        faculty = all_primary_faculty if affiliation_types.grep(/primary/i).length > 0
+        faculty = all_secondary_faculty if affiliation_types.grep(/secondary/i).length > 0
+        faculty = all_members if affiliation_types.grep(/member/i).length > 0
+      else
+        faculty = []
+        faculty = all_primary_faculty if affiliation_types.grep(/primary/i).length > 0
+        faculty += all_secondary_faculty if affiliation_types.grep(/secondary/i).length > 0
+        faculty += all_members if affiliation_types.grep(/member/i).length > 0
+        faculty.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+      end
+      faculty
+    end
+
     def all_faculty_publications
       faculty = (all_primary_faculty + all_associated_faculty).uniq
       faculty.collect(&:abstracts).flatten.uniq
     end
 
-    def all_faculty_publications_by_date( start_date, end_date )
-      faculty = (all_primary_faculty + all_associated_faculty).uniq
-      faculty.collect{|f| f.abstracts.abstracts_by_date(start_date, end_date)}.flatten.uniq
-    end
-
-    def all_ccsg_faculty_publications_by_date( start_date, end_date )
-      faculty = (all_primary_faculty + all_associated_faculty).uniq
-      faculty.collect{|f| f.abstracts.ccsg_abstracts_by_date(start_date, end_date)}.flatten.uniq
+    def all_ccsg_publications_by_date( faculty, start_date, end_date, exclude_letters=nil )
+      if exclude_letters.blank? or ! exclude_letters
+        faculty.collect{|f| f.abstracts.ccsg_abstracts_by_date(start_date, end_date)}.flatten.uniq
+      else
+        faculty.collect{|f| f.abstracts.exclude_letters.ccsg_abstracts_by_date(start_date, end_date)}.flatten.uniq
+      end
     end
 
     def shared_with_org( org_id )
-       abs = self.abstracts.all
-       OrganizationalUnit.find(org_id).abstracts.all & abs
+       abs = self.all_abstracts
+       OrganizationalUnit.find(org_id).all_abstracts & abs
     end
       
     def abstract_data( page=1 )
-       self.abstracts.paginate(:page => page,
+       self.all_abstracts.paginate(:page => page,
         :per_page => 20, 
         :order => "year DESC, publication_date DESC, electronic_publication_date DESC, authors ASC")
     end
 
     def display_year_data( year=2008 )
-      self.abstracts.find(:all,
+      self.abstracts.all(
         :order => "investigators.last_name ASC,authors ASC",
         :include => [:investigators],
     		:conditions => ['year = :year', 
@@ -117,15 +146,15 @@ class OrganizationalUnit < ActiveRecord::Base
     end
 
     def display_data_by_date( start_date, end_date )
-      self.abstracts.find(:all,
+      self.abstracts.all(
         :order => "year DESC, investigators.last_name ASC,authors ASC",
         :include => [:investigators],
-    		:conditions => [' publication_date between :start_date and :end_date or electronic_publication_date between :start_date and :end_date ', 
+    		:conditions => [' publication_date between :start_date and :end_date', 
      		      {:start_date => start_date, :end_date => end_date }])
     end
 
     def get_minimal_all_data( )
-      self.abstracts.find(:all)
+      self.all_abstracts
     end
 
   #    def investigator_abstracts

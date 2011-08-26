@@ -1,4 +1,7 @@
-<p><%= link_to( "Investigator publications", show_investigator_url(:id=>params[:id], :page=>1) ) + " &nbsp; &nbsp; " + link_to( "Co-authorship network diagram", show_member_graphviz_url(params[:id]) ) + " &nbsp; &nbsp; " + link_to( "MeSH similarities network diagram", show_member_mesh_graphviz_url(params[:id])) %></p>
+<div id="investigator_title">
+<% all_abstracts = @all_abstracts || nil -%>
+<%= investigator_bio_heading(@investigator, all_abstracts) %>
+</div>
 
 <div id="member"> 
 	<div id="MemberGraph"></div>

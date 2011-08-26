@@ -25,10 +25,14 @@ sudo gem install rails
 
 sudo gem install ruby-net-ldap
 
+# for using PostgreSQL use the pg gem
+sudo gem install pg
+
 # sparklines
 sudo gem install sparklines
 sudo gem install sparklines_generator
 # may need to do this too:
+# you will need to install ImageMagick first:  http://www.imagemagick.org/script/binary-releases.php
 sudo gem install rmagick
 
 ruby script/generate sparklines
@@ -47,10 +51,6 @@ helper :sparklines
 #csv parser
 sudo gem install fastercsv
 
-
-#simple date select plugin
-script/plugin install svn://code.jeremyevans.net/rails/plugins/simple_date_select
-
 # acts_as_taggable
 #deprecated: script/plugin install http://svn.viney.net.nz/things/rails/plugins/acts_as_taggable_on_steroids
 script/plugin install git://github.com/jviney/acts_as_taggable_on_steroids.git
@@ -60,25 +60,24 @@ script/plugin install git://github.com/jviney/acts_as_taggable_on_steroids.git
 # deprecated: script/plugin install acts_as_nested_set
 
 # awesome nested set plugin
- script/plugin install git://github.com/collectiveidea/awesome_nested_set.git
+# using gem instead now
+# script/plugin install git://github.com/collectiveidea/awesome_nested_set.git
 
-# prawn gem for pdf generation
-
-http://prawn.majesticseacreature.com/
-
-sudo gem install prawn 
-
-# a simpler pdf generater
-sudo gem install pdf-writer
-
-
-#install PrinceXML and princely
+#install PrinceXML and princely for generating PDFs
 
 http://www.princexml.com/download/
 tar zxf filename.tar.gz
 script/plugin install git://github.com/mbleigh/princely.git
 
 # install bioruby to make the calls to pubmed
+sudo gem sources -a http://gems.github.com  # this is installed by default now
 sudo gem install bioruby
-sudo gem sources -a http://gems.github.com
 sudo gem install mislav-will_paginate
+
+# for profiles controller inline editor:
+
+sudo gem install jintastic 
+#then
+script/generate jintastic
+
+

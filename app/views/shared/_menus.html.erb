@@ -1,22 +1,4 @@
-<% cache('navigation_menu') do %>
-<div id="side_nav_menu" class="ddsmoothmenu-v">
-<ul>
-	<li><a href="#">Publications by year</a>
-		<%= build_year_menu %>
-	</li>
-	<li><a href="#">Program publications</a>
-		<%= build_menu(@head_node.children.sort_by(&:abbreviation), Program) {|id| org_path(id)} %>
-	</li>
-	<li><a href="#">Program members</a>
-		<%= build_menu(@head_node.children.sort_by(&:abbreviation), Program) {|id| show_investigators_org_path(id)} %>
-	</li>
-	<li><a href="#">Program graphs</a>
-		<%= build_menu(@head_node.children.sort_by(&:abbreviation), Program) {|id| show_org_graph_path(id)} %>
-	</li>
-	<li><%= link_to "MeSH tag cloud", tag_cloud_abstracts_path, :title=>"Display MeSH tag cloud for all publications" %></li>
-	<li><%= link_to "Overview", programs_orgs_path, :title => "Display an overview" %></li>
-</ul>
-<br style="clear: left" />
-</div>
+<% cache("navigation_menu_#{@year}") do %>
+<%= menu_script() -%>
 <% end %>
 

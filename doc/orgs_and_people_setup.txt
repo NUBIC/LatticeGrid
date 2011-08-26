@@ -14,7 +14,11 @@ rake db:migrate
     rake db:migrate
 
 # do it in production:
-rake environment RAILS_ENV=production db:migrate
+rake RAILS_ENV=production db:migrate
+
+rake RAILS_ENV=production db:drop
+rake RAILS_ENV=production db:create
+rake RAILS_ENV=production db:migrate
 
 # do it in test:
 rake environment RAILS_ENV=test db:migrate
@@ -30,18 +34,27 @@ rake getLDAP uid_list=aqw,wakibbe
 
 # you will need to load your list of departments, programs, etc into these files. 
 #load organizations
-rake importDepartments file=db/imports/department_lookup.txt
-rake environment RAILS_ENV=production importDepartments file=db/imports/department_lookup.txt
+rake importDepartments file=db/imports/UMich/department_lookup.txt
+rake importOrganizations file=db/imports/UMich/division_lookup.txt
 
-rake importOrganizations file=db/imports/division_lookup.txt
-rake environment RAILS_ENV=production importOrganizations file=db/imports/division_lookup.txt
+rake RAILS_ENV=staging importDepartments file=db/imports/AAS/department_lookup.txt
+rake RAILS_ENV=staging importOrganizations file=db/imports/AAS/division_lookup.txt
 
-# for EAB temp orgs
-rake importOrganizations file=db/imports/division_lookup_EAB_2010_temp.txt
+rake getAllOrganizationsNotUpdated
+rake purgeUnupdatedOrganizations
+rake getAllOrganizationsNotUpdated
 
 # sets any missing division_ids appropriately
 rake cleanUpOrganizations
-rake environment RAILS_ENV=production cleanUpOrganizations
+
+rake RAILS_ENV=production importDepartments file=db/imports/department_lookup.txt
+rake RAILS_ENV=production importOrganizations file=db/imports/division_lookup.txt
+rake RAILS_ENV=production importOrganizations file=db/imports/division_lookup_0211.txt
+rake RAILS_ENV=production importOrganizations file=db/imports/RHLCCC/division_lookup_0811.txt
+rake RAILS_ENV=production cleanUpOrganizations
+rake RAILS_ENV=production getAllOrganizationsNotUpdated
+rake RAILS_ENV=production purgeUnupdatedOrganizations
+rake RAILS_ENV=production getAllOrganizationsNotUpdated
 
 # you can load the investigators in a migration file, which might have entries that look like this:
 Investigator.create :username => "str", :last_name => "Rosen", :first_name => "Steven", :middle_name => "T",  :pubmed_search_name => "Rosen S T", :email => "s-rosen@northwestern.edu"
@@ -50,23 +63,84 @@ Investigator.create :username => "str", :last_name => "Rosen", :first_name => "S
 #You can insert investigator names from a file, as per
 
 rake importInvestigators file=db/imports/faculty.txt
-rake environment RAILS_ENV=production importInvestigators file=db/imports/faculty.txt
+rake RAILS_ENV=production importInvestigators file=db/imports/faculty.txt
 
 rake importInvestigators file=db/imports/new_faculty.txt
-rake environment RAILS_ENV=production importInvestigators file=db/imports/new_faculty.txt
+rake RAILS_ENV=production importInvestigators file=db/imports/new_faculty.txt
 # or 
 rake importInvestigators file=db/imports/UCSFMembers.txt
-rake environment RAILS_ENV=production importInvestigators file=db/imports/UCSFMembers.txt
+rake RAILS_ENV=production importInvestigators file=db/imports/UCSFMembers.txt
 # or 
+rake importInvestigators file=db/imports/cinj_faculty_20101021.txt
 rake importInvestigators file=db/imports/cinj_faculty.txt
-rake environment RAILS_ENV=production importInvestigators file=db/imports/cinj_faculty.txt
+rake RAILS_ENV=production importInvestigators file=db/imports/cinj_faculty.txt
+
+# or 
+rake importInvestigators file=db/imports/cinj_faculty_20110407.txt
+rake RAILS_ENV=production importInvestigators file=db/imports/cinj_faculty_20110407.txt
+
 # or 
 rake importInvestigators file=db/imports/stanford_faculty.txt
-rake environment RAILS_ENV=production importInvestigators file=db/imports/stanford_faculty.txt
+rake RAILS_ENV=production importInvestigators file=db/imports/stanford_faculty.txt
 
-# build the investigator/program relationships. Use the following file as an example
+# or 
+rake importInvestigators file=db/imports/AAS/faculty.txt
+rake RAILS_ENV=staging importInvestigators file=db/imports/AAS/faculty.txt
+rake RAILS_ENV=production importInvestigators file=db/imports/AAS/faculty.txt
+
+rake importInvestigators file=db/imports/UMich/faculty.txt
+rake RAILS_ENV=production importInvestigators file=db/imports/UMich/faculty.txt
+
+rake importInvestigators file=db/imports/umich_members.txt
+rake RAILS_ENV=production importInvestigators file=db/imports/umich_members.txt
+
+rake importInvestigators file=db/imports/uwccc_members.txt
+rake RAILS_ENV=production importInvestigators file=db/imports/uwccc_members.txt
+
+# UCSF current import:
+rake importDepartments file=db/imports/department_lookup.txt
+rake importOrganizations file=db/imports/division_lookup.txt
+rake importInvestigators file=db/imports/UCSF_faculty_02_2011.txt 
+
+# If you separate the faculty from the programs they are in, you need to build the investigator/program relationships. Use the following file as an example
 rake importProgramMembership  file=db/imports/RHLCCCProgramMemberships.txt
-rake environment RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCCProgramMemberships.txt
+rake RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCCProgramMemberships.txt
+
+rake importInvestigators file=db/imports/RHLCCC/new_faculty_Aug2011.txt
+rake importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsAug2011.txt
+
+rake RAILS_ENV=production importInvestigators file=db/imports/RHLCCC/new_faculty_Aug2011.txt
+rake RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsAug2011.txt
+
+# add new investigator/program relationships. RHLCCC October 2010
+rake importInvestigators file=db/imports/new_faculty_Oct2010.txt
+rake importProgramMembership  file=db/imports/RHLCCCProgramMembershipsOctober2010.txt
+
+rake RAILS_ENV=production importInvestigators file=db/imports/new_faculty_Oct2010.txt
+rake RAILS_ENV=production importProgramMembership file=db/imports/RHLCCCProgramMembershipsOctober2010.txt
+
+# add new investigator/program relationships. RHLCCC February 2011
+rake importInvestigators file=db/imports/new_faculty_Feb2011.txt
+rake importProgramMembership  file=db/imports/RHLCCCProgramMembershipsFeb2011.txt
+
+rake RAILS_ENV=production importInvestigators file=db/imports/new_faculty_Feb2011.txt
+rake RAILS_ENV=production importProgramMembership file=db/imports/RHLCCCProgramMembershipsFeb2011.txt
+
+# add new investigator/program relationships. RHLCCC March 2011
+rake importInvestigators file=db/imports/new_faculty_Mar2011.txt
+rake importProgramMembership  file=db/imports/RHLCCCProgramMembershipsMar2011.txt
+
+rake RAILS_ENV=production importInvestigators file=db/imports/new_faculty_Mar2011.txt
+rake RAILS_ENV=production importProgramMembership file=db/imports/RHLCCCProgramMembershipsMar2011.txt
+
+# add new investigator/program relationships. RHLCCC April 2011
+rake importInvestigators file=db/imports/new_faculty_Apr2011.txt
+rake importProgramMembership  file=db/imports/RHLCCCProgramMembershipsApr2011.txt
+
+rake RAILS_ENV=production importInvestigators file=db/imports/new_faculty_Apr2011.txt
+rake RAILS_ENV=production importProgramMembership file=db/imports/RHLCCCProgramMembershipsApr2011.txt
+
+
 
 # build the investigator/program relationships. For the RHLCCC EAB meeting July 2010 for instance
 rake importInvestigators file=db/imports/new_faculty_temp.txt
@@ -74,29 +148,52 @@ rake RAILS_ENV=production importInvestigators file=db/imports/new_faculty_temp.t
 rake importProgramMembership  file=db/imports/RHLCCCProgramMemberships_EAB_2010_temp.txt
 
 
-
 #load investigators with additional data
 rake importInvestigators file=db/imports/FSM_Full_time_Faculty.txt
-rake environment RAILS_ENV=production importInvestigators file=db/imports/FSM_Full_time_Faculty.txt
+rake RAILS_ENV=production importInvestigators file=db/imports/FSM_Full_time_Faculty.txt
 
 
 # load appointments
 rake importJointAppointments file=db/imports/joint_appointments.txt
-rake environment RAILS_ENV=production  importJointAppointments file=db/imports/joint_appointments.txt
+rake RAILS_ENV=production  importJointAppointments file=db/imports/joint_appointments.txt
 
 rake importSecondaryAppointments file=db/imports/secondary_appointments.txt
-rake environment RAILS_ENV=production  importSecondaryAppointments file=db/imports/secondary_appointments.txt
+rake RAILS_ENV=production  importSecondaryAppointments file=db/imports/secondary_appointments.txt
 
 rake importCenterMemberships file=db/imports/center_memberships.txt
-rake environment RAILS_ENV=production  importCenterMemberships file=db/imports/center_memberships.txt
+rake RAILS_ENV=production  importCenterMemberships file=db/imports/center_memberships.txt
 
 #load publications from database
 rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids.txt
-rake environment RAILS_ENV=production  importInvestigatorPubmedIDs file=db/imports/pubmed_ids.txt
+rake RAILS_ENV=production  importInvestigatorPubmedIDs file=db/imports/pubmed_ids.txt
+
+rake importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_June2011.txt
+rake RAILS_ENV=production importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_June2011.txt
 
 #load awards from InfoEd
 rake importAwardData file=db/imports/Cognos_Awards.txt
-rake environment RAILS_ENV=production  importAwardData file=db/imports/Cognos_Awards.txt
+rake RAILS_ENV=production  importAwardData file=db/imports/Cognos_Awards.txt
+
+#load in research descriptions/summaries etc
+rake importInvestigatorDescriptions file=db/imports/RHLCCC_member_abstracts.txt
+rake RAILS_ENV=production importInvestigatorDescriptions file=db/imports/RHLCCC_member_abstracts.txt
+
+#load FSM research summaries
+rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_October2010.txt
+rake RAILS_ENV=production importInvestigatorDescriptions file=db/imports/faculty_descriptions_October2010.txt
+
+#load FSM research interests
+rake importInvestigatorDescriptions file=db/imports/faculty_interests_October2010.txt
+rake RAILS_ENV=production importInvestigatorDescriptions file=db/imports/faculty_interests_October2010.txt
+
+# cancer center research summaries
+rake importInvestigatorDescriptions file=db/imports/RHLCCC_member_abstracts.txt
+rake RAILS_ENV=production importInvestigatorDescriptions file=db/imports/RHLCCC_member_abstracts.txt
+
+#load cancer center exemplar summaries
+rake importInvestigatorDescriptions file=db/imports/examplar_research_summaries_dec_2010.txt
+rake RAILS_ENV=production importInvestigatorDescriptions file=db/imports/examplar_research_summaries_dec_2010.txt
+
 
 
 # test version for Dixon Kaufman
@@ -104,28 +201,42 @@ rake importInvestigators file=db/imports/FSM_Dixon_test.txt
 
 # 
 rake getAllMembers  
-rake environment RAILS_ENV=production getAllMembers
-
-rake purgeNonMembers
-rake environment RAILS_ENV=production purgeNonMembers
+rake RAILS_ENV=production getAllMembers
 
 rake getAllInvestigatorsWithoutMembership  
-rake environment RAILS_ENV=production getAllInvestigatorsWithoutMembership
+rake RAILS_ENV=production getAllInvestigatorsWithoutMembership
+
+rake purgeNonMembers
+rake RAILS_ENV=production purgeNonMembers
 
 #insert ISI Web of Science Journal impact factor ratings
 # you can download the ISI Journal Citation Records and process them
 # http://admin-apps.isiknowledge.com/JCR/JCR
 # cat jcr_recs.txt | sort -u > new_jcr_recs.txt
 
-rake importJournalImpact file=db/imports/jcr_recs.txt
-rake environment RAILS_ENV=production importJournalImpact file=db/imports/jcr_recs.txt
-
+#rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalImpact file=db/imports/jcr_recs_2009.txt
 rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
-rake environment RAILS_ENV=production importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake cleanJournalISSNentries
+rake findAbstractswithoutJCRentries
+rake findAbstractswithJCRentries
+
+rake RAILS_ENV=staging importJournalImpact file=db/imports/jcr_recs_2009.txt
+rake RAILS_ENV=staging importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake  RAILS_ENV=staging cleanJournalISSNentries
+rake  RAILS_ENV=staging findAbstractswithoutJCRentries
+rake  RAILS_ENV=staging findAbstractswithJCRentries
+
+#rake RAILS_ENV=production importJournalImpact file=db/imports/jcr_recs.txt
+rake RAILS_ENV=production importJournalImpact file=db/imports/jcr_recs_2009.txt
+rake RAILS_ENV=production importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake  RAILS_ENV=production cleanJournalISSNentries
+rake  RAILS_ENV=production findAbstractswithoutJCRentries
+rake  RAILS_ENV=production findAbstractswithJCRentries
 
 # clean all usernames by removing any periods
 rake cleanInvestigatorsUsername
-rake environment RAILS_ENV=production cleanInvestigatorsUsername
+rake RAILS_ENV=production cleanInvestigatorsUsername
 
 # you are now ready to start loading data
 

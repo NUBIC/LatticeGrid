@@ -14,8 +14,8 @@
 	</table>
 	
 	<%= "<div id='list_#{unit.id}'></div>" %>
-	<script language="javascript">
-	<%= remote_function(:url => {:controller => :orgs, :action => :list_abstracts_during_period_rjs, :id => unit.id, :start_date => @start_date, :end_date => @end_date }, :before => "Element.show('spinner')", 
+	<script type="text/javascript" language="javascript">
+	<%= remote_function(:url => {:controller => :orgs, :action => :list_abstracts_during_period_rjs, :id => unit.id, :start_date => @start_date, :end_date => @end_date, :affiliation_types => params[:affiliation_types], :exclude_letters => params[:exclude_letters] }, :before => "Element.show('spinner')", 
 	:complete => "Element.hide('spinner')" ) %> 
 	</script>
   <% end %>

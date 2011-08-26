@@ -1,10 +1,20 @@
 class Abstract < ActiveRecord::Base
   include MeshHelper
-  
-  has_many :journals, :foreign_key => "journal_abbreviation", :primary_key =>  "journal_abbreviation", :readonly => true
+  acts_as_taggable  # for MeSH terms
+  acts_as_tsearch :vectors => {:fields => ["abstract","authors", "full_authors", "title", "journal", "journal_abbreviation", "mesh"]},
+                  :author_vector => {:fields => ["authors", "full_authors"]},
+                  :abstract_vector => {:fields => ["abstract", "title"]},
+                  :mesh_vector => {:fields => ["mesh"]},
+                  :journal_vector => {:fields => ["journal","journal_abbreviation"]}
+  has_many :journals, 
+    :foreign_key => "issn", 
+    :primary_key =>  "issn", 
+    :readonly => true,
+    :order => "score_year DESC,journal_abbreviation"
+
   has_many :investigator_abstracts
   has_many :investigators, :through => :investigator_abstracts,
-    :conditions => ['(investigators.end_date is null or investigators.end_date >= :now) and investigator_abstracts.end_date is null', {:now => Date.today }]
+    :conditions => ['(investigators.end_date is null or investigators.end_date >= :now) and investigator_abstracts.is_valid = true', {:now => Date.today }]
   has_many :investigator_appointments, :through => :investigator_abstracts,
     :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', 
       {:now => Date.today }]
@@ -12,7 +22,6 @@ class Abstract < ActiveRecord::Base
         :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
   has_many :organizational_units, :through => :organization_abstracts
   validates_uniqueness_of :pubmed
-  acts_as_taggable  # for MeSH terms
   
   has_many :organization_abstracts,
         :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
@@ -26,23 +35,48 @@ class Abstract < ActiveRecord::Base
   }
   named_scope :ccsg_abstracts_by_date, lambda { |*dates|
       {:conditions => 
-          ['is_cancer = true and (publication_date between :start_date and :end_date or electronic_publication_date between :start_date and :end_date) ', 
+          ['is_cancer = true and (publication_date between :start_date and :end_date) ', 
             {:start_date => dates.first, :end_date => dates.last } ] }
     }
+  named_scope :exclude_letters, 
+        :conditions => ['publication_type NOT IN (:publication_types)', 
+          {:publication_types=> ["Dictionary", "Introductory Journal Article", "Interview", "Bibliography", "Retraction of Publication", "English Abstract", "Newspaper Article", "LETTER", "Lectures", "Interactive Tutorial", "News", "Letter", "Guideline", "Editorial", "Consensus Development Conference", "Historical Article", "Duplicate Publication", "Biography", "Addresses", "Video-Audio Media", "Comment", "Congresses", "EDITORIAL", "Clinical Conference"] }]
 
   named_scope :by_ids, lambda { |*ids|
       {:conditions => ['id IN (:ids) ', {:ids => ids.first}] }
     }
-  default_scope :conditions => 'abstracts.deleted_at is null'
+  default_scope :conditions => 'abstracts.is_valid = true'
 
 
   def self.include_deleted( id=nil )
     with_exclusive_scope do
       if id.blank?
-        find(:all)
+        all()
       else
         find(id)
       end
+    end
+  end
+
+  def self.only_deleted( )
+    with_exclusive_scope do
+      all(:conditions=>"abstracts.deleted_at is not null")
+    end
+  end
+
+  def self.include_invalid( id=nil )
+    with_exclusive_scope do
+      if id.blank?
+        all()
+      else
+        find(id)
+      end
+    end
+  end
+
+  def self.only_invalid( )
+    with_exclusive_scope do
+      all(:conditions=>"abstracts.is_valid = false")
     end
   end
 
@@ -54,8 +88,7 @@ class Abstract < ActiveRecord::Base
 
   def self.display_all_investigator_data_include_deleted( investigator_id )
     with_exclusive_scope do
-      find(:all,
-        :order => "year DESC, authors ASC",
+      all(:order => "is_valid DESC, year DESC, authors ASC",
         :joins => :investigator_abstracts,
         :conditions => ["investigator_abstracts.investigator_id = :investigator_id", {:investigator_id => investigator_id}])
     end
@@ -63,53 +96,91 @@ class Abstract < ActiveRecord::Base
 
   def self.from_journal_include_deleted(journal_abbreviation)
     with_exclusive_scope do
-      find(:all,
-          :conditions => ['lower(journal_abbreviation) = :journal_abbreviation',{:journal_abbreviation => journal_abbreviation}],
+      all(:conditions => ['lower(journal_abbreviation) = :journal_abbreviation',{:journal_abbreviation => journal_abbreviation}],
           :order => "year DESC, authors ASC" )
     end
   end
   
   def self.from_journal(journal_abbreviation)
-      find(:all,
-          :conditions => ['lower(journal_abbreviation) = :journal_abbreviation',{:journal_abbreviation => journal_abbreviation}],
+      all(:conditions => ['lower(journal_abbreviation) = :journal_abbreviation',{:journal_abbreviation => journal_abbreviation}],
           :order => "year DESC, authors ASC" )
+  end
+  
+  def self.mismatched_issns()
+      all(:select=>'distinct journal, journal_abbreviation, issn',
+          :conditions => ["exists(select 'x' from abstracts a2 where a2.journal_abbreviation = abstracts.journal_abbreviation and a2.issn != abstracts.issn )"],
+          :order => "journal, issn" )
+  end
+
+  def self.nulled_issns()
+      all(:select=>'distinct journal, journal_abbreviation, issn',
+          :conditions => ["exists(select 'x' from abstracts a2 where a2.journal_abbreviation = abstracts.journal_abbreviation and a2.issn is null and abstracts.issn is not null )"],
+          :order => "journal, issn" )
+  end
+  
+  def self.without_jcr_entries()
+      all(:select=>'distinct journal, journal_abbreviation, issn',
+          :conditions => ["not exists(select 'x' from journals where journals.issn = abstracts.issn )"],
+          :order => "journal, issn" )
+  end
+  
+  def self.with_jcr_entries()
+      all(:select=>'distinct journal, journal_abbreviation, issn',
+          :conditions => ["exists(select 'x' from journals where journals.issn = abstracts.issn )"],
+          :order => "journal, issn" )
+  end
+  
+  def self.all_issns()
+      all(:select=>'distinct journal, journal_abbreviation, issn',
+          :order => "journal, issn" )
   end
   
   def self.co_authors(abstracts)
     author_ids=abstracts.collect{|ab| ab.investigators.collect(&:id)}.flatten.sort.uniq
-    Investigator.find(:all, :conditions =>  ["id IN (:author_ids)", 
+    Investigator.all(:conditions =>  ["id IN (:author_ids)", 
       {:author_ids => author_ids }], :order => "lower(last_name), lower(first_name)" )
   end
+
   def self.annual_data( years)
-    conditions = "year IN (#{Journal.yearstring(years)}) "
-    find(:all,
-        :order => "authors ASC",
-        :conditions =>  "#{conditions}")
+    all(:order => "authors ASC",
+        :conditions =>  ["year IN (:years)",{:years => Journal.yearstring(years)}])
   end
 
-  def self.missing_publications(years, journals)
-    conditions = "year IN (#{Journal.yearstring(years)}) "
-    find(:all, 
-      :select => "count(*) as count_all, journal, journal_abbreviation",
-      :conditions => ["lower(journal_abbreviation) NOT IN (:abbreviations) AND #{conditions}", 
-        {:abbreviations => Journal.journal_to_array(journals) }],
-      :group => "journal, journal_abbreviation", 
-      :order => "count_all DESC" )
+  def self.without_investigators()
+    all(  :conditions => ["not exists(select 'x' from investigator_abstracts where investigator_abstracts.abstract_id = abstracts.id )"] )
   end
 
-  def self.display_data( year=2008, page=1)
+  def self.without_valid_investigators()
+    all(  :conditions => ["not exists(select 'x' from investigator_abstracts where investigator_abstracts.abstract_id = abstracts.id and investigator_abstracts.is_valid = true )"] )
+  end
+
+  def self.deleted_with_investigators()
+    with_exclusive_scope do
+      all(  :conditions => ["abstracts.is_valid = false and exists(select 'x' from investigator_abstracts where investigator_abstracts.abstract_id = abstracts.id and investigator_abstracts.is_valid = true )"] )
+    end
+  end
+
+  def self.missing_impact_factors(years)
+    all( :select => "count(*) as count_all, journal, journal_abbreviation, issn",
+      :conditions => ["abstracts.year IN (:years) AND not exists(select 'x' from journals where journals.issn = abstracts.issn )", 
+        {:years => Journal.yearstring(years) }],
+      :group => "journal, journal_abbreviation, issn", 
+      :order => "count_all DESC,journal, issn" )
+  end
+
+  def self.display_data( year=2007, page=1)
     paginate(:page => page,
       :per_page => 20, 
-      :order => "publication_date DESC, electronic_publication_date DESC, authors ASC",
- 		  :conditions => ['year = :year', 
+      :order => "abstracts.publication_date DESC, abstracts.electronic_publication_date DESC, abstracts.authors ASC",
+      :include => [:investigators],
+      :conditions => ['year = :year and investigator_abstracts.is_valid = true', 
   		      {:year => year }])
   end
   
   def self.display_all_data( year=2008)
-    find(:all,
-      :order => "investigators.last_name ASC, authors ASC",
-      :include => [:investigators, :investigator_abstracts],
- 		  :conditions => ['year = :year and investigator_abstracts.end_date is null', 
+    all(:order => "investigators.last_name ASC, authors ASC",
+      :include => [:investigators],
+      :conditions => ['year = :year and investigator_abstracts.is_valid = true', 
   		      {:year => year }])
   end
   
@@ -122,28 +193,97 @@ class Abstract < ActiveRecord::Base
   end
 
   def self.display_all_investigator_data( investigator_id )
-    find(:all,
-      :order => "year DESC, authors ASC",
+    all(:order => "year DESC, authors ASC",
       :joins => [:investigators],
     :conditions => ["investigators.id = :investigator_id", {:investigator_id => investigator_id}])
   end
   
   def self.investigator_publications( investigators, number_years=5)
     cutoff_date=number_years.years.ago
-    find(:all,
-       :joins => [:investigators, :investigator_abstracts],
-  		  :conditions => ['(publication_date >= :start_date or electronic_publication_date  >= :start_date) and investigator_abstracts.investigator_id IN (:investigators) and investigator_abstracts.end_date is null', 
+    all(:joins => [:investigators, :investigator_abstracts],
+  		  :conditions => ['(publication_date >= :start_date or electronic_publication_date  >= :start_date) and investigator_abstracts.investigator_id IN (:investigators) and investigator_abstracts.is_valid = true', 
    		      {:start_date => cutoff_date, :investigators => investigators }])
   end
   
+  def self.investigator_publications_by_date( investigators, pub_start_date, pub_end_date )
+       all(:joins => [:investigators, :investigator_abstracts],
+   		  :conditions => ['(abstracts.publication_date between :pub_start_date and :pub_end_date or abstracts.electronic_publication_date between :pub_start_date and :pub_end_date ) and investigator_abstracts.investigator_id IN (:investigators) and investigator_abstracts.is_valid = true', 
+    		      {:pub_start_date => pub_start_date, :pub_end_date => pub_end_date, :investigators => investigators }]).uniq
+  end
+   
+
   def self.display_abstracts_by_date( unit_id, pub_start_date, pub_end_date )
     find(:first,
       :order => "abstracts.year DESC, authors ASC",
-      :include => [:abstracts],
   		:conditions => ['organizational_units.id = :unit_id AND abstracts.publication_date between :pub_start_date and :pub_end_date', 
    		      {:unit_id => unit_id, :pub_start_date => pub_start_date, :pub_end_date => pub_end_date}])
   end
 
+  def self.display_tsearch(keywords, paginate=1, page=1)
+     if paginate != '0' then
+       abstracts = display_tsearch_paginated(keywords.keywords, keywords.search_field, page)
+      else
+       abstracts = display_tsearch_no_pagination(keywords.keywords, keywords.search_field)
+     end
+     return abstracts
+  end
+
+  def self.display_tsearch_paginated(terms, search_field, page)
+    if search_field.include?("Abstract") or search_field.include?("Title")
+      abstract_ids = Abstract.find_by_tsearch(terms, {:select => 'ID'}, {:vector => "abstract_vector"})
+    elsif search_field.include?("Author") or search_field.include?("Investigator")
+      abstract_ids = Abstract.find_by_tsearch(terms, {:select => 'ID'}, {:vector => "author_vector"})
+    elsif search_field.include?("Journal")
+      abstract_ids = Abstract.find_by_tsearch(terms, {:select => 'ID'}, {:vector => "journal_vector"})
+    elsif search_field.include?("Summary")
+      lc_keywords = terms.sub(/\*/, '%')
+      lc_keywords = "%"+lc_keywords+"%" 
+      abstracts = paginate(:page => page,
+           :joins => [:investigators],
+           :per_page => 20, 
+           :order => "year DESC, authors ASC",
+           :conditions => ["lower(investigators.faculty_keywords) like :search_term OR lower(investigators.faculty_research_summary) like :search_term  OR lower(investigators.faculty_interests) like :search_term",
+              {:search_term => lc_keywords }])
+    elsif search_field.include?("Keywords") or search_field.include?("MeSH")
+      abstract_ids = Abstract.find_by_tsearch(terms, {:select => 'ID'}, {:vector => "mesh_vector"})
+    else
+      abstract_ids = Abstract.find_by_tsearch(terms, {:select => 'ID'})
+    end
+    if defined?(abstract_ids) and !abstract_ids.nil? then 
+      abstracts = Abstract.paginate(:page => page,
+        :include => [:investigators],
+        :per_page => 20, 
+        :order => "year DESC, authors ASC",
+        :conditions => ["abstracts.id IN (:abstract_ids) and investigator_abstracts.is_valid = true",
+           {:abstract_ids => abstract_ids.collect(&:id)} ])
+    end
+    abstracts
+  end
+
+  def self.display_tsearch_no_pagination(terms, search_field)
+    if search_field.include?("Abstract") or search_field.include?("Title")
+      abstracts = Abstract.find_by_tsearch(terms, nil, {:vector => "abstract_vector"})
+    elsif search_field.include?("Author") or search_field.include?("Investigator")
+      abstracts = Abstract.find_by_tsearch(terms, nil, {:vector => "author_vector"})
+    elsif search_field.include?("Journal")
+      abstracts = Abstract.find_by_tsearch(terms, nil, {:vector => "journal_vector"})
+    elsif search_field.include?("Summary")
+      lc_keywords = terms.sub(/\*/, '%')
+      lc_keywords = "%"+lc_keywords+"%" 
+      abstracts = all(
+            :joins => [:investigators],
+            :order => "year DESC, authors ASC",
+            :conditions => ["lower(investigators.faculty_keywords) like :search_term OR lower(investigators.faculty_research_summary) like :search_term  OR lower(investigators.faculty_interests) like :search_term",
+              {:search_term => lc_keywords }])
+    elsif search_field.include?("Keywords") or search_field.include?("MeSH")
+      abstracts = Abstract.find_by_tsearch(terms, nil, {:vector => "mesh_vector"})
+    else
+      abstracts = Abstract.find_by_tsearch(terms)
+    end
+    abstracts
+  end
+
+# legacy for sites running postgres 8.2 or older
   def self.display_search(keywords, paginate=1, page=1)
      lc_keywords = keywords.keywords.downcase
      lc_keywords = lc_keywords.sub(/\*/, '%')
@@ -233,34 +373,35 @@ class Abstract < ActiveRecord::Base
 
   def self.display_search_no_pagination(keywords, lc_keywords)
     if keywords.search_field.include?("Abstract")
-      find :all, 
+      all(
         :order => "year DESC, authors ASC",
         :conditions => ["lower(abstract) like :search_term",
-           {:search_term => lc_keywords}]
+           {:search_term => lc_keywords}])
     elsif keywords.search_field.include?("Author")
        terms = keywords.keywords.downcase.split(" ",2) + Array.new(1, "")
        terms[1] = terms[0] if terms[1].blank?
        terms[0] = "%"+terms[0]+"%"
        terms[1] = "%"+terms[1]+"%"
-       find :all, 
+       all(
           :order => "year DESC, authors ASC",
           :conditions => ["(lower(full_authors) like :term1 AND lower(full_authors) like :term2) OR (lower(authors) like :term1 AND lower(authors) like :term2)",
-             {:term1 => terms[0], :term2 => terms[1]}]
+             {:term1 => terms[0], :term2 => terms[1]}])
     elsif keywords.search_field.include?("Title")
-      find :all, 
+      all(
           :order => "year DESC, authors ASC",
           :conditions => ["lower(title) like :search_term",
-             {:search_term => lc_keywords}]
+             {:search_term => lc_keywords}])
     elsif keywords.search_field.include?("Journal")
-      find :all, 
+      all(
           :order => "year DESC, authors ASC",
           :conditions => ["lower(journal) like :search_term OR lower(journal_abbreviation) like :search_term",
-             {:search_term => lc_keywords}]
+             {:search_term => lc_keywords}])
     else
-      find :all, 
+      all(
           :order => "year DESC, authors ASC",
           :conditions => ["lower(abstract) like :search_term OR lower(title) like :search_term OR lower(journal) like :search_term OR lower(authors) like :search_term",
-            {:search_term => lc_keywords}]
+            {:search_term => lc_keywords}])
     end
   end
+  # end of legacy for sites running postgres 8.2 or older
 end

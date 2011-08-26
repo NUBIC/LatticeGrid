@@ -21,3 +21,4 @@ one:
   pubmed: "-1"
   url: "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=R..."
   mesh: "Bacterial Proteins/*chemistry;\nCrystallization;\nCry..."
+  is_valid: true

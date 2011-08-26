@@ -6,7 +6,7 @@ body {
 	color : black;
 	background-color: #dfdfdf; 
 	line-height: 16px;
-	min-width: 800px;
+	/* min-width: 800px; */
 	background: #dfdfdf; 
 	margin-top: 0px; 
 	margin-left:10px; 
@@ -31,6 +31,13 @@ ul {
     padding-left: 15px;
     padding-top: 0px;
     margin-top: 0px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+ul.noBullets {
+  list-style-type: none;
+  line-height: 12px;
 }
 
 ul.squareBullets {
@@ -54,23 +61,26 @@ h1, h2, .h2, h3, .h3 {
 	color: #226;
     line-height: 140%;
     padding-bottom: 0px;
+    padding-left: 5px;
     margin-bottom: 2px;
     margin-top: 8px;
     padding-top: 0px;
 }
 
 h1, .h1 {
+  line-height: 180%;
   font-size: 18px;
   border-bottom: 3px;
 }
 
 h2, .h2 {
+  line-height: 150%;
   font-size: 15px;
 }
 
 a { color: #000; }
-a:visited { color: #666; }
-a:hover { color: #fff; background-color:#888; }
+a:visited { color: #333; }
+a:hover { color: #555; background-color:#cee; }
 
 #nci-logo {
 	float: left;
@@ -95,6 +105,18 @@ table {
 	border: 1px indigo solid;
 }
 
+tr.header {
+	background:   #709fc7;
+}
+
+tr.even {
+	background:   white;
+}
+
+tr.odd, .odd {
+	background:   silver;
+}
+
 td,th {
 	padding-top: 0.25em;
 	padding-bottom: 0.25em;
@@ -102,6 +124,18 @@ td,th {
 
 table.borderless {
 	border: 0px;
+}
+
+table.dense {
+	border: 0px;
+}
+
+table.dense tr td,th {
+	padding: 0px;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	margin: 0px;
+	margin-left: 0.5em;
 }
 
 #biograph table {
@@ -112,6 +146,10 @@ table.borderless {
 #biograph table tr td table {
 	padding-left: 2em;
 	border: 0px;
+}
+
+#biograph table tr td table tr th {
+	vertical-align:middle;
 }
 
 #biograph table tr th {
@@ -130,6 +168,22 @@ table.borderless {
 	vertical-align:top;
 	color:        #520063;
 	line-height: 14px;
+}
+
+#investigator_title {
+	display: block;
+}
+
+#investigator_title #full_name {
+    font-family: Arial, Helvetica, Geneva, Sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    color: #226;
+    line-height: 140%;
+    padding-bottom: 0px;
+    margin-bottom: 2px;
+    margin-top: 8px;
+    padding-top: 0px;
 }
 
 table.fullsize {
@@ -340,9 +394,9 @@ div.notice {
   padding: 3px;
   padding-left: 115px;
   margin: 0px;
-    color: #fff;
-    font-size: 12px;
-    background-color: #339;
+  color: #fff;
+  font-size: 12px;
+  background-color: #339;
 }
 #search a { padding: 4px; padding-top: 2px; color: white; text-decoration:none; }
 #search a:hover { background-color: #709fc7; }
@@ -364,6 +418,16 @@ div.notice {
   overflow:hidden;
 }
 
+#splash_screen p {
+	font-size:14px;
+	line-height: 22px;
+}
+
+#splash_screen p, #splash_screen ol {
+	font-size:14px;
+	line-height: 22px;
+}
+
 #collaborators, #similar_investigators {
   padding:1px;
   margin:0px;
@@ -382,7 +446,8 @@ div.notice {
 
 
 #OrgGraph, #MemberGraph {
-	margin-left: -8px;
+	margin-left: -6px;
+	z-index: -10;
 }
 
 #abstractcontent {
@@ -467,6 +532,17 @@ div.notice {
 	background: #AAA;
 }
 
+.investigator_awards {
+	color: #226;
+	background-color: #EEE;
+	text-decoration: none;
+}
+
+tr.odd td .investigator_awards{
+	background:   silver;
+}
+
+
 /*** special tags ***/
 	
 div.autoclear:after {
@@ -486,6 +562,15 @@ width: 260px;
 .inplaceeditor-form textarea { 
 width: 400px; 
 } 
+
+
+.submit {
+  padding: 10px;
+  margin: 0px;
+  color: #fff;
+  font-size: 12px;
+  background-color: #339;
+}
 
 /* form tags */
 
@@ -514,6 +599,37 @@ img
 form {
     margin: 1px ;
 	display: inline;
+}
+
+#note {
+  margin: 0px;
+  padding: 5px;
+  padding-left: 20px;
+  background-color: #DDD;
+  color : #226;
+  line-height: 110%;
+  font-weight: normal;
+  font-size: 12px;
+  font-family : Verdana,  Arial,  sans-serif;
+}
+#note p {
+  padding: 0px;
+  padding-bottom: 3px;
+  margin:  0px;
+  line-height: 110%;
+}
+
+.note {
+	clear:both;
+	text-decoration:none;
+	background: none;
+	padding: 0px 0px 8px 6px;
+	margin:  0px;
+	color : indigo;
+	line-height: 110%;
+	font-weight: normal;
+	font-size: 10px;
+	font-family : Verdana,  Arial,  sans-serif;
 }
 
 /*** for DIGG style pagination  ***/
@@ -571,12 +687,21 @@ form {
 	background-color: lightyellow;
 }
 
-.tagcloud1 {font-size: 0.8em;}
-.tagcloud2 {font-size: 0.9em;}
-.tagcloud3 {font-size: 1.0em;}
-.tagcloud4 {font-size: 1.1em;}
-.tagcloud5 {font-size: 1.2em;}
-.tagcloud6 {font-size: 1.4em;}
+.similarity1 {font-size: 1.6em; color: #660000; line-height: 20px;}
+.similarity2 {font-size: 1.4em; color: #800000; line-height: 18px;}
+.similarity3 {font-size: 1.2em; color: #993300; line-height: 16px;}
+.similarity4 {font-size: 1.0em; color: #993838; line-height: 14px; margin-top: -1px;}
+.similarity5 {font-size: 0.9em; color: #B26060; line-height: 12px; margin-top: -2px;}
+.similarity6 {font-size: 0.8em; color: #520063; line-height:  9px; margin-top: -3px;}
+.similarity7 {font-size: 0.7em; color: #A3A3A3; line-height:  8px; margin-top: -4px;}
+
+
+.tagcloud1 {font-size: 0.8em; color: #A3A3A3;}
+.tagcloud2 {font-size: 0.9em; color: #520063;}
+.tagcloud3 {font-size: 1.0em; color: #B26060}
+.tagcloud4 {font-size: 1.1em; color: #993300;}
+.tagcloud5 {font-size: 1.2em; color: #800000;}
+.tagcloud6 {font-size: 1.4em; color: #660000;}
 
 .nube1 {font-size: 1.0em;}
 .nube2 {font-size: 1.2em;}
@@ -623,3 +748,227 @@ form {
 </div>
 
 */
+
+.ddsmoothmenu{
+font: bold 12px Verdana;
+background: #414141; /*background of menu bar (default state)*/
+width: 100%;
+}
+
+.ddsmoothmenu ul{
+z-index:100;
+margin: 0;
+padding: 0;
+list-style-type: none;
+}
+
+/*Top level list items*/
+.ddsmoothmenu ul li{
+position: relative;
+display: inline;
+float: left;
+}
+
+/*Top level menu link items style*/
+.ddsmoothmenu ul li a{
+display: block;
+background: #414141; /*background of menu items (default state)*/
+color: white;
+padding: 8px 10px;
+border-right: 1px solid #778;
+color: #2d2b2b;
+text-decoration: none;
+}
+
+* html .ddsmoothmenu ul li a{ /*IE6 hack to get sub menu links to behave correctly*/
+display: inline-block;
+}
+
+.ddsmoothmenu ul li a:link, .ddsmoothmenu ul li a:visited{
+color: white;
+}
+
+.ddsmoothmenu ul li a.selected{ /*CSS class that's dynamically added to the currently active menu items' LI A element*/
+background: black; 
+color: white;
+}
+
+.ddsmoothmenu ul li a:hover{
+background: black; /*background of menu items during onmouseover (hover state)*/
+color: white;
+}
+	
+/*1st sub level menu*/
+.ddsmoothmenu ul li ul{
+position: absolute;
+left: 0;
+display: none; /*collapse all sub menus to begin with*/
+visibility: hidden;
+}
+
+/*Sub level menu list items (undo style from Top level List Items)*/
+.ddsmoothmenu ul li ul li{
+display: list-item;
+float: none;
+}
+
+/*All subsequent sub menu levels vertical offset after 1st level sub menu */
+.ddsmoothmenu ul li ul li ul{
+top: 0;
+}
+
+/* Sub level menu links style */
+.ddsmoothmenu ul li ul li a{
+font: normal 13px Verdana;
+width: 200px; /*width of sub menus*/
+padding: 5px;
+margin: 0;
+border-top-width: 0;
+border-bottom: 1px solid gray;
+}
+
+/* Holly Hack for IE \*/
+* html .ddsmoothmenu{height: 1%;} /*Holly Hack for IE7 and below*/
+
+
+/* ######### CSS classes applied to down and right arrow images  ######### */
+
+.downarrowclass{
+position: absolute;
+top: 12px;
+right: 7px;
+}
+
+.rightarrowclass{
+position: absolute;
+top: 6px;
+right: 5px;
+}
+
+/* ######### CSS for shadow added to sub menus  ######### */
+
+.ddshadow{
+position: absolute;
+left: 0;
+top: 0;
+width: 0;
+height: 0;
+background: silver;
+}
+
+.toplevelshadow{ /*shadow opacity. Doesn't work in IE*/
+opacity: 0.8;
+}
+
+.ddsmoothmenu ul li.currentyear, .ddsmoothmenu ul li ul li.currentyear {
+	background-color: #339;
+}
+
+.ddsmoothmenu-v ul{
+margin: 0;
+padding: 0;
+width: 160px; /* Main Menu Item widths */
+list-style-type: none;
+font: bold 12px Verdana;
+
+border-bottom: 1px solid #ccc;
+}
+ 
+.ddsmoothmenu-v ul li{
+position: relative;
+}
+
+/* Top level menu links style */
+.ddsmoothmenu-v ul li a{
+display: block;
+overflow: auto; /*force hasLayout in IE7 */
+color: white;
+text-decoration: none;
+padding: 6px;
+padding-left: 4px;
+padding-right: 1px;
+border-bottom: 1px solid #778;
+border-right: 1px solid #778;
+}
+
+.ddsmoothmenu-v ul li a:link, .ddsmoothmenu-v ul li a:visited, .ddsmoothmenu-v ul li a:active{
+background: #339; /*background of menu items (default state)*/
+color: white;
+}
+
+
+.ddsmoothmenu-v ul li a.selected{ /*CSS class that's dynamically added to the currently active menu items' LI A element*/
+background: #414141; 
+color: white;
+}
+
+.ddsmoothmenu-v ul li a:hover{
+background: #414141; /*background of menu items during onmouseover (hover state)*/
+color: white;
+}
+
+/*Sub level menu items */
+.ddsmoothmenu-v ul li ul{
+position: absolute;
+width: 170px; /*Sub Menu Items width */
+top: 0;
+padding: 1px;
+font-weight: normal;
+visibility: hidden;
+}
+/*Sub level menu items */
+.ddsmoothmenu-v ul li ul li a{
+padding: 1px;
+font-weight: normal;
+}
+
+
+.ddsmoothmenu-v ul li ul li.current, .ddsmoothmenu-v ul li ul li.current a {
+	background-color: #339;
+}
+ 
+/* Holly Hack for IE \*/
+* html .ddsmoothmenu-v ul li { float: left; height: 1%; }
+* html .ddsmoothmenu-v ul li a { height: 1%; }
+/* End */
+
+/* tables */
+table.tablesorter {
+    clear: both ;
+	font-family:arial;
+	background-color: #CDCDCD;
+	margin:10px 0pt 15px;
+	font-size: 8pt;
+	width: 100%;
+	text-align: left;
+}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+	background-color: #e6EEEE;
+	border: 1px solid #FFF;
+	font-size: 8pt;
+	padding: 4px;
+}
+table.tablesorter thead tr .header {
+	background-image: url(../images/bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+table.tablesorter tbody td {
+	color: #3D3D3D;
+	padding: 4px;
+	background-color: #FFF;
+	vertical-align: top;
+}
+table.tablesorter tbody tr.odd td {
+	background-color:#F0F0F6;
+}
+table.tablesorter thead tr .headerSortUp {
+	background-image: url(../images/asc.gif);
+}
+table.tablesorter thead tr .headerSortDown {
+	background-image: url(../images/desc.gif);
+}
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+  background-color: #8dbdd8;
+}

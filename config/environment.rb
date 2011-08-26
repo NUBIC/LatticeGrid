@@ -1,7 +1,7 @@
 # Be sure to restart your server when you modify this file
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-#RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
+#RAILS_GEM_VERSION = '2.3.10' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -13,11 +13,8 @@ Rails::Initializer.run do |config|
 
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
-
-  # config.gem 'mislav-will_paginate',
-  #          :lib => 'will_paginate',
-  #          :source => 'http://gems.github.com',
-  #          :version => '~> 2.3.6'
+  
+  # config.gem "bcsec-rails", :lib => 'bcsec/rails', :version => '~> 2.0'
   
   # Specify gems that this application depends on and have them installed with rake gems:install
   # config.gem "bj"
@@ -48,8 +45,8 @@ Rails::Initializer.run do |config|
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
   # config.i18n.default_locale = :de
   config.action_controller.session = {
-    :session_key => '_latticegrid_session',
-    :secret      => 'this is a  2.0 rails requirement'
+    :key => '_cancer_latticegrid_session',
+    :secret      => 'this is a 2.0 rails requirement'
   }
   
   # change the cache root
@@ -82,11 +79,5 @@ begin
   require 'RMagick'
 rescue NameError, LoadError
   puts "RMagick didn't load properly"
-  # RMagick didn't load right
-end
-begin
-  require 'sparklines'
-rescue NameError, LoadError
-  puts "sparklines didn't load properly"
-  # sparklines didn't load right
+  # RMagick didn't load 
 end

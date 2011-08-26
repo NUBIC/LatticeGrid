@@ -17,7 +17,7 @@ module ActiveRecord
           count = count_tagged_with(tags, options)
           options.merge!(:offset => offset, :limit => per_page.to_i)
           items = find_tagged_with(tags, options)
-          returning WillPaginate::Collection.new(page, per_page, count) do |p|
+          WillPaginate::Collection.new(page, per_page, count).tap do |p|
             p.replace items
           end
         end

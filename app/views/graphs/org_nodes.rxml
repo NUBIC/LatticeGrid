@@ -9,9 +9,9 @@ xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showForm
       cnt+=1
       xml.set(:x=>x, :y=>y, :width=>'80', :height=>'30', :name=>investigator.first_name+' '+investigator.last_name, 
         :id=>investigator.id,
-        :link => show_member_graph_path(investigator.username),
+        :link => show_member_graph_url(investigator.username),
         :color => '99CCFF',
-        :tooltext => 'Publications  '+investigator.abstract_count.to_s+';
+        :tooltext => 'Publications  '+investigator.total_pubs.to_s+';
  first author pubs:'+investigator.num_first_pubs.to_s+'; 
  last author pubs:'+investigator.num_last_pubs.to_s+'; 
  intra-unit collaborations:'+investigator.num_intraunit_collaborators.to_s+'; 
@@ -25,9 +25,9 @@ xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showForm
       cnt+=1
       xml.set(:x=>x, :y=>y, :width=>'80', :height=>'30', :name=>investigator.first_name+' '+investigator.last_name, 
         :id=>investigator.id,
-        :link => show_member_graph_path(investigator.username),
+        :link => show_member_graph_url(investigator.username),
         :color => 'FF99FF',
-        :tooltext => 'Publications  '+investigator.abstract_count.to_s+';
+        :tooltext => 'Publications  '+investigator.total_pubs.to_s+';
   first author pubs:'+investigator.num_first_pubs.to_s+'; 
   last author pubs:'+investigator.num_last_pubs.to_s+'; 
   intra-unit collaborations:'+investigator.num_intraunit_collaborators.to_s+'; 
@@ -40,7 +40,7 @@ xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showForm
       investigator.internal_collaborators.keys.each do |collaborator|
        xml.connector(:strength=>investigator.internal_collaborators[collaborator].length.to_f/10, :label=>investigator.internal_collaborators[collaborator].length, :from=>investigator.id, :to=>collaborator, :color=>'FFCC66', :arrowAtStart=>'0', :arrowAtEnd=>'0',
         :tooltext => 'connections:'+investigator.internal_collaborators[collaborator].length.to_s,
-        :link => show_member_graph_path(investigator.username) )
+        :link => show_member_graph_url(investigator.username) )
       end
      end
    end

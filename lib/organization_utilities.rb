@@ -16,6 +16,7 @@ def CreateSchoolDepartmentFromHash(data_row)
   end
   org.department_id = data_row['APPT_ENTITY_ID'] || data_row['dept_id'] || data_row['department_id'] || data_row['DEPT_ID'] || data_row['DEPARTMENT_ID']
   org.name = data_row['APPT_ENTITY_NAME']
+  org.name ||= data_row['LABEL_NAME']
   org.abbreviation = data_row['APPT_ENTITY_ABBR']
   org.abbreviation.strip! if ! org.abbreviation.blank?
   org.search_name.strip! if ! org.search_name.blank?
@@ -34,7 +35,7 @@ def CreateSchoolDepartmentFromHash(data_row)
       existing_org.department_id = org.department_id if existing_org.department_id.blank?
       existing_org.name = org.name if existing_org.name.blank?
       existing_org.abbreviation = org.abbreviation if existing_org.abbreviation.blank?
-      existing_org.save
+      existing_org.save!
       org = existing_org
 	  end
 	end
@@ -117,10 +118,10 @@ def CreateOrganizationFromHash(data_row)
   	# SEARCH_NAME
 
     org = OrganizationalUnit.new
-    org.name = data_row['NAME'] || data_row['DV_NAME'] || data_row['name'] || data_row['dv_name']
-    org.search_name = data_row['SEARCH_NAME'] || data_row['search_name'] 
+    org.name = data_row['NAME'] || data_row['DV_NAME'] || data_row['name'] || data_row['dv_name'] || data_row['LABEL_NAME'] || data_row['label_name']
+    org.search_name = data_row['SEARCH_NAME'] || data_row['search_name'] || org.name
     org.abbreviation = data_row['ABBREVIATION'] || data_row['DV_ABBR'] || data_row['abbreviation'] || data_row['dv_abbr']
-    org.department_id = data_row['DEPT_ID'] || data_row['dept_id'] || data_row['department_id']
+    org.department_id = data_row['DEPT_ID'] || data_row['dept_id'] || data_row['department_id'] || data_row['DEPARTMENT_ID']
     org.division_id = data_row['DIVISION_ID'] || data_row['div_id'] || data_row['division_id']
     org.organization_phone = data_row['DV_PHONE'] || data_row['PHONE'] || data_row['phone']
     org.organization_url = data_row['DV_URL'] || data_row['URL'] || data_row['dv_url']
@@ -137,6 +138,8 @@ def CreateOrganizationFromHash(data_row)
       org.type = "Department"
     elsif ! FindCenter(org.department_id ).nil?
       org.type = 'Program'
+    elsif FindOrg(org.department_id ).type == 'Program'
+      org.type = 'Program' #sub program
     else
       org.type = 'Division'
     end
@@ -149,18 +152,27 @@ def CreateOrganizationFromHash(data_row)
     else
       existing_org = OrganizationalUnit.find_by_name(org.name) || OrganizationalUnit.find_by_abbreviation(org.abbreviation)
       if existing_org.blank? then
+        puts "creating org #{org.name} #{org.search_name} #{org.abbreviation} "
         org.save!
         org.move_to_child_of parent_org if ! parent_org.nil?
         org.save
       else
-        existing_org.move_to_child_of parent_org if (existing_org.parent_id.blank? || existing_org.parent_id == 0) && ! parent_org.nil?
+        begin
+          existing_org.move_to_child_of parent_org if (! parent_org.nil?) && (existing_org.parent_id.blank? || existing_org.parent_id != parent_org.id ) && existing_org.id != parent_org.id
+        rescue
+          puts "failed to move #{existing_org.name} from #{existing_org.parent.name unless existing_org.parent.blank?} to #{parent_org.name}"
+        end
         existing_org.department_id = org.department_id if (existing_org.department_id.blank? || existing_org.department_id == 0) && org.department_id > 0
-        existing_org.division_id = org.division_id if (existing_org.division_id.blank? || existing_org.division_id == 0) && org.division_id > 0
-        existing_org.type = org.type if org.type == "Center"
-        existing_org.name = org.name if existing_org.name.blank?
-        existing_org.abbreviation = org.abbreviation if existing_org.abbreviation.blank?
+        existing_org.division_id = org.division_id if org.division_id > 0
+        existing_org.type = org.type if org.type != existing_org.type
+        existing_org.name = org.name if existing_org.name.blank? or existing_org.name != org.name
+        existing_org.abbreviation = org.abbreviation if ! org.abbreviation.blank?
         existing_org.organization_url = org.organization_url if existing_org.organization_url.blank?
-        existing_org.save
+        org_url = existing_org.organization_url
+        existing_org.organization_url = "http://test.com/"
+        existing_org.save!
+        existing_org.organization_url = org_url
+        existing_org.save!
         org = existing_org
   	  end
   	end
@@ -168,11 +180,11 @@ def CreateOrganizationFromHash(data_row)
 end
   
 def GetParentOrg(org)
-  return HandleSchool(GetDefaultSchool()) if org.type == "Department"
-  return HandleSchool(GetDefaultSchool()) if org.type == "Center" && (org.division_id.to_s =~ /010$/ || org.division_id.to_s =~ /510$/ )
+  return HandleSchool(LatticeGridHelper.GetDefaultSchool()) if org.type == "Department"
+  return HandleSchool(LatticeGridHelper.GetDefaultSchool()) if org.type == "Center" && (org.division_id.to_s =~ /010$/ || org.division_id.to_s =~ /510$/ )
   return nil if org.department_id.blank?
   if org.type == "Program"
-    return FindCenter(org.department_id)
+    return FindOrg(org.department_id)
   end
   return FindDepartment(org.department_id,'')
  end
@@ -228,6 +240,16 @@ def FindCenter(department_id)
   Center.find_by_department_id(department_id) if !department_id.blank? 
 end
 
+def FindProgram(department_id)
+  Program.find_by_department_id(department_id) if !department_id.blank? 
+end
+
+def FindOrg(department_id)
+  return nil if department_id.blank? 
+  the_org = OrganizationalUnit.find_by_division_id(department_id, :order => 'id') 
+  the_org = OrganizationalUnit.find_by_department_id(department_id, :order => 'id') if the_org.blank? 
+  return the_org
+end
 
 def FindAppointingUnit(department_id,division_id)
   return OrganizationalUnit.find_by_division_id(division_id) if !division_id.blank? 
@@ -253,7 +275,7 @@ def CreateProgramFromName(department)
              Program.find(:first, :conditions => ["lower(name) = :name or lower(search_name) = :name or lower(abbreviation) = :name", {:name=>department.downcase }])
       puts "Could not find program #{department}" if  theProgram.blank?
       if theProgram.blank? && !department.blank? then
-        max_program_number_q = Program.maximum(:program_number)
+        max_program_number_q = Program.maximum(:sort_order)
         if max_program_number_q.blank? 
           max_program_number = 0
         else
@@ -280,3 +302,20 @@ def CreateProgramsFromDepartments(departments)
      theProgram = CreateProgramFromDepartment(department.home_department)
    end
 end
+
+def deleteUnupdatedOrganizations(orgs_to_delete)
+  orgs_to_delete.each do |org|
+    # if we ever want to keep this information do the following
+    if (false) then
+      InvestigatorAppintment.update_all({:end_date => Time.now()},['organizational_unit_id = :org_id and (end_date is NULL or end_date > :now)', {:org_id => org.id, :now => Time.now() }])
+      org.end_date = Time.now()
+      org.save!
+    else
+      InvestigatorAppointment.delete_all(['organizational_unit_id = :org_id', {:org_id => org.id}])
+      OrganizationAbstract.delete_all(['organizational_unit_id = :org_id', {:org_id => org.id}])
+      OrganizationalUnit.delete(org.id)
+    end
+  end
+end    
+    
+    

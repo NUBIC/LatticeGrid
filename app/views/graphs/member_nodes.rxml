@@ -9,9 +9,9 @@ xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showForm
        # cnt+=1
         xml.set(:x=>50, :y=>50, :width=>'120', :height=>'40', :name=>investigator.first_name+' '+investigator.last_name+"\n"+investigator.abstracts.length.to_s+' publications', 
           :id=>investigator.id,
-          :link => show_investigator_path(:id=>investigator.username, :page=>1),
+          :link => show_investigator_url(:id=>investigator.username, :page=>1),
           :color => '99CCFF',
-          :tooltext => 'Publications  '+investigator.abstract_count.to_s+';
+          :tooltext => 'Publications  '+investigator.total_pubs.to_s+';
   first author pubs:'+investigator.num_first_pubs.to_s+'; 
   last author pubs:'+investigator.num_last_pubs.to_s+'; 
   intra-unit collaborations:'+investigator.num_intraunit_collaborators.to_s+'; 
@@ -27,11 +27,11 @@ xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showForm
         color = '99CCFF' if investigator.isInternal == true
         xml.set(:x=>x, :y=>y, :width=>'80', :height=>'30', :name=>investigator.first_name+' '+investigator.last_name, 
           :id=>investigator.id,
-          :link => show_member_graph_path(investigator.username),
+          :link => show_member_graph_url(investigator.username),
           :color => color,
           :onClick => 'http://www.basic.northwestern.edu/',
           :clickURL => 'http://www.basic.northwestern.edu/',
-          :tooltext => 'Publications  '+investigator.abstract_count.to_s+';
+          :tooltext => 'Publications  '+investigator.total_pubs.to_s+';
   intra-unit collaborations:'+investigator.num_intraunit_collaborators.to_s+'; 
   inter-unit collaborations:'+investigator.num_extraunit_collaborators.to_s)
       end
@@ -45,7 +45,7 @@ xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showForm
       :color=>'FFCC66', 
       :arrowAtStart=>'0', :arrowAtEnd=>'0',
       :tooltext => 'connections:'+investigator.internal_collaborators[collaborator].length.to_s,
-      :link => show_member_graph_path(investigator.username) )
+      :link => show_member_graph_url(investigator.username) )
     end
     investigator.external_collaborators.keys.each do |collaborator|
      xml.connector(:strength=>investigator.external_collaborators[collaborator].length.to_f/10, 
@@ -54,7 +54,7 @@ xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showForm
       :color=>'FFCC33', 
       :arrowAtStart=>'0', :arrowAtEnd=>'0',
       :tooltext => 'connections:'+investigator.external_collaborators[collaborator].length.to_s,
-      :link => show_investigator_path(:id=>investigator.username, :page=>1) )
+      :link => show_investigator_url(:id=>investigator.username, :page=>1) )
     end
   end
 end

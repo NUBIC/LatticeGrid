@@ -259,7 +259,7 @@ class AbstractsController < ApplicationController
         #sped this up by only processing the intersection
         if !(new_ids == [] ) then
           new_ids.each do |investigator_id|
-            InsertInvestigatorPublication(abstract.id, investigator_id)
+            InsertInvestigatorPublication(abstract.id, investigator.id, IsFirstAuthor(abstract,investigator), IsLastAuthor(abstract,investigator), true)
           end
           abstract.reload()
         end

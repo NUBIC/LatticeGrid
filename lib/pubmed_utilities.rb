@@ -1,40 +1,52 @@
-# -*- ruby -*-
 require 'pubmed_config'
 
+def limit_pubmed_search_to_institution(set_value=nil)
+  if set_value.blank? and @local_limit_pubmed_search_to_institution.blank?
+     @local_limit_pubmed_search_to_institution = LatticeGridHelper.global_limit_pubmed_search_to_institution?
+  elsif ! set_value.blank?
+    @local_limit_pubmed_search_to_institution = set_value
+  end
+  return @local_limit_pubmed_search_to_institution
+end
 
-def BuildPISearch(pi, full_first_name=true, limit_to_institution=true)
-  result = ""
-  if !pi.pubmed_search_name.blank?  then
-    result = pi.pubmed_search_name
-  else 
-    result = pi.last_name
-    if full_first_name then
-      result = result + ", " + pi.first_name
-      if !pi.middle_name.blank?  then
-        result = result + " " + pi.middle_name[0,1]
-      end
-    else
-      result = result + " " + pi.first_name[0,1]
-      if !pi.middle_name.blank?  then
-        result = result + pi.middle_name[0,1]
-      end
+def limit_to_institution(pi)
+#  logger.warn "limit_to_institution: limit_pubmed_search_to_institution= #{limit_pubmed_search_to_institution()}; LatticeGridHelper.global_limit_pubmed_search_to_institution?=#{LatticeGridHelper.global_limit_pubmed_search_to_institution?} "
+  if pi.pubmed_limit_to_institution || limit_pubmed_search_to_institution() || LatticeGridHelper.last_names_to_limit().include?(pi.last_name) then
+    return true 
+  end
+  false
+end
+
+def build_pi_search_string(pi, full_first_name=true)
+  return pi.pubmed_search_name if !pi.pubmed_search_name.blank?
+  result = pi.last_name
+  if full_first_name then
+    result = result + ", " + pi.first_name
+    if !pi.middle_name.blank?  then
+      result = result + " " + pi.middle_name[0,1]
+    end
+  else
+    result = result + " " + pi.first_name[0,1]
+    if !pi.middle_name.blank?  then
+      result = result + pi.middle_name[0,1]
     end
   end
+  result
+end
+
+def BuildPISearch(pi, full_first_name=true)
+  result = build_pi_search_string(pi, full_first_name)
   result = result + '[auth]' unless result =~ /\[auth|\(/
-  if pi.pubmed_limit_to_institution || limit_to_institution || @last_names_to_limit.include?(pi.last_name) then
+  if limit_to_institution(pi) then
     result = LimitSearchToInstitution(result)
   end
   result
 end
 
-def InstitutionalSearchTerms
-  return @institutional_limit_search_string
-end
-
 def LimitSearchToInstitution(term)
   # temporarily reverse logic limit by institution
-  # term + " NOT " + InstitutionalSearchTerms()
-  "(" + term + ") AND (" + InstitutionalSearchTerms() + ")"
+  # term + " NOT " + LatticeGridHelper.institutional_limit_search_string()
+  "(" + term + ") AND (" + LatticeGridHelper.institutional_limit_search_string() + ")"
 end
 
 def BuildSearchOptions (number_years, max_num_records=500)
@@ -47,25 +59,24 @@ def BuildSearchOptions (number_years, max_num_records=500)
 end
 
 
-def FindPubMedIDs (all_investigators, options, number_years, limit_to_institution=true, debug=false, smart_filters=false)
+def FindPubMedIDs (all_investigators, options, number_years, debug=false, smart_filters=false)
   theCnt = 0
-  expected_max_pubs_per_year = @expected_max_pubs_per_year
-  expected_min_pubs_per_year = @expected_min_pubs_per_year
   all_investigators.each do |investigator|
     #reset counters
     attempt=0
     repeatCnt=0
     entries = nil
     perform_esearch=true
-    keywords = BuildPISearch(investigator, true, limit_to_institution)
+    keywords = BuildPISearch(investigator, true)
+    investigator["mark_pubs_as_valid"]= limit_to_institution(investigator) 
     while perform_esearch && repeatCnt < 3 && attempt < 4
       begin
          #puts "esearch keywords = #{keywords}; repeatCnt=#{repeatCnt}"
         entries = Bio::PubMed.esearch(keywords, options)
         #puts "esearch results: #{entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found"
-        if entries.length < 1 && smart_filters then
-          keywords = BuildPISearch(investigator,false, limit_to_institution)
-        elsif entries.length > (expected_max_pubs_per_year*number_years) && smart_filters && repeatCnt < 3 && !limit_to_institution then
+        if entries.length < 1 && smart_filters && ! LatticeGridHelper.global_pubmed_search_full_first_name?() then
+          keywords = BuildPISearch(investigator,false)
+        elsif entries.length > (LatticeGridHelper.expected_max_pubs_per_year*number_years) && smart_filters && repeatCnt < 3 && ! limit_pubmed_search_to_institution() then
           keywords = LimitSearchToInstitution(keywords)
         else
           perform_esearch=false
@@ -90,7 +101,7 @@ def FindPubMedIDs (all_investigators, options, number_years, limit_to_institutio
     investigator["entries"] = entries
     if entries.length < 1 then
       puts "No publications found for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords}" if debug
-    elsif entries.length > (expected_max_pubs_per_year*number_years) then
+    elsif entries.length > (LatticeGridHelper.expected_max_pubs_per_year*number_years) then
       puts "Too many hits??: #{entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found. RepeatCnt=#{repeatCnt}"
     elsif entries.length < number_years then
       puts "Too few found: #{entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found" if debug
@@ -113,7 +124,7 @@ def GetPubsForInvestigators(investigators)
     if investigator.entries.length > 0
       fetchcnt=0
       begin
-        puts "looking up #{investigator.entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name}" if @debug
+        puts "looking up #{investigator.entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name}" if LatticeGridHelper.debug?
         pubs = Bio::PubMed.efetch(investigator.entries)
         raise "error fetching publications array from efetch. investigator.entries = #{investigator.entries.inspect}" if pubs.nil?
         investigator["publications"] = pubs
@@ -137,15 +148,14 @@ def GetPubsForInvestigators(investigators)
         raise "efetch timeout looking up #{investigator.entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name}"
       end
     else
-      puts "no publications found for investigator #{investigator.first_name} #{investigator.last_name}" if @debug
+      puts "no publications found for investigator #{investigator.first_name} #{investigator.last_name}" if LatticeGridHelper.debug?
       investigator["publications"] = nil
     end
   end
   return investigators
 end
 
-
-def InsertInvestigatorPublication(abstract_id, investigator_id, is_first_author=false, is_last_author=false)
+def InsertInvestigatorPublication(abstract_id, investigator_id, is_first_author=false, is_last_author=false, is_valid=false)
   puts "InsertInvestigatorPublication: this shouldn't happen - abstract_id was nil" if abstract_id.nil?
   return if abstract_id.nil?
   puts "InsertInvestigatorPublication: this shouldn't happen - investigator_id was nil" if investigator_id.nil?
@@ -158,25 +168,27 @@ def InsertInvestigatorPublication(abstract_id, investigator_id, is_first_author=
          :abstract_id     => abstract_id,
          :investigator_id => investigator_id,
          :is_first_author => is_first_author,
-         :is_last_author  => is_last_author
+         :is_last_author  => is_last_author,
+         :is_valid        => is_valid,
+         :reviewed_ip     => "inserted from pubmed"
        )
       rescue ActiveRecord::RecordInvalid
        if thePIPub.nil? then # something bad happened
          puts "InsertInvestigatorPublication: unable to either insert or find a reference with the abstract_id '#{abstract_id}' and the investigator_id '#{investigator_id}'"
-         return 
+         return nil
        end
      end 
    end
-   thePIPub.id
+   thePIPub
 end
 
-def UpdateCitationInvestigatorInformation(abstract_id, investigator_ids, first_author_id, last_author_id)
+def UpdateCitationInvestigatorInformation(abstract_id, investigator_ids, first_author_id, last_author_id, is_valid=nil)
   puts "UpdateCitationInvestigatorInformation: this shouldn't happen - abstract_id was nil" if abstract_id.nil?
   return if abstract_id.nil?
   puts "UpdateCitationInvestigatorInformation: this shouldn't happen - investigator_ids was nil" if investigator_ids.nil?
   return if investigator_ids.nil?
   investigator_ids.each do |investigator_id|
-    UpdateInvestigatorPublication(abstract_id, investigator_id, !!(first_author_id == investigator_id),  !!(last_author_id == investigator_id))
+    UpdateInvestigatorPublication(abstract_id, investigator_id, !!(first_author_id == investigator_id),  !!(last_author_id == investigator_id), is_valid)
    end
 end
 
@@ -194,10 +206,10 @@ def UpdateInvestigatorCitationInformation(investigator)
   investigator.save!
 end
 
-def UpdateInvestigatorPublication(abstract_id, investigator_id, is_first_author, is_last_author)
+def UpdateInvestigatorPublication(abstract_id, investigator_id, is_first_author, is_last_author, is_valid=nil )
   puts "UpdateInvestigatorPublication: this shouldn't happen - abstract_id was nil" if abstract_id.nil?
   return if abstract_id.nil?
-  puts "InsertInvestigatorPublication: this shouldn't happen - investigator_id was nil" if investigator_id.nil?
+  puts "UpdateInvestigatorPublication: this shouldn't happen - investigator_id was nil" if investigator_id.nil?
   return if investigator_id.nil?
   thePIPub = InvestigatorAbstract.find(:first, 
            :conditions => ["abstract_id = :abstract_id and investigator_id = :investigator_id", {:abstract_id => abstract_id, :investigator_id => investigator_id} ] )
@@ -208,29 +220,7 @@ def UpdateInvestigatorPublication(abstract_id, investigator_id, is_first_author,
     begin 
        thePIPub.is_first_author = is_first_author
        thePIPub.is_last_author = is_last_author
-       thePIPub.save!
-    rescue ActiveRecord::RecordInvalid
-       puts "UpdateInvestigatorPublication: unable to update an InvestigatorAbstract with the abstract_id '#{abstract_id}' and the investigator_id '#{investigator_id}'"
-       return 
-     end
-   end
-   thePIPub.id
-end
-
-def UpdateInvestigatorRecords(abstract_id, investigator_id, is_first_author, is_last_author)
-  puts "UpdateInvestigatorPublication: this shouldn't happen - abstract_id was nil" if abstract_id.nil?
-  return if abstract_id.nil?
-  puts "InsertInvestigatorPublication: this shouldn't happen - investigator_id was nil" if investigator_id.nil?
-  return if investigator_id.nil?
-  thePIPub = InvestigatorAbstract.find(:first, 
-           :conditions => ["abstract_id = :abstract_id and investigator_id = :investigator_id", {:abstract_id => abstract_id, :investigator_id => investigator_id} ] )
-  if thePIPub.nil? then
-    puts "UpdateInvestigatorPublication: this shouldn't happen - didn't find an InvestigatorAbstract"
-    return
-  else
-    begin 
-       thePIPub.is_first_author = is_first_author
-       thePIPub.is_last_author = is_last_author
+       thePIPub.is_valid = is_valid if ! is_valid.nil?
        thePIPub.save!
     rescue ActiveRecord::RecordInvalid
        puts "UpdateInvestigatorPublication: unable to update an InvestigatorAbstract with the abstract_id '#{abstract_id}' and the investigator_id '#{investigator_id}'"
@@ -253,11 +243,11 @@ def AddInvestigatorsToCitation(abstract_id, investigator_ids, first_author_id, l
           {:investigator_id => investigator_id, :abstract_id => abstract_id}])
       # puts "found investigator/abstract pair"
       if (last_author_id > 0 || first_author_id > 0) then 
-        UpdateInvestigatorRecords(abstract_id, investigator_id, !!(first_author_id == investigator_id),  !!(last_author_id == investigator_id))
+        UpdateInvestigatorRecords(abstract_id, investigator_id, !!(first_author_id == investigator_id),  !!(last_author_id == investigator_id), true)
       end
     else
-      puts "adding new investigator/abstract pair (investigator: #{Investigator.find(investigator_id).last_name}; abstract pubmed_id: #{Abstract.find(abstract_id).pubmed})" if @verbose
-      InsertInvestigatorPublication(abstract_id, investigator_id, !!(first_author_id == investigator_id),  !!(last_author_id == investigator_id))
+      puts "adding new investigator/abstract pair (investigator: #{Investigator.find(investigator_id).last_name}; abstract pubmed_id: #{Abstract.find(abstract_id).pubmed})" if LatticeGridHelper.verbose?
+      InsertInvestigatorPublication(abstract_id, investigator_id, !!(first_author_id == investigator_id),  !!(last_author_id == investigator_id), true)
     end
   end
 end
@@ -271,14 +261,14 @@ def FetchPublicationData(pubmed_ids)
   while theCnt < pubmed_ids.length do
     theEnd = theCnt+theSize
     theEnd = pubmed_ids.length-1 if theEnd > pubmed_ids.length-1 
-    puts "Slicing all_entries from #{theCnt} to #{theEnd}" if @debug
+    puts "Slicing all_entries from #{theCnt} to #{theEnd}" if LatticeGridHelper.debug?
     mySlice = pubmed_ids[theCnt..theEnd]
-    puts "looking up #{mySlice.length} pubs from #{theCnt} to #{theEnd}" if @debug
+    puts "looking up #{mySlice.length} pubs from #{theCnt} to #{theEnd}" if LatticeGridHelper.debug?
     theCnt = theEnd+1
-    printSlice(mySlice) if @debug
+    printSlice(mySlice) if LatticeGridHelper.debug?
     pubs = Bio::PubMed.efetch(mySlice)
-    inspectObject(pubs[0]) if @debug
-    puts "found #{pubs.length} pubs" if @debug
+    inspectObject(pubs[0]) if LatticeGridHelper.debug?
+    puts "found #{pubs.length} pubs" if LatticeGridHelper.debug?
     foundPubs =  foundPubs + pubs
   end
   foundPubs

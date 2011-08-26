@@ -4,16 +4,18 @@
 <% investigators_in_unit = [] if investigators_in_unit.nil? -%>
 <% show_paginator = true if show_paginator.nil? -%>
 <% do_pagination = "0" if do_pagination.nil? -%>
-<% show_delete_checkboxes = false if show_delete_checkboxes.nil? -%>
+<% show_valid_checkboxes = false if show_valid_checkboxes.nil? -%>
 <% bold_members = false if bold_members.nil? -%>
-<% show_cancer_related_checkbox = show_cancer_related_checkbox? -%>
+<% show_cancer_related_checkbox = LatticeGridHelper.show_cancer_related_checkbox? -%>
 <% link_abstract_to_pubmed = false if link_abstract_to_pubmed.nil? -%>
-
+<% speed_display=false if speed_display.nil? -%>
+<% include_impact_factor=false if include_impact_factor.nil? -%>
+<% simple_links=false if simple_links.nil? %>
 
 <div id="listing"> 
 <h2><%= heading -%></h2>
-<% if show_delete_checkboxes -%>
-<p>Uncheck the 'Valid' checkbox to remove that publication from all LatticeGrid counts and views. Uncheck a specific investigator listed on the right to remove that investigator from the list of investigators receiving 'credit' for that publication.</p>
+<% if show_valid_checkboxes -%>
+<p>Publications that LatticeGrid cannot validate as belonging to you are listed at the bottom of this list. Please Check the box under the 'Valid' heading for each publication that does belong to you. If you see publications that are attributed to you that are <b>not</b> yours or any other person listed under the 'faculty credited' heading, and are checked as valid, please uncheck the 'Valid' checkbox to remove that publication from all LatticeGrid counts and views. If the publication does not belong to one or more of the investigators listed on the right, please uncheck each incorrectly listed investigator for that publication.</p>
 <% end -%>
 <% if abstracts.length > 0 -%>
 
@@ -39,7 +41,7 @@
 	<%= will_paginate(abstracts, :outer_window => 5, :inner_window => 5) -%>
 <% end -%>
 
-<%= render :partial => "shared/abstract_listing_table.html", :locals => { :abstracts => abstracts, :investigators_in_unit => investigators_in_unit, :include_pubmed_id => include_pubmed_id, :include_collab_marker => include_collab_marker, :include_investigators => include_investigators, :show_delete_checkboxes => show_delete_checkboxes, :show_cancer_related_checkbox => show_cancer_related_checkbox, :bold_members => bold_members, :link_abstract_to_pubmed => link_abstract_to_pubmed } -%>
+<%= render( :partial => "shared/abstract_listing_table.html", :locals => { :abstracts => abstracts, :investigators_in_unit => investigators_in_unit, :include_pubmed_id => include_pubmed_id, :include_collab_marker => include_collab_marker, :include_investigators => include_investigators, :show_valid_checkboxes => show_valid_checkboxes, :show_cancer_related_checkbox => show_cancer_related_checkbox, :bold_members => bold_members, :link_abstract_to_pubmed => link_abstract_to_pubmed, :speed_display=>speed_display, :include_impact_factor => include_impact_factor, :simple_links => simple_links }) -%>
 
 <% if do_pagination != "0"  -%>
 	<%= will_paginate(abstracts, :outer_window => 5, :inner_window => 5) -%>

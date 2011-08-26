@@ -18,11 +18,9 @@
 	  <th align="left">Influence Score &nbsp; </th>
   </tr>
 
-<% cnt = 0 %>
-<% for journal in @high_impact %>
-	<% cnt+=1%>
+<% @high_impact.each_with_index do |journal, cnt| %>
   <tr valign="middle" class="<%= cycle('list-line-odd', 'list-line-even') %>"> 
-	<td class="list-right"><%= cnt %></td>
+	<td class="list-right"><%= cnt+1 %></td>
 	<td><%= link_to capitalize_words(journal.journal_abbreviation), journal_list_abstract_url(journal.id) %></td>
 	<td class="list-right"><%= journal.issn %></td>
 	<td class="list-right"><%= journal.total_cites %></td>

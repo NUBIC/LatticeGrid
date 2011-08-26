@@ -8,37 +8,38 @@
 <% include_investigators=false if include_investigators.nil? %>
 <% include_pubmed_id = false if include_pubmed_id.nil? %>
 <% include_collab_marker = false if include_collab_marker.nil? %>
+<% heading = "Publications " if heading.blank? %>
 
 <% if ! investigator.nil? %>
 
 <table class="borderless">
 <tr valign="top">
 	<td width="800px">
-		<%= render :partial => "shared/investigator_bio", :locals => { :investigator => investigator, :all_abstracts => all_abstracts } %>
-		<%= render( :partial => "shared/abstract_listing", :locals => { :abstracts => abstracts, :do_pagination => do_pagination, :heading => "Publications (#{total_entries})", :show_paginator => show_paginator, :include_investigators => include_investigators, :include_pubmed_id => include_pubmed_id, :include_collab_marker => include_collab_marker}) if !abstracts.blank? %>
+		<%= render :partial => "investigators/investigator_bio", :locals => { :investigator => investigator, :all_abstracts => all_abstracts } %>
+		<%= render( :partial => "shared/abstract_listing", :locals => { :abstracts => abstracts, :do_pagination => do_pagination, :heading => heading, :show_paginator => show_paginator, :include_investigators => include_investigators, :include_pubmed_id => include_pubmed_id, :include_collab_marker => include_collab_marker}) if !abstracts.blank? %>
 		<%= render :partial => "shared/all_tags", :locals => { :investigator => investigator } if include_all_mesh %>
 		
 	</td>
 	<td>
 		<% if investigator.co_authors.length > 0 %>
-		<h3>Co-Authors:</h3> 
+		<h3>Co-Authors (<%= investigator.co_authors.length -%>):</h3> 
 		<div id="collaborators">
 		<%= link_to_coauthors(investigator.co_authors, "<br/>") %>
 		</div>
 		<% end %>
 		<% similar_investigators=investigator.similar_investigators %>
 		<% if similar_investigators.length > 0 %>
-			<h3>Similar Investigators:</h3> 
+			<h3>Similar Investigators (<%= similar_investigators.length -%>):</h3>
+			<div id="investigator_note" class="note">Investigators you have not published with but by MeSH terms have significant overlap with your research</div>
 			<div id="similar_investigators">
 			<%= link_to_similar_investigators(similar_investigators, "<br/>") %>
 			</div>
 		<% end %>
-		<br/>
 		<% if include_mesh %>
 		<h3>Keywords (MeSH):</h3>
 		<div id="tag_cloud_side"></div>
-		<script language="javascript">
-		<%= remote_function(:url => tag_cloud_side_investigator_path( investigator.id), :method => :get, :before => "Element.show('spinner')", 
+		<script type='text/javascript' language="javascript">
+		<%= remote_function(:url => tag_cloud_side_investigator_path( investigator.username), :method => :get, :before => "Element.show('spinner')", 
 		:complete => "Element.hide('spinner')" ) %> 
 		</script>
 		<% end %>

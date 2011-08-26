@@ -14,11 +14,25 @@ class AbstractTest < ActiveSupport::TestCase
     assert !abstract.valid? 
     assert abstract.errors.invalid?(:pubmed) 
   end 
+  
+  test "test abstracts exist" do 
+    abstracts = Abstract.all
+    assert( abstracts.length > 0 )
+  end
+
+  test "test first abstract is not nil" do 
+    first_abstract = abstracts(:one)
+    assert( ! first_abstract.blank?)
+    assert( ! first_abstract.year.blank?)
+    assert( first_abstract.year ==  '2007')
+  end
+  
   test "test abstract display methods" do 
     first_abstract = abstracts(:one)
+    assert( ! first_abstract.year.blank?)
     abstracts=Abstract.display_data(first_abstract.year)
-    assert(abstracts.length >= 1)
-    assert(abstracts[0].id >= 1)
+    assert(abstracts.length > 0)
+    assert(abstracts[0].id > 0)
     assert_not_nil(abstracts.total_entries, "abstracts.total_entries should  exist")
     assert(abstracts.length == abstracts.total_entries)
     abstracts=Abstract.display_all_data(first_abstract.year)

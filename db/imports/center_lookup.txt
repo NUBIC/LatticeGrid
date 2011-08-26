@@ -1,1 +1,0 @@
-APPT_ENTITY_ABBR	APPT_ENTITY_CHAIR_FACULTY_ID	APPT_ENTITY_ID	APPT_ENTITY_NAME	APPT_ENTITY_SCHOOLFeinberg		600000	Feinberg School of Medicine	FeinbergLurie Cancer Center	604638	401000	Robert H. Lurie Comprehensive Cancer Center	Feinberg

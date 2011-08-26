@@ -1,13 +1,13 @@
 <td class="list-title-left">
-  <% if show_delete_checkboxes and publication.investigator_abstracts.length > 1 %>
+  <% if show_valid_checkboxes %>
 	<% for investigator_abstract in publication.investigator_abstracts %>
-		<%= check_box_tag(investigator_abstract.id, investigator_abstract.id, investigator_abstract.end_date.blank?, :onclick => remote_function( :url =>  set_investigator_abstract_end_date_abstract_path(investigator_abstract.id),
+		<%= check_box_tag(investigator_abstract.id, investigator_abstract.id, investigator_abstract.is_valid, :onclick => remote_function( :url =>  set_investigator_abstract_end_date_abstract_path(investigator_abstract.id),
 		:before => "Element.show('spinner')", :complete => "Element.hide('spinner')"
-		)) if show_delete_checkboxes and !investigator_abstract.investigator_id.blank? -%>&nbsp;<%= link_to_investigator( publication, Investigator.include_deleted(investigator_abstract.investigator_id)) if !investigator_abstract.investigator_id.blank? -%><br/>
+		)) if show_valid_checkboxes and !investigator_abstract.investigator_id.blank? -%>&nbsp;<%= link_to_investigator( publication, Investigator.include_deleted(investigator_abstract.investigator_id), nil, false, false, simple_links) if !investigator_abstract.investigator_id.blank? -%><br/>
 	<% end %>
   <% else %>
 	<% for investigator in publication.investigators %>
-		<%= link_to_investigator( publication, investigator) if !investigator.blank? %><br/>
+		<%= link_to_investigator( publication, investigator, nil, false, false, simple_links) if !investigator.blank? %><br/>
 	  <% end %>
   <% end %>
 </td>

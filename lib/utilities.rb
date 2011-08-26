@@ -1,4 +1,5 @@
 # -*- ruby -*-
+require 'config'
 
 # simply for debugging - prints a slice of an array or any other object that supports 'each'
 def printSlice (theslice)
@@ -23,18 +24,18 @@ def human_timing(elapsed_seconds)
 end
 
 def block_timing (taskname="task")
-  puts "starting #{taskname}" if @verbose
+  puts "starting #{taskname}" if LatticeGridHelper.verbose?
   start = Time.now
   yield
   stop = Time.now
   elapsed_seconds = stop.to_f - start.to_f
-  puts "#{taskname} ran in "+ human_timing(elapsed_seconds) if @verbose
+  puts "#{taskname} ran in "+ human_timing(elapsed_seconds) if LatticeGridHelper.verbose?
 end
 
 def row_iterator(data, cnt=0, row_message_cnt=500, start=nil)
   data.each do |data_row|
     cnt+=1
-    if cnt%row_message_cnt==0 and @verbose
+    if cnt%row_message_cnt==0 and LatticeGridHelper.verbose?
       if ! start.blank?
         stop = Time.now
         elapsed_seconds = stop.to_f - start.to_f

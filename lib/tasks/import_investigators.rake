@@ -5,26 +5,14 @@ require 'utilities' #specific methods
 require 'rubygems'
 require 'pathname'
 
-def read_file_handler(taskname="taskname")
-  if ENV["file"].nil?
-    puts "couldn't find a file in the calling parameters. Please call as 'rake #{taskname} file=filewithpath'" 
-  else
-    block_timing(taskname) {
-      puts "file: "+ENV["file"]
-      ENV["file"].split(',').each do | filename |
-        p1 = Pathname.new(filename) 
-        if p1.file? then
-          yield filename
-        else
-          puts "unable to open file #{filename}"
-        end
-      end
-    }
-  end
-end
-  
 task :importOrganizations => :environment do
   read_file_handler("importOrganizations" ) {|filename| ReadOrganizationData(filename)}
+end
+
+task :purgeUnupdatedOrganizations => :getAllOrganizationsNotUpdated do
+  block_timing("purgeUnupdatedOrganizations") {
+    deleteUnupdatedOrganizations(@AllOrganizationsNotUpdated)
+  }
 end
 
 task :importDepartments => :environment do
@@ -90,10 +78,6 @@ task :purgeNonMembers => :getAllInvestigatorsWithoutMembership do
    block_timing("purgeNonMembers") {
      purgeInvestigators(@InvestigatorsWithoutMembership)
    }
-end
-
-task :importAwardData => :getInvestigators do
-  read_file_handler("importAwardData" ) {|filename| ReadAwardData(filename)}
 end
 
 task :validateUsers => :environment do

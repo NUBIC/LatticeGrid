@@ -1,6 +1,27 @@
 require 'organization_utilities'
-require 'config' # cleanup_campus is in onfig
-  
+require 'config' # cleanup_campus is in config
+
+def GenerateNetIDReport(data_row)
+  pi = Investigator.new
+  pi = SetInvestigatorIdentity(pi,data_row)
+  existing_investigator = IdentifyExistingInvestigator(pi)
+  if pi.username.blank? then
+    puts "GenerateNetIDReport: Row did not have a username"
+    puts data_row.inspect
+  elsif existing_investigator.blank? then
+    puts "#{pi.username}\tNot FSM\tNot FSM\tNot FSM"
+  else
+    if ! existing_investigator.home_department.blank? then 
+      department_name = existing_investigator.home_department.name.to_s
+      department_abbreviation = existing_investigator.home_department.abbreviation.to_s
+    else
+      department_name = "not found"
+      department_abbreviation = "not found"
+    end
+    puts existing_investigator.username + "\t" + existing_investigator.name + "\t" + department_name + "\t" + department_abbreviation
+  end
+end
+
 def CreateInvestigatorFromHash(data_row)
   pi = Investigator.new
   pi = SetInvestigatorIdentity(pi,data_row)
@@ -21,32 +42,28 @@ def CreateInvestigatorFromHash(data_row)
     end
     if existing_pi.blank? then
       if pi.home_department_id.blank?
-        puts "unable to set home_department_id for #{data_row}" if @verbose and HasDepartment(data_row)
+        puts "unable to set home_department_id for #{data_row}" if LatticeGridHelper.verbose? and HasDepartment(data_row)
       end
-      puts "New investigator: #{pi.first_name} #{pi.last_name}; username: #{pi.username}; email: #{pi.email}" if @verbose
+      puts "New investigator: #{pi.first_name} #{pi.last_name}; username: #{pi.username}; email: #{pi.email}" if LatticeGridHelper.verbose?
       pi.save!
     else
-      # override existing record ?
-      override=true
-      existing_pi.employee_id = pi.employee_id if existing_pi.employee_id.blank?
+      # overwrite existing record ?
+      overwrite=true
+      existing_pi.employee_id = pi.employee_id if existing_pi.employee_id.blank? and ! pi.employee_id.blank?
       if existing_pi.first_name != pi.first_name
         puts "Existing first name and new first name different: existing: #{existing_pi.name}, username: #{existing_pi.username}, email: #{existing_pi.email}; new record: #{pi.name}, username #{pi.username}, email: #{pi.email}"
-        override=false
+        overwrite=false
       end
-      if existing_pi.email != pi.email
-        puts "Existing email is different: existing: #{existing_pi.name}, username: #{existing_pi.username}, email: #{existing_pi.email}; new record: #{pi.name}, username #{pi.username}, email: #{pi.email}"
+      if existing_pi.email != pi.email and !pi.email.blank?
+        puts "Existing email is different: existing: #{existing_pi.name}, username: #{existing_pi.username}, email: #{existing_pi.email}; merging record: #{pi.name}, username #{pi.username}, email: #{pi.email}"
       end
-      if override
-        existing_pi = MergeInvestigatorData(existing_pi, pi, true)
-      else
-        existing_pi = MergeInvestigatorData(existing_pi, pi, false)
-      end
+      existing_pi = MergeInvestigatorData(existing_pi, pi, overwrite)
       # in case this investigator was marked as deleted/expired
       existing_pi.end_date = nil
       existing_pi.deleted_at = nil
       existing_pi.deleted_ip = nil
       existing_pi.deleted_id = nil
-      existing_pi.save
+      existing_pi.save!
       pi = existing_pi
     end
     if ! data_row['program'].blank? then
@@ -59,16 +76,16 @@ def CreateInvestigatorFromHash(data_row)
           :conditions=>['investigator_id=:investigator_id and organizational_unit_id=:program_id and type in (:types)', 
             {:program_id => theProgram.id, :investigator_id => pi.id, :types => ["Member"]}])
       if membership.blank?
-        puts "Membership of #{pi.name} in #{theProgram.name} created" if @verbose
+        puts "Membership of #{pi.name} in #{theProgram.name} created" if LatticeGridHelper.verbose?
         Member.create :organizational_unit_id => theProgram.id, :investigator_id => pi.id, :start_date => Time.now
       else
-        puts "Membership of #{pi.name} in #{theProgram.name} updated" if @debug
+        puts "Membership of #{pi.name} in #{theProgram.name} updated" if LatticeGridHelper.debug?
         membership.end_date = nil
         membership.updated_at = Time.now
         membership.save!  # update the record
       end
     else
-      puts 'no program datarow'
+      puts 'no program datarow' if LatticeGridHelper.debug?
 	  end
 	end
 end
@@ -106,13 +123,14 @@ def SetInvestigatorIdentity(pi, data_row)
   pi.last_name = data_row['LAST_NAME'] || data_row['last_name'] 
   pi.email = data_row['EMAIL'] || data_row['email'] 
 
-  pi.username.strip! if ! pi.username.blank?
+  pi.username.downcase.strip! if ! pi.username.blank?
   pi.first_name.strip! if ! pi.first_name.blank?
   pi.middle_name.strip! if ! pi.middle_name.blank?
   pi.last_name.strip! if ! pi.last_name.blank?
-  pi.email.strip! if ! pi.email.blank?
+  pi.email.downcase.strip! if ! pi.email.blank?
   pi.employee_id.to_s.strip! if ! pi.employee_id.blank?
-
+  pi.employee_id.to_s.downcase! if ! pi.employee_id.blank?
+ 
   if pi.last_name.blank? && !data_row['NAME'].blank?
       pi=HandleName(pi,data_row['NAME'])
   end
@@ -159,7 +177,7 @@ def SetInvestigatorInformation(pi, data_row)
   pi.appointment_basis.strip! if ! pi.appointment_basis.blank?
   pi.degrees.strip! if ! pi.degrees.blank?
   pi.pubmed_search_name.strip! if ! pi.pubmed_search_name.blank?
-  pi.pubmed_limit_to_institution.strip! if ! pi.pubmed_limit_to_institution.blank?
+  # pi.pubmed_limit_to_institution.strip! if ! pi.pubmed_limit_to_institution.blank? # fails for booleans
   pi.faculty_interests.strip! if ! pi.faculty_interests.blank?
   pi.faculty_research_summary.strip! if ! pi.faculty_research_summary.blank?
   pi.faculty_keywords.strip! if ! pi.faculty_keywords.blank?
@@ -329,7 +347,7 @@ def MergeInvestigatorData(dest_pi, source_pi, overwrite)
   dest_pi.home_department_id  = DoOverwrite(dest_pi.home_department_id, source_pi.home_department_id, overwrite)
   dest_pi.pubmed_search_name  = DoOverwrite(dest_pi.pubmed_search_name, source_pi.pubmed_search_name, overwrite)
   dest_pi.pubmed_limit_to_institution = DoOverwrite(dest_pi.pubmed_limit_to_institution, source_pi.pubmed_limit_to_institution, overwrite)
-  dest_pi = cleanup_campus(dest_pi)
+  dest_pi = LatticeGridHelper.cleanup_campus(dest_pi)
   dest_pi
 end
 
@@ -365,7 +383,7 @@ def MergeInvestigatorDescriptionsFromHash(data_row)
   investigator = SetInvestigatorInformation(investigator,data_row)
   existing_investigator = IdentifyExistingInvestigator(investigator)
   if !existing_investigator.blank?
-    puts "merging data: #{existing_investigator.name}; #{existing_investigator.username}." if @verbose
+    puts "merging data: #{existing_investigator.name}; #{existing_investigator.username}." if LatticeGridHelper.verbose?
     # uncomment this if you are merging multiple research summaries
     #    if !investigator.faculty_research_summary.blank? and (existing_investigator.faculty_research_summary =~ Regexp.new(investigator.faculty_research_summary[0..20].gsub(/\//,'?')) ).blank?
     #      existing_investigator.faculty_research_summary += investigator.faculty_research_summary
@@ -376,7 +394,7 @@ def MergeInvestigatorDescriptionsFromHash(data_row)
       if (! existing_investigator.faculty_interests.split(',').collect{|interest| interest.strip }.include?(investigator.faculty_interests))
         existing_investigator.faculty_interests = [existing_investigator.faculty_interests,investigator.faculty_interests].join(", ")
         investigator.faculty_interests = existing_investigator.faculty_interests
-        puts "merging faculty interests: #{investigator.faculty_interests}" if @verbose
+        puts "merging faculty interests: #{investigator.faculty_interests}" if LatticeGridHelper.verbose?
       else
         investigator.faculty_interests = existing_investigator.faculty_interests
       end
@@ -436,7 +454,7 @@ def CreateAppointment(data_row, type)
     ['organizational_unit_id = :unit_id and investigator_id = :investigator_id and type = :type', 
       {:investigator_id => appt.investigator_id, :unit_id => appt.organizational_unit_id, :type => appt.type }])
   if exists.nil?
-    appt.save
+    appt.save!
   end
 end
 
@@ -469,7 +487,7 @@ def CreateProgramMembershipsFromHash(data_row, type='Member')
   end
   last_name.strip! if !last_name.blank?
   first_name.strip! if !first_name.blank?
-  email.strip! if !email.blank?
+  email.downcase.strip! if !email.blank?
   unit_abbreviation.strip! if !unit_abbreviation.blank?
   appt = InvestigatorAppointment.new
   program = OrganizationalUnit.find_by_abbreviation(unit_abbreviation)
@@ -478,11 +496,11 @@ def CreateProgramMembershipsFromHash(data_row, type='Member')
   if investigators.length == 1
     investigator = investigators[0]
   else
-    investigator = Investigator.find_by_email(email.downcase)
+    investigator = Investigator.find_by_email(email)
     if investigator.blank? then
       more_pis = Investigator.find(:all, 
         :conditions => ["lower(email) = :email",
-           {:email => email.downcase}])
+           {:email => email}])
       if more_pis.length == 1
         investigator = more_pis[0]
       end
@@ -512,21 +530,23 @@ def CreateProgramMembershipsFromHash(data_row, type='Member')
     ['organizational_unit_id = :unit_id and investigator_id = :investigator_id and type = :type', 
       {:investigator_id => appt.investigator_id, :unit_id => appt.organizational_unit_id, :type => appt.type }])
   if exists.nil?
-    appt.save
+    appt.save!
   else
     # save so we can look at the update_at info for all members
-    exists.end_date = nil
+    exists.end_date = Date.today
     exists.save
+    exists.end_date = nil
+    exists.save!
   end
  end
 
 def prune_investigators_without_programs(investigators)
   investigators.each do |investigator|
     if investigator.investigator_appointments.nil?
-      puts "pruning (setting deleted_at and end_date) for investigator #{investigator.name}" if @verbose
-		investigator.deleted_at = 2.days.ago
-		investigator.end_date = 2.days.ago
-		investigator.save
+      puts "pruning (setting deleted_at and end_date) for investigator #{investigator.name}" if LatticeGridHelper.verbose?
+      investigator.deleted_at = 2.days.ago
+      investigator.end_date = 2.days.ago
+      investigator.save!
     end
   end
 end
@@ -536,9 +556,9 @@ def prune_program_memberships_not_updated()
   memberships.each do |membership|
     # membership.updated_at < 1.hour.ago means update was more than an hour ago!
     if (membership.updated_at < 1.day.ago or membership.investigator.nil? or membership.organizational_unit.nil?) and (membership.end_date.nil? or membership.end_date > Date.tomorrow)
-      puts "deleting membership entry for #{membership.investigator.name} username #{membership.investigator.username} in program #{membership.organizational_unit.name}" if @verbose and !membership.investigator.nil? and ! membership.organizational_unit.nil?
-      puts "deleting membership entry for #{membership.investigator_id} with an invalid/deleted user in program #{membership.organizational_unit.name}" if @verbose and membership.investigator.nil? and ! membership.organizational_unit.nil?
-      puts "deleting membership entry for #{membership.investigator.name} username #{membership.investigator.username} in deleted program #{membership.organizational_unit_id}" if @verbose and !membership.investigator.nil? and membership.organizational_unit.nil?
+      puts "deleting membership entry for #{membership.investigator.name} username #{membership.investigator.username} in program #{membership.organizational_unit.name}" if LatticeGridHelper.verbose? and !membership.investigator.nil? and ! membership.organizational_unit.nil?
+      puts "deleting membership entry for #{membership.investigator_id} with an invalid/deleted user in program #{membership.organizational_unit.name}" if LatticeGridHelper.verbose? and membership.investigator.nil? and ! membership.organizational_unit.nil?
+      puts "deleting membership entry for #{membership.investigator.name} username #{membership.investigator.username} in deleted program #{membership.organizational_unit_id}" if LatticeGridHelper.verbose? and !membership.investigator.nil? and membership.organizational_unit.nil?
       membership.end_date = 1.day.ago
       membership.save! 
     end
@@ -546,7 +566,7 @@ def prune_program_memberships_not_updated()
 end
 
 def doCleanInvestigators(investigators)
-  puts "cleaning #{investigators.length} investigators" if @verbose
+  puts "cleaning #{investigators.length} investigators" if LatticeGridHelper.verbose?
   investigators.each do |pi|
     begin
       pi.username = pi.username.split('.')[0]
@@ -561,9 +581,10 @@ end
 
 def purgeInvestigators(investigators_to_purge)
   investigators_to_purge.each do |pi|
+    puts "marking investigator  #{pi.name} username #{pi.username} as deleted" if LatticeGridHelper.verbose?
     pi.deleted_at = 2.days.ago
     pi.end_date = 2.days.ago
-    pi.save
+    pi.save!
   end
 end
   

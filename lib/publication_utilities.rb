@@ -11,7 +11,7 @@ end
 
 def FindREmatch(str,re)
   string=str.gsub( /\n|\r/, ';')
-  puts show_regexp(string, re) if @debug
+  puts show_regexp(string, re) if LatticeGridHelper.debug?
   if string =~ re then
     return true
   end
@@ -36,7 +36,7 @@ end
 
 # used when inserting InvestigatorAbstract record
 def IsFirstAuthor(abstract,investigator)
-  puts "searching for first author using PI #{investigator.last_name}, #{investigator.first_name} "  if @debug
+  puts "searching for first author using PI #{investigator.last_name}, #{investigator.first_name} "  if LatticeGridHelper.debug?
   if abstract.full_authors.blank?
     return FindREmatch(abstract.authors,  /^#{investigator.last_name}, #{investigator.first_name.at(0)}/i)
   else
@@ -69,22 +69,30 @@ def FindLastAuthorInCitation(citation_investigators,abstract)
   0
 end
 
-def GetInvestigatorIDfromAuthorRecord(author_rec, author_string)
-  return 0  if author_rec.length < 2
-  investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name || '%' ", 
-        {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase}] )
-  return investigators[0].id if investigators.length == 1
-  if investigators.length > 1 and author_rec.length > 2
-    # has middle name or initial
+def GetInvestigatorIDfromAuthorRecord(author_rec, author_string="")
+  return 0  if author_rec.compact.length < 2
+  if author_rec.length > 2 then
+    # search for last_name, first_name and middle_name
     investigators = Investigator.find(:all, 
       :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name || '%' and lower(middle_name) like :middle_name || '%' ", 
           {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase, :middle_name => author_rec[2].downcase}] )
-  end
-  puts "Multiple investigators matching #{author_rec.inspect} found. Author was #{author_string}" if investigators.length > 1 and @debug
-  if investigators.length == 0
+    if investigators.length == 0 and author_rec[1] != author_rec[1].first then
+      # now look for last_name first_initial and middle_initial
+      investigators = Investigator.find(:all, 
+        :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name || '%' and lower(middle_name) like :middle_name || '%' ", 
+            {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase, :middle_name => author_rec[2].first.downcase}] )
+    end
+  else # last_name and first_name only
+    # search for last_name and first_name
     investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name || '%' ", 
-          {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase}] )
+        {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase}] )
+    return investigators[0].id if investigators.length == 1
+    if investigators.length == 0 and author_rec[1] != author_rec[1].first then
+      investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name || '%' ", 
+            {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase}] )
+    end
   end
+  puts "Multiple investigators matching #{author_rec.inspect} found. Author was #{author_string}" if investigators.length > 1 and LatticeGridHelper.debug?
   return investigators[0].id if investigators.length == 1
   0
 end  
@@ -142,6 +150,7 @@ def InsertPublication(publication, update_if_pmc_exists=false)
   reference = medline.reference
   pubmed_central_id = medline.pubmed_central
   pubmed_central_id = nil if pubmed_central_id.blank?
+
   thePub = Abstract.find_by_pubmed_include_deleted(reference.pubmed)
   begin 
     if thePub.nil? || thePub.id < 1 then
@@ -159,6 +168,7 @@ def InsertPublication(publication, update_if_pmc_exists=false)
         :publication_type => medline.publication_type[0],
         :journal => medline.full_journal[0..253],
         :journal_abbreviation => medline.ta, #journal Title Abbreviation
+        :issn => medline.issn,
         :volume  => reference.volume,
         :issue   => reference.issue,
         :pages   => reference.pages,
@@ -169,13 +179,14 @@ def InsertPublication(publication, update_if_pmc_exists=false)
         :mesh    => reference.mesh.is_a?(String) ? reference.mesh : reference.mesh.join(";\n")
       )
     else
-      if thePub.publication_date != medline.publication_date || thePub.status != medline.status || thePub.publication_status != medline.publication_status || (thePub.pubmedcentral != pubmed_central_id) then
+      if thePub.publication_date != medline.publication_date || thePub.status != medline.status || thePub.publication_status != medline.publication_status || (thePub.pubmedcentral != pubmed_central_id) || thePub.issn != medline.issn then
           thePub.endnote_citation = reference.endnote
           thePub.publication_date = medline.publication_date
           thePub.electronic_publication_date = medline.electronic_publication_date
           thePub.deposited_date = medline.deposited_date
           thePub.publication_status = medline.publication_status
           thePub.status  = medline.status
+          thePub.issn    = medline.issn if ! medline.issn.blank?
           thePub.volume  = reference.volume
           thePub.issue   = reference.issue
           thePub.pages   = reference.pages

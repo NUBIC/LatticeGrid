@@ -1,65 +1,76 @@
-
 <div id="listing">
-  <table cellpadding="2" cellspacing="0" lass="borderless"> 
+	<div style="width:100%; text-align:right;">
+		<%= link_to( "as pdf",list_all_investigators_path('pdf')) if !defined?(@pdf) and ! @pdf %>
+	</div>
+  <table cellpadding="2" cellspacing="0" class="borderless"> 
 	<% cnt = 0 %>
-	<tr valign="bottom" colspan="3">
+	<tr valign="bottom" class="header">
 		<td class="list-title-left">
 			#
 		</td>
 		<td class="list-title-left">
-			username
+			Name
 		</td>
 		<td class="list-title-left">
-			Last name
+			Degrees
 		</td>
 		<td class="list-title-left">
-			First name
+			Email
 		</td>
 		<td class="list-title-left">
-			email
+			Home department
 		</td>
 		<td class="list-title-left">
-			home department
+			Appointments (joint, secondary, centers)
 		</td>
 		<td class="list-title-left">
-			publication listing
+			Total pubs
+		</td>
+		<td class="list-title-left" colspan="2">
+			Valid Publications
 		</td>
 		<td class="list-title-left">
-			appointments (joint, secondary, centers)
+			PubMed search term
 		</td>
 		<td class="list-title-left">
-			Publications
+			Institution only
 		</td>
 	</tr>
   <% for investigator in @investigators %>
-	<tr valign="bottom" colspan="3">
+	<tr class="<%= cycle('even', 'odd') %>">
 		<td class="list-left">
 			<% cnt+=1 %>
 			<%= cnt %>
 		</td>
 		<td class="list-left">
-			<%= investigator.username %>
+			<%= link_to(investigator.last_name+", "+(investigator.first_name||"")+" "+(investigator.middle_name||""), investigator_url(investigator.username))  %>
 		</td>
 		<td class="list-left">
-			<%= investigator.last_name %>
-		</td>
-		<td class="list-left">
-			<%= investigator.first_name %>
+			<%= investigator.degrees %>
 		</td>
 		<td class="list-left">
 			<%= email_link(investigator.email) %>
 		</td>
 		<td class="list-left">
-			<%= investigator.home_department.abbreviation if ! investigator.home_department.blank? %>
+			<%= investigator.home_department.abbreviation if (! investigator.home_department_id.blank?) and (! investigator.home_department.blank?) %>
 		</td>
 		<td class="list-left">
-			<%= link_to "link", investigator_listing_abstract_url(investigator.username) %>
+			<%= link_to_units(investigator.appointments) %>
 		</td>
 		<td class="list-left">
-			<%= investigator.appointments.collect{|x| x.abbreviation}.join(", ") %>
+			<%=  investigator.investigator_abstracts.count %>
 		</td>
 		<td class="list-left">
-			<%= investigator.abstracts.length %>
+			<%=  investigator.abstracts.count %>
+		</td>
+		<td class="list-left">
+			<%= link_to "link", edit_pubs_profile_url(investigator.username) %>
+		</td>
+		<td class="list-left">
+			<%= build_pi_search_string(investigator)  %>
+		</td>
+		<td class="list-left">
+			<%= format_bool_yn(limit_to_institution(investigator)) %>
 		</td>
 	</tr>
   <% end %>

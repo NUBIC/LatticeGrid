@@ -2,6 +2,11 @@
 # Ideally all the counts should be zero for those looking for nulls
 # However, some data is not quite kosher in pubmed.
 
+# in the console:
+Investigator.all.collect{|pi| puts pi.username + "\t" + pi.full_name + "\t" + pi.abstracts.length.to_s}
+
+# from psql
+
 # logging in to psql
 psql latticegrid_development -U latticegrid
 psql latticegrid_production -U latticegrid
@@ -63,4 +68,18 @@ OrganizationalUnit.find(:all,:conditions=>'id IN (12,13,14,15,16)').collect{ |or
 OrganizationalUnit.find(:all,:conditions=>'id IN (12,13,14,15,16)').collect{ |org| org.primary_faculty.full_time.tenure_track.investigator_only}.flatten.collect(&:name).count
 
 OrganizationalUnit.find(:all,:conditions=>'id IN (12,13,14,15,16)').collect{ |org| org.primary_faculty.full_time.tenure_track.investigator_only}.flatten.collect{|pi| pi.last_name+", "+pi.first_name}.count
+
+#more console tasks
+#Introductory Journal Article
+abs = Abstract.find_all_by_publication_type("Introductory Journal Article")
+abs.collect{|ab| puts ab.authors.tr("\n",", ") + "\t " + ab.journal  + "\t " + ab.title}
+
+#Dictionary
+abs = Abstract.find_all_by_publication_type("Dictionary")
+abs.collect{|ab| puts ab.authors.tr("\n",", ") + "\t " + ab.journal  + "\t " + ab.title}
+
+#Evaluation Studies
+abs = Abstract.find_all_by_publication_type("Evaluation Studies")
+abs.collect{|ab| puts ab.authors.tr("\n",", ") + "\t " + ab.journal  + "\t " + ab.title}
+
 

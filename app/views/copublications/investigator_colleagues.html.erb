@@ -25,8 +25,8 @@
 		</div>
 		<h3>Keywords (MeSH):</h3>
 		<div id="tag_cloud_side"></div>
-		<script language="javascript">
-		<%= remote_function(:url => tag_cloud_side_copublication_path( @investigator_colleague.id), :method => :get, :before => "Element.show('spinner')", 
+		<script type="text/javascript" language="JavaScript">
+		<%= remote_function(:url => tag_cloud_side_copublication_url( @investigator_colleague.id), :method => :get, :before => "Element.show('spinner')", 
 		:complete => "Element.hide('spinner')" ) %> 
 		</script>
 	</td>

@@ -1,6 +1,6 @@
 <h2>Network diagram for investigators who have published with the MeSH terms '<i><%= @name %></i>'</h2>
 
-<%= render :partial => "shared/investigator_bio", :locals => { :investigator => @investigator } %>
+<%= render :partial => "investigators/investigator_bio", :locals => { :investigator => @investigator } %>
 
 <%= render( :partial => "graphviz_template" ) %>
 

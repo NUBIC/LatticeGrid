@@ -1,9 +1,17 @@
 class Journal < ActiveRecord::Base
   has_many :abstracts, 
-    :foreign_key => "journal_abbreviation", 
-    :primary_key =>  "journal_abbreviation", 
+    :foreign_key => "issn", 
+    :primary_key =>  "issn", 
     :readonly => true,
     :order => "year DESC, authors ASC"
+
+  def self.match_by_abbrev( )
+      find(:all, 
+        :select => " DISTINCT journals.id, journals.score_year, journals.impact_factor, journals.journal_abbreviation, journals.issn, journals.total_cites, journals.impact_factor_five_year, journals.immediacy_index, journals.total_articles, journals.eigenfactor_score, journals.article_influence_score, abstracts.issn as pubmed_issn",
+        :joins => " INNER JOIN Abstracts ON lower(abstracts.journal_abbreviation) = lower(journals.journal_abbreviation)",
+        :conditions => [" NOT EXISTS (select 'x' from Abstracts where abstracts.issn = journals.issn) "],
+        :order => "journals.journal_abbreviation" )
+  end
 
   def all_publications( )
     Abstract.from_journal_include_deleted(journal_abbreviation.downcase)
@@ -13,13 +21,6 @@ class Journal < ActiveRecord::Base
     Abstract.from_journal_include_deleted(journal_abbreviation.downcase)
   end
 
-  def self.journals_with_scores( journals )
-    find(:all,
-      :order => "score_year,journal_abbreviation",
-      :conditions => ['lower(journal_abbreviation) IN (:journals)', 
-           {:journals => journal_to_array(journals)}])
-  end
-
   def self.high_impact(impact=5.0 )
     sortby = "impact_factor DESC" 
     # sortby should be one of impact_factor DESC, count_all DESC, journals.journal_abbreviation
@@ -27,32 +28,31 @@ class Journal < ActiveRecord::Base
       :select => "id, score_year, impact_factor, journal_abbreviation, issn, total_cites, impact_factor_five_year, immediacy_index, total_articles, eigenfactor_score, article_influence_score",
       :conditions => ['impact_factor >= :impact', 
             {:impact => impact}],
-      :order => "score_year DESC, #{sortby}" )
+      :order => "#{sortby}" )
+    # score_year DESC, shows if more than one score year is used
   end
 
   def self.journal_publications( years, sortby )
     sortby = sortby.blank? ? "impact_factor DESC" : sortby
-    conditions = " abstracts.year IN (#{yearstring(years)}) "
-    conditions += " AND journals.impact_factor > 0.001"
-    conditions += " AND #{sortby.sub(/desc/i,'')} > 0.001" if (sortby =~ /desc/i ) and (sortby !~ /count_all/i )
+    conditions = " AND #{sortby.sub(/desc/i,'')} > 0.001" if (sortby =~ /desc/i ) and (sortby !~ /count_all/i )
     # sortby should be one of impact_factor DESC, count_all DESC, journals.journal_abbreviation
     find(:all, 
       :select => "count(*) as count_all, journals.id, journals.score_year, journals.impact_factor, journals.journal_abbreviation, journals.issn, journals.total_cites, journals.impact_factor_five_year, journals.immediacy_index, journals.total_articles, journals.eigenfactor_score, journals.article_influence_score",
-      :joins => "INNER JOIN abstracts on lower(abstracts.journal_abbreviation) = lower(journals.journal_abbreviation)",
-      :conditions => "#{conditions}",
+      :joins => :abstracts,
+      :conditions => [" abstracts.year IN (:years) AND journals.impact_factor > 0.001 #{conditions}", {:years => yearstring(years)}],
       :group => "journals.id, journals.score_year, journals.impact_factor, journals.journal_abbreviation, journals.issn, journals.total_cites, journals.impact_factor_five_year, journals.immediacy_index, journals.total_articles, journals.eigenfactor_score, journals.article_influence_score", 
-      :order => "journals.score_year DESC, #{sortby}" )
+      :order => "#{sortby}" )
+      # score_year DESC, shows if more than one score year is used
   end
 
-  def self.with_publications(years, journals)
-    conditions = " abstracts.year IN (#{yearstring(years)}) "
-     find(:all, 
+  def self.high_impact_publications(years, impact=5.0)
+    all( 
       :select => "count(*) as count_all, journals.id, journals.score_year, journals.impact_factor, journals.journal_abbreviation, journals.issn, journals.total_cites, journals.impact_factor_five_year, journals.immediacy_index, journals.total_articles, journals.eigenfactor_score, journals.article_influence_score",
-      :joins => "INNER JOIN abstracts on lower(abstracts.journal_abbreviation) = lower(journals.journal_abbreviation)",
-      :conditions => ["lower(abstracts.journal_abbreviation) IN (:abbreviations) AND journals.impact_factor > 0.001 AND #{conditions}", 
-           {:abbreviations => journal_to_array(journals) }],
+      :joins => :abstracts,
+      :conditions => ["journals.impact_factor >= :impact AND abstracts.year IN (:years)", 
+           {:impact => impact, :years => yearstring(years) }],
       :group => "journals.id, journals.score_year, journals.impact_factor, journals.journal_abbreviation, journals.issn, journals.total_cites, journals.impact_factor_five_year, journals.immediacy_index, journals.total_articles, journals.eigenfactor_score, journals.article_influence_score", 
-      :order => "count_all DESC" )
+      :order => "count_all DESC, score_year DESC" )
    end
   
   def self.journal_to_array(journals)
@@ -60,9 +60,9 @@ class Journal < ActiveRecord::Base
   end
   
   def self.yearstring(years)
-    return '' if years.nil? or years.length == 0
+    return '' if years.blank?
     year_string = years.to_s
     # logger.warn("years = #{year_string}, cnt  =#{year_string.split(',').length}")
-    "'"+year_string.split(',').join("\', \'")+"'"
+    year_string.split(',')
   end
 end

@@ -1,33 +1,245 @@
-In addition to the data configuration, you will undoubtedly want to configure the look and feel of LatticeGrid 
-for your organization. To do that, you will want, at a minimum, to modify these files:
+As of this release, the configuration of LatticeGrid has been changed quite dramatically. The connection of LatticeGrid to a database is now controlled by bcdatabase and is set in a text file that by default is stored in /etc/nubic/ bcdatabase uses the defaults that are set in config/database.yml to connect to the proper configuration.   This enables multiple versions of LatticeGrid to be run from a single VM easily and simplifies the installation and testing of LatticeGrid on development, staging, production instances. 
 
-config/database.yml : sets the database connection strings
-db/imports/department_lookup.txt : list of your schools, departments
-db/imports/division_lookup.txt : list of your programs and divisions
-db/imports/faculty.txt : list of your faculty. You can also include them as a migration script if you prefer. You 
+LatticeGrid is still a 
+Checking LatticeGrid out from github.
+
+Currently, github is the home for LatticeGrid. Assuming you have a standard Ubuntu, RHEL, or CentOS installation where you have already deployed the Rails gems, you can checkout LatticeGrid into a local directory. You will want to check it into a local directory that is going to have your instance name in it. lowercase is generally preferred. For instance, the default Northwestern Feinberg instance of latticegrid is installed at /var/www/apps/fsm_latticegrid
+
+If you have a terminal session open to the machine you want to deploy on, these commands should work:
+
+cd /var/www/apps/ 
+git clone 
+
+That should create a new directory for you that is now under local control. If you want to update your local instance, simply run
+
+git pull
+
+from the master directory (in example /var/www/apps/fsm_latticegrid )
+
+If you would like to push you changes up to github, you can either join the project, or even easier, fork LatticeGrid and push your changes to your forked copy. This also becomes a point where you can share your changed code for your institution.
+
+As mentioned above, you need to decide on a name for your instance. For instance, for the Robert H. Lurie Comprehensive Cancer Center of Northwestern University, the instance abbreviation is RHLCCC. For the Northwestern University Feinberg School of Medicine, the instance abbreviation is Feinberg. You need to either set a rule in config/initializers/latticegrid.rb or set a default. The preferred method is to add to the case statement and have your path to latticegrid include the name of your instance. The case switch is controlled with this ruby grep statement:  
+	case "#{File.expand_path(RAILS_ROOT)}"
+and examples of how the default instance name is set are below:
+
+case "#{File.expand_path(RAILS_ROOT)}"
+  when /fsm/i
+    'Feinberg'
+  when /cancer/i
+    'RHLCCC'
+  when /umich/i
+    'UMich'
+  else
+    'defaults'
+end
+
+For instance, if you want to add a 'Stanford' instance, simply insert:
+
+when /stanford/i
+  'Stanford'
+
+into the above case statement in config/initializers/latticegrid.rb so that the case statement now reads:
+
+case "#{File.expand_path(RAILS_ROOT)}"
+  when /fsm/i
+    'Feinberg'
+  when /cancer/i
+    'RHLCCC'
+  when /umich/i
+    'UMich'
+  when /stanford/i
+    'Stanford'
+  else
+    'defaults'
+end
+
+Once you have that component configured, you will now want to make sure these files and directories exist. For now, I will use the RHLCCC example. You need to make sure these files and directories exist:
+
+lib/latticegrid/RHLCCC.rb  # this is where most of the configuration changes can be made. The defaults are all listed (and loaded so don't change the defaults) in the file lib/latticegrid/defaults.rb
+public/stylesheets/latticegrid/RHLCCC.css #this is where you can override the default css found in public/stylesheets/publications.css
+public/images/RHLCCC/
+   public/images/RHLCCC/favicon.ico # for the browser url area icon
+   public/images/RHLCCC/logo_small.png  # a logo for the Direct2Experts preview page, if you set it up
+   public/images/RHLCCC//pageheader.jpg  # for the header of every page. The size and position can be configured in the css file
+
+For examples on how to configure each of these files, and example files, look at the defaults for each file. That is:
+
+lib/latticegrid/defaults.rb
+public/stylesheets/latticegrid/RHLCCC.css which points to public/stylesheets/publications.css
+public/images/defaults/, which has examples for each image: favicon.ico, logo_small.png, and pageheader.jpg
+
+Once you have set these files up, and have deployed LatticeGrid as a standard Ruby on Rails application, you need to configure the database, the connections to the database, run the rake task to initialize the database, and then run the rake task to create the database schema. The rest of the tutorial assumes you are connected to your deployment server, it is a development server (like your laptop!) and you are using PostgreSQL as the database. The instructions work for any 8.x and 9.0 version of LatticeGrid.
+
+Database/PostgreSQL setup
+
+LatticeGrid uses PostgreSQL. Download it here: http://www.postgresql.org/
+
+Once Postgres has been installed, add this line to pg_hba.conf so you can connect to it on the local machine without a password, if you so desire. This assumes your LatticeGrid username is latticegrid
+
+local  all    latticegrid   trust
+
+You will also need to add a file for bcdatabase to use to connect properly. By default it is in /etc/nubic/db and the file name is defined by the name you give bcdatabase in config/database.yml
+
+For instance:
+
+<%= bcdb.development :local_postgresql, 'fsm_latticegrid' %>
+<%= bcdb.test :local_postgresql, :latticegrid_test %>
+<%= bcdb.staging :pstage, 'fsm_latticegrid' %>
+
+if latticegrid is run in development mode, bcdatabase will expect an entry in /etc/nubic/db/local_postgresql.yml for fsm_latticegrid. The entry might look like:
+
+fsm_latticegrid:
+  adapter: postgresql
+  database: fsm_latticegrid_development
+  username: latticegrid
+
+You can include other information in the configuration, such as the name of the host (if on another machine) and password.
+
+Once you have done this configuration, you can go ahead and try to create the database. This should work:
+
+rake db:create
+
+For production, the command is
+
+rake RAILS_ENV=production db:create
+
+If you don't get any error messages, you are ready to migrate the database:
+
+rake db:migrate
+
+and for production:
+
+rake RAILS_ENV=production db:migrate
+
+Once the migration is complete, you are ready to load your instance data. The three files you will need at a minimum are:
+
+db/imports/instancename/department_lookup.txt : list of your schools, departments
+db/imports/instancename/division_lookup.txt : list of your programs and divisions
+db/imports/instancename/faculty.txt : list of your faculty. You can also include them as a migration script if you prefer. You 
 	can also include a 'Program' column listing the program association for each member. Include multiple identical 
 	rows (except for the Program name of course!) to load multiple programs for an investigator.
-db/imports/programmemberships.txt : list of your faculty and their memberships in your centers
-lib/config.rb : sets the menu headings, default school name, email subject line, and curl task urls
-lib/ldap_config.rb : sets whether or not to use ldap, and your local ldap names. 
-lib/ldap_utilities.rb : You may also need to change the mappings between the LatticeGrid column names and your ldap records
-lib/pubmed_config.rb : sets the pubmed search defaults and institution string for your install
+db/imports/instancename/programmemberships.txt : list of your faculty and their memberships in your centers
+
+Please see the example files for more information on the proper syntax for each file.
+
+Importing those data can be done fairly simply. These commands are assuming you are running in development:
+
+# you will need to load your list of departments, programs, etc into these files. the tasks can be repeatedly run with creating duplicates.
+#load organizations
+rake importDepartments file=db/imports/RHLCCC/department_lookup.txt
+rake importOrganizations file=db/imports/RHLCCC/division_lookup.txt
+
+# if you are running these files at sometime in the future, these rake tasks let you remove old organization names/trees
+rake getAllOrganizationsNotUpdated
+rake purgeUnupdatedOrganizations
+rake getAllOrganizationsNotUpdated
+
+# sets any missing division_ids appropriately
+rake cleanUpOrganizations
+
+Loading the faculty is very similar. The file can be loaded repeatedly without creating duplicate faculty entries
+
+rake importInvestigators file=db/imports/RHLCCC/faculty.txt
+
+You will want to make sure all the faculty ids are entered appropriately. The rake task is:
+
+rake cleanInvestigatorsUsername
+
+# If you want to separate the faculty from the programs they are in, you need to build the investigator/program relationships. Use the following file as an example
+
+rake importProgramMembership  file=db/imports/RHLCCC/ProgramMemberships.txt
+
+# Finally, you should verify that every faculty member has a program or else they will not show up in LatticeGrid:
+
+rake getAllMembers  
+
+# you can list the faculty without a program entry:
+
+rake getAllInvestigatorsWithoutMembership  
+
+# You can delete those without entries:
+rake purgeNonMembers
 
 
-Menus:
-edit app/views/shared/_menus.html.erb
+# Now we are ready to import the ISI Web of Science Journal impact factor ratings
+# you can download the ISI Journal Citation Records and process them yourself if your institution has the ISI license:
+# http://admin-apps.isiknowledge.com/JCR/JCR
 
-Images, such as logos, backgrounds, banners, etc. Please do leave the LatticeGrid logo on your templates
-public/images
+For instance, assuming you download all the impact factors into a file called jcr_recs_2009.txt. You can import it using:
 
-Stylesheets:
-You can add additional stylesheets or customize 
-public/stylesheets/publications.css
+rake importJournalImpact file=db/imports/jcr_recs_2009.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake cleanJournalISSNentries
+rake findAbstractswithoutJCRentries
+rake findAbstractswithJCRentries
 
-Layout:
-You can customize the layout of the main pages at
-app/views/layouts/application.html.erb
+# you are now ready to start loading publication data
+# by default LatticeGrid will use the full author name. Pubmed has been dramatically improve their search interface in preparation for the 2012 release of an author disambiguation tool. Pubmed searches by LatticeGrid have been steadily improving.
 
-You can customize the layout and css of the printable pages, such as those in ccsg here:
-app/views/layouts/printable.html.erb
-Note that in order for the printable layout to print properly you need to have the stylesheet included, not be a loaded by the browser
+Loading publication data
+There are three rake tasks that do most of the work. If you want to load all historical data, you can do that with:
+
+rake insertAllAbstracts
+
+To grab the last year's worth of pubmed data and merge it into LatticeGrid as well as run some cleanup and connection scripts, run:
+
+rake nightlyBuild
+
+As it sounds, this is meant to be run nightly in production, typically with a cron job. A typical shell script for initiating this job might be:
+
+nightly.sh
+
+rake RAILS_ENV=production nightlyBuild >> rake_result.txt
+
+rake RAILS_ENV=production db:vacuum
+
+rake tmp:cache:clear 
+rake cache:clear
+rake RAILS_ENV=production cache:populate taskname=abstracts > buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=investigators >> buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=orgs >> buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=investigator_graphs >> buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=org_graphs >> buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=investigator_graphviz >> buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=org_graphviz >> buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=mesh >> buildCache.txt
+
+This will also build all the cache files to dramatically speed up the responsiveness of LatticeGrid.
+
+After the nightly build script has run, you also need to run the monthly build script. This script calculates the distances between all the faculty and updates the MeSH statistics.
+
+rake monthlyBuild
+
+You will also want to automate this script as well. A typical monthly build script would look like:
+
+monthly.sh
+
+rake RAILS_ENV=production nightlyBuild >> rake_result.txt
+rake RAILS_ENV=production monthlyBuild >> monthly_rake_results.txt
+
+rake RAILS_ENV=production db:vacuum
+
+rake tmp:cache:clear 
+rake cache:clear
+rake RAILS_ENV=production cache:populate taskname=abstracts > buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=investigators >> buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=orgs >> buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=investigator_graphs >> buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=org_graphs >> buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=investigator_graphviz >> buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=org_graphviz >> buildCache.txt
+rake RAILS_ENV=production cache:populate taskname=mesh >> buildCache.txt
+
+You could also only run the monthlyBuild rake task and wait for the next nightly script to update the cache files. Depending on disk performance, memory and number of cores on your server and how many publications, faculty, and programs you have, the nightly script is usually done in two hours and the monthlyBuild rake task alone is several hours. 
+
+Once you have completed all these tasks, and your server has a static IP and is publicly available, LatticeGrid should be up and running.
+
+# extending LatticeGrid
+
+#creating new database migrations
+# for instance, if you want to add new columns to the proposals or investigator_proposals tables, you can first add a migration script:
+
+script/generate migration add_new_investigator_proposal_columns
+
+You can then look in db/migrate/ for the new file and add column definitions to it.
+

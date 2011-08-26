@@ -1,6 +1,6 @@
 require 'net/ldap'
 require 'config' # has cleanup_campus method
-require 'ldap_config'
+#require 'ldap_config' #moved to LatticeGridHelper
 require 'investigator_appointment_utilities'
 
 def ValidateUser(data_row)
@@ -49,27 +49,27 @@ end
 
 
 def GetLDAPentry(uid)
-  return nil if !ldap_perform_search? 
+  return nil if !LatticeGridHelper.ldap_perform_search? 
   return nil if uid.blank? 
-  ldap_connection = Net::LDAP.new( :host => ldap_host() )
+  ldap_connection = Net::LDAP.new( :host => LatticeGridHelper.ldap_host() )
   id_filter = Net::LDAP::Filter.eq( "uid", uid)
-  return ldap_connection.search( :base => ldap_treebase(), :filter => id_filter)
+  return ldap_connection.search( :base => LatticeGridHelper.ldap_treebase(), :filter => id_filter)
 end
 
 def GetLDAPentryFromEmail(email)
-  return nil if !ldap_perform_search? 
+  return nil if !LatticeGridHelper.ldap_perform_search? 
   return nil if email.blank? 
-  ldap_connection = Net::LDAP.new( :host => ldap_host() )
+  ldap_connection = Net::LDAP.new( :host => LatticeGridHelper.ldap_host() )
   mail_filter = Net::LDAP::Filter.eq( "mail", email)
-  return ldap_connection.search( :base => ldap_treebase(), :filter => mail_filter)
+  return ldap_connection.search( :base => LatticeGridHelper.ldap_treebase(), :filter => mail_filter)
 end
 
 def GetLDAPentryFromName(name)
-  return nil if !ldap_perform_search?  
+  return nil if !LatticeGridHelper.ldap_perform_search?  
   return nil if name.blank? 
-  ldap_connection = Net::LDAP.new( :host => ldap_host() )
+  ldap_connection = Net::LDAP.new( :host => LatticeGridHelper.ldap_host() )
   cn_filter = Net::LDAP::Filter.eq( "cn", name)
-  return ldap_connection.search( :base => ldap_treebase(), :filter => cn_filter)
+  return ldap_connection.search( :base => LatticeGridHelper.ldap_treebase(), :filter => cn_filter)
 end
 
 def CleanLDAPvalue(val)
@@ -138,11 +138,11 @@ def MergePIrecords(thePI, pi_data)
     thePI.address1 = thePI.address1.split("$").join(13.chr) if !  thePI.address1.blank?
     thePI.campus = CleanLDAPvalue(pi_data["postalAddress"]).split("$").last || thePI.campus if ! pi_data["postalAddress"].blank?
     # home_department is no longer a string
-    thePI["home"] = pi_data.ou  if pi_data.ou !~ /People/
+    thePI["home"] = CleanLDAPvalue(pi_data.ou)  if pi_data.ou !~ /People/
     #trust the internal system first
     thePI.email ||= CleanLDAPvalue(pi_data["mail"])
     thePI.fax ||= CleanLDAPvalue(pi_data["facsimiletelephonenumber"])
-    thePI = cleanup_campus(thePI)
+    thePI = LatticeGridHelper.cleanup_campus(thePI)
   end
   thePI
 end

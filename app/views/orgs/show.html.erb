@@ -1,28 +1,47 @@
 <% @include_mesh=true if @include_mesh.nil? %>
 <% @include_graph_link=true if @include_graph_link.nil? %>
 <% @show_paginator=true if @show_paginator.nil? %>
+<% @simple_links=false if @simple_links.nil? %>
+<% @exclude_letters=false if @exclude_letters.nil? %>
+<% @faculty= [] if @faculty.nil? %>
 
 <% @include_investigators=false if @include_investigators.nil? %>
 <% @include_pubmed_id = false if @include_pubmed_id.nil? %>
 <% @include_collab_marker = false if @include_collab_marker.nil? %>
 <% @bold_members = true if @bold_members.nil? %>
+<% @include_impact_factor = false if @include_impact_factor.nil? %>
 
 
-<h1><%= @unit.name %> Overview <a href='' title="publications per year"> <%= sparkline_tag( abstracts_per_year(@all_abstracts, @year_array.sort), :type => 'bar') if ! @all_abstracts.nil? && @all_abstracts.length > 10 %></a></h1>
+<h1><%= @unit.name %> Overview &nbsp;
+    <% if ! @all_abstracts.nil? && @all_abstracts.length > 9 -%>
+	  <% publications_per_year=abstracts_per_year_as_string(@all_abstracts) -%>
+	  <span class='inlinebarchart' values='<%= publications_per_year -%>' title='publications per year: <%= publications_per_year -%>'>&nbsp;</span>
+   	  <%= sparkline_barchart_setup({'barWidth'=>2,'barSpacing'=>2}) -%>
+    <% end -%>
+</h1>
+
 <% if @include_graph_link %>
-<p><%= link_to( "Authorship graph in <i>#{@unit.name}</i>", show_org_graph_url(@unit.id)) + " &nbsp; &nbsp; " +  link_to( "Authorship network diagram", show_org_graphviz_url(@unit.id)) + " &nbsp; &nbsp; " + link_to( "MeSH-based network diagram", show_org_mesh_graphviz_url(@unit.id)) + " &nbsp; &nbsp; " + link_to( "Unit-to-Unit co-authorship network diagram", show_org_org_graphviz_url(@unit.id)) %></p>
-
+<p><%= org_nav_heading() %></p>
 <% end %>
 
-<h2><%= link_to( "Show all #{@unit.name} members", show_investigators_org_url(@unit.id)) %></h2>
+<% if @faculty.length > 0 %>
+<p>Faculty (<%= @faculty.length -%>) included in chart: <%= link_to_faculty(@faculty) %></p>
+<% end %>
+<% if ! @faculty_affiliation_types.blank? %>
+<p>Only faculty with <%= @faculty_affiliation_types.split(",").join(" or ") %> appointments are included in this list.</p>
+<% end %>
 
-<%= render :partial => "shared/abstract_listing.html", :locals => { :abstracts => @abstracts, :do_pagination => @do_pagination, :heading => @heading, :show_paginator => @show_paginator, :include_investigators => @include_investigators, :investigators_in_unit => @investigators_in_unit, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker, :bold_members => @bold_members  } %>
+<% if @exclude_letters %>
+<p>Letters, editorials, tutorials, commentaries, and reviews have been removed from this list.</p>
+<% end %>
+
+<%= render :partial => "shared/abstract_listing.html", :locals => { :abstracts => @abstracts, :do_pagination => @do_pagination, :heading => @heading, :show_paginator => @show_paginator, :include_investigators => @include_investigators, :investigators_in_unit => @investigators_in_unit, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker, :bold_members => @bold_members, :include_impact_factor => @include_impact_factor, :simple_links => @simple_links  } %>
 
 
 <% if @include_mesh %>
 <h2><%= "MeSH cloud from publications by faculty members in <i>#{@unit.name}</i>" %></h2>
 <div id="tag_cloud"></div>
-<script language="javascript">
+<script type="text/javascript" language="javascript">
 <%= remote_function(:url => tag_cloud_org_path( @unit.id ), :method => :get, :before => "Element.show('spinner')", :complete => "Element.hide('spinner')" ) %> 
 </script>
 

@@ -1,6 +1,6 @@
 <h1>Organization-level interaction graph for <%= @name %></h1>
 
-<p><%= link_to( "Publications", org_url(:id=>params[:id], :page=>1) ) + " &nbsp; &nbsp; " + link_to( "Co-authorship version of this diagram", show_org_graphviz_url(params[:id])) + " &nbsp; &nbsp; " + link_to( "MeSH similarities network diagram", show_org_mesh_graphviz_url(params[:id])) %> </p>
+<p><%= org_nav_heading() %></p>
 
 <%= render( :partial => "graphviz_template" ) %>
 

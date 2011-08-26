@@ -11,38 +11,77 @@ require 'pubmedext' #my extensions to grab other dates and full author names
 
 require 'rubygems'
 
-task :getPubmedIDs => :getInvestigators do
-  #get the pubmed ids
-  block_timing("getPubmedIDs") {
-    options = BuildSearchOptions(@publication_years)
-    pubsFound = FindPubMedIDs (@AllInvestigators, options, @publication_years, @limit_to_institution, @debug, @smart_filters)
-    puts "number of publications found for #{@publication_years} years: #{pubsFound}" if @verbose
-  }
-end
-
-task :getPIAbstracts => :getPubmedIDs do
-  #get the abstracts
-  block_timing("getPIAbstracts") {
-    GetPubsForInvestigators(@AllInvestigators)
-  }
-end
-
-task :insertAbstracts => :getPIAbstracts do
-  # load the test data
+def do_insert_abstracts
   block_timing("insertAbstracts") {
     thisLoad = LoadDate.new(:load_date=> Time.now)
     thisLoad.save
+    puts "investigator.mark_pubs_as_valid is #{(@AllInvestigators[0].mark_pubs_as_valid || limit_pubmed_search_to_institution())}"
     row_iterator(@AllInvestigators) {  |investigator|
       if !investigator.publications.nil? then
         investigator.publications.each do |publication|
           abstract = InsertPublication(publication)
           if abstract.id > 0 then
-             InsertInvestigatorPublication( abstract.id, investigator.id, IsFirstAuthor(abstract,investigator), IsLastAuthor(abstract,investigator) )
+            thePIPub = InsertInvestigatorPublication( abstract.id, investigator.id, IsFirstAuthor(abstract,investigator), IsLastAuthor(abstract,investigator), (investigator.mark_pubs_as_valid || limit_pubmed_search_to_institution()) )
+            # check to see if we should set as valid if it has not been reviewed!
+            if (investigator.mark_pubs_as_valid || limit_pubmed_search_to_institution()) and ! thePIPub.is_valid 
+              if (thePIPub.last_reviewed_at.blank? || thePIPub.last_reviewed_id == 0) and (thePIPub.last_reviewed_ip.blank? or thePIPub.last_reviewed_ip =~ /abstract|migration/i ) then
+                thePIPub.is_valid = true
+                thePIPub.save!
+              end
+            elsif (!investigator.mark_pubs_as_valid) and thePIPub.is_valid 
+              if (thePIPub.last_reviewed_id.blank? or thePIPub.last_reviewed_id < 1) and (thePIPub.last_reviewed_ip.blank? or thePIPub.last_reviewed_ip =~ /abstract|migration/i ) then
+                thePIPub.is_valid = false
+                thePIPub.save!
+              end
+            end
+            if thePIPub.is_valid and abstract.is_valid == false and (abstract.last_reviewed_id.blank? or abstract.last_reviewed_id < 1) and (abstract.last_reviewed_ip.blank? or abstract.last_reviewed_ip =~ /abstract|migration/i ) then
+              abstract.is_valid    = true
+              abstract.last_reviewed_id    = 0
+              abstract.last_reviewed_at    = Time.now
+              abstract.last_reviewed_ip    = 'added valid investigator_abstract'
+              abstract.save!
+            end
           end
         end
       end
     }
   }
+end
+
+def get_pubmed_ids
+  block_timing("getPubmedIDs") {
+    options = BuildSearchOptions(@publication_years)
+    pubsFound = FindPubMedIDs(@AllInvestigators, options, @publication_years, LatticeGridHelper.debug?, LatticeGridHelper.smart_filters?)
+    puts "number of publications found for #{@publication_years} years: #{pubsFound}" if LatticeGridHelper.verbose?
+  }
+end
+
+def get_pi_abstracts
+  block_timing("getPIAbstracts") {
+    GetPubsForInvestigators(@AllInvestigators)
+  }
+end
+
+task :getPubmedIDs => :getInvestigators do
+  #get the pubmed ids
+  get_pubmed_ids()
+end
+
+task :getPIAbstracts => :getPubmedIDs do
+  #get the abstracts
+  get_pi_abstracts()
+end
+
+task :insertAbstracts => :getPIAbstracts do
+  # load the test data
+  do_insert_abstracts()
+  if LatticeGridHelper.global_limit_pubmed_search_to_institution?() == false then
+    #repeat with limited to institution and trust the results
+    limit_pubmed_search_to_institution(true)
+    get_pubmed_ids()
+    get_pi_abstracts()
+    do_insert_abstracts()
+  end
 end
 
 task :updateAbstractsWithPMCIDs => :getAbstracts do
@@ -69,9 +108,10 @@ task :associateAbstractsWithInvestigators => [:getAbstracts] do
       new_ids = all_investigator_ids.delete_if{|id| old_investigator_ids.include?(id)}.compact
       #sped this up by only processing the intersection
       if !(new_ids == [] ) then
-        puts "found new investigators for abstract #{abstract.id}. new investigator ids: #{new_ids.join(',')}; old investigator ids: #{old_investigator_ids.join(',')}" if @debug
+        puts "found new investigators for abstract #{abstract.id}. new investigator ids: #{new_ids.join(',')}; old investigator ids: #{old_investigator_ids.join(',')}" if LatticeGridHelper.debug?
         new_ids.each do |investigator_id|
-          InsertInvestigatorPublication (abstract.id, investigator_id)
+          investigator=Investigator.find(investigator_id)
+          InsertInvestigatorPublication(abstract.id, investigator_id, IsFirstAuthor(abstract,investigator), IsLastAuthor(abstract,investigator), true)
         end
         # this fails on the server but not on my laptop...
         # abstract.investigators = Abstract.find(abstract.id).investigators
@@ -114,19 +154,19 @@ end
 task :getInstitutionalPubmedIDs => :environment do
   # get all pubmed IDs using the following keywords:
   block_timing("getInstitutionalPubmedIDs") {
-    keywords = InstitutionalSearchTerms()
+    keywords = LatticeGridHelper.institutional_limit_search_string()
     options = BuildSearchOptions(@publication_years,50000)
     @all_entries = Bio::PubMed.esearch(keywords, options) # returns an array of pubmed_ids
-    puts "task getInstitutionalPubmedIDs: number of publications found for #{@publication_years} years: #{@all_entries.length}" if @verbose
+    puts "task getInstitutionalPubmedIDs: number of publications found for #{@publication_years} years: #{@all_entries.length}" if LatticeGridHelper.verbose?
   }
 end
 
 task :getInstitutionalPubmedIDsAbstracts => :getInstitutionalPubmedIDs do
   #get the abstracts
   block_timing("getInstitutionalPubmedIDsAbstracts") {
-    puts "looking up #{@all_entries.length} pubs" if @debug
+    puts "looking up #{@all_entries.length} pubs" if LatticeGridHelper.debug?
     @all_publications = FetchPublicationData(@all_entries) # takes an array of pubmed_ids and returns an array of pubmed records
-    puts "task getInstitutionalPubmedIDsAbstracts: number abstracts pulled: #{@all_publications.length}" if @verbose
+    puts "task getInstitutionalPubmedIDsAbstracts: number abstracts pulled: #{@all_publications.length}" if LatticeGridHelper.verbose?
   }
 end
 

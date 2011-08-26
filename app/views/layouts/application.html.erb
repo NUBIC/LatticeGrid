@@ -1,21 +1,32 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title>LatticeGrid: <%= controller.action_name %></title>
-	<%= javascript_include_tag :defaults, 'FusionCharts', 'ddsmoothmenu', 'jquery.min' %> 
-	<%= stylesheet_link_tag 'publications','ddsmoothmenu', 'ddsmoothmenu-v'   %>
+  <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
+  <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
+
+	<!-- javascript files -->
+	<% @javascripts ||= [ 'prototype','FusionCharts', 'ddsmoothmenu', 'jquery.min', 'jquery.sparkline.min' ] %>
+	<% @javascripts += @javascripts_add if defined?(@javascripts_add) %>
+	<%= javascript_include_tag @javascripts %> 
+	<!-- CSS Files -->
+	<% @stylesheets ||= [ "publications", "latticegrid/#{lattice_grid_instance}" ] %>
+	<%= stylesheet_link_tag @stylesheets %>
+
 	<%= render :partial => "shared/menu_scripts", :locals => { :menu_nodes => @menu_nodes } %>
-	<script>
-     jQuery.noConflict();
-     // Use jQuery via jQuery(...)
-    </script>
+	<link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
+  <% if @javascripts.join =~ /jquery/i %>
+  <script type="text/javascript" language="JavaScript">
+   jQuery.noConflict();
+ 	var $j = jQuery;
+  // Use jQuery via jQuery(...)
+  </script>
+  <% end %>
 </head>
 <body>
 
-<% if ENV['RAILS_ENV'] == 'development' %>
+<% if Rails.env == 'development' %>
     <div id="debug" style="margin: 5px 5px 5px 5px;">
         <a href="#" onclick="Element.toggle('debug_info');return false" style="text-decoration: none; color: #999;">Show Debug Info &#10162;</a>
         <div id="debug_info" style="display : none;">
@@ -25,38 +36,27 @@
     </div>
 <% end %>
 <div id="main" class="autoclear">
-	<div id="banner"><a href="http://www.cancer.northwestern.edu" ><%= image_tag "pageheader.jpg", options={:alt=>"LatticeGrid Publications"} %></a></div>
+	<div id="banner"><a href="<%= LatticeGridHelper.home_url %>" ><%= image_tag "#{lattice_grid_instance}/pageheader.jpg", options={:alt=>LatticeGridHelper.header_title} %></a></div>
 	<div id="results" class="notice"><%= flash[:notice] %> 	<%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %> </div>
-	<div id="title">Cancer Center Member Publications and Abstracts Site</div>
-	<div id="search">
-		<% form_tag(abstracts_search_url, :method => :get) do %>
-		  <%= text_field_tag(:keywords, params[:keywords], :size => 20) %> Search 
-		  <%= select_tag("search_field",options_for_select(%w{ Author Title Journal Abstract All},params[:search_field]), {:class => "dropdown"}) %> Enter term and hit return. Use '*' as a wildcard.
-		<% end %> 
-		<% if allow_profile_edits? %>
-		<div style="float:right;">
-			<%= link_to("login", profiles_path) %>
-		</div>
-		<% end %>
-	</div>
+	<div id="title"><%= LatticeGridHelper.header_title -%></div>
+	<%= render :partial => "shared/search" %>
 	<div id="side">
 		<div id="sideinfo">
 			<%= render :partial => "shared/menus", :locals => { :menu_nodes => @menu_nodes } %>
 		</div> <!-- end of sideinfo -->
 		<div id="lattice_grid">
-			<%= link_to( image_tag( 'lattice_grid_med.gif', :size => "60x60" ), "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %> <br/>
+			<%= link_to( image_tag( 'latticegrid.png', :size => "65x93" ), "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %> <br/>
 			Powered by <%= link_to( "LatticeGrid", "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %> 
 		</div>
 		<br/>
 		<div id="nubic">
-			<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://www.nucats.northwestern.edu/centers/nubic/index.html") %> 
-		 	<%= link_to( "Sponsored by NUBIC", "http://www.nucats.northwestern.edu/centers/nubic/index.html") %>
+			<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://informatics.northwestern.edu/") %> 
+		 	<%= link_to( "Built by NUBIC", "http://informatics.northwestern.edu/") %>
 		</div>
 		<p></p>
 	</div> <!-- end of side -->
 	<div id="maincontent">
-		<div id="niceline">
-		</div>
+		<div id="niceline"></div>
 		<div id="content">
 		<%= yield  %>
 		</div> <!-- end of content -->

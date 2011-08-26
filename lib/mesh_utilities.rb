@@ -31,16 +31,21 @@ def AddMeshTermstoObject(obj, mesh_array)
 end
 
 def TagAbstractWithMeSH(abstract)
-  AddMeshTermstoObject(abstract,CleanMeshTerms(abstract.mesh.split(";\n")))
+  return if abstract.blank?
+  AddMeshTermstoObject(abstract,CleanMeshTerms(abstract.mesh.split(";\n"))) if !abstract.mesh.blank? #don't add the blank ones
 end
 
-def TagInvestigatorWithMeSH(investigator)
+def LimitedTagInvestigatorWithMeSH(investigator) # not using this one anymore
   invpubs = (investigator.investigator_abstracts.first_author_publications + investigator.investigator_abstracts.last_author_publications).uniq
   if (invpubs.length > 7)
     AddMeshTermstoObject(investigator,Abstract.by_ids(invpubs.collect(&:abstract_id)).collect(&:tag_list).flatten.uniq)
   else
     AddMeshTermstoObject(investigator,investigator.abstracts.collect(&:tag_list).flatten.uniq)
   end
+end
+
+def TagInvestigatorWithMeSH(investigator)
+  AddMeshTermstoObject(investigator,investigator.abstracts.collect(&:tag_list).flatten.uniq)
 end
 
 def TagInvestigatorWithKeywords(investigator)
@@ -99,12 +104,12 @@ def CalculateMeSHinformationContent(investigator,colleague, mesh_tag_ids, citati
   # these two methods are similar except the tag_list calls the database
   # for all FSM takes about 4 minutes per 10 investigators
 
-  if mesh_tag_ids.length < 1
+  if mesh_tag_ids.length < 4
     return 0
   end
   abstract_ids1 = investigator.abstracts.collect(&:id)
   abstract_ids2 = colleague.abstracts.collect(&:id)
-  if abstract_ids1.length < 1 or abstract_ids2.length < 1
+  if abstract_ids1.length < 3 or abstract_ids2.length < 3
     return 0
   end
 
@@ -232,7 +237,7 @@ def BuildInvestigatorColleague(investigator, colleague, update_only=true)
     InsertUpdateInvestigatorColleague(investigator.id,colleague.id,citation_overlap,mesh_tag_ids,mesh_information_content)
     #repeat as inverse
     InsertUpdateInvestigatorColleague(colleague.id,investigator.id,citation_overlap,mesh_tag_ids,mesh_information_content) 
-    #puts "Found relationship: #{investigator.name} and #{colleague.name}: citations: #{citation_overlap.join(', ')}; mesh_ic: #{mesh_information_content} " if @verbose && citation_overlap.length > 0 
+    #puts "Found relationship: #{investigator.name} and #{colleague.name}: citations: #{citation_overlap.join(', ')}; mesh_ic: #{mesh_information_content} " if LatticeGridHelper.verbose? && citation_overlap.length > 0 
   end
 end
 

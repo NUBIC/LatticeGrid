@@ -5,9 +5,11 @@ Only publications from <%= params[:year] %> are included.
 <% else %>
 Publications from 2000 onward are included in the analysis. 
 <% end %>
+
 <% high_impact_pubs = @high_impact_pubs.sum{|pub| pub.count_all.to_i } %>
 <% journal_pubs = @journals.sum{|pub| pub.count_all.to_i } %>
 <% missing_impact_pubs = @missing_journals.sum{|pub| pub.count_all.to_i } %>
+
 There were a total of <%= @all_pubs.length %> publications during this period, with <%= high_impact_pubs %> high impact publications out of <%= journal_pubs %> publications with impact factors listed, and <%= missing_impact_pubs %> publications from journals without ISI listed impact factors or for which ISI and PubMed list the journals differently.</p>
 <p>Please keep in mind that the size of the field and patterns of publication are very important when interpreting Impact Factors - the. See this Wikipedia article for more information: 
 <a href="http://en.wikipedia.org/wiki/Impact_factor">About Impact Factors</a>. The Article Influence Score might be a better way to rank the publications. See this Wikipedia article for more information: <a href="http://en.wikipedia.org/wiki/Eigenfactor">About Eigenfactor and Article Influence Score</a>.
@@ -30,11 +32,9 @@ There were a total of <%= @all_pubs.length %> publications during this period, w
 	  <th align="left"><%= link_to "Influence Score", impact_factor_url(params[:year], "article_influence_score desc") %> &nbsp; </th>
   </tr>
 
-<% cnt = 0 %>
-<% for journal in @journals %>
-	<% cnt+=1%>
-  <tr valign="middle" class="<%= @high_impact.collect{|x| x.journal_abbreviation.downcase}.include?(journal.journal_abbreviation.downcase) ?  'list-line-highlight' : cycle('list-line-odd', 'list-line-even') %>"> 
-	<td class="list-right"><%= cnt %></td>
+<% @journals.each_with_index do |journal, cnt| %>
+  <tr valign="middle" class="<%= @high_impact_pubs.collect{|x| x.journal_abbreviation.downcase}.include?(journal.journal_abbreviation.downcase) ?  'list-line-highlight' : cycle('list-line-odd', 'list-line-even') %>"> 
+	<td class="list-right"><%= cnt+1 %></td>
 	<td><%= link_to capitalize_words(journal.journal_abbreviation), journal_list_abstract_url(journal.id) %></td>
 	<td class="list-right"><%= journal.count_all %></td>
 	<td class="list-right"><%= journal.issn %></td>
@@ -50,21 +50,21 @@ There were a total of <%= @all_pubs.length %> publications during this period, w
 </table>
 <% end %>
 <br/>
-<p>These journals do not have an impact factor in the database. This is still a work in progress!</p>
+<p>These journals do not have an impact factor in the database. The ISSN is from the NLM/PubMed 'Linking' number and should be connected to a ISI JCR impact factor, but in these cases the ISSN numbers are not found in the JCR.</p>
 <table cellpadding="2" cellspacing="0"> 
   <tr valign="bottom" class="list-heading">
 	  <th align="right"># &nbsp; </th>
 	  <th align="left">Journal &nbsp; </th>
 	  <th align="left">Pub Cnt &nbsp; </th>
+	  <th align="left">ISSN &nbsp; </th>
   </tr>
 
-<% cnt = 0 %>
-<% for journal in @missing_journals %>
-	<% cnt+=1%>
+<% @missing_journals.each_with_index do |journal, cnt| %>
   <tr valign="middle" class="<%= cycle('list-line-odd', 'list-line-even') %>"> 
-	<td class="list-right"><%= cnt %></td>
+	<td class="list-right"><%= cnt+1 %></td>
 	<td><%=capitalize_words journal.journal_abbreviation %></td>
 	<td class="list-right"><%= journal.count_all %></td>
+	<td class="list-right"><%= journal.issn %></td>
   </tr>
 <% end %>
 </table>

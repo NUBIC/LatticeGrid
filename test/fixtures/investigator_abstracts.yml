@@ -3,3 +3,4 @@ one:
   id: 1
   abstract_id: 1
   investigator_id: 1
+  is_valid: true

@@ -19,9 +19,9 @@ two:
   issn: MyString2
   score_year: 1
   total_cites: 1
-  impact_factor: 1.5
-  impact_factor_five_year: 1.5
-  immediacy_index: 1.5
+  impact_factor: 15
+  impact_factor_five_year: 15
+  immediacy_index: 15
   total_articles: 1
-  eigenfactor_score: 1.5
-  article_influence_score: 1.5
+  eigenfactor_score: 15
+  article_influence_score: 15

@@ -9,5 +9,5 @@ if update_id == 'tag_cloud'
 else
   tag_classes =  %w(tagcloud1 tagcloud2 tagcloud3 tagcloud4 tagcloud6)
 end
-page.replace_html(update_id,'loading...') 
+page.replace_html(update_id,'loading..'+tags.length.to_s+' tags') 
 page.replace_html(update_id, :partial => 'shared/tag_cloud_list', :locals => { :tags => tags, :investigator => investigator, :include_breaks => include_breaks, :tag_classes => tag_classes }) 

@@ -1,3 +1,5 @@
+<% @exclude_letters=false if @exclude_letters.nil? %>
+
 <h1><%= @heading %></i></h1>
 
 <% hasPrimary = false %>
@@ -11,11 +13,19 @@
 	<% multipleUnits = true if unit.type != unitType %>
 <% end %>
 The following is a list of the total publications, number of publications with intra-<%= multipleUnits ? "unit" : unitType.downcase -%> sharing, and inter-<%= multipleUnits ? "unit" : unitType.downcase -%> sharing, broken down by <%= multipleUnits ? "organizational unit" : unitType  -%>.
-<% if show_cancer_related_checkbox? %>The publication statistics only include publications that are deemed to be "cancer relevant" according to the criteria of the NCI and the judgement of the coordinator's office. <% end %><br/>
+<% if LatticeGridHelper.show_cancer_related_checkbox? %>The publication statistics only include publications that are deemed to be "cancer relevant" according to the criteria of the NCI and the judgement of the coordinator's office. <% end %><br/>
+
+<% if ! @faculty_affiliation_types.blank? %>
+<p>Only faculty with <%= @faculty_affiliation_types.split(",").join(" or ") %> appointments are included in this list.</p>
+<% end %>
+
+<% if @exclude_letters %>
+<p>Letters, editorials, tutorials, commentaries, and reviews have been removed from this list.</p>
+<% end %>
 
 <div id="listing">
   
-<table cellpadding="2" cellspacing="0" width="900" class="borderless"> 
+<table cellpadding="2" cellspacing="0" width="100%" class="borderless"> 
 <tr valign="bottom" colspan="3">
 	<td class="list-title-left">
 		<%=  multipleUnits ? "Unit" : unitType  -%> name<br />

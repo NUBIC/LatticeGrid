@@ -1,5 +1,6 @@
 require 'pubmed_config' #look here to change the default time spans
 require 'file_utilities' #specific methods
+require 'journal_utilities' #specific methods
 require 'utilities' #block_timing
 
 require 'rubygems'
@@ -41,33 +42,48 @@ task :importJournalISOnames => :environment do
    end
 end
 
-
-task :getJournalsWithImpactFactor => :environment do
-  block_timing("getJournalsWithImpactFactor") {
-    all_journals=CurrentJournals()
-    puts "total number of journals: #{all_journals.length}"
-    journals_with_impact = CurrentJournalsWithImpactScore(all_journals)
-    journals_found = journals_with_impact.collect{|a|a.journal_abbreviation.downcase}  
-    journals_found.sort!
-    puts "number of journals found with impact factor: #{journals_found.length}"
-    journals_found.each do |x|
-      puts "found: #{x}"
+task :cleanJournalISSNentries => :environment do
+  block_timing("cleanJournalISSNentries") {
+    mismatched = Abstract.mismatched_issns
+    puts "mismatched entries: #{mismatched.length}"
+    mismatched.each do |x|
+      puts "mismatched: #{x.journal_abbreviation}\t#{x.issn}"
     end
-    not_found = all_journals-journals_found
-    not_found.sort!.uniq!
-    puts "number of journals not found: #{not_found.length}"
-    not_found.each do |x|
-      puts "not found: #{x}"
+    nulled_issns = Abstract.nulled_issns
+    puts "nulled_issns entries: #{nulled_issns.length}"
+    nulled_issns.each do |x|
+      puts "updating records: #{x.journal_abbreviation}\t#{x.issn}"
+      Abstract.update_all( "issn = '#{x.issn}'", "journal_abbreviation = '#{x.journal_abbreviation}'" )
     end
   }
 end
 
-task :getAllJournalsWithImpactFactor => :environment do
-  block_timing("getAllJournalsWithImpactFactor") {
-    all_journals=AllJournalsWithImpact()
-    puts "total number of journals: #{all_journals.length}"
-    all_journals.each do |x|
-      puts "impact: #{x}"
+task :findAbstractswithoutJCRentries => :environment do
+  block_timing("findAbstractswithoutJCRentries") {
+    without_jcr_entries = Abstract.without_jcr_entries
+    puts "without JCR entries: #{without_jcr_entries.length}"
+    without_jcr_entries.each do |x|
+      puts "without_jcr_entries: #{x.journal_abbreviation}\t#{x.issn}"
     end
+    puts "Count of journals without_jcr_entries: #{without_jcr_entries.length}"
   }
 end
+
+task :findAbstractswithJCRentries => :environment do
+  block_timing("findAbstractswithJCRentries") {
+    with_jcr_entries = Abstract.with_jcr_entries
+    puts "with JCR entries: #{with_jcr_entries.length}"
+    with_jcr_entries.each do |x|
+      puts "with_jcr_entries: #{x.journal_abbreviation}\t#{x.issn}"
+    end
+    puts "Count of journals with_jcr_entries: #{with_jcr_entries.length}"
+  }
+end
+
+task :updateJournalISSNsFromPubmed => :environment do
+  block_timing("UpdateJournalISSNsFromPubmed") {
+    UpdateJournalISSNsFromPubmed()
+  }
+end
+
+

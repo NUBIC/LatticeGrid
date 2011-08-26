@@ -2,28 +2,37 @@
 <% include_collab_marker = false if include_collab_marker.nil? -%>
 <% include_investigators = false if include_investigators.nil? -%>
 <% investigators_in_unit = [] if investigators_in_unit.nil? -%>
-<% show_delete_checkboxes = false if show_delete_checkboxes.nil? -%>
+<% show_valid_checkboxes = false if show_valid_checkboxes.nil? -%>
 <% show_cancer_related_checkbox = false if show_cancer_related_checkbox.nil? -%>
 <% bold_members = false if bold_members.nil? -%>
 <% link_abstract_to_pubmed = false if link_abstract_to_pubmed.nil? -%>
+<% speed_display=false if speed_display.nil? -%>
+<% include_impact_factor=false if include_impact_factor.nil? -%>
+<% simple_links=false if simple_links.nil? -%>
 
 <form onsubmit="return false">
 <table class="borderless"> 
   <tr valign="bottom">
 	  <%= '<th bgcolor="white" align="left"  class="list-left"></th>' if include_collab_marker %>
-	  <%= '<th bgcolor="white" align="left"  class="list-left">PubMed&nbsp;ID</th><th bgcolor="white" align="left"  class="list-left">PMC&nbsp;ID</th>' if include_pubmed_id %>
-	  <%= '<th bgcolor="white" align="left" class="list-left">'+link_to('Valid', '#', :title=>"Unselect a publication to remove it from the list of publications" )+'</th>' if show_delete_checkboxes %>
-	  <%= '<th bgcolor="white" align="left" class="list-left">'+link_to('Cancer<br/>Related', '#', :title=>"Unselect a publication to indicate that it is not cancer relevant. Relevance is defined as appropriate for inclusion in the CCSG (Cancer Center Support Grant) submission as a cancer-related publication." )+'</th>' if show_delete_checkboxes and show_cancer_related_checkbox %>
+	  <%= '<th bgcolor="white" align="left"  class="list-left">'+link_to('PubMed&nbsp;ID', '#', :title=>"Click on the PubMed ID for a publication to go to PubMed" )+'</th><th bgcolor="white" align="left"  class="list-left">'+link_to('PMC&nbsp;ID', '#', :title=>"Click on the PubMed Central ID for a publication to go to PubMed Central for that article" )+'</th>' if include_pubmed_id %>
+	  <%= '<th bgcolor="white" align="left"  class="list-left">'+link_to('Impact', '#', :title=>"The ISI impact factor for each journal" )+'</th>' if include_impact_factor %>
+	  <%= '<th bgcolor="white" align="left" class="list-left">'+link_to('Valid', '#', :title=>"Unselect a publication to remove it from the list of publications" )+'</th>' if show_valid_checkboxes %>
+	  <%= '<th bgcolor="white" align="left" class="list-left">'+link_to('Cancer<br/>Related', '#', :title=>"Unselect a publication to indicate that it is not cancer relevant. Relevance is defined as appropriate for inclusion in the CCSG (Cancer Center Support Grant) submission as a cancer-related publication." )+'</th>' if show_valid_checkboxes and show_cancer_related_checkbox %>
  	  <th bgcolor="white" align="left"  class="list-left">Publications</th>
-	  <%= '<th bgcolor="white" align="left" class="list-left">'+link_to('Faculty&nbsp;credited', '#', :title=>"Unselect an investigator to remove them from the publication. Useful for removing authors with the same name and initial as another faculty member. Publications with a single investigator cannot be modified." )+'&nbsp;&nbsp;</th>' if show_delete_checkboxes %>
+	  <%= '<th bgcolor="white" align="left" class="list-left">'+link_to('Faculty&nbsp;credited', '#', :title=>"Unselect an investigator to remove them from the publication. Useful for removing authors with the same name and initial as another faculty member. Publications with a single investigator cannot be modified." )+'&nbsp;&nbsp;</th>' if show_valid_checkboxes %>
   </tr>
 <% for publication in abstracts %>
   <tr valign="middle" class="<%= cycle('list-line-odd', 'list-line-even') %>"> 
 	<%= render( :partial => "shared/publication_collab_marker.html", :locals => { :publication => publication, :investigators_in_unit => investigators_in_unit }) if include_collab_marker %>
 	<%= render( :partial => "shared/pubmed_id_item.html", :locals => { :publication => publication }) if include_pubmed_id %>
-	<%= render( :partial => "shared/show_delete_checkboxes.html", :locals => { :publication => publication, :show_cancer_related_checkbox => show_cancer_related_checkbox }) if show_delete_checkboxes %>
-	<%= render :partial => "shared/publication_item.html", :locals => { :publication => publication, :bold_members => bold_members, :investigators_in_unit => investigators_in_unit, :link_abstract_to_pubmed => link_abstract_to_pubmed } %>
-	<%= render :partial => "shared/publication_investigators_item.html", :locals => { :show_delete_checkboxes => show_delete_checkboxes, :publication => publication }  if include_investigators %>
+	<% if include_impact_factor -%>
+	<td class="list-left"> 
+		<%= publication.journals[0].impact_factor if !publication.journals.blank? %>
+	</td> 
+	<% end %>
+	<%= render( :partial => "shared/show_valid_checkboxes.html", :locals => { :publication => publication, :show_cancer_related_checkbox => show_cancer_related_checkbox }) if show_valid_checkboxes %>
+	<%= render :partial => "shared/publication_item.html", :locals => { :publication => publication, :bold_members => bold_members, :speed_display=>speed_display, :investigators_in_unit => investigators_in_unit, :link_abstract_to_pubmed => link_abstract_to_pubmed, :simple_links => simple_links } %>
+	<%= render :partial => "shared/publication_investigators_item.html", :locals => { :show_valid_checkboxes => show_valid_checkboxes, :publication => publication, :simple_links => simple_links }  if include_investigators %>
   </tr>
 <% end -%>
 </table>

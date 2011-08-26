@@ -1,13 +1,15 @@
 <% @include_mesh=true if @include_mesh.nil? %>
+<% @speed_display=false if @speed_display.nil? %>
+
 <h1><% if ! @investigator.blank? and ! params[:id].blank? %>
 	   <span class="small"><%= link_to('Graph Interactions', show_member_graph_url(params[:id])) %></span>
 	<% end %></h1>
-	<%= render( :partial => "shared/abstract_listing", :locals => { :abstracts => @abstracts, :do_pagination => @do_pagination, :heading => @heading  }) %>
+	<%= render( :partial => "shared/abstract_listing", :locals => { :abstracts => @abstracts, :do_pagination => @do_pagination, :heading => @heading, :speed_display => @speed_display  }) %>
 
 	<% if @include_mesh %>
 	<h3><%= "MeSH cloud from publications for the year #{@year}" %></h3>
 	<div id="tag_cloud"></div>
-	<script language="javascript">
+	<script type="text/javascript" language="JavaScript">
 	<%= remote_function(:url => tag_cloud_by_year_abstract_url( @year ), :method => :get, :before => "Element.show('spinner')", :complete => "Element.hide('spinner')" ) %> 
 	</script>
 	<br/>

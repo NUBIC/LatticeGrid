@@ -1,6 +1,10 @@
 -- LatticeGrid uses PostgreSQL. Download it here: http://www.postgresql.org/
 -- AFAIK there aren't any version specific issues for LatticeGrid other than those of the ruby drivers
 
+-- connecting to a remote postgres server:
+
+psql -h pstage rhlccc_latticegrid_staging -U rhlccc_latticegrid
+
 --PostgreSQL commands
 
 -- add this line to pg_hba.conf so you can connect to it on the local machine without a password, if you so desire
@@ -15,13 +19,11 @@ psql postgres
 -- for a little bit of security, create a role. user is an alias for role that also specifies that the role is permitted to login
 
 CREATE USER latticegrid with createdb;
+ALTER USER latticegrid with superuser;
+ALTER USER latticegrid with login;
 
 #if you need to add the createdb role to user, do it like this:
 ALTER USER latticegrid with createdb;
-ALTER USER latticegrid with superuser;
-ALTER USER latticegrid with login;
-ALTER USER latticegrid with superuser;
-
 
 -- you can also specify a user and password:
 
@@ -43,6 +45,7 @@ CREATE ROLE latticegrid WITH LOGIN PASSWORD 'jw8s0F4' VALID UNTIL '2008-01-01';
 -- now create the database
 
 create database latticegrid_development;
+create database cinj_latticegrid_staging;
 create database latticegrid_test;
 create database latticegrid_production;
 
@@ -70,3 +73,6 @@ production:
   database: latticegrid_production
   username: latticegrid
 
+# using postgres pg_dump
+
+pg_dump -i -Fc ucsfcancerpublications_development -U ucsfcancerpublications > ucsfpublications_dev_20110308.dmp
