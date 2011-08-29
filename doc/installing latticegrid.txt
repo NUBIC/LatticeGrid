@@ -1,0 +1,16 @@
+#installing from github
+# move to the right directory!
+ls -lath
+sudo env GIT_SSL_NO_VERIFY=true git clone https://github.com/NUBIC/LatticeGrid.git umich_latticegrid_new
+ls
+cd umich_latticegrid_new/
+ls
+bundle install
+cd 
+ls
+more /etc/nubic/bcsec-prod.yml 
+more /etc/nubic/bcsec-production.yml 
+more /etc/nubic/db/
+more /etc/nubic/db/pprod.yml 
+sudo vi /etc/nubic/db/pprod.yml 
+pg_restore -c -O -d fsm_latticegrid_production -U fsm_latticegrid -h pprod.bioinformatics.northwestern.edu fsmpublications_dev_20110825.dmp
