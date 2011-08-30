@@ -145,6 +145,20 @@ namespace :cache do
     end
   end
 
+  def investigator_awards
+    @AllInvestigators.each do |inv|
+      run_curl awards_cytoscape_url( inv.username)  
+      run_curl investigator_award_url(inv.username)
+     end
+  end
+
+  def awards
+    run_curl listing_awards_url
+    @AllAwards.each do |award|
+      run_curl award_url( award.id)  
+     end
+  end
+
   def investigator_graphviz
     params = set_graphviz_defaults({})
     params[:distance] = "1"
@@ -194,8 +208,8 @@ namespace :cache do
     end
   end
 
-  task :populate => [:setup_url_for,:getInvestigators, :getAllOrganizations, :getTags] do
-    tasknames = %w{abstracts investigators orgs investigator_graphs org_graphs investigator_graphviz org_graphviz mesh}
+  task :populate => [:setup_url_for,:getInvestigators, :getAllOrganizations, :getTags, :getAwards] do
+    tasknames = %w{abstracts investigators orgs investigator_graphs org_graphs investigator_graphviz org_graphviz mesh investigator_awards awards}
     if ENV["taskname"].nil?
       puts "sorry. You need to call 'rake cache:populate taskname=task' where task is one of #{tasknames.join(', ')}"
     else
@@ -210,6 +224,8 @@ namespace :cache do
         when taskname == 'investigator_graphviz': investigator_graphviz
         when taskname == 'org_graphs': org_graphs
         when taskname == 'org_graphviz': org_graphviz
+        when taskname == 'investigator_awards': investigator_awards
+        when taskname == 'awards': awards
         else puts "sorry - unknown caching task #{taskname}."
       end    
       }

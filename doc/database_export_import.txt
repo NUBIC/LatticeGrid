@@ -11,6 +11,8 @@ pg_dump -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev
 
 pg_dump -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev_20110825.dmp
 
+pg_dump -Fc umich_latticegrid_development -U latticegrid > umich_latticegrid_dev_20110825.dmp
+
 # through a ssh connection
 
 #set up a tunnel from my laptop to rails2-staging routing localhost port 5433 to pprod port 5432 (standard postgres port)
@@ -36,6 +38,15 @@ scp fsmpublications_dev_20110614.dmp wakibbe@rails-prod2.nubic.northwestern.edu:
 scp fsmpublications_dev_20110825.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe
 
 scp fsmpublications_dev_20110825.dmp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe
+
+scp umich_latticegrid_dev_20110825.dmp root@172.16.215.128:/root
+pg_restore -c -O -d umich_latticegrid_production -U latticegrid umich_latticegrid_dev_20110825.dmp
+
+
+# then push into staging/production
+pg_restore -c -O -d fsm_latticegrid_staging -U fsm_latticegrid -h pstage fsmpublications_dev_20110825.dmp
+
+pg_restore -c -O -d fsm_latticegrid_production -U fsm_latticegrid -h pprod fsmpublications_dev_20110825.dmp
 
 #move to laptop from old rails-dev
 scp wakibbe@rails-dev.bioinformatics.northwestern.edu:/home/wakibbe/cinj_pubs/cinjpublications_dev_20110410.dmp  cinjpublications_dev_20110410.dmp
