@@ -218,14 +218,14 @@ namespace :cache do
       case 
         when taskname == 'abstracts': abstracts
         when taskname == 'investigators': investigators
+        when taskname == 'awards': awards
         when taskname == 'orgs': orgs
         when taskname == 'mesh': mesh
         when taskname == 'investigator_graphs': investigator_graphs
         when taskname == 'investigator_graphviz': investigator_graphviz
+        when taskname == 'investigator_awards': investigator_awards
         when taskname == 'org_graphs': org_graphs
         when taskname == 'org_graphviz': org_graphviz
-        when taskname == 'investigator_awards': investigator_awards
-        when taskname == 'awards': awards
         else puts "sorry - unknown caching task #{taskname}."
       end    
       }

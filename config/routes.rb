@@ -31,7 +31,7 @@ ActionController::Routing::Routes.draw do |map|
   map.tag_cloud_by_year_abstract '/abstracts/:id/tag_cloud_by_year.js', :action=>"tag_cloud_by_year", :controller=>"abstracts",  :conditions => { :method => :get }
 
 # manually added html route for the top mesh terms in the tag cloud
-  map.tag_cloud_list '/investigators/:username/tag_cloud_list.json', :action=>"tag_cloud_list", :controller=>"investigators", :conditions => { :method => :get }
+  map.tag_cloud_list '/investigators/:id/tag_cloud_list.json', :action=>"tag_cloud_list", :controller=>"investigators", :conditions => { :method => :get }
    
   map.resources :abstracts, :only => [:index, :show], :collection => { :search => [:get, :post], :tag_cloud => :get, :current => :get, :add_pubmed_ids => [:get, :post], :update_pubmed_id => [:get, :post], :add_abstracts => :get },
     :member => {:set_deleted_date => [:get,:post], :set_is_cancer => [:get,:post], :impact_factor => :get, :set_investigator_abstract_end_date => [:get,:post], :tag_cloud_by_year => :get, :full_year_list => :get, :year_list => :get, :journal_list => :get, :endnote => :get, :full_tagged_abstracts => :get, :tagged_abstracts => [:get, :post] }
