@@ -233,7 +233,7 @@ end
 
 # these names will always be limited to the institutional search only even if LatticeGridHelper.global_limit_pubmed_search_to_institution?` is false
 def LatticeGridHelper.last_names_to_limit
-  ["Brown","Chen","Das","Khan","Li","Liu","Lu","Lee","Shen","Smith","Wang","Xia","Yang","Zhou"]
+  ["Brown","Chen","Das","Khan","Li","Liu","Lu","Lee","Shen","Smith","Tu","Wang","Xia","Yang","Zhou"]
 end
 
 # these are for messages regarding the expected number of publications
