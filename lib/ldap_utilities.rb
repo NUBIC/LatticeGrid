@@ -103,9 +103,11 @@ end
 
 # may need to adapt the ldap attributes to the Investigator data model
 def BuildPIobject(pi_data)
-  puts "BuildPIobject: this shouldn't happen - pi_data was nil" if pi_data.nil?
-  raise "BuildPIobject: this shouldn't happen - pi_data was nil" if pi_data.nil?
-  thePI = nil
+  if pi_data.blank?
+    puts "BuildPIobject: this shouldn't happen - pi_data was nil or blank" 
+    thePI = Investigator.new
+    return thePI
+  end
   thePI = Investigator.find_by_username(pi_data.uid)
   begin 
     if thePI.nil? || thePI.id < 1 then
@@ -130,6 +132,8 @@ end
 def MergePIrecords(thePI, pi_data)
   # trust LDAP
   # this database does not have a campus_address field
+  thePI["home"] = ""
+  thePI["ldap_email"] = ""
   if ! pi_data.blank?
     thePI.title = CleanLDAPvalue(pi_data["title"]) || thePI.title
     thePI.business_phone = CleanLDAPvalue(pi_data["telephoneNumber"]) || thePI.business_phone
@@ -139,6 +143,7 @@ def MergePIrecords(thePI, pi_data)
     thePI.campus = CleanLDAPvalue(pi_data["postalAddress"]).split("$").last || thePI.campus if ! pi_data["postalAddress"].blank?
     # home_department is no longer a string
     thePI["home"] = CleanLDAPvalue(pi_data.ou)  if pi_data.ou !~ /People/
+    thePI["ldap_email"] = CleanLDAPvalue(pi_data["mail"])
     #trust the internal system first
     thePI.email ||= CleanLDAPvalue(pi_data["mail"])
     thePI.fax ||= CleanLDAPvalue(pi_data["facsimiletelephonenumber"])
@@ -157,22 +162,18 @@ def CleanPIfromLDAP(pi_data)
   pi_data
 end
 
-def MakePIfromLDAP(pi_data)
-  if pi_data.length > 0 then
-    clean_rec = CleanPIfromLDAP(pi_data)
-    thePI = BuildPIobject(clean_rec)
-    thePI=MergePIrecords(thePI, clean_rec)
-    begin
-     logger.info "MakePIfromLDAP: #{thePI.id}  #{thePI.username} #{thePI.last_name} #{thePI.first_name}"
-     # logger.info pi_data.inspect
-      #logger.info thePI.inspect
-    rescue Exception => error
-      puts "#{thePI.id}  #{thePI.username} #{thePI.last_name} #{thePI.first_name}"
-      puts pi_data.inspect
-      puts thePI.inspect
-    end
-    return thePI
+def MakePIfromLDAP(pi_data, silent=false)
+  clean_rec = CleanPIfromLDAP(pi_data)
+  thePI = BuildPIobject(clean_rec)
+  thePI = MergePIrecords(thePI, clean_rec)
+  begin
+   logger.info "MakePIfromLDAP: #{thePI.id}  #{thePI.username} #{thePI.last_name} #{thePI.first_name}"
+   # logger.info pi_data.inspect
+    #logger.info thePI.inspect
+  rescue Exception => error
+    puts "MakePIfromLDAP: #{thePI.id}  #{thePI.username} #{thePI.last_name} #{thePI.first_name}" unless silent
   end
+  return thePI
 end
 
 # may need to adapt the ldap attributes to the Investigator data model

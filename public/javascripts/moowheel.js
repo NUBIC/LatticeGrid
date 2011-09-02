@@ -56,9 +56,7 @@ var MooWheel = new Class({
    
    initialize: function(data, ct, options) {
       this.data = data;
-
       this.radius = Math.round(this.options.radialMultiplier * this.data.length);
-
       this.setOptions(options);
 
       // calculate canvas height/width if necessary
@@ -127,6 +125,9 @@ var MooWheel = new Class({
          if(typeof(G_vmlCanvasManager) != 'undefined') {
              this.hoverCanvas = $(G_vmlCanvasManager.initElement(this.hoverCanvas));
          }
+         // karthik singh added August 2011
+		 this.hcx = this.hoverCanvas.getContext('2d');
+		 CanvasTextFunctions.enable(this.hcx);
       }
       
       this.data.each(function(item) {
@@ -353,7 +354,7 @@ var MooWheel = new Class({
                                   (item['colors'][connections[j][0]] ? item['colors'][connections[j][0]] : item['colors']['__default']);
 
          cx.lineWidth = item['lineWidths'][connections[j][0]] ? item['lineWidths'][connections[j][0]] : cx.lineWidth;
-         cx.lineWidth = hover ? cx.lineWidth+2 : cx.lineWidth
+         cx.lineWidth = hover ? cx.lineWidth+2 : cx.lineWidth;
          cx.beginPath();
          cx.moveTo(x, y);
          rpos = this.getAngle(itemIdx);
