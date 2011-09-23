@@ -61,7 +61,7 @@ class InvestigatorsController < ApplicationController
   
   def listing
     @javascripts_add = ['jquery.min', 'jquery.tablesorter.min', 'jquery.fixheadertable.min']
-    @investigators = Investigator.all( :conditions=>['total_pubs > 2'], :order => "total_pubs desc", :limit => 3000 )   
+    @investigators = Investigator.all( :conditions=>['total_publications > 2'], :order => "total_publications desc", :limit => 3000 )   
     respond_to do |format|
       format.html { render :layout => 'printable'}
       format.xml  { render :xml => @investigators }

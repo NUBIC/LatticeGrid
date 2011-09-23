@@ -27,8 +27,8 @@
 <tr>
 <td style="font-size: 10px;text-align:right; padding-right:5px;"><%= cnt+=1 %></td>
 <td><div style="float:left;"><%= investigator.last_name %>, <%= investigator.first_name %>  <%= investigator.middle_name %>, <%= investigator.degrees %></div><div style="float:right;"> <%= link_to("details", investigator_url(investigator.username))  %>&nbsp;</div></td>
-<td style="text-align:right; padding-right:5px;"><%= investigator.total_pubs %></td>
-<td style="text-align:right; padding-right:5px;"><%= investigator.total_pubs_last_five_years %></td>
+<td style="text-align:right; padding-right:5px;"><%= investigator.total_publications %></td>
+<td style="text-align:right; padding-right:5px;"><%= investigator.total_publications_last_five_years %></td>
 <td style="text-align:right; padding-right:5px;"><%= investigator.num_first_pubs + investigator.num_last_pubs %></td>
 <td style="text-align:right; padding-right:5px;"><%= investigator.num_first_pubs %></td>
 <td style="text-align:right; padding-right:5px;"><%= investigator.num_last_pubs %></td>

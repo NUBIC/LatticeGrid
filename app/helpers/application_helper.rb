@@ -36,6 +36,7 @@ module ApplicationHelper
   end 
   
   def truncate_words(phrase, count=20) 
+    return "" if phrase.blank?
     re = Regexp.new('^(.{'+count.to_s+'}\w*)(.*)', Regexp::MULTILINE)
     phrase.gsub(re) {$2.empty? ? $1 : $1 + '...'}
   end
@@ -59,27 +60,27 @@ module ApplicationHelper
   def link_to_faculty(faculty, delimiter=", ")
     faculty.collect{|pi| link_to( pi.name,
       show_investigator_url(:id=>pi.username, :page=>1), # can't use this form for usernames including non-ascii characters
-      :title => " Go to #{pi.name}; #{pi.total_pubs} pubs")
+      :title => " Go to #{pi.name}; #{pi.total_publications} pubs")
       }.compact.join(delimiter)
   end
 
   def link_to_coauthors(co_authors, delimiter=", ")
     co_authors.collect{|co_author| link_to( coauthor_span_class(co_author.colleague.name, co_author.publication_cnt),
      show_investigator_url(:id=>co_author.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
-      :title => "#{co_author.publication_cnt} shared pubs, #{co_author.colleague.total_pubs} pubs, "+(co_author.colleague.num_intraunit_collaborators+co_author.colleague.num_extraunit_collaborators).to_s+" collaborators") if co_author.colleague.deleted_at.blank? }.compact.join(delimiter)
+      :title => "#{co_author.publication_cnt} shared pubs, #{co_author.colleague.total_publications} pubs, "+(co_author.colleague.num_intraunit_collaborators+co_author.colleague.num_extraunit_collaborators).to_s+" collaborators") if co_author.colleague.deleted_at.blank? }.compact.join(delimiter)
   end
 
   def link_to_collaborators(collaborators, delimiter=", ")
     collaborators.collect{|investigator| link_to( investigator.name, 
       show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
-        :title => " #{investigator.total_pubs} pubs, "+(investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators")  if investigator.deleted_at.blank? }.compact.join(delimiter)
+        :title => " #{investigator.total_publications} pubs, "+(investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators")  if investigator.deleted_at.blank? }.compact.join(delimiter)
   end
 
   def link_to_similar_investigators(relationships, delimiter=", ")
     relationships.collect{|relationship| 
       link_to( similarity_span_class(relationship.colleague.name, relationship.mesh_tags_ic.round), 
       show_investigator_url(:id=>relationship.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
-        :title => "#{relationship.mesh_tags_ic.round} similarity score, #{relationship.publication_cnt} shared pubs, #{relationship.colleague.total_pubs} total pubs, "+(relationship.colleague.num_intraunit_collaborators+relationship.colleague.num_extraunit_collaborators).to_s+" collaborators") if relationship.colleague.deleted_at.blank?}.compact.join(delimiter)
+        :title => "#{relationship.mesh_tags_ic.round} similarity score, #{relationship.publication_cnt} shared pubs, #{relationship.colleague.total_publications} total pubs, "+(relationship.colleague.num_intraunit_collaborators+relationship.colleague.num_extraunit_collaborators).to_s+" collaborators") if relationship.colleague.deleted_at.blank?}.compact.join(delimiter)
   end
  
   def coauthor_span_class(link_out, score)

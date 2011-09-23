@@ -1,15 +1,15 @@
 require 'publication_utilities' #specific methods
 require 'utilities' #specific methods
 
-task :checkForAbstractsWithNoInvestgators => :environment do
-  block_timing("checkForAbstractsWithNoInvestgators") {
+task :checkForAbstractsWithNoInvestigators => :environment do
+  block_timing("checkForAbstractsWithNoInvestigators") {
     @AbstractsNoInvestigators = Abstract.without_investigators()
     puts "abstracts without investigators: #{@AbstractsNoInvestigators.length}"
   }
 end
 
-task :deleteAbstractsWithNoInvestgators => :environment do
-  block_timing("deleteAbstractsWithNoInvestgators") {
+task :deleteAbstractsWithNoInvestigators => :environment do
+  block_timing("deleteAbstractsWithNoInvestigators") {
     @AbstractsNoInvestigators = Abstract.without_investigators()
     puts "deleting #{@AbstractsNoInvestigators.length} abstracts without investigators."
     @AbstractsNoInvestigators.each do |abstract|

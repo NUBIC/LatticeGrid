@@ -124,6 +124,10 @@
      false
    end
 
+   def LatticeGridHelper.include_studies?
+     false
+   end
+
    def LatticeGridHelper.allowed_ips
      # childrens: 199.125.
      # nmff: 209.107.
@@ -338,7 +342,7 @@ def link_to_investigator(citation, investigator, name=nil, isMember=false, speed
   link_to( name, 
    show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
      :class => ((speed_display) ? 'author' : LatticeGridHelper.setInvestigatorClass(citation, investigator, isMember)),
-     :title => (simple_links ? "Go to #{investigator.name}: #{investigator.total_pubs} pubs" : "Go to #{investigator.name}: #{investigator.total_pubs} pubs, " + (investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators") )
+     :title => (simple_links ? "Go to #{investigator.name}: #{investigator.total_publications} pubs" : "Go to #{investigator.name}: #{investigator.total_publications} pubs, " + (investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators") )
 end
 
   # investigator highlighting

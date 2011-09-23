@@ -195,14 +195,31 @@ end
 def UpdateInvestigatorCitationInformation(investigator)
   investigator.num_intraunit_collaborators_last_five_years=Investigator.intramural_collaborators_since_date_cnt(investigator.id)
   investigator.num_extraunit_collaborators_last_five_years=Investigator.other_collaborators_since_date_cnt(investigator.id)
-  investigator.total_pubs_last_five_years=investigator.abstract_last_five_years_count()
+  investigator.total_publications_last_five_years=investigator.abstract_last_five_years_count()
   investigator.num_first_pubs_last_five_years=investigator.first_author_publications_since_date_cnt()
   investigator.num_last_pubs_last_five_years=investigator.last_author_publications_since_date_cnt()
   investigator.num_intraunit_collaborators=Investigator.intramural_collaborators_cnt(investigator.id)
   investigator.num_extraunit_collaborators=Investigator.other_collaborators_cnt(investigator.id)
-  investigator.total_pubs=investigator.abstracts.length
+  investigator.total_publications=investigator.abstracts.length
   investigator.num_first_pubs=investigator.first_author_publications_cnt()
   investigator.num_last_pubs=investigator.last_author_publications_cnt()
+  investigator.home_department_name=investigator.home_department.name if !investigator.home_department.blank?
+
+  investigator.total_studies = investigator.investigator_studies.length
+  collabs = investigator.investigator_studies.map{|inv| inv.study.investigators.map(&:id)}.flatten.uniq
+  investigator.total_studies_collaborators = collabs.length - 1
+   
+  investigator.total_pi_studies = investigator.investigator_pi_studies.length
+  collabs = investigator.investigator_pi_studies.map{|inv| inv.study.investigators.map(&:id)}.flatten.uniq
+  investigator.total_pi_studies_collaborators = collabs.length - 1
+  
+  investigator.total_awards = investigator.investigator_proposals.length
+  collabs = investigator.investigator_proposals.map{|inv| inv.proposal.investigators.map(&:id)}.flatten.uniq
+  investigator.total_awards_collaborators = collabs.length - 1
+   
+  investigator.total_pi_awards = investigator.investigator_pi_proposals.length
+  collabs = investigator.investigator_pi_proposals.map{|inv| inv.proposal.investigators.map(&:id)}.flatten.uniq
+  investigator.total_pi_awards_collaborators = collabs.length - 1
   investigator.save!
 end
 

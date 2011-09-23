@@ -34,20 +34,49 @@ if( FlashDetect.versionAtLeast(MIN_FLASH_VERSION) ) {
 			var variable_name = i;
 			var variable_value = target.data[i];
 			msg += "event.target.data." + variable_name + " = " + variable_value + "\n";
-			var netID = extract_netid(event);
+			var target_id = extract_id(event);
+			var prefix = get_target_prefix(event)
+			var suffix = "";
+			if (prefix.search(/cytoscape/i) >=0 ) {
+			 	suffix = get_target_suffix(event);
+			}
 			var orig_investigator = determine_current_netid();
-			var url = '/cytoscape/' + netID;
-			if (netID == orig_investigator){
-			  url = '/investigators/' + netID + '/show/1';
+			var url = prefix + target_id + suffix;
+			if (target_id == orig_investigator){
+			  url = '/investigators/' + target_id + '/show/1';
 			}
 			window.location = url;
 		}
 	}
 	
-	function extract_netid(event) {
-		var netID = event.target.data.tooltiptext.match(/NetID: ([^;: ]+)/)[1];
-		return netID;
+	function extract_id(event) {
+		var text = event.target.data.tooltiptext;
+		var id = event.target.data.tooltiptext.match(/(NetID|id|STU): ([^;: ]+)/)[2];
+		return id;
 	} 
+	function get_target_prefix(event) {
+		var text = event.target.data.tooltiptext;
+		var id = event.target.data.tooltiptext.match(/(NetID|id|STU): /)[1];
+		var prefix;
+		if (id.search(/NetID/) == 0) {
+			prefix = '/cytoscape/'
+		} else if ( id.search(/STU/) == 0) {
+			prefix = '/studies/'
+		} else {
+			prefix = '/awards/'
+		}
+		return prefix;
+	} 
+	function get_target_suffix() {
+		var text = window.location.href.match(/cytoscape\/[^;:\/ ]+(.*)/)[1];
+		var suffix = '';
+		if (text.search(/awards/) > 0) {
+			suffix = '/awards'
+		} else if (text.search(/studies/) > 0) {
+			suffix = '/studies'
+		}
+		return suffix;
+	}
 	
 	function determine_current_netid() {
 		var netID = window.location.href.match(/cytoscape\/([^;:\/ ]+)/)[1];

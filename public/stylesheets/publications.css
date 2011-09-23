@@ -174,7 +174,7 @@ table.dense tr td,th {
 	display: block;
 }
 
-#investigator_title #full_name {
+#investigator_title #full_name, #investigator_title #page_title {
     font-family: Arial, Helvetica, Geneva, Sans-serif;
     font-size: 15px;
     font-weight: bold;

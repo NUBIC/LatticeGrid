@@ -12,8 +12,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :orgs, :only => [:index, :show], :collection => { :stats => :get, :period_stats => [:get,:post], :list => :get, :centers => :get, :departments => :get, :programs => :get, :department_collaborations => :get, :investigator_abstracts_during_period => [:get, :post] }, 
     :member => {:full_show => :get, :show_investigators => :get, :list_abstracts_during_period_rjs => :post }
   map.resources :investigators, :only => [:index, :show], :member => {:full_show => :get, :show_all_tags => :get, :publications => :get, :abstract_count => :get, :preview => :get, :search => :get, :investigators_search => :get}, :collection => { :list_all => :get, :listing => :get, :list_by_ids => [:post, :get] }
-  map.resources :cytoscape, :only => [:index, :show], :member => {:investigators => :get, :protovis => :get, :jit => :get, :awards => :get}
+  map.resources :cytoscape, :only => [:index, :show], :member => {:investigators => :get, :protovis => :get, :jit => :get, :awards => :get, :studies => :get}
   map.resources :awards, :only => [:index, :show], :collection => {:disallowed => :get, :listing => :get}, :member => {:investigator => :get, :org => :get}
+  map.resources :studies, :only => [:index, :show], :collection => {:disallowed => :get, :listing => :get}, :member => {:investigator => :get, :org => :get}
   map.resources :profiles, :except=>[:destroy,:new], :member => {:edit_pubs => :get, :investigator_listing => [:get, :post]}, :collection => { :splash => :get, :ccsg => :get, :admin => :get, :list_investigators => :get, :edit_investigators => :get}
   map.resources :mesh, :only => [:index], :member => {:search => :get, :investigators => :get, :investigator => :get, :investigator_tags => :get, :tag_count => :get, :investigator_count => :get}
   map.investigator_mesh_tags 'mesh/investigator/:username.:format', {:controller => "mesh", :action => "investigator", :conditions => { :method => :get }  }
@@ -51,7 +52,7 @@ ActionController::Routing::Routes.draw do |map|
   map.profile_edit 'profiles_edit/:id', :controller => 'profiles', :action => 'edit' #need this to work with a form
   map.publications_edit 'publications_edit/:id', :controller => 'profiles', :action => 'edit_pubs' #need this to work with a form
   map.member_protovis_data "member_protovis_data/:id", :controller => 'cytoscape', :action => 'member_protovis_data'
-  map.member_cytoscape_data "member_cytoscape_data/:id/:depth/:include_awards", :controller => 'cytoscape', :action => 'member_cytoscape_data'
+  map.member_cytoscape_data "member_cytoscape_data/:id/:depth/:include_awards/:include_studies", :controller => 'cytoscape', :action => 'member_cytoscape_data'
   map.investigators_search "investigators_search/:id", :controller => 'investigators', :action => 'investigators_search'
   map.investigators_search_all "investigators_search_all/:id", :controller => 'investigators', :action => 'search'
   map.direct_search "direct_search/:id", :controller => 'investigators', :action => 'direct_search', :format=>'xml'

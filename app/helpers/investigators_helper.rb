@@ -69,15 +69,15 @@ module InvestigatorsHelper
     out="<span id='nav_links2'>"
     if defined?(LatticeGridHelper.include_awards?) and LatticeGridHelper.include_awards?() then
       out+= " Award data: " 
-	  if not (controller.action_name == 'awards' and controller.controller_name == 'cytoscape')
-	    out+= link_to('Graph', awards_cytoscape_url(params[:id]) ) 
-	    out+= " &nbsp;  &nbsp; " 
-	  end
-	  if not (controller.action_name == 'show' and controller.controller_name == 'awards')
-	    out+= link_to( "Report", investigator_award_url(params[:id]) )
-	    out+= " &nbsp;  &nbsp; " 
-	  end
-	end
+      if not (controller.action_name == 'awards' and controller.controller_name == 'cytoscape')
+        out+= link_to('Graph', awards_cytoscape_url(params[:id]) ) 
+        out+= " &nbsp;  &nbsp; " 
+      end
+      if not (controller.action_name == 'investigator' and controller.controller_name == 'awards')
+        out+= link_to( "Report", investigator_award_url(params[:id]) )
+        out+= " &nbsp;  &nbsp; " 
+      end
+    end
     out+= " MeSH: " 
     if not (controller.action_name == 'show_member_mesh' and controller.controller_name == 'graphviz')
       out+= link_to( "similarities graph", show_member_mesh_graphviz_url(params[:id]))
@@ -86,11 +86,32 @@ module InvestigatorsHelper
     out+"</span>"
   end
 
-  def investigator_bio_heading(investigator, all_abstracts=nil)
+  def nav_heading3()
+     out="<span id='nav_links3'>"
+     if defined?(LatticeGridHelper.include_studies?) and LatticeGridHelper.include_studies?() then
+       out+= " Study data: &nbsp; " 
+       if not (controller.action_name == 'studies' and controller.controller_name == 'cytoscape')
+         out+= link_to('Graph', studies_cytoscape_url(params[:id]) ) 
+         out+= " &nbsp;  &nbsp; " 
+       end
+       if not (controller.action_name == 'investigator' and controller.controller_name == 'studies')
+         out+= link_to( "Report", investigator_study_url(params[:id]) )
+         out+= " &nbsp;  &nbsp; " 
+       end
+     end
+     out+"</span>"
+   end
+
+  def investigator_bio_heading(investigator, all_abstracts=nil, title=nil)
     out="<table class='borderless' width='100%'><tr><td style='vertical-align: top'>"
     if defined?(investigator) and ! investigator.blank?
       out+="<span id='full_name'>"
       out+=investigator.full_name
+      out+="</span>"
+    end
+    if defined?(title) and ! title.blank?
+      out+="<br/><span id='page_title'>"
+      out+=title
       out+="</span>"
     end
     out+=" &nbsp; </td><td>"
@@ -105,6 +126,8 @@ module InvestigatorsHelper
     out+=nav_heading()
     out+= "<br/>"
     out+= nav_heading2()
+    out+= "<br/>"
+    out+= nav_heading3()
     out+= "</td></tr></table>"
     
     out

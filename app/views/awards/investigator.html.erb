@@ -1,10 +1,18 @@
-<span id='full_name' class='h2'>Award data for <%= @investigator.full_name %></span>
+<% @all_abstracts = nil if !defined?(@all_abstracts) %>
+
 <% if !@pi_awards.blank? %>
-<div style="float:right;padding-right:5px;">
-	<%= link_to( "as Word", investigator_award_url(params[:id],'doc')) if !defined?(@pdf) and ! @pdf %>
-	<%= link_to( "as Excel", investigator_award_url(params[:id],'xls')) if !defined?(@pdf) and ! @pdf %>
-	<%= link_to( "as PDF", investigator_award_url(params[:id],'pdf')) if !defined?(@pdf) and ! @pdf %>
+<% if !defined?(@pdf) and ! @pdf %>
+<div id="investigator_title">
+<%= investigator_bio_heading(@investigator, @all_abstracts) %>
 </div>
+<span id='data_title' class='h2'>Award data</span>
+<div style="float:right;padding-right:5px;">
+	<%= link_to( "as Word", investigator_award_url(params[:id],'doc'))  %>
+	<%= link_to( "as Excel", investigator_award_url(params[:id],'xls')) %>
+	<%= link_to( "as PDF", investigator_award_url(params[:id],'pdf'))  %>
+</div>
+<% end %>
+
 <table class="dense">
 	<tr><td class='h3' align='right'>
 		PI awards:

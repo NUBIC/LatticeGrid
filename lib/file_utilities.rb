@@ -85,6 +85,14 @@ def ReadJournalISOnamesData(file_name)
   read_data_handler(Journal,file_name, ";") {|data| row_iterator(data) {|data| UpdateJournalAbbreviation(data)} }
 end
 
+def ReadStudyData(file_name)
+  read_data_handler(Study,file_name, ",") {|data| row_iterator(data) {|data| CreateStudyFromHash(data)} }
+end
+
+def ReadStudyInvestigatorData(file_name)
+  read_data_handler(InvestigatorStudy,file_name, ",") {|data| row_iterator(data) {|data| CreateStudyInvestigatorFromHash(data)} }
+end
+
 def ReadAwardData(file_name)
   read_data_handler(Proposal,file_name) {|data| row_iterator(data) {|data| CreateAwardData(data)} }
 end

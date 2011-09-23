@@ -147,7 +147,7 @@ namespace :cache do
 
   def investigator_awards
     @AllInvestigators.each do |inv|
-      run_curl awards_cytoscape_url( inv.username)  
+ #     run_curl awards_cytoscape_url( inv.username)  
       run_curl investigator_award_url(inv.username)
      end
   end
@@ -156,6 +156,34 @@ namespace :cache do
     run_curl listing_awards_url
     @AllAwards.each do |award|
       run_curl award_url( award.id)  
+     end
+  end
+
+  def investigator_studies
+    @AllInvestigators.each do |inv|
+#      run_curl studies_cytoscape_url( inv.username)  
+      run_curl investigator_study_url(inv.username)
+     end
+  end
+
+  def studies
+    run_curl listing_studies_url
+    @AllStudies=Study.all
+    @AllStudies.each do |study|
+      run_curl study_url( study.id)  
+     end
+  end
+
+  def investigator_cytoscape
+    @AllInvestigators.each do |inv|
+      #study data
+      run_ajax_curl member_cytoscape_data_url(:id=>inv.username, :depth=>1, :include_awards=>0, :include_studies=>1)
+      #award data
+      run_ajax_curl member_cytoscape_data_url(:id=>inv.username, :depth=>1, :include_awards=>1, :include_studies=>0)
+      #publications data
+      run_ajax_curl member_cytoscape_data_url(:id=>inv.username, :depth=>1, :include_awards=>0, :include_studies=>0)
+      puts "generated cytoscape data for #{inv.name}: #{inv.username}"
+      break
      end
   end
 
@@ -209,7 +237,7 @@ namespace :cache do
   end
 
   task :populate => [:setup_url_for,:getInvestigators, :getAllOrganizations, :getTags, :getAwards] do
-    tasknames = %w{abstracts investigators orgs investigator_graphs org_graphs investigator_graphviz org_graphviz mesh investigator_awards awards}
+    tasknames = %w{abstracts investigators orgs investigator_graphs org_graphs investigator_graphviz org_graphviz mesh investigator_awards awards investigator_studies studies investigator_cytoscape}
     if ENV["taskname"].nil?
       puts "sorry. You need to call 'rake cache:populate taskname=task' where task is one of #{tasknames.join(', ')}"
     else
@@ -226,6 +254,9 @@ namespace :cache do
         when taskname == 'investigator_awards': investigator_awards
         when taskname == 'org_graphs': org_graphs
         when taskname == 'org_graphviz': org_graphviz
+        when taskname == 'investigator_studies': investigator_studies
+        when taskname == 'studies': studies
+        when taskname == 'investigator_cytoscape': investigator_cytoscape
         else puts "sorry - unknown caching task #{taskname}."
       end    
       }

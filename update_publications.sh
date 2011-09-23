@@ -37,3 +37,5 @@ rake cache:populate taskname=investigator_graphs >> buildCache.txt
 rake cache:populate taskname=org_graphs >> buildCache.txt
 rake cache:populate taskname=investigator_graphviz >> buildCache.txt
 rake cache:populate taskname=org_graphviz >> buildCache.txt
+rake cache:populate taskname=investigator_studies >> buildCache.txt
+rake cache:populate taskname=studies >> buildCache.txt

@@ -5,7 +5,7 @@ module AwardsHelper
     link_to name, 
       investigator_award_url(:id=>investigator.username), # can't use this form for usernames including non-ascii characters
        :class => 'investigator_awards',
-       :title => "Go to #{name}: #{investigator.total_pubs} pubs"
+       :title => "Go to #{name}: #{investigator.total_publications} pubs"
   end
   
   def number_to_dollars(amount)

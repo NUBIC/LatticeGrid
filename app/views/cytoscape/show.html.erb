@@ -5,7 +5,7 @@
 	<script type="text/javascript">
 	// globals
 	var vis;
-	var cytoscapeGraphURL = "<%= member_cytoscape_data_url(params[:id], params[:depth], params[:include_awards]) -%>";
+	var cytoscapeGraphURL = "<%= member_cytoscape_data_url(params[:id], params[:depth], params[:include_awards], params[:include_studies]) -%>";
 	var swfPath = "<%= image_path('../swf/CytoscapeWeb') %>";
 	var flashInstallerPath = "<%= image_path('../swf/playerProductInstall') %>";
 	</script>
@@ -31,7 +31,8 @@
 <div id="page" class="slice">
 	<div id="investigator_title">
 	<% all_abstracts = @all_abstracts || nil -%>
-	<%= investigator_bio_heading(@investigator, all_abstracts) %>
+	<% title = @title || nil -%>
+	<%= investigator_bio_heading(@investigator, all_abstracts, title) %>
 	</div>
   <div>
 	<input type="checkbox" id="nodeLabelsVisibleCheckbox"> Show Node Labels &nbsp; &nbsp;

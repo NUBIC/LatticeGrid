@@ -10,7 +10,7 @@ one:
   home_department_id: 1
   num_first_pubs_last_five_years: 0
   num_last_pubs_last_five_years: 1
-  total_pubs_last_five_years: 1
+  total_publications_last_five_years: 1
   num_intraunit_collaborators_last_five_years: 1
   num_extraunit_collaborators_last_five_years: 0
   employee_id: null

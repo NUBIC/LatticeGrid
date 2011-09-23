@@ -35,7 +35,7 @@ module MigrationHelper
     execute %{create index #{index_name(columns)} on #{table} (#{columns.join(',')}) }
   end
 
-  def remove_index(table, *columns)
+  def drop_index(table, *columns)
     execute %{drop index #{index_name(columns)}on #{table}}
   end
 

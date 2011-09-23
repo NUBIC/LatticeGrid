@@ -238,5 +238,9 @@ rake  RAILS_ENV=production findAbstractswithJCRentries
 rake cleanInvestigatorsUsername
 rake RAILS_ENV=production cleanInvestigatorsUsername
 
-# you are now ready to start loading data
+rake importStudies file=db/imports/Feinberg/private/studies_2011_09_08.csv
+rake importStudyInvestigators file=db/imports/Feinberg/private/study_roles_2011-09-08.csv
+rake findStudiesWithoutInvestigators
+
+# you are now ready to start loading data from pubmed
 

@@ -1,7 +1,8 @@
 class CytoscapeController < ApplicationController
-  before_filter :check_allowed, :only => [:awards]
+  before_filter :check_allowed, :only => [:awards, :studies]
 
   caches_page( :show, :jit, :protovis, :member_cytoscape_data, :member_protovis_data, :disallowed) if LatticeGridHelper.CachePages()
+  caches_action( :listing, :investigator, :show, :awards, :studies )  if LatticeGridHelper.CachePages()
   
   require 'cytoscape_config'
   require 'cytoscape_generator'
@@ -19,12 +20,25 @@ class CytoscapeController < ApplicationController
   def show
     params[:depth] ||= 1
     params[:include_awards] ||= 0
+    params[:include_studies] ||= 0
+    @title = "Publications Collaborations"
     @investigator=Investigator.find_by_username(params[:id])
   end
 
   def awards
     params[:depth] ||= 1
     params[:include_awards] ||= 1
+    params[:include_studies] ||= 0
+    @title = "Award Collaborations"
+    @investigator=Investigator.find_by_username(params[:id])
+    render :action => :show
+  end
+
+  def studies
+    params[:depth] ||= 1
+    params[:include_awards] ||= 0
+    params[:include_studies] ||= 1
+    @title = "Research Study Collaborations"
     @investigator=Investigator.find_by_username(params[:id])
     render :action => :show
   end
@@ -46,16 +60,20 @@ class CytoscapeController < ApplicationController
     params[:depth] ||= 1
     depth = params[:depth].to_i
     params[:include_awards] ||= 1
+    params[:include_studies] ||= 0
     include_awards = params[:include_awards].to_i
+    include_studies = params[:include_studies].to_i
     data_schema = generate_cytoscape_schema()
-    if !include_awards.blank? and include_awards != 0
+    if !include_studies.blank? and include_studies != 0
+      data = generate_cytoscape_study_data(investigator, depth)
+    elsif !include_awards.blank? and include_awards != 0
       data = generate_cytoscape_award_data(investigator, depth)
     else
       data = generate_cytoscape_data(investigator, depth)
     end
     respond_to do |format|
-      #format.json{ render :partial => "member_protovis_data", :locals => {:nodes_array_hash => nodes_array_hash, :edges_array_hash => edges_array_hash}  }
       format.json{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
+      format.js{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
     end
   end
 

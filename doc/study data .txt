@@ -1,0 +1,29 @@
+study_id
+irb_number
+title
+approved_date
+closed_or_completed_date
+research_type
+review_type_requested
+accrual_goal
+clinical_trial
+is_a_clinical_investigation
+inclusion_criteria
+exclusion_criteria
+description
+uses_medical_services
+
+
+create_table "investigator_studies", :force => true do |t|
+   t.string    "status"
+   t.date      "approval_date"
+   t.date      "completion_date"
+   t.string    "role"
+   t.timestamp "created_at"
+   t.timestamp "updated_at"
+   t.integer   "investigator_id", :null => false
+   t.integer   "study_id",        :null => false
+ end
+
+study_role
+consent_role

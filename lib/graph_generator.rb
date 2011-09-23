@@ -139,7 +139,7 @@ end
 
 def node_label (node_object)
   "#{node_object.name}: " +
-  "Publications: #{node_object.total_pubs}; " + 
+  "Publications: #{node_object.total_publications}; " + 
   "First author pubs: #{node_object.num_first_pubs}; " +
   "Last author pubs: #{node_object.num_last_pubs}; " +
   "intra-unit collab: #{node_object.num_intraunit_collaborators}; " +

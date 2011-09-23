@@ -50,6 +50,10 @@ def LatticeGridHelper.include_awards?
   true
 end
 
+def LatticeGridHelper.include_studies?
+  true
+end
+
 def edit_profile_link
   link_to("Edit your FSM profile", "https://fsmweb.northwestern.edu/facultylogin/", :title=>"Login with your NetID and NetID password to change your profile and publication record")
 end

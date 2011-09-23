@@ -26,7 +26,7 @@
 		<%= link_to( investigator.abstracts.length.to_s, show_investigator_url(:id=>investigator.username, :page=>1), :title => "Total: #{investigator.abstracts.length.to_s}")  %>&nbsp;<br/>
 	</td>
 	<td class="list-left">
-		<%= link_to( investigator.abstract_last_five_years_count, show_investigator_url(:id=>investigator.username, :page=>1), :title => "Total: #{investigator.total_pubs}; First Author: #{investigator.num_first_pubs}; Last Author: #{investigator.num_last_pubs}")  %>&nbsp;<br/>
+		<%= link_to( investigator.abstract_last_five_years_count, show_investigator_url(:id=>investigator.username, :page=>1), :title => "Total: #{investigator.total_publications}; First Author: #{investigator.num_first_pubs}; Last Author: #{investigator.num_last_pubs}")  %>&nbsp;<br/>
 	</td>
 	<td class="list-left">
 	  <% if ! investigator.abstracts.nil? && investigator.abstracts.length > 9 %>
