@@ -73,6 +73,39 @@ class Abstract < ActiveRecord::Base
       end
     end
   end
+  
+  def self.abstracts_with_missing_dates()
+     with_exclusive_scope do
+       all(:conditions=>"abstracts.publication_date is null or abstracts.electronic_publication_date is null")
+     end
+  end   
+
+  def self.abstracts_with_missing_publication_date()
+    with_exclusive_scope do
+      all(:conditions=>"abstracts.publication_date is null")
+    end
+  end   
+
+  def self.abstracts_with_missing_publication_date_and_good_edate()
+    abs = abstracts_with_missing_publication_date
+    good = []
+    abs.each do |ab|
+      good << ab if ab.year.to_s == ab.electronic_publication_date.year.to_s
+    end
+    good
+  end   
+
+  def self.abstracts_with_missing_electronic_publication_date()
+    with_exclusive_scope do
+      all(:conditions=>"abstracts.electronic_publication_date is null ")
+    end
+  end   
+
+  def self.abstracts_with_missing_deposited_date()
+    with_exclusive_scope do
+      all(:conditions=>"abstracts.deposited_date is null ")
+    end
+  end   
 
   def self.only_invalid( )
     with_exclusive_scope do
@@ -92,6 +125,11 @@ class Abstract < ActiveRecord::Base
         :joins => :investigator_abstracts,
         :conditions => ["investigator_abstracts.investigator_id = :investigator_id", {:investigator_id => investigator_id}])
     end
+  end
+
+  def self.recents_by_issns(issns)
+    all(:conditions => ['abstracts.issn IN (:issns) and abstracts.publication_date >= :recent_date',{:issns => issns, :recent_date => 30.months.ago}],
+          :order => "abstracts.publication_date DESC, authors ASC" )
   end
 
   def self.from_journal_include_deleted(journal_abbreviation)

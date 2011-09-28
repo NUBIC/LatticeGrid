@@ -383,7 +383,7 @@ def MergeInvestigatorDescriptionsFromHash(data_row)
   investigator = SetInvestigatorInformation(investigator,data_row)
   existing_investigator = IdentifyExistingInvestigator(investigator)
   if !existing_investigator.blank?
-    puts "merging data: #{existing_investigator.name}; #{existing_investigator.username}." if LatticeGridHelper.verbose?
+    puts "merging data: #{existing_investigator.name}; #{existing_investigator.username}." if LatticeGridHelper.debug?
     # uncomment this if you are merging multiple research summaries
     #    if !investigator.faculty_research_summary.blank? and (existing_investigator.faculty_research_summary =~ Regexp.new(investigator.faculty_research_summary[0..20].gsub(/\//,'?')) ).blank?
     #      existing_investigator.faculty_research_summary += investigator.faculty_research_summary
@@ -402,7 +402,7 @@ def MergeInvestigatorDescriptionsFromHash(data_row)
     existing_investigator = MergeInvestigatorData(existing_investigator, investigator, true)
     existing_investigator.save!
   else
-    puts "could not find Investigator: name: #{investigator.name}; email: #{investigator.email}; username: #{investigator.username} for data_row: #{data_row.inspect}"
+    puts "could not find Investigator: name: #{investigator.name}; email: #{investigator.email}; username: #{investigator.username} for data_row: #{data_row.inspect}"  if LatticeGridHelper.debug?
   end
 end
   
@@ -587,4 +587,18 @@ def purgeInvestigators(investigators_to_purge)
     pi.save!
   end
 end
+
+def count_faculty_updates()
+  updated = Investigator.find_updated().length
+  not_updated = Investigator.find_not_updated().length
+  puts "#{updated} faculty updated. #{not_updated} faculty were not updated."
+end
+
+def prune_unupdated_faculty()
+  updated = Investigator.find_updated().length
+  not_updated = Investigator.find_not_updated()
+  puts "#{updated} faculty updated. #{not_updated.length} faculty were not updated."
+  purgeInvestigators(not_updated)
+  puts "#{not_updated.length} faculty were marked as removed."
   
+end

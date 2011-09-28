@@ -150,6 +150,7 @@ def InsertPublication(publication, update_if_pmc_exists=false)
   reference = medline.reference
   pubmed_central_id = medline.pubmed_central
   pubmed_central_id = nil if pubmed_central_id.blank?
+  publication_date = check_date(medline.publication_date, medline.electronic_publication_date,  medline.deposited_date, reference.pubmed)
 
   thePub = Abstract.find_by_pubmed_include_deleted(reference.pubmed)
   begin 
@@ -159,7 +160,7 @@ def InsertPublication(publication, update_if_pmc_exists=false)
         :abstract => reference.abstract,
         :authors => reference.authors.join("\n"),
         :full_authors => medline.full_authors,
-        :publication_date => medline.publication_date,
+        :publication_date => publication_date,
         :electronic_publication_date => medline.electronic_publication_date,
         :deposited_date => medline.deposited_date,
         :status => medline.status,
@@ -179,10 +180,10 @@ def InsertPublication(publication, update_if_pmc_exists=false)
         :mesh    => reference.mesh.is_a?(String) ? reference.mesh : reference.mesh.join(";\n")
       )
     else
-      if thePub.publication_date != medline.publication_date || thePub.status != medline.status || thePub.publication_status != medline.publication_status || (thePub.pubmedcentral != pubmed_central_id) || thePub.issn != medline.issn then
+      if thePub.publication_date != publication_date || thePub.status != medline.status || thePub.publication_status != medline.publication_status || (thePub.pubmedcentral != pubmed_central_id) || thePub.issn != medline.issn then
           thePub.endnote_citation = reference.endnote
-          thePub.publication_date = medline.publication_date
-          thePub.electronic_publication_date = medline.electronic_publication_date
+          thePub.publication_date = publication_date if ! publication_date.blank?
+          thePub.electronic_publication_date = medline.electronic_publication_date if ! medline.electronic_publication_date.blank?
           thePub.deposited_date = medline.deposited_date
           thePub.publication_status = medline.publication_status
           thePub.status  = medline.status
@@ -234,3 +235,36 @@ def InsertOrganizationAbstract(unit_id, abstract_id)
    theOrgPub.id
 end
 
+# use this as a last minute check for a publication date.
+def check_date(pub_date, edate, created_date, pubmed_id)
+  if pub_date.blank?
+    puts "pubdate for #{pubmed_id} was blank!"
+    return nil
+  end
+  begin 
+    pub_date.to_date
+  rescue
+    if pub_date =~ /([0-9]+)-([a-zA-Z]+)-([0-9]+)/
+      day = $1
+      month = $2
+      year = $3
+      day = 1 unless (day === (1..28))
+      month = 'Jan' unless month =~ /jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec/i
+      unless (year === (1800..today.year) )
+        year = edate.year unless edate.blank?
+        year = created_date.year if year.blank? and ! created_date.blank?
+        year = today.year if year.blank?
+      end
+      puts "check_date ERROR handling: invalid date for #{pubmed_id} was #{pub_date} and is #{day}-#{month}-#{year}"
+    else
+      day = '1'
+      month = 'Jan'
+      year = edate.year unless edate.blank?
+       year = created_date.year if year.blank? and ! created_date.blank?
+       year = today.year if year.blank?x
+      puts "check_date ERROR handling: INVALID DATE FORMAT: date for #{pubmed_id} was #{pub_date} and is #{day}-#{month}-#{year}"
+    end
+    pub_date = "#{day}-#{month}-#{year}"
+  end
+  return pub_date
+end

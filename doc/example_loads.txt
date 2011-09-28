@@ -1,3 +1,42 @@
+# September 2011 loads
+rake importDepartments file=db/imports/Feinberg/department_lookup_Dec2010.txt 
+rake importOrganizations file=db/imports/Feinberg/division_lookup_Sep2011.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/Feinberg/faculty_Sep2011.txt 
+rake importInvestigators file=db/imports/Feinberg/faculty_Aug2011b.txt 
+rake countFacultyUpdates
+rake purgeUnupdatedFaculty
+rake importJointAppointments file=db/imports/Feinberg/joint_appointments_Sep2011.txt
+rake importSecondaryAppointments file=db/imports/Feinberg/secondary_appointments_Sep2011.txt 
+rake importCenterMemberships file=db/imports/Feinberg/center_memberships_Sep2011.txt 
+rake importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_Sep2011.txt 
+rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_interests_Sep2011.txt
+rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_descriptions_Sep2011.txt
+rake db:vacuum  #added a custom rake method for this
+rake cleanup:email
+rake cleanInvestigatorsUsername
+
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalImpact file=db/imports/jcr_recs_2010.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake updateJournalISSNsFromPubmed
+rake cleanJournalISSNentries
+rake findAbstractswithoutJCRentries
+rake findAbstractswithJCRentries
+rake updateJournalISSNsFromPubmed
+
+rake awards:importData file=db/imports/Feinberg/private/award_data_20110927xl.txt
+rake awards:cleanPIassignments
+
+rake importStudies file=db/imports/Feinberg/private/studies_2011_09_08.csv
+rake importStudyInvestigators file=db/imports/Feinberg/private/study_roles_2011-09-08.csv
+rake findStudiesWithoutInvestigators
+
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+
 # August 2011 loads
 rake importDepartments file=db/imports/Feinberg/department_lookup_Dec2010.txt 
 rake importOrganizations file=db/imports/Feinberg/division_lookup_Aug2011.txt 

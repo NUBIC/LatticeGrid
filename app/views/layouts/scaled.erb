@@ -15,15 +15,6 @@
 </head>
 <body>
 
-<% if Rails.env == 'development' && request.remote_ip =~ /127.0.*/ %>
-    <div id="debug" style="margin: 5px 5px 5px 5px;">
-        <a href="#" onclick="Element.toggle('debug_info');return false" style="text-decoration: none; color: #999;">Show Debug Info &#10162;</a>
-        <div id="debug_info" style="display : none;">
-            <%= debug session %>
-            <%= debug params %>
-        </div>
-    </div>
-<% end %>
 <div id="main" class="autoclear">
 	<div id="banner"><a href="<%= LatticeGridHelper.home_url %>" ><%= image_tag "#{lattice_grid_instance}/pageheader.jpg", options={:alt=>LatticeGridHelper.header_title} %></a></div>
 	<div id="results" class="notice"><%= flash[:notice] %> 	<%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %> </div>

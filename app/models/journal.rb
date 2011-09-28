@@ -21,10 +21,17 @@ class Journal < ActiveRecord::Base
     Abstract.from_journal_include_deleted(journal_abbreviation.downcase)
   end
 
-  def self.high_impact(impact=5.0 )
+  def self.high_impact_issns(impact=10.0 )
+    all(
+      :select => "issn",
+      :conditions => ['impact_factor >= :impact', 
+            {:impact => impact}] )
+  end
+
+  def self.high_impact(impact=10.0 )
     sortby = "impact_factor DESC" 
     # sortby should be one of impact_factor DESC, count_all DESC, journals.journal_abbreviation
-    find(:all,
+    all(
       :select => "id, score_year, impact_factor, journal_abbreviation, issn, total_cites, impact_factor_five_year, immediacy_index, total_articles, eigenfactor_score, article_influence_score",
       :conditions => ['impact_factor >= :impact', 
             {:impact => impact}],

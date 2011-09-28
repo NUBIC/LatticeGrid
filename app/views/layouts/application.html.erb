@@ -5,7 +5,6 @@
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
   <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
-
 	<!-- javascript files -->
 	<% @javascripts ||= [ 'prototype','FusionCharts', 'ddsmoothmenu', 'jquery.min', 'jquery.sparkline.min' ] %>
 	<% @javascripts += @javascripts_add if defined?(@javascripts_add) %>
@@ -28,7 +27,7 @@
 
 <% if Rails.env == 'development' %>
     <div id="debug" style="margin: 5px 5px 5px 5px;">
-        <a href="#" onclick="Element.toggle('debug_info');return false" style="text-decoration: none; color: #999;">Show Debug Info &#10162;</a>
+        <a href="#" onclick="$j('#debug').toggle(); return false" style="text-decoration: none; color: #999;">Show Debug Info &#10162;</a>
         <div id="debug_info" style="display : none;">
             <%= debug session %>
             <%= debug params %>

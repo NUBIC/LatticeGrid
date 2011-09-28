@@ -118,6 +118,14 @@ class Investigator < ActiveRecord::Base
     end
   end
 
+  def self.find_updated( )
+    all(:conditions=>["updated_at > :recent", {:recent=>Time.now-10.days}])
+  end
+
+  def self.find_not_updated( )
+    all(:conditions=>["updated_at is null or updated_at <= :recent", {:recent=>Time.now-10.days}])
+  end
+
   def self.find_by_username_including_deleted( val )
     with_exclusive_scope do
         find_by_username(val)

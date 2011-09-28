@@ -61,25 +61,6 @@ task :buildProgramsFromInvestigators => [:getInvestigators,:getPrimaryAppointmen
   }
 end
 
-task :cleanInvestigatorsUsername => :environment do
-   block_timing("cleanInvestigatorsUsername") {
-     doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%.%'"))
-     doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%(%'"))
-   }
-end
-
-task :purgeOldMemberships => :environment do
-   block_timing("purgeOldMemberships") {
-      prune_program_memberships_not_updated()
-   }
-end
-
-task :purgeNonMembers => :getAllInvestigatorsWithoutMembership do
-   block_timing("purgeNonMembers") {
-     purgeInvestigators(@InvestigatorsWithoutMembership)
-   }
-end
-
 task :validateUsers => :environment do
   read_file_handler("ValidateUsers" ) {|filename| ReadUsers(filename)}
 end

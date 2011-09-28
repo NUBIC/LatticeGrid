@@ -22,6 +22,42 @@ def LatticeGridHelper.home_url
   "http://www.feinberg.northwestern.edu"
 end
 
+def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bold=false, investigators_in_unit=[], speed_display=false, simple_links=false)
+  #  out = publication.authors
+    out = (mark_members_bold) ? highlightMemberInvestigator(publication, speed_display, simple_links, investigators_in_unit) : highlightInvestigator(publication, speed_display, simple_links)
+    out << ". "
+    if link_abstract_to_pubmed
+  	out << link_to( publication.title, "http://www.ncbi.nlm.nih.gov/pubmed/"+publication.pubmed, :target => '_blank', :title=>'PubMed ID')
+    else
+  	out << link_to( publication.title, abstract_url(publication))
+    end 
+  out << " "
+  out << publication.journal_abbreviation
+  out << ", "
+  if publication.pages.length > 0
+    out << "<i>"+h(publication.volume) +"</i>:"+ h(publication.pages)
+  else
+  	out << "<i>In process</i>"
+  end
+  out << ", #{publication.year}."
+end
+
+def highlightInvestigator(citation, speed_display=false, simple_links=false, authors=nil,memberArray=nil)
+  if authors.blank?
+    authors = citation.authors
+  end
+  authors = authors.gsub(", "," ")
+  authors = authors.gsub(/\. ?/,"")
+  citation.investigators.each do |investigator|
+    re = Regexp.new('('+investigator.last_name.downcase+' '+investigator.first_name.at(0).downcase+'[^,\n]*)', Regexp::IGNORECASE)
+    isMember = (!memberArray.blank? and memberArray.include?(investigator.id))
+    authors.gsub!(re){|author_match| link_to_investigator(citation, investigator, author_match.gsub(" ","| "), isMember, speed_display, simple_links)}
+  end
+  authors = authors.gsub("|","")
+  authors = authors.gsub("\n",", ")
+  authors
+end
+
 def LatticeGridHelper.curl_host
 	my_env = Rails.env
 	my_env = 'home' if public_path =~ /Users/ 

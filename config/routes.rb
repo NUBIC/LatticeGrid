@@ -34,7 +34,7 @@ ActionController::Routing::Routes.draw do |map|
 # manually added html route for the top mesh terms in the tag cloud
   map.tag_cloud_list '/investigators/:id/tag_cloud_list.json', :action=>"tag_cloud_list", :controller=>"investigators", :conditions => { :method => :get }
    
-  map.resources :abstracts, :only => [:index, :show], :collection => { :search => [:get, :post], :tag_cloud => :get, :current => :get, :add_pubmed_ids => [:get, :post], :update_pubmed_id => [:get, :post], :add_abstracts => :get },
+  map.resources :abstracts, :only => [:index, :show], :collection => { :search => [:get, :post], :tag_cloud => :get, :current => :get, :add_pubmed_ids => [:get, :post], :update_pubmed_id => [:get, :post], :add_abstracts => :get, :high_impact_by_month => :get },
     :member => {:set_deleted_date => [:get,:post], :set_is_cancer => [:get,:post], :impact_factor => :get, :set_investigator_abstract_end_date => [:get,:post], :tag_cloud_by_year => :get, :full_year_list => :get, :year_list => :get, :journal_list => :get, :endnote => :get, :full_tagged_abstracts => :get, :tagged_abstracts => [:get, :post] }
   map.resources :graphs, :only => [:none], :member => {:show_member => :get, :show_org => :get}
   map.resources :graphviz, :only => [:none], :member => {:investigator_wheel => :get, :org_wheel => :get, :show_member => :get, :show_member_mesh => :get, :show_mesh => :get, :show_org_mesh => :get, :show_org => :get, :show_org_org => :get, :show_member_award => :get}
@@ -46,7 +46,7 @@ ActionController::Routing::Routes.draw do |map|
   map.tag_cloud 'tag_cloud', :controller => 'abstracts', :action => 'tag_cloud', :conditions => { :method => :get }
   map.impact_factor 'impact_factor/:year/:sortby', :controller => 'abstracts', :action => 'impact_factor', :conditions => { :method => :get }
   map.formatted_impact_factor 'impact_factor/:year.:format', :controller => 'abstracts', :action => 'impact_factor', :sortby=>'', :conditions => { :method => :get }
-  map.high_impact 'high_impact', :controller => 'abstracts', :action => 'high_impact', :conditions => { :method => :get }
+  map.high_impact 'high_impact.:format', :controller => 'abstracts', :action => 'high_impact', :conditions => { :method => :get }
   map.org_nodes 'org_nodes/:id', :controller => 'graphs', :action => 'org_nodes' #need this for some of the flash xml calls
   map.member_nodes 'member_nodes/:id', :controller => 'graphs', :action => 'member_nodes' #need this for some of the flash xml calls
   map.profile_edit 'profiles_edit/:id', :controller => 'profiles', :action => 'edit' #need this to work with a form

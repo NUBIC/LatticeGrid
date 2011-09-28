@@ -1,0 +1,26 @@
+<% include_pubmed_id = false if include_pubmed_id.nil? -%>
+<% include_collab_marker = false if include_collab_marker.nil? -%>
+<% include_investigators = false if include_investigators.nil? -%>
+<% investigators_in_unit = [] if investigators_in_unit.nil? -%>
+<% show_valid_checkboxes = false if show_valid_checkboxes.nil? -%>
+<% show_cancer_related_checkbox = false if show_cancer_related_checkbox.nil? -%>
+<% bold_members = false if bold_members.nil? -%>
+<% link_abstract_to_pubmed = false if link_abstract_to_pubmed.nil? -%>
+<% speed_display=false if speed_display.nil? -%>
+<% include_impact_factor=false if include_impact_factor.nil? -%>
+<% simple_links=false if simple_links.nil? -%>
+<% current_date = "" %>
+<table class="borderless"> 
+<form onsubmit="return false">
+<% for publication in abstracts %>
+  <% new_date = publication.publication_date.strftime("%B %Y")%>
+  <% if new_date != current_date %>
+	<% current_date = new_date %>
+    <tr><td class="list-title-left"><%= current_date %></td></tr>
+  <% end %>
+  <tr valign="middle" class="<%= cycle('list-line-odd', 'list-line-even') %>"> 
+	<%= render :partial => "shared/publication_item.html", :locals => { :publication => publication, :bold_members => bold_members, :speed_display=>speed_display, :investigators_in_unit => investigators_in_unit, :link_abstract_to_pubmed => link_abstract_to_pubmed, :simple_links => simple_links } %>
+  </tr>
+<% end -%>
+</form>
+</table>

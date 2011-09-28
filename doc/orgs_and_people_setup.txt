@@ -216,6 +216,7 @@ rake RAILS_ENV=production purgeNonMembers
 
 #rake importJournalImpact file=db/imports/jcr_recs.txt
 rake importJournalImpact file=db/imports/jcr_recs_2009.txt
+rake importJournalImpact file=db/imports/jcr_recs_2010.txt
 rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
 rake cleanJournalISSNentries
 rake findAbstractswithoutJCRentries

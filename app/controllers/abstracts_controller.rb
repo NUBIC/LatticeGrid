@@ -158,7 +158,30 @@ class AbstractsController < ApplicationController
 
   def high_impact
     @high_impact = Journal.high_impact()
-    render :layout => 'printable'
+    respond_to do |format|
+      format.html {render :layout => 'printable'}
+      format.pdf do
+        @pdf = 1
+        render( :pdf => "High Impact journals", 
+            :stylesheets => "pdf", 
+            :template => "abstracts/high_impact.html",
+            :layout => "pdf")
+      end
+    end
+  end
+
+  def high_impact_by_month
+    @high_impact_issns = Journal.high_impact_issns(12)
+    @abstracts = Abstract.recents_by_issns(@high_impact_issns.map(&:issn))
+    respond_to do |format|
+      format.html {render :layout => 'high_impact'}
+      format.pdf do
+        render( :pdf => "Recent high impact by month", 
+            :stylesheets => "high_impact", 
+            :template => "abstracts/high_impact_by_month.html",
+            :layout => "high_impact")
+      end
+    end
   end
 
   def search 

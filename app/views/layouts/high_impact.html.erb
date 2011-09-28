@@ -6,23 +6,10 @@
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
   <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations" />
-  <!-- javascript files -->
-  <% @javascripts ||= [ 'prototype' ] %>
-  <% @javascripts += @javascripts_add if defined?(@javascripts_add) %>
-  <%= javascript_include_tag @javascripts %> 
-  <link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
-  <% if @javascripts.join =~ /jquery/i %>
-  <script type="text/javascript" language="JavaScript">
-   jQuery.noConflict();
- 	var $j = jQuery;
-  // Use jQuery via jQuery(...)
-  </script>
-  <% end %>
   <style type="text/css">
   <%= File.read("#{RAILS_ROOT}/public/stylesheets/publications.css") %>
   <%= File.read("#{RAILS_ROOT}/public/stylesheets/latticegrid/#{lattice_grid_instance}.css") %>
-  <%= File.read("#{RAILS_ROOT}/public/stylesheets/redmond/jquery-ui-1.8.4.custom.css") %>
-  <%= File.read("#{RAILS_ROOT}/public/stylesheets/printable.css") %>
+  <%= File.read("#{RAILS_ROOT}/public/stylesheets/high_impact.css") %>
   <%= @css if defined?(@css) %>
   </style>
 

@@ -2,7 +2,7 @@
 
 body { 
 	font-family : Verdana, Arial, sans-serif;
-	font-size : 8pt;
+	font-size : 10pt;
 	color : black;
 	background-color: #dfdfdf; 
 	line-height: 16px;
@@ -124,6 +124,11 @@ td,th {
 
 table.borderless {
 	border: 0px;
+}
+
+table.borderless tr td,th {
+	padding-top: 0.5em;
+	padding-bottom: 0.2em;
 }
 
 table.dense {

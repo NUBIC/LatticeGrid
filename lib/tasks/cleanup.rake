@@ -28,3 +28,36 @@ def clean_model(class_model, attribute_name, match_names, accepted_name)
     class_model.update_all( {"#{attribute_name}" => accepted_name}, ["lower(#{attribute_name}) like :like_match", {:like_match => the_match.strip.downcase+'%'} ] )
   end
 end
+
+task :purgeOldMemberships => :environment do
+   block_timing("purgeOldMemberships") {
+      prune_program_memberships_not_updated()
+   }
+end
+
+task :countFacultyUpdates => :environment do
+   block_timing("countFacultyUpdates") {
+      count_faculty_updates()
+   }
+end
+
+task :purgeUnupdatedFaculty => :environment do
+   block_timing("purgeUnupdatedFaculty") {
+      prune_unupdated_faculty()
+   }
+end
+
+
+task :cleanInvestigatorsUsername => :environment do
+   block_timing("cleanInvestigatorsUsername") {
+     doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%.%'"))
+     doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%(%'"))
+   }
+end
+
+task :purgeNonMembers => :getAllInvestigatorsWithoutMembership do
+   block_timing("purgeNonMembers") {
+     purgeInvestigators(@InvestigatorsWithoutMembership)
+   }
+end
+
