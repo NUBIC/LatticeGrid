@@ -37,7 +37,7 @@
 <div id="main" class="autoclear">
 	<div id="banner"><a href="<%= LatticeGridHelper.home_url %>" ><%= image_tag "#{lattice_grid_instance}/pageheader.jpg", options={:alt=>LatticeGridHelper.header_title} %></a></div>
 	<div id="results" class="notice"><%= flash[:notice] %> 	<%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %> </div>
-	<div id="title"><%= LatticeGridHelper.header_title -%></div>
+	<div id="title"><%= link_to( LatticeGridHelper.header_title, current_abstracts_url) -%></div>
 	<%= render :partial => "shared/search" %>
 	<div id="side">
 		<div id="sideinfo">

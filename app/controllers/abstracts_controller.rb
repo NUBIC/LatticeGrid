@@ -1,7 +1,7 @@
 class AbstractsController < ApplicationController
 #removed :full_tagged_abstracts and :tagged_abstracts - too many cached pages
 
-  caches_page( :year_list, :full_year_list, :current, :tag_cloud, :endnote, :tagged_abstracts, :full_tagged_abstracts, :tag_cloud_by_year, :endnote, :show)  if LatticeGridHelper.CachePages()
+  caches_page( :year_list, :full_year_list, :current, :tag_cloud, :endnote, :tagged_abstracts, :full_tagged_abstracts, :tag_cloud_by_year, :endnote, :show, :high_impact, :high_impact_by_month)  if LatticeGridHelper.CachePages()
   
   include AbstractsHelper
   include ApplicationHelper
@@ -157,7 +157,8 @@ class AbstractsController < ApplicationController
   end
 
   def high_impact
-    @high_impact = Journal.high_impact()
+    @high_impact = Journal.preferred_high_impact()
+    @high_impact = Journal.high_impact() if @high_impact.blank?
     respond_to do |format|
       format.html {render :layout => 'printable'}
       format.pdf do
@@ -171,7 +172,8 @@ class AbstractsController < ApplicationController
   end
 
   def high_impact_by_month
-    @high_impact_issns = Journal.high_impact_issns(12)
+    @high_impact_issns = Journal.preferred_high_impact_issns()
+    @high_impact_issns = Journal.high_impact_issns() if @high_impact_issns.blank?
     @abstracts = Abstract.recents_by_issns(@high_impact_issns.map(&:issn))
     respond_to do |format|
       format.html {render :layout => 'high_impact'}

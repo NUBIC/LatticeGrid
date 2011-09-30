@@ -34,7 +34,7 @@ ActionController::Routing::Routes.draw do |map|
 # manually added html route for the top mesh terms in the tag cloud
   map.tag_cloud_list '/investigators/:id/tag_cloud_list.json', :action=>"tag_cloud_list", :controller=>"investigators", :conditions => { :method => :get }
    
-  map.resources :abstracts, :only => [:index, :show], :collection => { :search => [:get, :post], :tag_cloud => :get, :current => :get, :add_pubmed_ids => [:get, :post], :update_pubmed_id => [:get, :post], :add_abstracts => :get, :high_impact_by_month => :get },
+  map.resources :abstracts, :only => [:index, :show], :collection => { :search => [:get, :post], :tag_cloud => :get, :current => :get, :add_pubmed_ids => [:get, :post], :update_pubmed_id => [:get, :post], :add_abstracts => :get, :high_impact_by_month => :get, :high_impact => :get },
     :member => {:set_deleted_date => [:get,:post], :set_is_cancer => [:get,:post], :impact_factor => :get, :set_investigator_abstract_end_date => [:get,:post], :tag_cloud_by_year => :get, :full_year_list => :get, :year_list => :get, :journal_list => :get, :endnote => :get, :full_tagged_abstracts => :get, :tagged_abstracts => [:get, :post] }
   map.resources :graphs, :only => [:none], :member => {:show_member => :get, :show_org => :get}
   map.resources :graphviz, :only => [:none], :member => {:investigator_wheel => :get, :org_wheel => :get, :show_member => :get, :show_member_mesh => :get, :show_mesh => :get, :show_org_mesh => :get, :show_org => :get, :show_org_org => :get, :show_member_award => :get}

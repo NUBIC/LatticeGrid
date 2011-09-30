@@ -28,14 +28,28 @@ class Journal < ActiveRecord::Base
             {:impact => impact}] )
   end
 
+  def self.preferred_high_impact_issns()
+    all(
+      :select => "issn",
+      :conditions => ['include_as_high_impact = true'] )
+  end
+
   def self.high_impact(impact=10.0 )
-    sortby = "impact_factor DESC" 
-    # sortby should be one of impact_factor DESC, count_all DESC, journals.journal_abbreviation
+    # order should be one of impact_factor DESC, count_all DESC, journals.journal_abbreviation
     all(
       :select => "id, score_year, impact_factor, journal_abbreviation, issn, total_cites, impact_factor_five_year, immediacy_index, total_articles, eigenfactor_score, article_influence_score",
       :conditions => ['impact_factor >= :impact', 
             {:impact => impact}],
-      :order => "#{sortby}" )
+      :order => "impact_factor DESC" )
+    # score_year DESC, shows if more than one score year is used
+  end
+
+  def self.preferred_high_impact()
+   # order should be one of impact_factor DESC, count_all DESC, journals.journal_abbreviation
+    all(
+      :select => "id, score_year, impact_factor, journal_abbreviation, issn, total_cites, impact_factor_five_year, immediacy_index, total_articles, eigenfactor_score, article_influence_score",
+      :conditions => ['include_as_high_impact = true'],
+      :order => "impact_factor DESC" )
     # score_year DESC, shows if more than one score year is used
   end
 

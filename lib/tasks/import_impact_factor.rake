@@ -86,4 +86,10 @@ task :updateJournalISSNsFromPubmed => :environment do
   }
 end
 
+task :setPreferredHighImpact => :environment do
+  block_timing("setPreferredHighImpact") {
+    UpdateJournalHighImpactPreferred()
+  }
+end
+
 

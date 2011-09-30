@@ -15,6 +15,28 @@ def CurrentJournalsWithImpactScore(journals)
   journals_w_scores = Journal.journals_with_scores(journals)
 end
 
+def UpdateJournalHighImpactPreferred()
+  pref_issns = LatticeGridHelper.high_impact_issns
+  all_high_impact = Journal.high_impact_issns
+  current_preferred_issns = Journal.all(:conditions=>"include_as_high_impact = true")
+  puts "Preferred: #{pref_issns.length}; all high impact #{all_high_impact.length}; current_preferred: #{current_preferred_issns.length}."
+  current_preferred_issns.each do |pref|
+    pref.include_as_high_impact = false
+    pref.save!
+  end
+  puts "current preferred high impact journals reset (#{current_preferred_issns.length} journals reset)"
+  issns_found = Journal.all(:conditions=>["issn IN (:issns)", {:issns=>pref_issns }])
+  puts "pref_issns: #{pref_issns.length}; found issns: #{issns_found.length}"
+  issns_found.each do |pref|
+    pref.include_as_high_impact = true
+    pref.save!
+  end
+  puts "updating!"
+  current_preferred_issns = Journal.all(:conditions=>"include_as_high_impact = true")
+  puts "Preferred: #{pref_issns.length}; all high impact #{all_high_impact.length}; current_preferred: #{current_preferred_issns.length}."
+  
+end
+
 def CreateJournalImpactFromHash(data_row)
   # assumed header values
   #Abbreviated Journal Title

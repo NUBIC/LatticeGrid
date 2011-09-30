@@ -40,6 +40,10 @@
      "Lurie Cancer Center"
    end
 
+   def LatticeGridHelper.high_impact_issns
+     []
+   end
+
    def LatticeGridHelper.GetDefaultSchool()
      "Feinberg"
    end
@@ -390,6 +394,7 @@ end
    	<li><a href='#'>Graphs by program</a>
    		#{build_menu(@head_node.children.sort_by(&:abbreviation), Program) {|id| show_org_graph_path(id)} }
    	</li>
+   	<li>#{link_to( 'High Impact', high_impact_by_month_abstracts_path, :title=>'Recent high-impact publications')} </li>
    	<li>#{link_to( 'MeSH tag cloud', tag_cloud_abstracts_path, :title=>'Display MeSH tag cloud for all publications')} </li>
    	<li>#{link_to( 'Overview', programs_orgs_path, :title => 'Display an overview for all programs')}</li>
    </ul>

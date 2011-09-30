@@ -85,7 +85,6 @@ task :reinstateAbstractsWithInvestigators => :environment do
   puts "#{marked} abstracts have been reinstated"
 end
 
-
 task :checkDeletedAbstractsWithActiveInvestigators => :environment do
   block_timing("checkDeletedAbstractsWithActiveInvestigators") {
     @DeletedAbstractsWithInvestigators = Abstract.deleted_with_investigators()

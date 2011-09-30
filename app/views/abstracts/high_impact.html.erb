@@ -1,3 +1,4 @@
+<span style="float:right; padding-right:15px; z-index:3; "><%= link_to( "as pdf",high_impact_abstracts_url('pdf')) if !defined?(@pdf) and ! @pdf %></span>
 <h2>High Impact-Factor Journals Listing</h2>
 <p>Journal rankings for the most recent ranking period (<%= @high_impact[0].score_year if @high_impact.length > 0 %>) are listed.</p>
 <p>Please keep this information in mind when interpreting Impact Factors - the size of the field and patterns of publication are very important. See this Wikipedia article for more information: 
