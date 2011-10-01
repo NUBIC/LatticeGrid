@@ -33,6 +33,22 @@ class ProfilesController < ApplicationController
     end
   end
 
+  def reviewed_abstracts
+    if is_admin? 
+      inv_abs=InvestigatorAbstract.all(:conditions=>"is_valid = false and (reviewed_id > 0)")
+    else
+      redirect_to( current_abstracts_url)
+    end
+  end
+
+  def unreviewed_abstracts
+    if is_admin? 
+      inv_abs=InvestigatorAbstract.all(:conditions=>"is_valid = true and (reviewed_id < 1 or reviewed_id is null)")
+    else
+      redirect_to( current_abstracts_url)
+    end
+  end
+  #  invabs = InvestigatorAbstract.all(:conditions=>"is_valid = false ")
 
   def ccsg
     @date_range = DateRange.new(1.year.ago,Time.now)

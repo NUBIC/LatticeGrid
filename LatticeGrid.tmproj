@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>app/controllers/abstracts_controller.rb</string>
+	<string>app/controllers/profiles_controller.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -21,19 +21,35 @@
 	<integer>503</integer>
 	<key>metaData</key>
 	<dict>
-		<key>app/controllers/abstracts_controller.rb</key>
+		<key>app/controllers/profiles_controller.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>191</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>3</integer>
+				<integer>10</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>1</integer>
+				<key>line</key>
+				<integer>9</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>10</integer>
+			</dict>
 		</dict>
 		<key>app/models/journal.rb</key>
 		<dict>
@@ -82,9 +98,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>272</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>36</integer>
+				<integer>30</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -139,14 +155,14 @@
 	<key>openDocuments</key>
 	<array>
 		<string>doc/publications_scripts.txt</string>
-		<string>app/controllers/abstracts_controller.rb</string>
+		<string>app/controllers/profiles_controller.rb</string>
 		<string>config/routes.rb</string>
-		<string>app/models/journal.rb</string>
 		<string>doc/example_loads.txt</string>
+		<string>app/models/journal.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{13, 49}, {1069, 979}}</string>
+	<string>{{548, -146}, {1069, 979}}</string>
 </dict>
 </plist>

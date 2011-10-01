@@ -28,7 +28,6 @@ ActionController::Routing::Routes.draw do |map|
   map.tag_cloud_copublication '/copublications/:id/tag_cloud.js', :action=>"tag_cloud", :controller=>"copublications",  :conditions => { :method => :get }
   map.short_tag_cloud_org '/orgs/:id/short_tag_cloud.js', :action=>"short_tag_cloud", :controller=>"orgs",  :conditions => { :method => :get }
   map.tag_cloud_org '/orgs/:id/tag_cloud.js', :action=>"tag_cloud", :controller=>"orgs",  :conditions => { :method => [:get, :post] }
-  
   map.tag_cloud_by_year_abstract '/abstracts/:id/tag_cloud_by_year.js', :action=>"tag_cloud_by_year", :controller=>"abstracts",  :conditions => { :method => :get }
 
 # manually added html route for the top mesh terms in the tag cloud

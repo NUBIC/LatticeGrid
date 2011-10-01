@@ -7,6 +7,7 @@ class StudiesController < ApplicationController
 
   before_filter :check_allowed, :except => [:disallowed]
   caches_action( :listing, :investigator, :show )  if LatticeGridHelper.CachePages()
+  
   def show
     if params[:id].nil? then
       redirect_to( current_abstracts_url)

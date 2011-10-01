@@ -15,6 +15,12 @@ pg_dump -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev
 
 pg_dump -Fc umich_latticegrid_development -U latticegrid > umich_latticegrid_dev_20110825.dmp
 
+pg_dump -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev_20110930.dmp
+
+scp fsmpublications_dev_20110930.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/fsmpublications_dev_20110930.dmp  
+
+pg_restore -c -O -d fsm_latticegrid_production -U fsm_latticegrid -h pprod fsmpublications_dev_20110930.dmp
+
 # through a ssh connection
 
 #set up a tunnel from my laptop to rails2-staging routing localhost port 5433 to pprod port 5432 (standard postgres port)
