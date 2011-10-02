@@ -41,3 +41,11 @@ end
 def LatticeGridHelper.global_limit_pubmed_search_to_institution?
   false
 end
+
+def LatticeGridHelper.include_awards?
+  true
+end
+
+def LatticeGridHelper.include_studies?
+  true
+end

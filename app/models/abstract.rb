@@ -192,9 +192,45 @@ class Abstract < ActiveRecord::Base
     all(  :conditions => ["not exists(select 'x' from investigator_abstracts where investigator_abstracts.abstract_id = abstracts.id and investigator_abstracts.is_valid = true )"] )
   end
 
-  def self.deleted_with_investigators()
+  def self.invalid_with_investigators()
     with_exclusive_scope do
       all(  :conditions => ["abstracts.is_valid = false and exists(select 'x' from investigator_abstracts where investigator_abstracts.abstract_id = abstracts.id and investigator_abstracts.is_valid = true )"] )
+    end
+  end
+
+  def self.invalid_with_investigators_unreviewed()
+    with_exclusive_scope do
+      all(  :conditions => ["abstracts.is_valid = false and abstracts.last_reviewed_id is null and exists(select 'x' from investigator_abstracts where investigator_abstracts.abstract_id = abstracts.id and investigator_abstracts.is_valid = true )"] )
+    end
+  end
+
+  def self.invalid_with_investigators_reviewed()
+    with_exclusive_scope do
+      all(  :conditions => ["abstracts.is_valid = false and abstracts.last_reviewed_id is not null and exists(select 'x' from investigator_abstracts where investigator_abstracts.abstract_id = abstracts.id and investigator_abstracts.is_valid = true )"] )
+    end
+  end
+
+  def self.invalid_unreviewed()
+    with_exclusive_scope do
+      all(  :conditions => ["abstracts.is_valid = false and abstracts.last_reviewed_id is null "] )
+    end
+  end
+
+  def self.invalid_reviewed()
+    with_exclusive_scope do
+      all(  :conditions => ["abstracts.is_valid = false and abstracts.last_reviewed_id is not null "] )
+    end
+  end
+
+  def self.valid_unreviewed()
+    with_exclusive_scope do
+      all(  :conditions => ["abstracts.is_valid = true and abstracts.last_reviewed_id is null "] )
+    end
+  end
+
+  def self.valid_reviewed()
+    with_exclusive_scope do
+      all(  :conditions => ["abstracts.is_valid = true and abstracts.last_reviewed_id is not null "] )
     end
   end
 

@@ -91,11 +91,19 @@ pg_restore -c -O -d fsm_latticegrid_production -U fsm_latticegrid -h localhost -
 # from rails2prod
 pg_dump -Fc rhlccc_latticegrid_production -U rhlccc_latticegrid -h pprod > cancer_latticegrid_prod_20110807.dmp
 
+pg_dump -Fc rhlccc_latticegrid_production -U rhlccc_latticegrid -h pprod > cancer_latticegrid_prod_20110930.dmp
+
+
 #move to laptop from rails-prod2
-scp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/cancer_latticegrid_prod_20110807.dmp  cancer_latticegrid_prod_20110807.dmp
+scp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/cancer_latticegrid_prod_20110930.dmp  cancer_latticegrid_prod_20110930.dmp
 #install on laptop
 pg_restore -c -O -d cancerpublications_development -U cancerpublications cancer_latticegrid_prod_20110807.dmp
 #install back on rails-prod2
 pg_restore -c -O -d rhlccc_latticegrid_production -U rhlccc_latticegrid -h pprod cancer_latticegrid_prod_20110807.dmp
 
 
+pg_dump -Fc cancerpublications_development -U cancerpublications > cancer_latticegrid_prod_20111001.dmp
+
+scp cancer_latticegrid_prod_20111001.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/cancer_latticegrid_prod_20111001.dmp  
+
+pg_restore -c -O -d rhlccc_latticegrid_production -U rhlccc_latticegrid -h pprod cancer_latticegrid_prod_20111001.dmp

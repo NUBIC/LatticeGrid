@@ -33,17 +33,57 @@ class ProfilesController < ApplicationController
     end
   end
 
-  def reviewed_abstracts
+  def unreviewed_valid_abstracts
     if is_admin? 
-      inv_abs=InvestigatorAbstract.all(:conditions=>"is_valid = false and (reviewed_id > 0)")
+      render_abstract_listing(Abstract.valid_unreviewed)
     else
       redirect_to( current_abstracts_url)
     end
   end
 
-  def unreviewed_abstracts
+  def reviewed_valid_abstracts
     if is_admin? 
-      inv_abs=InvestigatorAbstract.all(:conditions=>"is_valid = true and (reviewed_id < 1 or reviewed_id is null)")
+      render_abstract_listing(Abstract.valid_reviewed)
+    else
+      redirect_to( current_abstracts_url)
+    end
+  end
+
+  def reviewed_invalid_abstracts
+    if is_admin? 
+      render_abstract_listing(Abstract.invalid_reviewed)
+    else
+      redirect_to( current_abstracts_url)
+    end
+  end
+
+  def reviewed_invalid_abstracts_with_investigators
+    if is_admin? 
+      render_abstract_listing(Abstract.invalid_with_investigators_reviewed)
+    else
+      redirect_to( current_abstracts_url)
+    end
+  end
+  
+  def invalid_abstracts_with_investigators
+    if is_admin? 
+      render_abstract_listing(Abstract.invalid_with_investigators)
+    else
+      redirect_to( current_abstracts_url)
+    end
+  end
+
+  def unreviewed_invalid_abstracts
+    if is_admin? 
+      render_abstract_listing(Abstract.invalid_unreviewed)
+    else
+      redirect_to( current_abstracts_url)
+    end
+  end
+
+  def unreviewed_invalid_abstracts_with_investigators
+    if is_admin? 
+      render_abstract_listing(Abstract.invalid_with_investigators_unreviewed)
     else
       redirect_to( current_abstracts_url)
     end
@@ -181,7 +221,6 @@ class ProfilesController < ApplicationController
       format.pdf do
         @link_abstract_to_pubmed = true
         @abstracts = Abstract.display_all_investigator_data(@investigator.id)
-        @heading=@heading_base
         @show_valid_checkboxes = false
         render( :pdf => "Publication Listing for " + @investigator.name, 
             :stylesheets => "pdf", 
@@ -215,17 +254,48 @@ class ProfilesController < ApplicationController
     end
   end
 
-private
+  private
 
-def mark_investigator_abstracts_as_reviewed(investigator)
-  investigator.abstracts.each do |abstract|
-    before_abstract_save(abstract)
-    abstract.save!
+  def mark_investigator_abstracts_as_reviewed(investigator)
+    investigator.abstracts.each do |abstract|
+      before_abstract_save(abstract)
+      abstract.save!
+    end
+    investigator.investigator_abstracts.each do |ia|
+      before_abstract_save(ia)
+      ia.save!
+    end
   end
-  investigator.investigator_abstracts.each do |ia|
-    before_abstract_save(ia)
-    ia.save!
+
+  def render_abstract_listing(abstracts)
+    @abstracts = abstracts
+    respond_to do |format|
+      format.html { 
+       render :template => 'profiles/abstracts_listing'
+      }
+      format.xml  { 
+       render :xml => @abstracts }
+      format.xls  { 
+       @link_abstract_to_pubmed = true
+       send_data(render(:template => 'profiles/abstracts_listing', :layout => "excel"),
+       :filename => "abstracts_listing.xls",
+       :type => 'application/vnd.ms-excel',
+       :disposition => 'attachment') }
+      format.doc  { 
+       @link_abstract_to_pubmed = true
+       send_data(render(:template => 'profiles/abstracts_listing', :layout => "excel"),
+       :filename => "abstracts_listing.doc",
+       :type => 'application/msword',
+       :disposition => 'attachment') }
+      format.pdf do
+       @link_abstract_to_pubmed = true
+       @show_valid_checkboxes = false
+       render( :pdf => "Abstracts listing", 
+           :stylesheets => "pdf", 
+           :template => 'profiles/abstracts_listing',
+           :layout => "pdf")
+      end
+    end
   end
-end
 
 end

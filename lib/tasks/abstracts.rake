@@ -66,15 +66,15 @@ end
 task :reinstateAbstractsWithInvestigators => :environment do
   marked=0
   block_timing("reinstateAbstractsWithInvestigators") {
-     @AbstractsWithInvestigators = Abstract.deleted_with_investigators()
+     @AbstractsWithInvestigators = Abstract.invalid_with_investigators_unreviewed()
     puts "deleted abstracts with investigators: #{@AbstractsWithInvestigators.length}"
     @AbstractsWithInvestigators.each do |abstract|
-      if (abstract.deleted_id.blank? or abstract.deleted_id < 1) and (abstract.deleted_ip.blank? or abstract.deleted_ip =='checkValidAbstracts' ) then
+      if (abstract.last_reviewed_id.blank? or abstract.last_reviewed_id < 1) then
         abstract.is_valid         = true
         abstract.reviewed_at    ||= Time.now
         abstract.last_reviewed_at = Time.now
-        abstract.reviewed_id    ||= 0
-        abstract.last_reviewed_id = 0
+        abstract.reviewed_id    ||= nil
+        abstract.last_reviewed_id = nil
         abstract.reviewed_ip    ||= 'reinstateValidAbstracts'
         abstract.last_reviewed_ip = 'reinstateValidAbstracts'
         abstract.save!
@@ -87,7 +87,7 @@ end
 
 task :checkDeletedAbstractsWithActiveInvestigators => :environment do
   block_timing("checkDeletedAbstractsWithActiveInvestigators") {
-    @DeletedAbstractsWithInvestigators = Abstract.deleted_with_investigators()
+    @DeletedAbstractsWithInvestigators = Abstract.invalid_with_investigators_unreviewed()
     puts "Deleted abstracts with investigators: #{@DeletedAbstractsWithInvestigators.length}"
   }
 end
@@ -110,11 +110,17 @@ task :updateAbstractsMissingCreationDate => :environment do
   block_timing("checkAbstractsWithMissingDates") {
     @abstractsWithMissingDates = Abstract.all(:conditions=>"pubmed_creation_date is null")
     @abstractsWithMissingDates.each do |abstract|
-      pubs = Bio::PubMed.efetch(abstract.pubmed)
-      medline = Bio::MEDLINE.new(pubs[0])
-      puts "crdt: #{medline.creation_date}; pmid: #{abstract.pubmed}; year: #{abstract.year}; edat - #{abstract.electronic_publication_date}"
-      abstract.pubmed_creation_date = medline.creation_date
-      abstract.save!
+      unless abstract.pubmed.blank?
+        pubs = Bio::PubMed.efetch(abstract.pubmed)
+        unless pubs.blank? or pubs[0].blank?
+          medline = Bio::MEDLINE.new(pubs[0])
+          puts "crdt: #{medline.creation_date}; pmid: #{abstract.pubmed}; year: #{abstract.year}; edat - #{abstract.electronic_publication_date}"
+          abstract.pubmed_creation_date = medline.creation_date
+          abstract.save!
+        else
+          puts "efetch failed for pubmed_id #{abstract.pubmed}"
+        end
+      end
     end
   }
 end
@@ -124,17 +130,23 @@ task :updateAbstractsMissingPublicationDate => :environment do
     @abstractsWithMissingDates = Abstract.all(:conditions=>"publication_date is null")
     puts "processing #{@abstractsWithMissingDates.length} abstracts"
     @abstractsWithMissingDates.each do |abstract|
-      pubs = Bio::PubMed.efetch(abstract.pubmed)
-      medline = Bio::MEDLINE.new(pubs[0])
-      begin
-        puts "pubdate: #{abstract.publication_date}; pmid: #{abstract.pubmed}; year: #{abstract.year}; edat - #{abstract.electronic_publication_date}; dp: #{medline.dp}: pubdate from medline: #{medline.publication_date}" if medline.publication_date.to_date.year != abstract.year.to_i 
-        if medline.publication_date.to_date.to_s != abstract.publication_date.to_s
-          puts "new pubdate: #{abstract.publication_date}; pmid: #{abstract.pubmed}; year: #{abstract.year}; edat - #{abstract.electronic_publication_date}; dp: #{medline.dp}: pubdate from medline: #{medline.publication_date}"
-          abstract.publication_date = medline.publication_date 
-          abstract.save!
+      unless abstract.pubmed.blank?
+        pubs = Bio::PubMed.efetch(abstract.pubmed)
+        unless pubs.blank? or pubs[0].blank?
+          medline = Bio::MEDLINE.new(pubs[0])
+          begin
+            puts "pubdate: #{abstract.publication_date}; pmid: #{abstract.pubmed}; year: #{abstract.year}; edat - #{abstract.electronic_publication_date}; dp: #{medline.dp}: pubdate from medline: #{medline.publication_date}" if medline.publication_date.to_date.year != abstract.year.to_i 
+            if medline.publication_date.to_date.to_s != abstract.publication_date.to_s
+              puts "new pubdate: #{abstract.publication_date}; pmid: #{abstract.pubmed}; year: #{abstract.year}; edat - #{abstract.electronic_publication_date}; dp: #{medline.dp}: pubdate from medline: #{medline.publication_date}"
+              abstract.publication_date = medline.publication_date 
+              abstract.save!
+            end
+          rescue
+            puts "pubdate ERROR from medline: #{abstract.publication_date}; pmid: #{abstract.pubmed}; year: #{abstract.year}; edat - #{abstract.electronic_publication_date}; dp: #{medline.dp}: pubdate from medline: #{medline.publication_date}"
+          end
+        else
+          puts "efetch failed for pubmed_id #{abstract.pubmed}"
         end
-      rescue
-        puts "pubdate ERROR from medline: #{abstract.publication_date}; pmid: #{abstract.pubmed}; year: #{abstract.year}; edat - #{abstract.electronic_publication_date}; dp: #{medline.dp}: pubdate from medline: #{medline.publication_date}"
       end
     end
   }
