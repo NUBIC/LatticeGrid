@@ -193,6 +193,81 @@ class InvestigatorsController < ApplicationController
     end
   end 
   
+  def research_summary
+    if params[:id] =~ /^\d+$/
+      investigator = Investigator.include_deleted(params[:id])
+    else
+      investigator = Investigator.find_by_username_including_deleted(params[:id])
+    end
+    summary = investigator.faculty_research_summary
+    respond_to do |format|
+      format.html { render :text => summary }
+      format.js  { render :json => summary.to_json  }
+      format.json  { render :json => summary.to_json  }
+    end
+  end 
+
+  def title
+    if params[:id] =~ /^\d+$/
+      investigator = Investigator.include_deleted(params[:id])
+    else
+      investigator = Investigator.find_by_username_including_deleted(params[:id])
+    end
+    title = investigator.title
+    respond_to do |format|
+      format.html { render :text => title }
+      format.js  { render :json => title.to_json  }
+      format.json  { render :json => title.to_json  }
+    end
+  end 
+
+  def email
+    if params[:id] =~ /^\d+$/
+      investigator = Investigator.include_deleted(params[:id])
+    else
+      investigator = Investigator.find_by_username_including_deleted(params[:id])
+    end
+    email = investigator.email
+    respond_to do |format|
+      format.html { render :text => email }
+      format.js  { render :json => email.to_json  }
+      format.json  { render :json => email.to_json  }
+    end
+  end 
+
+  def affiliations
+    if params[:id] =~ /^\d+$/
+      investigator = Investigator.include_deleted(params[:id])
+    else
+      investigator = Investigator.find_by_username_including_deleted(params[:id])
+    end
+    affiliations = []
+    investigator.appointments.each { |appt| affiliations << [appt.name, appt.division_id] }
+    respond_to do |format|
+      format.html { render :text => affiliations.join("; ") }
+      format.js  { render :json => affiliations.to_json  }
+      format.json  { render :json => affiliations.to_json  }
+    end
+  end 
+
+  def bio
+    if params[:id] =~ /^\d+$/
+      investigator = Investigator.include_deleted(params[:id])
+    else
+      investigator = Investigator.find_by_username_including_deleted(params[:id])
+    end
+    affiliations = []
+    investigator.appointments.each { |appt| affiliations << [appt.name, appt.division_id] }
+    respond_to do |format|
+      format.html { render :text => investigator.inspect }
+      format.js { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "research_summary" => investigator.faculty_research_summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
+      format.json { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "research_summary" => investigator.faculty_research_summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
+    end
+  end 
+  
+  #:title => :get, :bio=>:get, :email=>:get, :affiliations=>:get
+  
+  
   # Differs from above because the Investigator is found by username instead of id
   # Then it will send a json response to the requester
   def tag_cloud_list
