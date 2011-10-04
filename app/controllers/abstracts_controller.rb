@@ -284,7 +284,8 @@ class AbstractsController < ApplicationController
         #sped this up by only processing the intersection
         if !(new_ids == [] ) then
           new_ids.each do |investigator_id|
-            InsertInvestigatorPublication(abstract.id, investigator.id, IsFirstAuthor(abstract,investigator), IsLastAuthor(abstract,investigator), true)
+            investigator = Investigator.find_by_id(investigator_id)
+            InsertInvestigatorPublication(abstract.id, investigator.id, IsFirstAuthor(abstract,investigator), IsLastAuthor(abstract,investigator), true) unless investigator.blank? or investigator.id.blank?
           end
           abstract.reload()
         end
