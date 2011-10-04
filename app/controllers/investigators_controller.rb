@@ -199,7 +199,7 @@ class InvestigatorsController < ApplicationController
     else
       investigator = Investigator.find_by_username_including_deleted(params[:id])
     end
-    summary = investigator.appointments.map(&:research_summary).join("; ")
+    summary = investigator.investigator_appointments.map(&:research_summary).join("; ")
     summary = investigator.faculty_research_summary if summary.blank?
     respond_to do |format|
       format.html { render :text => summary }
@@ -257,7 +257,7 @@ class InvestigatorsController < ApplicationController
     else
       investigator = Investigator.find_by_username_including_deleted(params[:id])
     end
-    summary = investigator.appointments.map(&:research_summary).join("; ")
+    summary = investigator.investigator_appointments.map(&:research_summary).join("; ")
     summary = investigator.faculty_research_summary if summary.blank?
     affiliations = []
     investigator.appointments.each { |appt| affiliations << [appt.name, appt.division_id] }
