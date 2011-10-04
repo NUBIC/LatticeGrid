@@ -85,12 +85,20 @@
   end
 
   def LatticeGridHelper.email_subject
-    "Contact from the LatticeGrid Publications site at the Northwestern Robert H. Lurie Comprehensive Cancer Center"
+    "Contact from the LatticeGrid Publications site"
   end
 
   def LatticeGridHelper.home_url
     "http://www.cancer.northwestern.edu"
     "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid"
+  end
+
+  def LatticeGridHelper.organization_name
+    "institution"
+  end
+  
+  def latticegrid_high_impact_description
+    '<p>Researchers at our institution publish thousands of articles in peer-reviewed journals every year.  The following recommended reading showcases a selection of their recent work.</p>'
   end
 
    def LatticeGridHelper.cleanup_campus(thePI)
@@ -379,7 +387,7 @@ end
     link_to("Edit profile", profiles_path, :title=>"Login with your NetID and NetID password to change your profile")
   end
 
-   def menu_script
+   def latticegrid_menu_script
    "<div id='side_nav_menu' class='ddsmoothmenu-v'>
    <ul>
    	<li><a href='#'>Publications by year</a>

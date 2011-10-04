@@ -1,15 +1,13 @@
 <div style="padding-left:12px;">
 <span style="float:right; padding-right:15px; z-index:3; "><%= link_to( "as pdf",high_impact_by_month_abstracts_url('pdf')) if !defined?(@pdf) and ! @pdf %></span>
 <h1>High Impact-Factor Research</h1>
-<p><%= image_tag "#{lattice_grid_instance}/high_impact_research.jpg", options={:alt=>"high impact research", :height => '180', :width => '637'} %></p>
-
-<p>Researchers at Feinberg publish thousands of articles in peer-reviewed journals every year.  The following recommended reading showcases a selection of the school's recent work.</p>
+<%= latticegrid_high_impact_description %>
 </div>
 <%= render( :partial => "high_impact_by_month_table.html", :locals => { :abstracts => @abstracts }) -%>
 
 
 <div style="padding-left:12px; padding-top:24px">
-<p>ISI 2010 Impact Factors were used in generating this list of high impact publications by faculty in the Feinberg School of Medicine.  More details on impact factors are available in this Wikipedia article: 
+<p>ISI 2010 Impact Factors were used in generating this list of high impact publications by faculty in the <%= LatticeGridHelper.organization_name %>.  The list of high impact journals used to make this publication listing is available at <%= link_to high_impact_abstracts_url, high_impact_abstracts_url %>. More details on impact factors are available in this Wikipedia article: 
 <a href="http://en.wikipedia.org/wiki/Impact_factor">About Impact Factors</a>. 
 </p>
 </div>

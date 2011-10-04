@@ -26,6 +26,15 @@ def LatticeGridHelper.home_url
   "http://www.feinberg.northwestern.edu"
 end
 
+def LatticeGridHelper.organization_name
+  "Feinberg School of Medicine"
+end
+
+def latticegrid_high_impact_description
+  '<p>' + image_tag("#{lattice_grid_instance}/high_impact_research.jpg", options={:alt=>"high impact research", :height => "180", :width => "637"}) + '</p>
+  <p>Researchers in the ' + LatticeGridHelper.organization_name + ' publish thousands of articles in peer-reviewed journals every year.  The following recommended reading showcases a selection of their recent work.</p>'
+end
+
 def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bold=false, investigators_in_unit=[], speed_display=false, simple_links=false)
   #  out = publication.authors
     out = (mark_members_bold) ? highlightMemberInvestigator(publication, speed_display, simple_links, investigators_in_unit) : highlightInvestigator(publication, speed_display, simple_links)
@@ -98,7 +107,7 @@ def edit_profile_link
   link_to("Edit your FSM profile", "https://fsmweb.northwestern.edu/facultylogin/", :title=>"Login with your NetID and NetID password to change your profile and publication record")
 end
 
-def menu_script
+def latticegrid_menu_script
   
 "<div id='side_nav_menu' class='ddsmoothmenu-v'>
 <ul>

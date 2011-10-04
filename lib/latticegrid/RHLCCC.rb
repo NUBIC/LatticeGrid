@@ -34,8 +34,21 @@ def LatticeGridHelper.GetDefaultSchool()
   "Feinberg"
 end
 
+def LatticeGridHelper.organization_name
+  "Robert H. Lurie Comprehensive Cancer Center"
+end
+
+def latticegrid_high_impact_description
+  "<p>Researchers in the #{LatticeGridHelper.organization_name} publish thousands of articles in peer-reviewed journals every year.  The following recommended reading showcases a selection of their recent work.</p>
+  "
+end
+
 def LatticeGridHelper.home_url
   "http://www.cancer.northwestern.edu"
+end
+
+def LatticeGridHelper.email_subject
+  "Contact from the LatticeGrid Publications site at the Northwestern Robert H. Lurie Comprehensive Cancer Center"
 end
 
 def LatticeGridHelper.global_limit_pubmed_search_to_institution?
