@@ -199,7 +199,8 @@ class InvestigatorsController < ApplicationController
     else
       investigator = Investigator.find_by_username_including_deleted(params[:id])
     end
-    summary = investigator.faculty_research_summary
+    summary = investigator.appointments.map(&:research_summary).join("; ")
+    summary = investigator.faculty_research_summary if summary.blank?
     respond_to do |format|
       format.html { render :text => summary }
       format.js  { render :json => summary.to_json  }
@@ -256,12 +257,14 @@ class InvestigatorsController < ApplicationController
     else
       investigator = Investigator.find_by_username_including_deleted(params[:id])
     end
+    summary = investigator.appointments.map(&:research_summary).join("; ")
+    summary = investigator.faculty_research_summary if summary.blank?
     affiliations = []
     investigator.appointments.each { |appt| affiliations << [appt.name, appt.division_id] }
     respond_to do |format|
-      format.html { render :text => investigator.inspect }
-      format.js { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "research_summary" => investigator.faculty_research_summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
-      format.json { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "research_summary" => investigator.faculty_research_summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
+      format.html { render :text => summary }
+      format.js { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
+      format.json { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
     end
   end 
   
