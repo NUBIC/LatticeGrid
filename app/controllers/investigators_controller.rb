@@ -83,7 +83,7 @@ class InvestigatorsController < ApplicationController
       params.delete(:page)
       redirect_to params
     else
-      handle_member_name # converts params[:id] to params[:investigator_id]
+      handle_member_name # converts params[:id] to params[:investigator_id] and sets @investigator
       @do_pagination = "0"
       @heading = "Selected publications from 2004-2011" if LatticeGridHelper.GetDefaultSchool() == 'UMDNJ'
       @abstracts = Abstract.display_all_investigator_data(params[:investigator_id])
@@ -98,7 +98,7 @@ class InvestigatorsController < ApplicationController
   
   def publications
     # set variables used in show
-    handle_member_name
+    handle_member_name # sets @investigator
     @do_pagination = "0"
     @abstracts = Abstract.display_all_investigator_data(params[:investigator_id])
     @all_abstracts=@abstracts
@@ -116,8 +116,8 @@ class InvestigatorsController < ApplicationController
   
   def abstract_count
     # set variables used in show
-    handle_member_name
-    investigator = Investigator.find_by_id(params[:investigator_id])
+    handle_member_name(false) # sets @investigator
+    investigator = @investigator
     abstract_count = 0
     tags = ""
     if !investigator.nil?
@@ -139,7 +139,7 @@ class InvestigatorsController < ApplicationController
       params[:page]="1"
       redirect_to params
     else
-      handle_member_name
+      handle_member_name # sets @investigator
       @heading = "Selected publications from 2004-2011" if LatticeGridHelper.GetDefaultSchool() == 'UMDNJ'
       @do_pagination = "1"
       @abstracts = Abstract.display_investigator_data(params[:investigator_id],params[:page] )
@@ -156,7 +156,7 @@ class InvestigatorsController < ApplicationController
       params[:page]="1"
       redirect_to params
     else
-      handle_member_name
+      handle_member_name # sets @investigator
       @do_pagination = "1"
       @abstracts = Abstract.display_investigator_data(params[:investigator_id],params[:page] )
       @all_abstracts = Abstract.display_all_investigator_data(params[:investigator_id])
@@ -236,6 +236,20 @@ class InvestigatorsController < ApplicationController
     end
   end 
 
+  def home_department
+    if params[:id] =~ /^\d+$/
+      investigator = Investigator.include_deleted(params[:id])
+    else
+      investigator = Investigator.find_by_username_including_deleted(params[:id])
+    end
+    home_department_name = investigator.home_department_name
+    respond_to do |format|
+      format.html { render :text => home_department_name }
+      format.js  { render :json => home_department_name.to_json  }
+      format.json  { render :json => home_department_name.to_json  }
+    end
+  end 
+
   def affiliations
     if params[:id] =~ /^\d+$/
       investigator = Investigator.include_deleted(params[:id])
@@ -243,7 +257,7 @@ class InvestigatorsController < ApplicationController
       investigator = Investigator.find_by_username_including_deleted(params[:id])
     end
     affiliations = []
-    investigator.appointments.each { |appt| affiliations << [appt.name, appt.division_id] }
+    investigator.appointments.each { |appt| affiliations << [appt.name, appt.division_id, appt.id] }
     respond_to do |format|
       format.html { render :text => affiliations.join("; ") }
       format.js  { render :json => affiliations.to_json  }
@@ -260,11 +274,11 @@ class InvestigatorsController < ApplicationController
     summary = investigator.investigator_appointments.map(&:research_summary).join("; ")
     summary = investigator.faculty_research_summary if summary.blank?
     affiliations = []
-    investigator.appointments.each { |appt| affiliations << [appt.name, appt.division_id] }
+    investigator.appointments.each { |appt| affiliations << [appt.name, appt.division_id, appt.id] }
     respond_to do |format|
       format.html { render :text => summary }
-      format.js { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
-      format.json { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
+      format.js { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "home_department" => investigator.home_department_name, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
+      format.json { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "home_department" => investigator.home_department_name, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
     end
   end 
   

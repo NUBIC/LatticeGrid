@@ -1,3 +1,5 @@
+require 'investigator_appointment_utilities'
+
 namespace :cleanup do
   
   task :countries => :environment do
@@ -27,6 +29,38 @@ namespace :cleanup do
       puts "#{pi.name}\t#{pi.email}\t#{pi.username}\t#{pi.employee_id}"
     end
   end
+  
+  task :titles => :environment do
+    pis = Investigator.all(:conditions=>"investigators.title is not null") 
+    puts "#{pis.length} investigators have a title"
+    clean_cnt = 0
+    pis.each do |pi|
+      title = pi.title
+      CleanTitle(pi)
+      if pi.title != title
+        clean_cnt+=1
+        pi.save! 
+      end
+    end
+    puts "#{clean_cnt} investigator titles cleaned"
+  end
+  
+  task :update_titles_and_home_from_ldap => :environment do
+    pis = Investigator.all() 
+    puts "#{pis.length} investigators"
+    clean_cnt = 0
+    pis.each do |pi|
+      title = pi.title
+      home_department_name = pi.home_department_name
+      UpdateHomeDepartmentAndTitle(pi)
+      if pi.title != title or pi.home_department_name != home_department_name
+        clean_cnt+=1
+        pi.save! 
+      end
+    end
+    puts "#{clean_cnt} investigator titles and/or home departments updated"
+  end
+  
   
   task :insert_employee_ids => :environment do
     username_hash = {'bmd525'=>'1068930',

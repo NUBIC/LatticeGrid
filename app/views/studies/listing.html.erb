@@ -33,7 +33,7 @@
 		<td style="padding-left:5px;"><div style="float:left;"><%= investigator.last_name %>, <%= investigator.first_name %>  <%= investigator.middle_name %>, <%= investigator.degrees %></div>
 			<div style="float:right;"><%= link_to("details", investigator_url(investigator.username))  %>&nbsp;</div>
 		</td>
-		<td  style="text-align:left; padding-left:5px;"><%= investigator.home_department_name unless investigator.home_department_id.blank? %></td>
+		<td  style="text-align:left; padding-left:5px;"><%= investigator.home_department_name %></td>
 		<td style="text-align:right; padding-right:5px;"><%= link_to(investigator.total_studies, investigator_study_url(:id=>investigator.username)) unless investigator.total_studies.to_i < 1 %></td>
 		<td style="text-align:right; padding-right:5px;"><%= link_to(investigator.total_studies_collaborators, studies_cytoscape_url(:id=>investigator.username)) unless investigator.total_studies_collaborators.to_i < 1 %></td>
 		<td style="text-align:right; padding-right:5px;"><%= investigator.total_pi_studies unless investigator.total_pi_studies.to_i < 1 %></td>

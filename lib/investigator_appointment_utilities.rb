@@ -158,6 +158,7 @@ def SetInvestigatorInformation(pi, data_row)
 
 
   pi.title = data_row['RANK'] || data_row['rank'] || data_row['TITLE'] || data_row['title'] 
+  CleanTitle(pi)
   pi = SetDepartment(pi, data_row )
   pi.appointment_type = data_row['CATEGORY'] || data_row['category'] # Regular, Adjunct, Emeritus
   pi.appointment_track = data_row['CAREER_TRACK'] || data_row['career_track'] # research, clinician, clinician for CS, Clinician-Investigator
@@ -576,6 +577,57 @@ def doCleanInvestigators(investigators)
     rescue
       puts "could not change #{pi.name} username to #{pi.username}"
     end
+  end
+end
+
+def CleanTitle(pi)
+  return if pi.blank? or pi.title.blank?
+  title = pi.title 
+  title = title.sub(/Sr /, "Senior ")
+  title = title.sub(/Emer$/, "Emeritus")
+  title = title.sub(/Adj /, "Adjunct ")
+  title = title.sub(/Asst /, "Assistant ")
+  title = title.sub(/Assoc /, "Associate ")
+  title = title.sub(/Prof$/, "Professor")
+  title = title.sub(/Prof,/, "Professor,")
+  title = title.sub(/CL$/, "Clinical")
+  title = title.sub(/CL /, "Clinical ")
+  title = title.sub(/Res /, "Research ")
+  title = title.sub(/Vis /, "Visiting ")
+  title = title.sub(/Dir /, "Director ")
+  title = title.sub(/Dir$/, "Director")
+  pi.title = title
+end
+
+def UpdateHomeDepartmentAndTitle(pi)
+  return if pi.blank? or pi.username.blank?
+  pi.home_department_name=pi.home_department.name if !pi.home_department.blank?
+  if ( LatticeGridHelper.ldap_perform_search?)
+    begin
+      pi_data = GetLDAPentry(pi.username)
+      if pi_data.nil?
+        logger.warn("Probable error reaching the LDAP server in GetLDAPentry: GetLDAPentry returned null for netid #{pi.username}.")
+      elsif pi_data.blank?
+          logger.warn("Entry not found. GetLDAPentry returned null using netid #{pi.username}.")
+      else
+        ldap_rec=CleanPIfromLDAP(pi_data)
+        investigator = Investigator.new
+        investigator=MergePIrecords(investigator,ldap_rec)
+      end
+    rescue Exception => error
+      if pi_data.nil?
+        puts "Probable error reaching the LDAP server in GetLDAPentry: GetLDAPentry returned null for netid #{pi.username}."
+      else
+        puts "Entry not found. GetLDAPentry returned null using netid #{pi.username}."
+      end
+    end
+  end
+  return if investigator.blank?
+  if pi.title.blank? and not investigator.title.blank?
+    pi.title = CleanTitle(investigator.title)
+  end
+  if pi.home_department.blank? and not investigator.home.blank?
+    pi.home_department_name = investigator.home
   end
 end
 

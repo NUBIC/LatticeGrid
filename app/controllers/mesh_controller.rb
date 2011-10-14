@@ -25,7 +25,7 @@ class MeshController < ApplicationController
 
   def investigator_tags
     investigator_id = params[:id]
-    handle_member_name
+    handle_member_name(false)
     investigator_id = params[:investigator_id] unless params[:investigator_id].blank?
     @taggings = Tagging.find(:all,
        :include => [:tag],
