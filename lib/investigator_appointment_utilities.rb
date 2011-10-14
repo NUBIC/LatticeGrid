@@ -624,7 +624,8 @@ def UpdateHomeDepartmentAndTitle(pi)
   end
   return if investigator.blank?
   if pi.title.blank? and not investigator.title.blank?
-    pi.title = CleanTitle(investigator.title)
+    pi.title = investigator.title
+    CleanTitle(pi)
   end
   if pi.home_department.blank? and not investigator.home.blank?
     pi.home_department_name = investigator.home
