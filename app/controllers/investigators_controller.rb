@@ -186,10 +186,15 @@ class InvestigatorsController < ApplicationController
     else
       investigator = Investigator.find_by_username_including_deleted(params[:id])
     end
-    tags = investigator.abstracts.tag_counts( :order => "count desc")
     respond_to do |format|
-      format.html { render :template => "shared/tag_cloud", :locals => {:tags => tags}}
-      format.js  { render  :partial => "shared/tag_cloud", :locals => {:tags => tags}  }
+      format.html { 
+        tags = investigator.abstracts.map{|ab| ab.tags.map(&:name) }.flatten
+        render :text => tags.join(", ")
+      }
+      format.js  { 
+        tags = investigator.abstracts.tag_counts( :order => "count desc")
+        render  :partial => "shared/tag_cloud", :locals => {:tags => tags}  
+      }
     end
   end 
   
