@@ -623,11 +623,13 @@ def UpdateHomeDepartmentAndTitle(pi)
     end
   end
   return if investigator.blank?
-  if pi.title.blank? and not investigator.title.blank?
+  CleanTitle(investigator)
+  if not investigator.title.blank? and (pi.title.blank? or pi.title.strip != investigator.title.strip )
+    puts "Title change for pi #{pi.name}. Old: #{pi.title}. New: #{investigator.title}"
     pi.title = investigator.title
-    CleanTitle(pi)
   end
-  if pi.home_department.blank? and not investigator.home.blank?
+  if not investigator.home.blank? and (pi.home_department_name.blank? or pi.home_department_name.strip != investigator.home.strip )
+    puts "home department change for pi #{pi.name}. Old: #{pi.home_department_name}; New: #{investigator.home};"
     pi.home_department_name = investigator.home
   end
 end
