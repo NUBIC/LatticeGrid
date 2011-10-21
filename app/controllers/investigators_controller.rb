@@ -277,14 +277,18 @@ class InvestigatorsController < ApplicationController
     else
       investigator = Investigator.find_by_username_including_deleted(params[:id])
     end
-    summary = investigator.investigator_appointments.map(&:research_summary).join("; ")
-    summary = investigator.faculty_research_summary if summary.blank?
-    affiliations = []
-    investigator.appointments.each { |appt| affiliations << [appt.name, appt.division_id, appt.id] }
-    respond_to do |format|
-      format.html { render :text => summary }
-      format.js { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "home_department" => investigator.home_department_name, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
-      format.json { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "home_department" => investigator.home_department_name, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
+    unless investigator.blank?
+      summary = investigator.investigator_appointments.map(&:research_summary).join("; ")
+      summary = investigator.faculty_research_summary if summary.blank?
+      affiliations = []
+      investigator.appointments.each { |appt| affiliations << [appt.name, appt.division_id, appt.id] }
+      respond_to do |format|
+        format.html { render :text => summary }
+        format.js { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "home_department" => investigator.home_department_name, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
+        format.json { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "home_department" => investigator.home_department_name, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
+      end
+    else
+      render :text => 'investigator not found'
     end
   end 
   

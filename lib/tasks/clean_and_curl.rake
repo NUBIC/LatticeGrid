@@ -72,6 +72,7 @@ namespace :cache do
   def do_abstracts_for_year(year)
     page = 1
     run_ajax_curl tag_cloud_by_year_abstract_url(:id => year)
+    run_curl high_impact_by_month_abstracts_url()
     run_curl full_year_list_abstract_url(:id => year)
     abstracts = Abstract.display_data( year, page )
     total_entries = abstracts.total_entries
