@@ -1,5 +1,5 @@
 class InvestigatorsController < ApplicationController
-  caches_page( :show, :full_show, :list_all, :listing, :tag_cloud_side, :tag_cloud, :show_all_tags, :publications, :tag_cloud_list, :abstract_count, :preview, :search) if LatticeGridHelper.CachePages()
+  caches_page( :show, :full_show, :list_all, :listing, :tag_cloud_side, :tag_cloud, :show_all_tags, :publications, :tag_cloud_list, :abstract_count, :preview, :search, :bio) if LatticeGridHelper.CachePages()
   helper :all
   include InvestigatorsHelper
   include ApplicationHelper
