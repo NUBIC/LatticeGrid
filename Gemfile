@@ -18,3 +18,4 @@ gem 'bcsec', '2.0.6'
 gem 'bcsec-rails', '~> 2.0'
 gem 'rdoc' # necessary for rails 2.3.12
 gem 'bcdatabase', '~> 1.0.6'
+#gem 'wordcram'

@@ -1,12 +1,13 @@
 class CytoscapeController < ApplicationController
   before_filter :check_allowed, :only => [:awards, :studies]
 
-  caches_page( :show, :jit, :protovis, :member_cytoscape_data, :member_protovis_data, :disallowed) if LatticeGridHelper.CachePages()
+  caches_page( :show, :jit, :protovis, :member_cytoscape_data, :member_protovis_data, :disallowed, :d3_data) if LatticeGridHelper.CachePages()
   caches_action( :listing, :investigator, :show, :awards, :studies )  if LatticeGridHelper.CachePages()
   
   require 'cytoscape_config'
   require 'cytoscape_generator'
   require 'protovis_generator'
+  require 'd3_generator'
   require 'infoviz_generator'
   include ApplicationHelper
   include CytoscapeHelper
@@ -88,6 +89,31 @@ class CytoscapeController < ApplicationController
       format.json{ render :layout=> false, :json=> {:nodes => protovis_nodes.as_json(), :links => protovis_edges.as_json()}  }
     end
   end
+
+  #d3 methods
+  def chord
+    respond_to do |format|
+      format.html { render :layout => 'd3'  }
+      format.json{ render :layout=> false, :text => ""  }
+    end
+    
+  end
+
+  def d3_data
+    if (params[:id].blank?)
+      # children are one level down - descendents are all levels down
+      @units = @head_node.descendants.sort_by(&:abbreviation)
+    else 
+      @units = OrganizationalUnit.find_all_by_id(params[:id])
+    end
+    graph = d3_units_graph(@units)
+    depth = 1    
+    respond_to do |format|
+      #format.json{ render :partial => "member_protovis_data", :locals => {:nodes_array_hash => protovis_nodes, :edges_array_hash => protovis_edges}  }
+      format.json{ render :layout=> false, :json => graph.as_json() }
+    end
+  end
+
 
 
    private  

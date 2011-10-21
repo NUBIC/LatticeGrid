@@ -6,6 +6,7 @@ class InvestigatorsController < ApplicationController
 
   require 'pubmed_utilities'
 
+  # <iframe frameborder="0" src="http://www.tagxedo.com/art/f6f2d766fb9d47e6" width="300" height="300" scrolling="no"></iframe>
   skip_before_filter  :find_last_load_date, :only => [:tag_cloud_side, :tag_cloud, :search]
   skip_before_filter  :handle_year, :only => [:tag_cloud_side, :tag_cloud, :search]
   skip_before_filter  :get_organizations, :only => [:tag_cloud_side, :tag_cloud, :search]
