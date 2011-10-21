@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %> Diagram</title>
+	<% @javascripts ||= [ 'd3/d3.js', 'd3/d3.layout.js' ] %>
+	<!-- include JIT Library File -->
+	<%= javascript_include_tag @javascripts %> 
+
+	<link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
+
+	<!-- CSS Files -->
+    <style type="text/css">
+
+body {
+  font: 10px sans-serif;
+}
+
+path.chord {
+  fill-opacity: .67;
+}
+
+    </style>
+  </head>
+  <body>
+
+
+<%= yield  %>
+
+</body>
+</html>
