@@ -30,7 +30,7 @@ class Abstract < ActiveRecord::Base
           {:start_date => 5.years.ago }]
   named_scope :abstracts_by_date, lambda { |*dates|
       {:conditions => 
-          [' publication_date between :start_date and :end_date or electronic_publication_date between :start_date and :end_date ', 
+          [' publication_date between :start_date and :end_date ', 
             {:start_date => dates.first, :end_date => dates.last } ] }
   }
   named_scope :ccsg_abstracts_by_date, lambda { |*dates|

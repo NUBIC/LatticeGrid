@@ -1,7 +1,7 @@
 class CytoscapeController < ApplicationController
   before_filter :check_allowed, :only => [:awards, :studies]
 
-  caches_page( :show, :jit, :protovis, :member_cytoscape_data, :member_protovis_data, :disallowed, :d3_data) if LatticeGridHelper.CachePages()
+  caches_page( :show, :jit, :protovis, :member_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data) if LatticeGridHelper.CachePages()
   caches_action( :listing, :investigator, :show, :awards, :studies )  if LatticeGridHelper.CachePages()
   
   require 'cytoscape_config'
@@ -92,21 +92,56 @@ class CytoscapeController < ApplicationController
 
   #d3 methods
   def chord
+    @json_callback = "../cytoscape/d3_data.json"
+    @title = 'Chord Diagram showing inter- and intra-programmatic publications for all programs'
+    unless params[:id].blank?
+      program = OrganizationalUnit.find_by_id(params[:id])
+      unless program.blank?
+        flash[:notice] = "unable to find unit"
+        params[:id] = nil
+      else
+        @json_callback = "../cytoscape/"+params[:id]+"/d3_data.json"
+        @title = 'Chord Diagram showing inter- and intra-programmatic publications for '+program.name
+      end
+    end
     respond_to do |format|
       format.html { render :layout => 'd3'  }
       format.json{ render :layout=> false, :text => ""  }
     end
-    
+  end
+  
+  def chord_by_date
+    start_date = params[:start_date] || 5.years.ago.to_date
+    end_date = params[:end_date] || Date.today
+    start_date = start_date.to_date
+    end_date = end_date.to_date
+    @json_callback = "../cytoscape/"+start_date.to_s(:db_date)+"/" + end_date.to_s(:db_date) + "/d3_date_data.json"
+    @title = 'Chord Diagram showing inter- and intra-programmatic publications for all programs from ' + start_date.to_s(:justdate) + ' to ' + end_date.to_s(:justdate)
+    respond_to do |format|
+      format.html { render :layout => 'd3', :action => :chord  }
+      format.json{ render :layout=> false, :text => ""  }
+    end
   end
 
   def d3_data
+    @units = @head_node.descendants.sort_by(&:abbreviation)
     if (params[:id].blank?)
       # children are one level down - descendents are all levels down
-      @units = @head_node.descendants.sort_by(&:abbreviation)
+      graph = d3_all_units_graph(@units)
     else 
-      @units = OrganizationalUnit.find_all_by_id(params[:id])
+      @master_unit = OrganizationalUnit.find_by_id(params[:id])
+      graph = d3_master_unit_graph(@units,@master_unit)
     end
-    graph = d3_units_graph(@units)
+    depth = 1    
+    respond_to do |format|
+      #format.json{ render :partial => "member_protovis_data", :locals => {:nodes_array_hash => protovis_nodes, :edges_array_hash => protovis_edges}  }
+      format.json{ render :layout=> false, :json => graph.as_json() }
+    end
+  end
+
+  def d3_date_data
+    @units = @head_node.descendants.sort_by(&:abbreviation)
+    graph = d3_units_by_date_graph(@units, params[:start_date].to_date,  params[:end_date].to_date)
     depth = 1    
     respond_to do |format|
       #format.json{ render :partial => "member_protovis_data", :locals => {:nodes_array_hash => protovis_nodes, :edges_array_hash => protovis_edges}  }
