@@ -38,7 +38,7 @@ config.after_initialize do
       authority Aker::Authorities::Static.from_file(login_config)
       puts "loading local static bcsec file"
     else
-      authority :netid
+      authorities :ldap
       central '/etc/nubic/bcsec-staging.yml'
     end
   end

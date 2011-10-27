@@ -30,7 +30,7 @@ config.after_initialize do
   Aker.configure do
     ui_mode :form
     api_mode :http_basic
-    authority :netid
-    central '/etc/nubic/aker-prod.yml'
+    authorities :ldap
+    central '/etc/nubic/bcsec-prod.yml'
   end
 end
