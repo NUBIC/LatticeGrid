@@ -8,8 +8,8 @@ ls
 bundle install
 cd 
 ls
-more /etc/nubic/bcsec-prod.yml 
-more /etc/nubic/bcsec-production.yml 
+more /etc/nubic/aker-prod.yml 
+more /etc/nubic/aker-production.yml 
 more /etc/nubic/db/
 more /etc/nubic/db/pprod.yml 
 sudo vi /etc/nubic/db/pprod.yml 

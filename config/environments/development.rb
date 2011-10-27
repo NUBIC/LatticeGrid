@@ -20,15 +20,26 @@ config.action_controller.relative_url_root           = '/cancer' if ENV["HOME"] 
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
 
+
 config.after_initialize do
-  Bcsec.configure do
+  Aker.configure do
+    # The authentication protocol to use for interactive access.
+    # `:form` is the default.
+    # ui_mode :cas
+
+    # The authentication protocol(s) to use for non-interactive
+    # access.  There is no default.
+    # api_mode :http_basic
+
+    # The portal to which this application belongs.  Optional.
+    # portal :LatticeGrid
     if RAILS_ROOT =~ /Users/ 
       login_config = File.join(RAILS_ROOT, %w(config logins development.yml))
-      authority Bcsec::Authorities::Static.from_file(login_config)
+      authority Aker::Authorities::Static.from_file(login_config)
       puts "loading local static bcsec file"
     else
       authority :netid
-      central '/etc/nubic/bcsec-prod.yml'
+      #central '/etc/nubic/aker-prod.yml'
     end
   end
 end

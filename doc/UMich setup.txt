@@ -1,4 +1,4 @@
-# verify that /etc/nubic/db/bcsec-prod.yml has the necessary config. Should look like:
+# verify that /etc/nubic/db/aker-prod.yml has the necessary config. Should look like:
 
 umich_latticegrid:
   database: umich_latticegrid_development

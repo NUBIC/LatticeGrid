@@ -7,7 +7,7 @@ class ProfilesController < ApplicationController
 
   require 'cache_utilities'
 
-  include Bcsec::Rails::SecuredController if LatticeGridHelper.require_authentication?
+  include Aker::Rails::SecuredController if LatticeGridHelper.require_authentication?
   include ProfilesHelper
   include InvestigatorsHelper
   include ApplicationHelper

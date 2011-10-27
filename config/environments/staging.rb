@@ -21,6 +21,7 @@ config.action_controller.perform_caching             = true
 the_relative_url_root = case LatticeGrid.the_instance
   when 'RHLCCC' then "cancer-latticegrid"
   when 'Feinberg' then "fsm-latticegrid"
+  when 'Stanford' then "stanford-latticegrid"
   when 'UCSF' then "ucsf-latticegrid"
   when 'UWCCC' then "uwisc-latticegrid"
   when 'UMich' then "umich-latticegrid"
@@ -37,14 +38,14 @@ config.action_controller.relative_url_root           = "/#{the_relative_url_root
 config.action_mailer.raise_delivery_errors = false
 
 config.after_initialize do
-  Bcsec.configure do
+  Aker.configure do
     if RAILS_ROOT =~ /Users/ 
       login_config = File.join(RAILS_ROOT, %w(config logins development.yml))
-      authority Bcsec::Authorities::Static.from_file(login_config)
-      puts "loading local static bcsec file"
+      authority Aker::Authorities::Static.from_file(login_config)
+      puts "loading local static aker file"
     else
       authority :netid
-      central '/etc/nubic/bcsec-staging.yml'
+#      central '/etc/nubic/bcsec-staging.yml'
     end
   end
 end

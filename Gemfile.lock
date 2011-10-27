@@ -1,6 +1,5 @@
 GEM
   remote: http://rubygems.org/
-  remote: http://download.bioinformatics.northwestern.edu/gems/
   specs:
     actionmailer (2.3.12)
       actionpack (= 2.3.12)
@@ -12,32 +11,24 @@ GEM
     activeresource (2.3.12)
       activesupport (= 2.3.12)
     activesupport (2.3.12)
+    aker (3.0.2)
+      activesupport (>= 2.3.0)
+      castanet (~> 1.0.0)
+      i18n (~> 0.4)
+      net-ldap (~> 0.1.1)
+      rubytree (~> 0.7.0)
+      warden (~> 1.0)
+    aker-rails (2.0.2)
+      aker (~> 3.0)
+      rails (~> 2.3.5)
     awesome_nested_set (1.4.3)
       activerecord (>= 1.1)
-    bcaudit (0.1.0)
-      activerecord (>= 2.3.2)
-      rack (~> 1.1)
     bcdatabase (1.0.6)
       activesupport (>= 2.0)
       highline (~> 1.5)
       i18n
-    bcsec (2.0.6)
-      activerecord (~> 2.3.5)
-      activesupport (~> 2.3.5)
-      bcaudit (~> 0.0, >= 0.0.3)
-      bcdatabase (~> 1.0)
-      composite_primary_keys (~> 2.3.5)
-      net-ldap (~> 0.1.1)
-      rubycas-client (~> 2.1.0)
-      rubytree (~> 0.7.0)
-      schema_qualified_tables (~> 1.0)
-      warden (~> 0.10.3)
-    bcsec-rails (2.0.1)
-      bcsec (>= 2.0.0)
-      rails (~> 2.3.5)
     bio (1.4.1)
-    composite_primary_keys (2.3.5.1)
-      activerecord (>= 2.3.5)
+    castanet (1.0.1)
     fastercsv (1.5.4)
     haml (3.0.25)
     highline (1.6.2)
@@ -58,23 +49,19 @@ GEM
     rmagick (2.13.1)
     ruby-graphviz (0.9.20)
     ruby-net-ldap (0.0.4)
-    rubycas-client (2.1.0)
-      activesupport
     rubytree (0.7.0)
-    schema_qualified_tables (1.0.0)
-      activerecord (>= 2.3)
-    warden (0.10.7)
-      rack (>= 1.0.0)
+    warden (1.0.6)
+      rack (>= 1.0)
     will_paginate (2.3.15)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  aker
+  aker-rails
   awesome_nested_set (~> 1.4)
   bcdatabase (~> 1.0.6)
-  bcsec (= 2.0.6)
-  bcsec-rails (~> 2.0)
   bio
   bundler
   fastercsv

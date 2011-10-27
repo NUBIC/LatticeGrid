@@ -1,5 +1,4 @@
 source :gemcutter
-source 'http://download.bioinformatics.northwestern.edu/gems'
 gem 'bundler'
 gem "rails", "~>2.3.5", :require => nil
 gem 'rmagick', :require => nil
@@ -14,8 +13,8 @@ gem 'awesome_nested_set', "~> 1.4"
 gem "princely", "~> 1.2.5"
 gem 'ruby-net-ldap'
 gem 'bio'
-gem 'bcsec', '2.0.6'
-gem 'bcsec-rails', '~> 2.0'
+gem 'aker-rails'
+gem 'aker'
 gem 'rdoc' # necessary for rails 2.3.12
 gem 'bcdatabase', '~> 1.0.6'
 #gem 'wordcram'

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>Gemfile</string>
+	<string>app/views/layouts/d3.html.erb</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -21,28 +21,44 @@
 	<integer>503</integer>
 	<key>metaData</key>
 	<dict>
-		<key>Gemfile</key>
+		<key>app/controllers/cytoscape_controller.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>14</integer>
-				<key>line</key>
 				<integer>20</integer>
+				<key>line</key>
+				<integer>143</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>115</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>12</integer>
+				<key>line</key>
+				<integer>143</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>34</integer>
+				<key>line</key>
+				<integer>143</integer>
+			</dict>
 		</dict>
-		<key>app/controllers/investigators_controller.rb</key>
+		<key>app/views/cytoscape/chord.html.erb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>127</integer>
+				<integer>38</integer>
 				<key>line</key>
-				<integer>8</integer>
+				<integer>25</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -71,6 +87,20 @@
 				<integer>1</integer>
 				<key>line</key>
 				<integer>11</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>app/views/layouts/d3.html.erb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -137,48 +167,79 @@
 				<integer>47</integer>
 			</dict>
 		</dict>
-		<key>lib/latticegrid/defaults.rb</key>
+		<key>lib/d3_generator.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>19</integer>
+				<key>line</key>
+				<integer>116</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>91</integer>
+		</dict>
+		<key>public/d3/examples/chord/chord.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>129</integer>
+				<integer>36</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>105</integer>
+			<integer>0</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>126</integer>
+				<integer>27</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>129</integer>
+				<integer>36</integer>
 			</dict>
+		</dict>
+		<key>public/d3/examples/chord/reorder_chord.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>213</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>172</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
 		<string>doc/publications_scripts.txt</string>
 		<string>doc/example_loads.txt</string>
-		<string>app/controllers/investigators_controller.rb</string>
-		<string>Gemfile</string>
-		<string>lib/latticegrid/defaults.rb</string>
+		<string>app/controllers/cytoscape_controller.rb</string>
+		<string>app/views/cytoscape/chord.html.erb</string>
+		<string>app/views/layouts/d3.html.erb</string>
+		<string>public/d3/examples/chord/reorder_chord.js</string>
+		<string>public/d3/examples/chord/chord.js</string>
+		<string>lib/d3_generator.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{186, 230}, {1160, 921}}</string>
+	<string>{{189, 257}, {1160, 921}}</string>
 </dict>
 </plist>
