@@ -45,7 +45,7 @@ config.after_initialize do
       puts "loading local static aker file"
     else
       authority :netid
-#      central '/etc/nubic/bcsec-staging.yml'
+      central '/etc/nubic/bcsec-staging.yml'
     end
   end
 end

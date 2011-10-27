@@ -31,6 +31,6 @@ config.after_initialize do
     ui_mode :form
     api_mode :http_basic
     authority :netid
-    #central '/etc/nubic/aker-prod.yml'
+    central '/etc/nubic/aker-prod.yml'
   end
 end
