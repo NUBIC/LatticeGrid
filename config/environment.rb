@@ -44,7 +44,7 @@ Rails::Initializer.run do |config|
   # config.i18n.default_locale = :de
   config.action_controller.session = {
     :key => '_cancer_latticegrid_session',
-    :secret      => 'd191041bea4ebc0533e3f68b1bb41c5a1233162b24232a0e15e70764ae12598a4b419a127e69139ff2ae849d5d563a3405e00306a47270aba9adead393d9ba76'
+    :secret      => 'd191041bea4ebc0533e3f68b1bb41c5a1233162b24232a0e15e'
   }
   
   # change the cache root
