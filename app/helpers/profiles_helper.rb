@@ -14,18 +14,14 @@ module ProfilesHelper
   end 
   
   def current_user_model
-    begin 
-       return Investigator.new(:username=>'wakibbe') if current_user.blank?
-    rescue Exception => error
-      return Investigator.new(:username=>'wakibbe') if ! defined?(current_user.username)
-    end
-    return @@current_user_model if defined?(@@current_user_model) and ! @@current_user_model.blank? and ! @@current_user_model.username.blank? and @@current_user_model.username == current_user.username
-    @@current_user_model = Investigator.find_by_username(current_user.username)
+    return Investigator.new(:username=>"invalid")  if ! defined?(current_user) or current_user.nil?
+    return @@current_user_model if defined?(@@current_user_model) and ! @@current_user_model.blank? and ! @@current_user_model.username.blank? and @@current_user_model.username == current_user.username.strip.downcase
+    @@current_user_model = Investigator.find_by_username(current_user.username.strip.downcase)
     if @@current_user_model.blank?
       #create the user
       # we don't want to do this for this application
       #@@current_user_model = create_the_user(current_user.username)
-      @@current_user_model = Investigator.new(:username=>current_user.username)
+      @@current_user_model = Investigator.new(:username=>current_user.username.strip.downcase)
     end
      @@current_user_model
   end

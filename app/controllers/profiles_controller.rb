@@ -1,9 +1,9 @@
 class ProfilesController < ApplicationController
 
 #  caches_page( :show, :show_pubs, :ccsg ) if LatticeGridHelper.CachePages()
-  before_filter :check_login
+#  before_filter :check_login
   after_filter  :log_request, :except => [:login, :welcome, :splash, :show_pubs, :edit, :edit_pubs, :ccsg]
-  after_filter :check_login
+#  after_filter :check_login
 
 #  require 'cache_utilities'
 
