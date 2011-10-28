@@ -9,8 +9,9 @@ ActionController::Routing::Routes.draw do |map|
   map.abstracts_search 'abstracts/search', {:controller => 'abstracts', :action => 'search', :conditions => { :method => :get } }
   map.investigator_listing 'profiles/investigator_listing/:id', {:controller => 'profiles', :action => 'investigator_listing'}
   map.index_orgs 'orgs/index', :controller => 'orgs', :action => 'index'  #handle the route for orgs_path to make sure it is cached properly
-  map.resources :orgs, :only => [:index, :show], :collection => { :stats => :get, :period_stats => [:get,:post], :list => :get, :centers => :get, :departments => :get, :programs => :get, :department_collaborations => :get, :investigator_abstracts_during_period => [:get, :post] }, 
-    :member => {:full_show => :get, :show_investigators => :get, :list_abstracts_during_period_rjs => :post }
+  map.resources :orgs, :only => [:index, :show], 
+    :collection => { :stats => :get, :period_stats => [:get,:post], :list => :get, :centers => :get, :departments => :get, :programs => :get, :department_collaborations => :get, :investigator_abstracts_during_period => [:get, :post], :classifications => :get }, 
+    :member => {:full_show => :get, :show_investigators => :get, :list_abstracts_during_period_rjs => :post, :classification_orgs => :get, :program_members => :get }
   map.resources :investigators, :only => [:index, :show], :member => {:full_show => :get, :show_all_tags => :get, :publications => :get, :abstract_count => :get, :preview => :get, :search => :get, :investigators_search => :get, :research_summary => :get, :tag_cloud_list => :get, :title => :get, :home_department => :get, :bio=>:get, :email=>:get, :affiliations=>:get}, :collection => { :list_all => :get, :listing => :get, :list_by_ids => [:post, :get] }
   map.resources :cytoscape, :only => [:index, :show], :member => {:investigators => :get, :protovis => :get, :jit => :get, :awards => :get, :studies => :get, :d3_data => :get, :chord=>:get}, :collection => {:d3_data => :get, :chord=>:get, :chord_by_date => :get}
   map.resources :awards, :only => [:index, :show], :collection => {:disallowed => :get, :listing => :get}, :member => {:investigator => :get, :org => :get}

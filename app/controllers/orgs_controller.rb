@@ -142,8 +142,25 @@ class OrgsController < ApplicationController
     end
   end
 
+  def classifications
+    @classifications = Program.all(:select=>"organization_classification", :group=>"organization_classification")
+    cats = @classifications.map(&:organization_classification)
+    respond_to do |format|
+      format.html { render :text=> cats.inspect }
+      format.js { render :json => {"classifications" => cats }.as_json() }
+    end
+  end
+
+  def classification_orgs
+    @units = Program.all(:select=>"name, abbreviation, division_id, id, organization_classification", :order => "sort_order, lower(abbreviation)", :conditions => ["organization_classification = :organization_classification", {:organization_classification => params[:id]}] )
+    respond_to do |format|
+      format.html { render :text=> @units.inspect }
+      format.js { render :json => {"orgs" => @units }.as_json() }
+    end
+  end
+
   def programs
-    @units = Program.find(:all, :order => "sort_order, lower(abbreviation)", :include => [:members,:organization_abstracts, :primary_faculty, :joint_faculty, :secondary_faculty])
+    @units = Program.all( :order => "sort_order, lower(abbreviation)", :include => [:members,:organization_abstracts, :primary_faculty, :joint_faculty, :secondary_faculty])
     @heading = "Center Programs Listing"
     @show_primary_faculty=false
     @show_associated_faculty=false
@@ -151,6 +168,31 @@ class OrgsController < ApplicationController
     respond_to do |format|
       format.html { render :action => :index }
       format.xml  { render :xml => @units }
+    end
+  end
+
+  def program_members
+    @unit = Program.find_by_abbreviation(params[:id])
+    if @unit.blank?
+      @unit = Program.find_by_name(params[:id])
+    end
+    if @unit.blank?
+      @unit = Program.find_by_search_name(params[:id])
+    end
+    if @unit.blank?
+      @unit = Program.find_by_division_id(params[:id])
+    end
+    if @unit.blank?
+      render :text=>'could not find unit ' + params[:id]
+    else
+      investigators = @unit.associated_faculty.sort_by(&:last_name)
+      investigators_array = investigators.collect{ |inv| 
+        {"username" => inv.username, "name" => inv.full_name, "department" => inv.home_department_name, "title" => inv.title} 
+      }      
+      respond_to do |format|
+        format.html { render :text => @unit.name }
+        format.js { render :json => {"unit_name" => @unit.name, :faculty => investigators_array }.as_json() }
+      end
     end
   end
 
