@@ -107,8 +107,8 @@ class Investigator < ActiveRecord::Base
 #  default_scope :include => :abstracts
   #default_scope :order => 'lower(investigators.last_name),lower(investigators.first_name)'
 
-#  validates_presence_of :username
-#  validates_uniqueness_of :username
+  validates_presence_of :username
+  validates_uniqueness_of :username
 
   def self.include_deleted( id=nil )
     with_exclusive_scope do

@@ -2,29 +2,29 @@ class ProfilesController < ApplicationController
 
 #  caches_page( :show, :show_pubs, :ccsg ) if LatticeGridHelper.CachePages()
 #  before_filter :check_login
-  after_filter  :log_request, :except => [:login, :welcome, :splash, :show_pubs, :edit, :edit_pubs, :ccsg]
+#  after_filter  :log_request, :except => [:login, :welcome, :splash, :show_pubs, :edit, :edit_pubs, :ccsg]
 #  after_filter :check_login
 
 #  require 'cache_utilities'
 
-  include Aker::Rails::SecuredController if LatticeGridHelper.require_authentication?
-  include ProfilesHelper
-  include InvestigatorsHelper
-  include ApplicationHelper
-  include AbstractsHelper
+#  include Aker::Rails::SecuredController if LatticeGridHelper.require_authentication?
+#  include ProfilesHelper
+#  include InvestigatorsHelper
+#  include ApplicationHelper
+#  include AbstractsHelper
   
-  include MeshHelper  #for the do_mesh_search method
+#  include MeshHelper  #for the do_mesh_search method
 
-  require 'publication_utilities' #all the helper methods
-  require 'pubmed_utilities'  #loads including 'pubmed_config'  'bio' (bioruby) and 
+#  require 'publication_utilities' #all the helper methods
+#  require 'pubmed_utilities'  #loads including 'pubmed_config'  'bio' (bioruby) and 
   #  require 'pubmed_config' #look here to change the default time spans
     # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
     # verify :method => :post, :only => [ :search ], :redirect_to => :current_abstracts_url
   
   def index
-    @username = (is_admin? ? params[:id] : current_user_model.username)
-    @pronoun  = (is_admin? ? "" : " Your ")
-    @username = current_user_model.username if @username.blank?
+#    @username = (is_admin? ? params[:id] : current_user_model.username)
+#    @pronoun  = (is_admin? ? "" : " Your ")
+#    @username = current_user_model.username if @username.blank?
     if is_admin?
       @investigators = Investigator.by_name
       render :action => 'admin_index'
