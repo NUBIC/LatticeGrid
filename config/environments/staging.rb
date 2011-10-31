@@ -39,7 +39,7 @@ config.action_mailer.raise_delivery_errors = false
 
 config.after_initialize do
   Aker.configure do
-    if RAILS_ROOT =~ /Users/ or true
+    if RAILS_ROOT =~ /Users/
       login_config = File.join(RAILS_ROOT, %w(config logins development.yml))
       authority Aker::Authorities::Static.from_file(login_config)
       puts "loading local static aker file"

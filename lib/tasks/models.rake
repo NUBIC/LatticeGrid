@@ -73,7 +73,7 @@ task :getAllInvestigatorsWithoutMembership => :environment do
   # load all organizations that have an investigator
   @InvestigatorsWithoutMembership = Investigator.not_members()
   
-  puts "count of all investigators  without a membership is #{@InvestigatorsWithoutMembership.length}" if LatticeGridHelper.verbose?
+  puts "count of all investigators without a membership is #{@InvestigatorsWithoutMembership.length}" if LatticeGridHelper.verbose?
 end
 
 task :getAbstracts => :environment do

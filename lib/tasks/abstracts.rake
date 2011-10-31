@@ -21,8 +21,12 @@ end
 
 task :checkForInvestigatorsWithNoPrograms => :environment do
   block_timing("checkForInvestigatorsWithNoPrograms") {
-    @AbstractsNoInvestigators = Investigator.without_programs()
-    puts "investigators without programs: #{@AbstractsNoInvestigators.length}"
+    @InvestigatorsNoPrograms = Investigator.without_programs()
+    @InvestigatorsNoPrograms.each do |inv|
+      puts "#{inv.name} is has no memberships"
+    end
+    
+    puts "investigators without programs: #{@InvestigatorsNoPrograms.length}"
   }
 end
 
@@ -30,9 +34,7 @@ task :deleteInvestigatorsWithNoPrograms => :environment do
   block_timing("deleteInvestigatorsWithNoPrograms") {
     @InvestigatorsNoPrograms = Investigator.without_programs()
     puts "deleting #{@InvestigatorsNoPrograms.length} investigators with no programs."
-    @InvestigatorsNoPrograms.each do |inv|
-      inv.delete
-    end
+    purgeInvestigators(@InvestigatorsNoPrograms)
     puts "done."
   }
 end

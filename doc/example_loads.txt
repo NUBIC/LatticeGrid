@@ -1,3 +1,9 @@
+# October 2011 loads, RHLCCC
+rake importInvestigators file=db/imports/RHLCCC/new_faculty_Sep2011.txt
+rake importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsSep2011.txt
+rake getAllMembers  
+
+
 # September 2011 loads
 rake importDepartments file=db/imports/Feinberg/department_lookup_Dec2010.txt 
 rake importOrganizations file=db/imports/Feinberg/division_lookup_Sep2011.txt 

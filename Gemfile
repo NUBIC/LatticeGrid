@@ -11,7 +11,7 @@ gem 'will_paginate'
 gem 'awesome_nested_set', "~> 1.4"
 #gem "acts_as_taggable_on_steroids", "~> 1.2"
 gem "princely", "~> 1.2.5"
-gem 'ruby-net-ldap'
+gem 'net-ldap'
 gem 'bio'
 gem 'aker-rails'
 gem 'aker'

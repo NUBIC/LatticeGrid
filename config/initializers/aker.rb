@@ -1,4 +1,4 @@
-# In config/initializers/bcsec.rb
+# In config/initializers/aker.rb
 require "aker"
 Aker.configure do
   # The authentication protocol to use for interactive access.

@@ -46,7 +46,12 @@ class Investigator < ActiveRecord::Base
 
 
   has_many :investigator_abstracts
+  
   has_many :investigator_colleagues
+  has_many :colleague_investigators,
+    :class_name => "InvestigatorColleague",
+    :foreign_key => 'colleague_id'
+
   has_many :similar_investigators, 
       :class_name => "InvestigatorColleague", 
       :include => [:colleague], 
@@ -67,8 +72,11 @@ class Investigator < ActiveRecord::Base
          :conditions => ['investigator_abstracts.is_valid = true']
 #  has_many :investigator_abstracts_meshes
 #  has_many :meshes, :through => :investigator_abstracts_meshes
-  has_many :investigator_appointments,
-    :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
+has_many :investigator_appointments,
+  :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
+  has_many :all_investigator_appointments,
+    :class_name => "InvestigatorAppointment"
+
   has_many :joints, :class_name => "Joint",
     :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
   has_many :secondaries, :class_name => "Secondary",
@@ -117,6 +125,19 @@ class Investigator < ActiveRecord::Base
       else
         find(id)
       end
+    end
+  end
+
+  def self.delete_deleted( id )
+    with_exclusive_scope do
+        delete(id)
+    end
+  end
+
+
+  def self.find_purged( )
+    with_exclusive_scope do
+      all(:conditions=>["investigators.deleted_at is not null"])
     end
   end
 
@@ -388,7 +409,11 @@ class Investigator < ActiveRecord::Base
   def self.no_appointments()
     all(  :conditions => ["not exists(select 'x' from investigator_appointments where investigator_appointments.investigator_id = investigators.id )"] )
   end
-  
+
+  def self.without_programs()
+    all(  :conditions => ["not exists(select 'x' from investigator_appointments where investigator_appointments.investigator_id = investigators.id and investigator_appointments.type = 'Member' and investigator_appointments.end_date is null )"] )
+  end
+
   
 # used in the rake tasks to add to the investigator object attributes
 

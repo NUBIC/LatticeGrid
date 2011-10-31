@@ -414,44 +414,57 @@ namespace :cleanup do
     puts "insert_employee_ids completed. Processed #{username_hash.keys.length} entries. Changed #{changed} investigators"
   end
 
-end
-
-def clean_model(class_model, attribute_name, match_names, accepted_name)
-  match_names = match_names.split(",")
-  match_names.each do |the_match|
-    class_model.update_all( {"#{attribute_name}" => accepted_name}, ["lower(#{attribute_name}) like :like_match", {:like_match => the_match.strip.downcase+'%'} ] )
+  def clean_model(class_model, attribute_name, match_names, accepted_name)
+    match_names = match_names.split(",")
+    match_names.each do |the_match|
+      class_model.update_all( {"#{attribute_name}" => accepted_name}, ["lower(#{attribute_name}) like :like_match", {:like_match => the_match.strip.downcase+'%'} ] )
+    end
   end
-end
 
-task :purgeOldMemberships => :environment do
-   block_timing("purgeOldMemberships") {
-      prune_program_memberships_not_updated()
-   }
-end
+  task :purgeOldMemberships => :environment do
+     block_timing("cleanup:purgeOldMemberships") {
+        prune_program_memberships_not_updated()
+     }
+  end
 
-task :countFacultyUpdates => :environment do
-   block_timing("countFacultyUpdates") {
-      count_faculty_updates()
-   }
-end
+  task :countFacultyUpdates => :environment do
+     block_timing("cleanup:countFacultyUpdates") {
+        count_faculty_updates()
+     }
+  end
 
-task :purgeUnupdatedFaculty => :environment do
-   block_timing("purgeUnupdatedFaculty") {
-      prune_unupdated_faculty()
-   }
-end
+  task :purgeUnupdatedFaculty => :environment do
+     block_timing("cleanup:purgeUnupdatedFaculty") {
+        prune_unupdated_faculty()
+     }
+  end
 
 
-task :cleanInvestigatorsUsername => :environment do
-   block_timing("cleanInvestigatorsUsername") {
-     doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%.%'"))
-     doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%(%'"))
-   }
-end
+  task :cleanInvestigatorsUsername => :environment do
+     block_timing("cleanup:cleanInvestigatorsUsername") {
+       doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%.%'"))
+       doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%(%'"))
+     }
+  end
 
-task :purgeNonMembers => :getAllInvestigatorsWithoutMembership do
-   block_timing("purgeNonMembers") {
-     purgeInvestigators(@InvestigatorsWithoutMembership)
-   }
+  task :purgeNonMembers => :getAllInvestigatorsWithoutMembership do
+     block_timing("cleanup:purgeNonMembers") {
+       purgeInvestigators(@InvestigatorsWithoutMembership)
+     }
+  end
+
+  task :get_unmatched_investigator => :environment do
+     block_timing("cleanup:get_unmatched_investigator") {
+       purgeInvestigators(@Unmatched_Investigators)
+     }
+  end
+
+
+  task :delete_purged_investigators => :environment do
+     block_timing("cleanup:delete_purged_investigators") {
+       deletePurgedInvestigators()
+      }
+  end
+
 end
 

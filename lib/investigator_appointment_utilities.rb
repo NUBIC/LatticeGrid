@@ -493,11 +493,13 @@ def CreateProgramMembershipsFromHash(data_row, type='Member')
   appt = InvestigatorAppointment.new
   program = OrganizationalUnit.find_by_abbreviation(unit_abbreviation)
   investigator=nil
-  investigators = Investigator.find_all_by_last_name(last_name)
+  investigators = Investigator.find_all_by_email(email)
   if investigators.length == 1
     investigator = investigators[0]
   else
-    investigator = Investigator.find_by_email(email)
+    investigator = Investigator.first(
+        :conditions => ["lower(last_name) = :last_name AND lower(first_name) like :first_name",
+           {:last_name => last_name.downcase, :first_name => "#{first_name.split(" ").first.downcase}%"}])
     if investigator.blank? then
       more_pis = Investigator.find(:all, 
         :conditions => ["lower(email) = :email",
@@ -507,7 +509,7 @@ def CreateProgramMembershipsFromHash(data_row, type='Member')
       end
     end
     if investigator.blank? then
-      more_pis = Investigator.find(:all, 
+      more_pis = Investigator.all(
         :conditions => ["lower(last_name) = :last_name AND lower(first_name) like :first_name",
            {:last_name => last_name.split(",").first.downcase, :first_name => "#{first_name.split(" ").first.downcase}%"}])
       if more_pis.length == 1
@@ -640,6 +642,21 @@ def purgeInvestigators(investigators_to_purge)
     pi.deleted_at = 2.days.ago
     pi.end_date = 2.days.ago
     pi.save!
+  end
+end
+
+def deletePurgedInvestigators()
+  purged_investigators = Investigator.find_purged
+  puts "deleting #{purged_investigators.length} investigators"
+  purged_investigators.each do |pi|
+    puts "deleting purged investigator  #{pi.name} username #{pi.username}" if LatticeGridHelper.verbose?
+    pi.investigator_abstracts.map{|m| m.delete}
+    pi.all_investigator_appointments.map{|m| m.delete}
+    pi.investigator_proposals.map{|m| m.delete}
+    pi.investigator_studies.map{|m| m.delete}
+    pi.investigator_colleagues.map{|m| m.delete}
+    pi.colleague_investigators.map{|m| m.delete}
+    Investigator.delete_deleted(pi.id)
   end
 end
 
