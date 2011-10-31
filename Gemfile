@@ -14,7 +14,7 @@ gem "princely", "~> 1.2.5"
 gem 'net-ldap'
 gem 'bio'
 gem 'aker-rails'
-gem 'aker'
+gem 'aker', '~> 3.0.3'
 gem 'rdoc' # necessary for rails 2.3.12
 gem 'bcdatabase', '~> 1.0.6'
 #gem 'wordcram'
