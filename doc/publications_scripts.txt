@@ -1,7 +1,7 @@
 # look in the file 'update_publications.sh' for an example of a file you can run nightly as a cron job
 # don't forget to customize the environment information for your server!
 
-# you are now ready to start loading data
+# you are now ready to start loading database
 
 # load data using the insertAbstracts rake task
 rake insertAbstracts

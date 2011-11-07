@@ -16,13 +16,13 @@
 		<%= handle_tr_format("Telephone",investigator.business_phone) %>
 		<%= handle_tr_format("Fax",investigator.fax) %>
 		<%= handle_tr_format("Email",email_link(investigator.email)) %>
-		<% if defined?(LatticeGridHelper.include_summary_by_member?) and LatticeGridHelper.include_summary_by_member? %>
+		<% if defined?(LatticeGridHelper.include_summary_by_member?) and LatticeGridHelper.include_summary_by_member? and defined?(LatticeGridHelper.include_research_summary_by_organization?) and LatticeGridHelper.include_research_summary_by_organization? %>
 			<% old_summary = "&nbsp;" %>
 			<% investigator.member_appointments.each do |appointment| %>
 				<% research_summary = (appointment.research_summary || investigator.faculty_research_summary || "").chomp %>
 				<% research_summary = "&nbsp;" if research_summary == old_summary %>
 				<% old_summary = research_summary if ((!research_summary.blank?) and (research_summary != "&nbsp;")) %>
-				<%= handle_tr_format("Research in #{link_to_unit(appointment.organizational_unit)}", research_summary )%>
+				<%= handle_tr_format("Research in #{link_to_unit(appointment.organizational_unit)}", research_summary ) %>
 			<% end %>
 		<% else %>
 		<%= handle_tr_format("Description",investigator.faculty_research_summary||"No research description available") if LatticeGridHelper.show_research_description? %>

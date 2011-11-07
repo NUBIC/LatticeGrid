@@ -143,7 +143,7 @@ rake importInvestigators file=db/imports/RHLCCC/faculty.txt
 
 You will want to make sure all the faculty ids are entered appropriately. The rake task is:
 
-rake cleanInvestigatorsUsername
+rake cleanup:cleanInvestigatorsUsername
 
 # If you want to separate the faculty from the programs they are in, you need to build the investigator/program relationships. Use the following file as an example
 

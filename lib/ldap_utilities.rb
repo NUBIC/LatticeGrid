@@ -139,8 +139,8 @@ def MergePIrecords(thePI, pi_data)
     thePI.business_phone = CleanLDAPvalue(pi_data["telephoneNumber"]) || thePI.business_phone
     thePI.employee_id = CleanLDAPvalue(pi_data["employeeNumber"]) || thePI.employee_id
     thePI.address1 = CleanLDAPvalue(pi_data["postalAddress"]) || thePI.address1
-    thePI.address1 = thePI.address1.split("$").join(13.chr) if !  thePI.address1.blank?
-    thePI.campus = CleanLDAPvalue(pi_data["postalAddress"]).split("$").last || thePI.campus if ! pi_data["postalAddress"].blank?
+    thePI.address1 = thePI.address1.split("$").join(13.chr) unless  thePI.address1.blank?
+    thePI.campus = CleanLDAPvalue(pi_data["postalAddress"]).split("$").last || thePI.campus unless pi_data["postalAddress"].blank? or CleanLDAPvalue(pi_data["postalAddress"]).blank?
     # home_department is no longer a string
     thePI["home"] = CleanLDAPvalue(pi_data.ou)  if pi_data.ou !~ /People/
     thePI["ldap_email"] = CleanLDAPvalue(pi_data["mail"])

@@ -25,6 +25,10 @@
   def LatticeGridHelper.include_summary_by_member?
     return false
   end
+  
+  def LatticeGridHelper.include_research_summary_by_organization?
+    return false
+  end
 
   # for cancer centers to 'deselect' publications from inclusion in the CCSG report
   def LatticeGridHelper.show_cancer_related_checkbox?

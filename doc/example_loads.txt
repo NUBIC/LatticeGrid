@@ -1,7 +1,18 @@
+# November 2011 loads, RHLCCC
+rake importInvestigators file=db/imports/RHLCCC/new_faculty_Oct2011.txt
+rake importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsOct2011.txt
+rake getAllMembers  
+rake checkForInvestigatorsWithNoPrograms
+rake deleteInvestigatorsWithNoPrograms
+rake importInvestigatorDescriptions file=db/imports/RHLCCC/example_summaries_nov2011.txt
+
+
 # October 2011 loads, RHLCCC
 rake importInvestigators file=db/imports/RHLCCC/new_faculty_Sep2011.txt
 rake importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsSep2011.txt
 rake getAllMembers  
+rake checkForInvestigatorsWithNoPrograms
+rake deleteInvestigatorsWithNoPrograms
 
 
 # September 2011 loads
@@ -21,7 +32,7 @@ rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_interests_S
 rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_descriptions_Sep2011.txt
 rake db:vacuum  #added a custom rake method for this
 rake cleanup:email
-rake cleanInvestigatorsUsername
+rake cleanup:cleanInvestigatorsUsername
 
 rake importJournalImpact file=db/imports/jcr_recs.txt
 rake importJournalImpact file=db/imports/jcr_recs_2010.txt
@@ -68,7 +79,7 @@ rake cleanJournalISSNentries
 rake findAbstractswithoutJCRentries
 rake findAbstractswithJCRentries
 
-rake cleanInvestigatorsUsername
+rake cleanup:cleanInvestigatorsUsername
 rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_interests_Aug2011.txt
 rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_descriptions_Aug2011.txt
 rake db:vacuum  #added a custom rake method for this
@@ -96,7 +107,7 @@ rake cleanJournalISSNentries
 rake findAbstractswithoutJCRentries
 rake findAbstractswithJCRentries
 
-rake cleanInvestigatorsUsername
+rake cleanup:cleanInvestigatorsUsername
 rake importInvestigatorDescriptions file=db/imports/faculty_interests_June2011.txt
 rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_June2011.txt
 rake db:vacuum  #added a custom rake method for this
@@ -125,7 +136,7 @@ rake cleanJournalISSNentries
 rake findAbstractswithoutJCRentries
 rake findAbstractswithJCRentries
 
-rake cleanInvestigatorsUsername
+rake cleanup:cleanInvestigatorsUsername
 rake importInvestigatorDescriptions file=db/imports/faculty_interests_Apr2011.txt
 rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_Apr2011.txt
 rake db:vacuum  #added a custom rake method for this
@@ -154,7 +165,7 @@ rake RAILS_ENV=staging  cleanJournalISSNentries
 rake RAILS_ENV=staging  findAbstractswithoutJCRentries
 rake RAILS_ENV=staging  findAbstractswithJCRentries
 
-rake RAILS_ENV=staging  cleanInvestigatorsUsername
+rake RAILS_ENV=staging  cleanup:cleanInvestigatorsUsername
 rake RAILS_ENV=staging  importInvestigatorDescriptions file=db/imports/faculty_interests_Apr2011.txt
 rake RAILS_ENV=staging  importInvestigatorDescriptions file=db/imports/faculty_descriptions_Apr2011.txt
 rake RAILS_ENV=staging  db:vacuum  #added a custom rake method for this
@@ -184,7 +195,7 @@ rake RAILS_ENV=production  cleanJournalISSNentries
 rake RAILS_ENV=production  findAbstractswithoutJCRentries
 rake RAILS_ENV=production  findAbstractswithJCRentries
 
-rake RAILS_ENV=production  cleanInvestigatorsUsername
+rake RAILS_ENV=production  cleanup:cleanInvestigatorsUsername
 rake RAILS_ENV=production  importInvestigatorDescriptions file=db/imports/faculty_interests_Apr2011.txt
 rake RAILS_ENV=production  importInvestigatorDescriptions file=db/imports/faculty_descriptions_Apr2011.txt
 rake RAILS_ENV=production  db:vacuum  #added a custom rake method for this
@@ -209,7 +220,7 @@ rake importAwardData file=db/imports/Cognos_Awards.txt
 rake importAwardData file=db/imports/award_data_20110417.txt
 rake importJournalImpact file=db/imports/jcr_recs.txt
 rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
-rake cleanInvestigatorsUsername
+rake cleanup:cleanInvestigatorsUsername
 rake importInvestigatorDescriptions file=db/imports/faculty_interests_Feb2011.txt
 rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_Feb2011.txt
 rake db:vacuum  #added a custom rake method for this
@@ -229,7 +240,7 @@ rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids_Dec2010.txt
 rake importAwardData file=db/imports/Cognos_Awards.txt
 rake importJournalImpact file=db/imports/jcr_recs.txt
 rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
-rake cleanInvestigatorsUsername
+rake cleanup:cleanInvestigatorsUsername
 rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_Dec2010.txt
 rake importInvestigatorDescriptions file=db/imports/faculty_interests_Dec2010.txt
 rake db:vacuum  #added a custom rake method for this
@@ -248,7 +259,7 @@ rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids_October2010.txt
 rake importAwardData file=db/imports/Cognos_Awards.txt
 rake importJournalImpact file=db/imports/jcr_recs.txt
 rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
-rake cleanInvestigatorsUsername
+rake cleanup:cleanInvestigatorsUsername
 rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_October2010.txt
 rake importInvestigatorDescriptions file=db/imports/faculty_interests_October2010.txt
 rake db:vacuum  #added a custom rake method for this
@@ -270,7 +281,7 @@ rake environment RAILS_ENV=production  importInvestigatorPubmedIDs file=db/impor
 rake environment RAILS_ENV=production  importAwardData file=db/imports/Cognos_Awards.txt
 rake environment RAILS_ENV=production  importJournalImpact file=db/imports/jcr_recs.txt
 rake environment RAILS_ENV=production  importJournalISOnames file=db/imports/jcr_iso_titles.txt
-rake environment RAILS_ENV=production  cleanInvestigatorsUsername
+rake environment RAILS_ENV=production  cleanup:cleanInvestigatorsUsername
 rake environment RAILS_ENV=production importInvestigatorDescriptions file=db/imports/faculty_descriptions_October2010.txt
 rake environment RAILS_ENV=production importInvestigatorDescriptions file=db/imports/faculty_interests_October2010.txt
 rake environment RAILS_ENV=production  db:vacuum  #added a custom rake method for this
@@ -294,7 +305,7 @@ rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids_June2010.txt
 rake importAwardData file=db/imports/Cognos_Awards.txt
 rake importJournalImpact file=db/imports/jcr_recs.txt
 rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
-rake cleanInvestigatorsUsername
+rake cleanup:cleanInvestigatorsUsername
 rake log:clear
 
 rake environment RAILS_ENV=production  db:drop
@@ -312,7 +323,7 @@ rake environment RAILS_ENV=production  importInvestigatorPubmedIDs file=db/impor
 rake environment RAILS_ENV=production  importAwardData file=db/imports/Cognos_Awards.txt
 rake environment RAILS_ENV=production  importJournalImpact file=db/imports/jcr_recs.txt
 rake environment RAILS_ENV=production  importJournalISOnames file=db/imports/jcr_iso_titles.txt
-rake environment RAILS_ENV=production  cleanInvestigatorsUsername
+rake environment RAILS_ENV=production  cleanup:cleanInvestigatorsUsername
 rake log:clear
 
 # for the irb

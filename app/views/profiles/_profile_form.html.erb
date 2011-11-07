@@ -1,18 +1,15 @@
 <% if ! investigator_form.error_messages.blank? %><tr><td colspan="3"><%= investigator_form.error_messages %></td></tr><% end %>
 
-<% index = 0 %>
 <% investigator_form.fields_for :member_appointments do |appointment| %>
-<% appointment.object.research_summary = appointment.object.research_summary || investigator.faculty_research_summary %>
-	<tr><td class="title"><%= appointment.label :research_summary, 'Research Summary for '+link_to_unit(appointment.object.organizational_unit) %></td>
-		<td><%= appointment.text_area :research_summary, {:rows => 12, :cols => 90, :wrap=>"virtual", :class => 'uEditorCustom'} %></td>
-		<td class="notes">
-		<% if index == 0 %>
-		<p>Please enter a 100-300 word summary describing your research and highlighting your cancer research activities. Please include the ties between your research and the cancer center research programs you are a part of. </p>
-		<%= profile_example_summaries() if defined?(profile_example_summaries) and not profile_example_summaries.blank? %>
-		<% end %>
-	</td></tr>
-<% index += 1 %>
+	<% investigator.faculty_research_summary = investigator.faculty_research_summary || appointment.object.research_summary %>
 <% end %>
+<tr><td class="title"><%= investigator_form.label :faculty_research_summary, 'Research Summary' %></td>
+	<td><%= investigator_form.text_area :faculty_research_summary, {:rows => 15, :cols => 90, :wrap=>"virtual", :class => 'uEditorCustom'} %></td>
+	<td class="notes">
+	<p>Please enter a 100-300 word summary describing your research and highlighting your cancer research activities. Please include the ties between your research and the cancer center research programs you are a part of. </p>
+	<%= profile_example_summaries() if defined?(profile_example_summaries) and not profile_example_summaries.blank? %>
+</td></tr>
+
 <tr><td class="title"><%= investigator_form.label :faculty_interests, "Research Interests" %></td>
 	<td> <%= investigator_form.text_area :faculty_interests, {:rows => 6, :cols => 90, :wrap=>"virtual"} %></td><td class="notes">
 	Please enter comma- or return-separated keywords/phrases describing your research interests.
