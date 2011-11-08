@@ -199,8 +199,10 @@ def generate_cytoscape_study_edges(investigator, depth, nodes_array_hash, edge_a
         i_study.study.investigator_studies.each { |inv_study|
           inv_study_index = inv_study.investigator_id.to_s
           if inv_study_index and cytoscape_array_has_key?(nodes_array_hash, inv_study_index) and ! cytoscape_edge_array_has_key?(edge_array, study_index, inv_study_index)
-            tooltiptext=investigator_study_edge_tooltip(i_study,inv_study.investigator,depth)
-            edge_array << cytoscape_edge_hash(edge_array.length, study_index, inv_study_index, inv_study.role, i_study.study.investigator_studies.length, tooltiptext)
+            unless inv_study.investigator.blank?
+              tooltiptext=investigator_study_edge_tooltip(i_study,inv_study.investigator,depth)
+              edge_array << cytoscape_edge_hash(edge_array.length, study_index, inv_study_index, inv_study.role, i_study.study.investigator_studies.length, tooltiptext)
+            end
           end
         }
       end
@@ -222,8 +224,10 @@ def generate_cytoscape_study_investigator_edges(study,edge_array, depth)
     investigator_index = inner_inv_study.investigator_id.to_s
     
     if investigator_index and ! cytoscape_edge_array_has_key?(edge_array, study_index, investigator_index)
-      tooltiptext=investigator_study_edge_tooltip(inner_inv_study,inner_inv_study.investigator,depth)
-      edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, study_index, inner_inv_study.role, study.investigator_studies.length, tooltiptext)
+      unless inner_inv_study.investigator.blank?
+        tooltiptext=investigator_study_edge_tooltip(inner_inv_study,inner_inv_study.investigator,depth)
+        edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, study_index, inner_inv_study.role, study.investigator_studies.length, tooltiptext)
+      end
     end
   }
   edge_array
@@ -334,8 +338,10 @@ def generate_cytoscape_award_investigator_edges(award,edge_array, depth)
     investigator_index = inner_inv_award.investigator_id.to_s
     
     if investigator_index and ! cytoscape_edge_array_has_key?(edge_array, award_index, investigator_index)
-      tooltiptext=investigator_award_edge_tooltip(inner_inv_award,inner_inv_award.investigator,depth)
-      edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, award_index, inner_inv_award.role, award.total_amount, tooltiptext)
+      unless inner_inv_award.investigator.blank?
+        tooltiptext=investigator_award_edge_tooltip(inner_inv_award,inner_inv_award.investigator,depth)
+        edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, award_index, inner_inv_award.role, award.total_amount, tooltiptext)
+      end
     end
   }
   edge_array
@@ -343,7 +349,7 @@ end
 
 
 def investigator_award_edge_tooltip(i_award,investigator,depth)
-   "Investigator #{investigator.name}; <br/>" + 
+   "Investigator #{investigator.name unless investigator.blank?}; <br/>" + 
    "Role: #{i_award.role}; <br/>" + 
    "Award: #{i_award.proposal.title}; <br/>" 
 end

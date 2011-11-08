@@ -8,12 +8,14 @@ class GraphsController < ApplicationController
   end
 
   def show_org
+    @javascripts_add = ['prototype', 'scriptaculous', 'effects']
     if params[:id].blank? then
       redirect_to show_org_graph_url(1)
     end
   end
 
   def show_member
+    @javascripts_add = ['prototype', 'scriptaculous', 'effects']
    if !params[:id].blank? then
      if !params[:format].blank? then #reassemble the username
        params[:id]=params[:id]+'.'+params[:format]

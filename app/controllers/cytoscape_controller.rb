@@ -2,7 +2,7 @@ class CytoscapeController < ApplicationController
   before_filter :check_allowed, :only => [:awards, :studies]
 
   caches_page( :show, :jit, :protovis, :member_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data) if LatticeGridHelper.CachePages()
-  caches_action( :listing, :investigator, :show, :awards, :studies )  if LatticeGridHelper.CachePages()
+  caches_action( :listing, :investigator, :awards, :studies )  if LatticeGridHelper.CachePages()
   
   require 'cytoscape_config'
   require 'cytoscape_generator'
