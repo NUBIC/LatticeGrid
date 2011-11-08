@@ -22,12 +22,12 @@ class CreateInvestigators < ActiveRecord::Migration
       t.column :pubmed_limit_to_institution, :boolean, :default => false 
       t.column :num_first_pubs_last_five_years, :integer, :default => 0 
       t.column :num_last_pubs_last_five_years, :integer, :default => 0
-      t.column :total_publications_last_five_years, :integer, :default => 0
+      t.column :total_pubs_last_five_years, :integer, :default => 0
       t.column :num_intraunit_collaborators_last_five_years, :integer, :default => 0
       t.column :num_extraunit_collaborators_last_five_years, :integer, :default => 0
       t.column :num_first_pubs, :integer, :default => 0 
       t.column :num_last_pubs, :integer, :default => 0
-      t.column :total_publications, :integer, :default => 0
+      t.column :total_pubs, :integer, :default => 0
       t.column :num_intraunit_collaborators, :integer, :default => 0
       t.column :num_extraunit_collaborators, :integer, :default => 0
       t.column :last_pubmed_search, :date

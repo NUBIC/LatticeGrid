@@ -1,3 +1,24 @@
+#Stanford November 2011 loads
+rake importDepartments file=db/imports/Stanford/department_lookup.txt
+rake importOrganizations file=db/imports/Stanford/division_lookup.txt 
+rake cleanUpOrganizations
+rake getAllOrganizationsNotUpdated
+rake purgeUnupdatedOrganizations
+rake getAllOrganizationsNotUpdated
+rake importJournalImpact file=db/imports/jcr_recs_2009.txt
+rake importJournalImpact file=db/imports/jcr_recs_2010.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake cleanJournalISSNentries
+
+
+rake importInvestigators file=db/imports/Stanford/stanford_membership_101911.txt
+rake log:clear
+rake getAllMembers  
+rake checkForInvestigatorsWithNoPrograms
+rake db:vacuum  #added a custom rake method for this
+rake cleanup:email
+rake cleanup:cleanInvestigatorsUsername
+
 # November 2011 loads, RHLCCC
 rake importInvestigators file=db/imports/RHLCCC/new_faculty_Oct2011.txt
 rake importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsOct2011.txt

@@ -36,7 +36,7 @@ config.after_initialize do
     if RAILS_ROOT =~ /Users/ 
       login_config = File.join(RAILS_ROOT, %w(config logins development.yml))
       authority Aker::Authorities::Static.from_file(login_config)
-      puts "loading local static bcsec file"
+      puts "loading local static aker file"
     else
       authorities :ldap
       central '/etc/nubic/bcsec-staging.yml'

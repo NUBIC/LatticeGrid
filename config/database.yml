@@ -11,6 +11,7 @@
     when 'UCSF' then "ucsf_latticegrid"
     when 'UWCCC' then "uwisc_latticegrid"
     when 'UMich' then "umich_latticegrid"
+    when 'Stanford' then "stanford_latticegrid"
     when 'CINJ' then "cinj_latticegrid"
     when 'UChicago' then "uchicago_latticegrid"
     when 'UIC' then "uic_latticegrid"

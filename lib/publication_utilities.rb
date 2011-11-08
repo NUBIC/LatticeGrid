@@ -150,8 +150,11 @@ def InsertPublication(publication, update_if_pmc_exists=false)
   reference = medline.reference
   pubmed_central_id = medline.pubmed_central
   pubmed_central_id = nil if pubmed_central_id.blank?
+  if reference.pubmed.blank?
+    puts "pubmed_id was blank for reference #{medline.inspect}"
+    return nil
+  end
   publication_date = check_date(medline.publication_date, medline.electronic_publication_date,  medline.deposited_date, reference.pubmed)
-
   thePub = Abstract.find_by_pubmed_include_deleted(reference.pubmed)
   begin 
     if thePub.nil? || thePub.id < 1 then
