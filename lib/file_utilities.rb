@@ -30,14 +30,20 @@ end
 def read_data_handler(model_name, file_name, column_separator="\t")
   errors = ""
   data = FasterCSV.read(file_name, :col_sep => column_separator, :headers => :first_row)
-  puts model_name.find(:all).length
+  puts model_name.find(:all).length unless model_name.blank?
   yield(data)
-  puts model_name.find(:all).length
+  puts model_name.find(:all).length unless model_name.blank?
 end
 
 
 def ReadNetIDgenerateReport(file_name)
+  puts   "username\tfirst_name\tmiddle_name\tlast_name\tdegrees\temail\temployee_id\ttitle\tposition\tdepartment\tbusiness_phone\taddress"
   read_data_handler(Investigator,file_name) {|data| row_iterator(data) {|data| GenerateNetIDReport(data)} }
+end
+
+def ReadNamesAndSplit(file_name)
+  puts  "username\tfirst_name\tmiddle_name\tlast_name\tdegrees"
+  read_data_handler("",file_name) {|data| row_iterator(data) {|data| DoReadNamesAndSplit(data)} }
 end
 
 def ReadInvestigatorData(file_name)

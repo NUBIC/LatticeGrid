@@ -15,7 +15,7 @@ rake RAILS_ENV=production cleanUpOrganizations
 rake RAILS_ENV=production getAllOrganizationsNotUpdated
 rake RAILS_ENV=production importInvestigators file=db/imports/RHLCCC/new_faculty_Aug2011.txt
 rake RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsAug2011.txt
-rake RAILS_ENV=production cleanInvestigatorsUsername
+rake RAILS_ENV=production cleanup:cleanInvestigatorsUsername
 rake RAILS_ENV=production getAllInvestigatorsWithoutMembership
 rake RAILS_ENV=production checkValidAbstracts
 rake RAILS_ENV=production checkDeletedAbstractsWithActiveInvestigators

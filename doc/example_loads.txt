@@ -1,3 +1,24 @@
+# UCSF November 2011 loads
+rake db:drop
+rake db:create
+rake db:migrate
+rake importDepartments file=db/imports/UCSF/department_lookup.txt
+rake importOrganizations file=db/imports/UCSF/division_lookup_aug_2011.txt 
+rake cleanUpOrganizations
+rake getAllOrganizationsNotUpdated
+rake importInvestigators file=db/imports/UCSF/faculty_02_2011.txt
+rake importInvestigators file=db/imports/UCSF/membership_20110804.txt
+rake getAllInvestigatorsWithoutMembership  
+rake cleanup:purgeNonMembers
+rake importJournalImpact file=db/imports/jcr_recs_2009.txt
+rake importJournalImpact file=db/imports/jcr_recs_2010.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake cleanJournalISSNentries
+rake insertAllAbstracts
+rake nightlyBuild
+rake monthlyBuild
+
+
 #Stanford November 2011 loads
 rake importDepartments file=db/imports/Stanford/department_lookup.txt
 rake importOrganizations file=db/imports/Stanford/division_lookup.txt 

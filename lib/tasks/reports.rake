@@ -11,6 +11,10 @@ namespace :reports do
     read_file_handler("netids_to_organization" ) {|filename| ReadNetIDgenerateReport(filename)}
   end
 
+  task :name_to_fields => :environment do
+    read_file_handler("name_to_fields" ) {|filename| ReadNamesAndSplit(filename)}
+  end
+
   task :abstracts_by_type => :environment do
     abstract_types = Abstract.all(:select=>"distinct publication_type")
     abstract_types.each do |abstract_type|

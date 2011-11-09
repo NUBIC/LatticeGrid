@@ -27,15 +27,28 @@ module InvestigatorsHelper
     begin
       pi_data = GetLDAPentry(investigator.username)
       if pi_data.nil?
-        logger.warn("Probable error reaching the LDAP server in GetLDAPentry: GetLDAPentry returned null for #{params[:name]} using netid #{investigator.username}.")
+        if defined?(logger) and ! logger.error.blank?
+          logger.warn("Probable error reaching the LDAP server in GetLDAPentry: GetLDAPentry returned null for #{params[:name]} using netid #{investigator.username}.")
+        else
+          puts "Probable error reaching the LDAP server in GetLDAPentry: GetLDAPentry returned null for #{params[:name]} using netid #{investigator.username}."
+        end
       elsif pi_data.blank?
+        if defined?(logger) and ! logger.error.blank?
           logger.warn("Entry not found. GetLDAPentry returned null using netid #{investigator.username}.")
+        else
+          puts "Entry not found. GetLDAPentry returned null using netid #{investigator.username}."
+        end
       else
         ldap_rec=CleanPIfromLDAP(pi_data)
-        investigator=MergePIrecords(investigator,ldap_rec)
+        investigator = BuildPIobject(ldap_rec) if investigator.id.blank?
+        investigator = MergePIrecords(investigator,ldap_rec)
       end
     rescue Exception => error
-      logger.error("Probable error reaching the LDAP server in GetLDAPentry: #{error.message}")
+      if defined?(logger) and ! logger.error.blank?
+        logger.error("Probable error reaching the LDAP server in GetLDAPentry: #{error.message}")
+      else
+        puts "Probable error reaching the LDAP server in GetLDAPentry: #{error.message}"
+      end
     end
   end
   
@@ -115,8 +128,11 @@ module InvestigatorsHelper
       out+="</span>"
     end
     out+=" &nbsp; </td><td>"
-    out+= edit_profile_link()
-    out+= " &nbsp;  &nbsp; "
+    profile_link = edit_profile_link()
+    unless profile_link.blank?
+      out+= profile_link
+      out+= " &nbsp;  &nbsp; "
+    end
     if defined?(all_abstracts) and ! all_abstracts.nil? and all_abstracts.length > 10
       publications_per_year=abstracts_per_year_as_string(all_abstracts)
       out+= "<span class='inlinebarchart' values='#{publications_per_year}' title='publications per year: #{publications_per_year}'>&nbsp;</span>"

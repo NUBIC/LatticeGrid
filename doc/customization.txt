@@ -158,7 +158,7 @@ rake getAllMembers
 rake getAllInvestigatorsWithoutMembership  
 
 # You can delete those without entries:
-rake purgeNonMembers
+rake cleanup:purgeNonMembers
 
 
 # Now we are ready to import the ISI Web of Science Journal impact factor ratings

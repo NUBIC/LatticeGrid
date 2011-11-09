@@ -6,7 +6,7 @@
   <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
   <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
 	<!-- javascript files -->
-	<% @javascripts ||= [ 'prototype','FusionCharts', 'ddsmoothmenu', 'jquery.min', 'jquery.sparkline.min' ] %>
+	<% @javascripts ||= [ 'prototype', 'scriptaculous', 'FusionCharts', 'ddsmoothmenu', 'jquery.min', 'jquery.sparkline.min' ] %>
 	<% @javascripts += @javascripts_add if defined?(@javascripts_add) %>
 	<%= javascript_include_tag @javascripts %> 
 	<!-- CSS Files -->

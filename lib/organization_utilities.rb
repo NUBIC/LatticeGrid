@@ -214,6 +214,8 @@ def HandleDepartment(pi, datarow)
   # department
   return pi if datarow["department"].blank? 
   department=datarow["department"]
+  # put in the string handler too
+  pi.home_department_name = department
   temp, joint = department.split("/")
   department, division = temp.split("-")
   temp, joint = joint.split("=") if ! joint.blank?

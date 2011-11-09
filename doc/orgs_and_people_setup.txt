@@ -40,6 +40,9 @@ rake importOrganizations file=db/imports/UMich/division_lookup.txt
 rake RAILS_ENV=staging importDepartments file=db/imports/AAS/department_lookup.txt
 rake RAILS_ENV=staging importOrganizations file=db/imports/AAS/division_lookup.txt
 
+rake importDepartments file=db/imports/UCSF/department_lookup.txt
+rake importOrganizations file=db/imports/UCSF/division_lookup.txt
+
 rake getAllOrganizationsNotUpdated
 rake purgeUnupdatedOrganizations
 rake getAllOrganizationsNotUpdated
@@ -68,8 +71,9 @@ rake RAILS_ENV=production importInvestigators file=db/imports/faculty.txt
 rake importInvestigators file=db/imports/new_faculty.txt
 rake RAILS_ENV=production importInvestigators file=db/imports/new_faculty.txt
 # or 
-rake importInvestigators file=db/imports/UCSFMembers.txt
-rake RAILS_ENV=production importInvestigators file=db/imports/UCSFMembers.txt
+rake importInvestigators file=db/imports/UCSF/faculty_02_2011.txt
+rake importInvestigators file=db/imports/UCSF/membership_20110804.txt
+rake RAILS_ENV=production importInvestigators file=db/imports/UCSF/membership_02_2011.txt
 # or 
 rake importInvestigators file=db/imports/cinj_faculty_20101021.txt
 rake importInvestigators file=db/imports/cinj_faculty.txt
@@ -206,8 +210,8 @@ rake RAILS_ENV=production getAllMembers
 rake getAllInvestigatorsWithoutMembership  
 rake RAILS_ENV=production getAllInvestigatorsWithoutMembership
 
-rake purgeNonMembers
-rake RAILS_ENV=production purgeNonMembers
+rake cleanup:purgeNonMembers
+rake RAILS_ENV=production cleanup:purgeNonMembers
 
 #insert ISI Web of Science Journal impact factor ratings
 # you can download the ISI Journal Citation Records and process them
@@ -236,8 +240,8 @@ rake  RAILS_ENV=production findAbstractswithoutJCRentries
 rake  RAILS_ENV=production findAbstractswithJCRentries
 
 # clean all usernames by removing any periods
-rake cleanInvestigatorsUsername
-rake RAILS_ENV=production cleanInvestigatorsUsername
+rake cleanup:cleanInvestigatorsUsername
+rake RAILS_ENV=production cleanup:cleanInvestigatorsUsername
 
 rake importStudies file=db/imports/Feinberg/private/studies_2011_09_08.csv
 rake importStudyInvestigators file=db/imports/Feinberg/private/study_roles_2011-09-08.csv

@@ -1,24 +1,77 @@
 require 'organization_utilities'
 require 'config' # cleanup_campus is in config
+require "#{RAILS_ROOT}/app/helpers/investigators_helper"
+include InvestigatorsHelper
+
+def to_str(element)
+  return "" if element.blank?
+  return element.to_s.split(13.chr).join(', ')
+end
+
+def DoReadNamesAndSplit(data_row)
+  investigator_string = data_row["name"] || data_row["NAME"]
+  first_name = ""
+  middle_name = ""
+  last_name = ""
+  degrees = ""
+  
+  return if investigator_string.blank?
+  investigator_string =~ /([^,]*),(.*)/
+  if $2.blank?
+    name_string = investigator_string
+  else
+    name_string = $1.strip
+    degrees = $2.strip
+  end
+  space_split = name_string.split(" ")
+  if space_split.length == 1
+    last_name = space_split[0]
+  elsif space_split.length == 2
+    first_name = space_split[0]
+    last_name = space_split[1]
+  elsif space_split.length == 3
+    first_name = space_split[0]
+    middle_name = space_split[1]
+    last_name = space_split[2]
+  else
+    puts "unable to process #{investigator_string}: too many spaces"
+    return
+  end
+  puts "#{first_name}\t#{middle_name}\t#{last_name}\t#{degrees}"
+end
 
 def GenerateNetIDReport(data_row)
   pi = Investigator.new
   pi = SetInvestigatorIdentity(pi,data_row)
   existing_investigator = IdentifyExistingInvestigator(pi)
+  position = "FSM faculty"
+  if existing_investigator.blank? and ! pi.username.blank?
+    position = "Not FSM faculty"
+    existing_investigator = Investigator.new(:username=>pi.username)
+  end
+  
+  existing_investigator = merge_investigator_db_and_ldap(existing_investigator)
+  
   if pi.username.blank? then
     puts "GenerateNetIDReport: Row did not have a username"
     puts data_row.inspect
-  elsif existing_investigator.blank? then
-    puts "#{pi.username}\tNot FSM\tNot FSM\tNot FSM"
+  elsif existing_investigator.blank? or existing_investigator.last_name.blank?
+    puts pi.username + "\tblank investigator"
   else
     if ! existing_investigator.home_department.blank? then 
       department_name = existing_investigator.home_department.name.to_s
       department_abbreviation = existing_investigator.home_department.abbreviation.to_s
+    elsif ! existing_investigator.home_department_name.blank?
+      department_name = existing_investigator.home_department_name.to_s
+      department_abbreviation = department_name.to_s
+    elsif ! existing_investigator.home.blank?
+      department_name = existing_investigator.home.to_s
+      department_abbreviation = department_name.to_s
     else
       department_name = "not found"
       department_abbreviation = "not found"
     end
-    puts existing_investigator.username + "\t" + existing_investigator.name + "\t" + department_name + "\t" + department_abbreviation
+    puts existing_investigator.username + "\t" + to_str(existing_investigator.first_name) + "\t" + to_str(existing_investigator.middle_name) + "\t" + to_str(existing_investigator.last_name) + "\t" + to_str(existing_investigator.degrees) + "\t" + to_str(existing_investigator.email) + "\t" + to_str(existing_investigator.employee_id) + "\t" + to_str(existing_investigator.title) + "\t" + position + "\t" + department_name + "\t" + to_str(existing_investigator.business_phone) + "\t" + to_str(existing_investigator.address1)  
   end
 end
 
@@ -41,7 +94,7 @@ def CreateInvestigatorFromHash(data_row)
       existing_pi = Investigator.find_by_email_including_deleted(pi.email)
     end
     if existing_pi.blank? then
-      if pi.home_department_id.blank?
+      if pi.home_department_id.blank? and pi.home_department_name.blank?
         puts "unable to set home_department_id for #{data_row}" if LatticeGridHelper.verbose? and HasDepartment(data_row)
       end
       puts "New investigator: #{pi.first_name} #{pi.last_name}; username: #{pi.username}; email: #{pi.email}" if LatticeGridHelper.verbose?
@@ -124,9 +177,9 @@ def SetInvestigatorIdentity(pi, data_row)
   pi.email = data_row['EMAIL'] || data_row['email'] 
 
   pi.username.downcase.strip! if ! pi.username.blank?
-  pi.first_name.strip! if ! pi.first_name.blank?
-  pi.middle_name.strip! if ! pi.middle_name.blank?
-  pi.last_name.strip! if ! pi.last_name.blank?
+  pi.first_name = pi.first_name.gsub(/\./,' ').strip if ! pi.first_name.blank?
+  pi.middle_name = pi.middle_name.gsub(/\./,' ').strip if ! pi.middle_name.blank?
+  pi.last_name = pi.last_name.gsub(/\./,' ').strip if ! pi.last_name.blank?
   pi.email.downcase.strip! if ! pi.email.blank?
   pi.employee_id.to_s.strip! if ! pi.employee_id.blank?
   pi.employee_id.to_s.downcase! if ! pi.employee_id.blank?
@@ -363,7 +416,9 @@ def IdentifyExistingInvestigator(pi)
   existing = Investigator.find(:all, 
     :conditions => ['lower(last_name) = lower(:last_name) and lower(first_name) = lower(:first_name)', 
       {:first_name=>pi.first_name,  :last_name=>pi.last_name}])  if (! pi.first_name.blank?) and (! pi.last_name.blank?)
-  return existing[0] if ! existing.blank? and existing.length == 1
+  unless  existing.blank? or existing.length != 1
+    return existing[0] 
+  end
   nil
 end
 

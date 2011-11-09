@@ -24,7 +24,7 @@ def LatticeGridHelper.show_cancer_related_checkbox?
 end
 
 def LatticeGridHelper.page_title
-  return 'Stanford Cancer Institute Faculty Publications'
+  return 'Helen Diller Family Comprehensive Cancer Center Faculty Publications'
 end
 
 def LatticeGridHelper.header_title
@@ -32,15 +32,15 @@ def LatticeGridHelper.header_title
 end
 
 def LatticeGridHelper.menu_head_abbreviation
-  "Stanford Cancer Institute"
+  "Diller Cancer Center"
 end
 
 def LatticeGridHelper.GetDefaultSchool()
-  "SUMC"
+  "UCSF"
 end
 
 def LatticeGridHelper.home_url
-  "http://cancer.stanford.edu/"
+  "http://cancer.ucsf.edu/"
 end
 
 def LatticeGridHelper.curl_host
@@ -50,8 +50,8 @@ case
   when my_env == 'home': 'localhost:3000'
   when my_env == 'development': 'rails-staging2.nubic.northwestern.edu'
   when my_env == 'staging': 'rails-staging2.nubic.northwestern.edu'
-  when my_env == 'production': 'latticegrid.cancer.stanford.edu'
-  else 'latticegrid.cancer.stanford.edu/'
+  when my_env == 'production': 'latticegrid.cancer.ucsf.edu'
+  else 'latticegrid.cancer.ucsf.edu/'
 end 
 end
 
@@ -62,7 +62,7 @@ case
   when my_env == 'home': 'http'
   when my_env == 'development': 'http'
   when my_env == 'staging': 'http'
-  when my_env == 'production': 'http'
+  when my_env == 'production': 'https'
   else 'http'
 end 
 end
@@ -72,7 +72,6 @@ def profile_example_summaries()
 end
 
 def LatticeGridHelper.do_ldap?
- (is_admin? and Rails.env != 'production') ? false : true
  false
 end
 
@@ -82,11 +81,11 @@ def LatticeGridHelper.ldap_perform_search?
 end
 
 def LatticeGridHelper.ldap_host
- "directory.stanford.edu"
+ "directory.ucsf.edu"
 end
 
 def LatticeGridHelper.ldap_treebase 
- "ou=People, dc=stanford,dc=edu"
+ "ou=People, dc=ucsf,dc=edu"
 end
 
 def LatticeGridHelper.include_awards?
@@ -105,7 +104,7 @@ end
 # build LatticeGridHelper.institutional_limit_search_string to identify all the publications at your institution 
 
 def LatticeGridHelper.institutional_limit_search_string 
-  '(Stanford[affil])'
+  '("San Francisco"[affil] OR "Diller"[affil] OR "UCSF"[affil])'
 end
 
 # limit searches to include the institutional_limit_search_string
