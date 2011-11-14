@@ -17,6 +17,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :awards, :only => [:index, :show], :collection => {:disallowed => :get, :listing => :get}, :member => {:investigator => :get, :org => :get}
   map.resources :studies, :only => [:index, :show], :collection => {:disallowed => :get, :listing => :get}, :member => {:investigator => :get, :org => :get}
   map.resources :profiles, :except=>[:destroy,:new], :member => {:edit_pubs => :get, :investigator_listing => [:get, :post]}, :collection => { :splash => :get, :ccsg => :get, :admin => :get, :list_investigators => :get, :edit_investigators => :get}
+  map.resources :audits, :only => [:index, :show], :collection => { :view_logins => :get, :view_approved_profiles => :get, :view_approved_publications => :get, :faculty_data=>:get, :login_data=>:get, :approved_profile_data=>:get, :approved_publication_data=>:get, :view_publication_approvers=>:get, :view_profile_approvers=>:get, :view_logins_without_approvals=>:get}
+  
+  
   map.resources :mesh, :only => [:index], :member => {:search => :get, :investigators => :get, :investigator => :get, :investigator_tags => :get, :tag_count => :get, :investigator_count => :get}
   map.investigator_mesh_tags 'mesh/investigator/:username.:format', {:controller => "mesh", :action => "investigator", :conditions => { :method => :get }  }
   map.investigator_abstract_count 'investigators/:username/abstract_count.:format', {:controller => "investigators", :action => "abstract_count", :conditions => { :method => :get }  }
@@ -62,6 +65,7 @@ ActionController::Routing::Routes.draw do |map|
   map.cytoscape_member "cytoscape/:id/:depth", :controller => 'cytoscape', :action => 'show'
   map.send_graphviz_image 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:program.:format', :controller => 'graphviz', :action => 'send_graphviz_image'
   map.restless_graphviz 'get_graphviz/', :controller => 'graphviz', :action => 'get_graphviz'
+    
 #  map.graphviz 'graph/:id/graphviz/:distance/:stingency/:program.:format', :controller => 'graphviz', :action => 'graphviz'
   map.logout "/logout", :controller => 'access', :action => 'logout'
 

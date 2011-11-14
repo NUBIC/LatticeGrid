@@ -12,6 +12,7 @@ class CytoscapeController < ApplicationController
   include ApplicationHelper
   include CytoscapeHelper
   include InvestigatorsHelper
+  include OrgsHelper
 
 
   def index
@@ -24,6 +25,14 @@ class CytoscapeController < ApplicationController
     params[:include_studies] ||= 0
     @title = "Publications Collaborations"
     @investigator=Investigator.find_by_username(params[:id])
+  end
+
+  def show_org
+    params[:depth] ||= 1
+    params[:include_awards] ||= 0
+    params[:include_studies] ||= 0
+    @title = "Publications Collaborations"
+    @org = find_unit_by_id_or_name(params[:id])
   end
 
   def awards
@@ -71,6 +80,28 @@ class CytoscapeController < ApplicationController
       data = generate_cytoscape_award_data(investigator, depth)
     else
       data = generate_cytoscape_data(investigator, depth)
+    end
+    respond_to do |format|
+      format.json{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
+      format.js{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
+    end
+  end
+
+  def org_cytoscape_data
+    @org = find_unit_by_id_or_name(params[:id])
+    params[:depth] ||= 1
+    depth = params[:depth].to_i
+    params[:include_awards] ||= 1
+    params[:include_studies] ||= 0
+    include_awards = params[:include_awards].to_i
+    include_studies = params[:include_studies].to_i
+    data_schema = generate_cytoscape_schema()
+    if !include_studies.blank? and include_studies != 0
+      data = generate_cytoscape_study_org_data(@org, depth)
+    elsif !include_awards.blank? and include_awards != 0
+      data = generate_cytoscape_award_org_data(@org, depth)
+    else
+      data = generate_cytoscape_org_data(@org, depth)
     end
     respond_to do |format|
       format.json{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }

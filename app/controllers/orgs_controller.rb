@@ -172,16 +172,7 @@ class OrgsController < ApplicationController
   end
 
   def program_members
-    @unit = Program.find_by_abbreviation(params[:id])
-    if @unit.blank?
-      @unit = Program.find_by_name(params[:id])
-    end
-    if @unit.blank?
-      @unit = Program.find_by_search_name(params[:id])
-    end
-    if @unit.blank?
-      @unit = Program.find_by_division_id(params[:id])
-    end
+    @unit = find_unit_by_id_or_name(params[:id])
     if @unit.blank?
       render :text=>'could not find unit ' + params[:id]
     else
@@ -200,7 +191,7 @@ class OrgsController < ApplicationController
     if params[:id].nil? then
       redirect_to index_orgs_url
     else
-      @unit = OrganizationalUnit.find(params[:id])
+      @unit = find_unit_by_id_or_name(params[:id])
       @heading = "Faculty Listing for '#{@unit.name}'"
 
       respond_to do |format|
@@ -230,7 +221,7 @@ class OrgsController < ApplicationController
     elsif redirect then
       redirect_to params
     else
-      show_pre
+      @unit = find_unit_by_id_or_name(params[:id])
       @do_pagination = "1"
       @abstracts = @unit.abstract_data( params[:page] )
       @all_abstracts = @unit.get_minimal_all_data( )
@@ -251,7 +242,7 @@ class OrgsController < ApplicationController
       params.delete(:page)
       redirect_to params
     else
-      show_pre
+      @unit = find_unit_by_id_or_name(params[:id])
       @do_pagination = "0"
       @abstracts =  @unit.display_year_data( @year )
       @all_abstracts =  @unit.get_minimal_all_data( )
@@ -440,11 +431,5 @@ class OrgsController < ApplicationController
         :type => 'application/msword',
         :disposition => 'attachment') }
     end
-  end
-
-  private
-
-  def show_pre
-    @unit = OrganizationalUnit.find(params[:id])
   end
 end

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Only the settings with values not equal to defaults are in this file. If you want to see the
+full list of available settings, check the amstock_settings.xml file in the amstock folder. -->
+<settings>
+  <margins>0</margins>
+  <equal_spacing>false</equal_spacing>
+  <redraw>true</redraw>
+  <text_size>10</text_size>                                               
+
+  <number_format>  
+	<decimal_separator>.</decimal_separator>
+    <letters>
+       <letter number="1000">K</letter>
+       <letter number="1000000">M</letter>
+       <letter number="1000000000">B</letter>
+    </letters>      
+  </number_format>
+
+  <data_sets> 
+    <data_set did="0">
+       <title>Logins</title>
+       <short>Logins</short>
+       <file_name>/audits/login_data</file_name>
+       <main_drop_down selected="true"></main_drop_down> 	    	  
+       <compare_list_box selected="true"></compare_list_box>
+       <csv>
+         <reverse>false</reverse>
+         <separator>,</separator>
+         <date_format>YYYY-MM-DD</date_format>
+         <decimal_separator>.</decimal_separator>
+         <columns>
+           <column>date</column>
+           <column>volume</column>
+           <column>close</column>
+         </columns>
+       </csv>
+    </data_set> 
+    <data_set did="1">
+       <title>Faculty</title>
+       <short>Faculty</short>
+       <color>fec514</color>
+       <file_name>/audits/faculty_data</file_name>
+       <csv>
+         <reverse>false</reverse>
+         <separator>,</separator>
+         <date_format>YYYY-MM-DD</date_format>
+         <decimal_separator>.</decimal_separator>
+         <columns>
+           <column>date</column>
+           <column>volume</column>
+           <column>close</column>
+         </columns>
+       </csv>
+    </data_set>
+
+    <data_set did="2">
+       <title>Approved profiles</title>
+       <short>Profiles</short>
+       <file_name>/audits/approved_profile_data</file_name>
+       <main_drop_down selected="false"></main_drop_down> 	    	  
+       <compare_list_box selected="true"></compare_list_box>
+       <csv>
+         <reverse>false</reverse>
+         <separator>,</separator>
+         <date_format>YYYY-MM-DD</date_format>
+         <decimal_separator>.</decimal_separator>
+         <columns>
+           <column>date</column>
+           <column>volume</column>
+           <column>close</column>
+         </columns>
+       </csv>
+    </data_set>
+        
+    <data_set did="3">
+       <title>Approved publications</title>
+       <short>Pubs</short>
+       <file_name>/audits/approved_publication_data</file_name>
+       <main_drop_down selected="false"></main_drop_down> 	    	  
+       <compare_list_box selected="true"></compare_list_box>
+       <csv>
+         <reverse>false</reverse>
+         <separator>,</separator>
+         <date_format>YYYY-MM-DD</date_format>
+         <decimal_separator>.</decimal_separator>
+         <columns>
+           <column>date</column>
+           <column>volume</column>
+           <column>close</column>
+         </columns>
+       </csv>
+    </data_set> 
+
+
+  </data_sets>
+
+  <charts>
+  	<chart cid="0">
+  		<height>60</height>
+  		<title>Total</title>
+  	  <bg_color>f5f5f5,ffffff</bg_color>
+      <border_color>#CCCCCC</border_color>
+      <border_alpha>100</border_alpha>
+     
+      <grid>
+        <x>
+          <bg_color>EEEEEE</bg_color>
+        </x>    
+        <y_left>
+          <digits_after_decimal>
+            <data>0</data>
+          </digits_after_decimal>        
+        </y_left>    
+        <y_right>
+          <digits_after_decimal>
+            <data>0</data>
+          </digits_after_decimal>        
+          <color>cccccc</color>
+          <alpha>100</alpha>
+        </y_right>    
+      </grid>
+
+      <legend>
+        <graph_on_off>false</graph_on_off>
+        <fade_others_to>10</fade_others_to>
+        <show_date>true</show_date>
+      </legend>
+
+      <column_width>100</column_width>
+
+  		<graphs>
+  			<graph gid="0">
+  			  <axis>right</axis>
+  				<type>line</type>
+  				<data_sources>
+  				  <close>close</close>
+          		</data_sources>
+
+         	 <compare_source>close</compare_source>
+  			<bullet>round_outline</bullet>
+
+  		    <legend>
+            <date key="true" title="true"><![CDATA[<b>{close}</b>]]></date>
+            <period key="true" title="true"><![CDATA[start:<b>{open}</b> min:<b>{low}</b> max:<b>{high}</b> last:<b>{close}</b>]]></period>
+            <date_comparing key="true" title="true"><![CDATA[{close.percents}]]></date_comparing>
+            <period_comparing key="true" title="true"><![CDATA[{close.percents}]]></period_comparing>
+          </legend>         
+  			</graph>  			
+  		</graphs>
+  	</chart>  
+
+  	<chart cid="1">
+  		<height>30</height>
+  		<title>Count</title>  		
+      <border_color>#CCCCCC</border_color>
+      <border_alpha>100</border_alpha>
+      <grid>
+        <y_left>
+          <approx_count>3</approx_count>
+        </y_left>
+      </grid>	
+
+      <values>
+        <x>
+          <enabled>false</enabled>
+        </x>
+      </values>
+
+      <legend>
+        <show_date>false</show_date>
+      </legend>
+       	
+      <column_width>100</column_width>
+  		<graphs>
+  			<graph gid="0">
+  				<type>column</type>
+  				<data_sources>
+  				  <close>volume</close>
+          </data_sources>
+          <period_value>average</period_value>
+  				<alpha>0</alpha>
+  				<fill_alpha>50</fill_alpha>
+  		    <legend>
+            <date key="false" title="false"><![CDATA[{close}]]></date>
+            <period key="false" title="false"><![CDATA[start:<b>{open}</b> min:<b>{low}</b> max:<b>{high}</b> last:<b>{close}</b> aver:<b>{average}</b>]]></period>
+          </legend>         
+  			</graph>  			
+  		</graphs>
+  	</chart>    
+ 
+  </charts>
+
+  <data_set_selector>
+    <width>130</width>
+    <max_comparing_count>3</max_comparing_count>
+ 		<main_drop_down_title>Select:</main_drop_down_title> 		
+ 		<compare_list_box_title>Compare to:</compare_list_box_title>
+  </data_set_selector>
+  
+  <period_selector>
+    <button>
+      <bg_color_hover>b81d1b</bg_color_hover>
+      <bg_color_selected>b81d1b</bg_color_selected>
+      <text_color_hover>ffffff</text_color_hover>
+      <text_color_selected>ffffff</text_color_selected>
+    </button>
+  
+		<periods>		
+      <period type="DD" count="10">10D</period>
+    	<period type="MM" count="1">1M</period>
+    	<period type="MM" count="3">3M</period>
+    	<period selected="true" type="YYYY" count="1">1Y</period>
+    	<period type="YYYY" count="3">3Y</period>
+    	<period type="YTD" count="0">YTD</period>
+    	<period type="MAX">MAX</period>
+		</periods>
+		
+		<periods_title>Zoom:</periods_title>
+		<custom_period_title>Custom period:</custom_period_title> 
+  </period_selector>
+
+  <header>
+    <enabled></enabled>
+    <text><![CDATA[<b>{title}</b> ({short}) {description}]]></text>
+    <text_size>12</text_size>
+  </header>
+
+  <plot_area>
+    <border_color>cccccc</border_color>
+  </plot_area>
+
+  <scroller>
+    <enabled>true</enabled>
+    <height>50</height>    
+    <graph_data_source>close</graph_data_source>
+    <bg_color>f5f5f5,ffffff</bg_color>
+    <resize_button_style>dragger</resize_button_style>
+    <playback>
+      <enabled>true</enabled>
+      <speed>3</speed>
+    </playback>
+  </scroller>
+</settings>

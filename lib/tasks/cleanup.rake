@@ -439,7 +439,6 @@ namespace :cleanup do
      }
   end
 
-
   task :cleanInvestigatorsUsername => :environment do
      block_timing("cleanup:cleanInvestigatorsUsername") {
        doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%.%'"))
@@ -453,16 +452,16 @@ namespace :cleanup do
      }
   end
 
-  task :get_unmatched_investigator => :environment do
-     block_timing("cleanup:get_unmatched_investigator") {
-       purgeInvestigators(@Unmatched_Investigators)
-     }
-  end
-
-
   task :delete_purged_investigators => :environment do
      block_timing("cleanup:delete_purged_investigators") {
        deletePurgedInvestigators()
+      }
+  end
+  
+  task :reinstate_investigators_with_valid_abstracts => :environment do
+     block_timing("cleanup:reinstate_investigators_with_valid_abstracts") {
+       investigators_to_reinstate = Investigators.deleted_with_valid_abstracts
+       reinstateInvestigators(investigators_to_reinstate)
       }
   end
 

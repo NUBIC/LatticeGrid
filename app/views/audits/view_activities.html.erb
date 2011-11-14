@@ -1,0 +1,131 @@
+<% @activity ||= "logged activities" %>
+<% @log_entered ||= "When" %>
+<% @has_without = (defined?(@without_entries) and @without_entries.length > 0)%>
+<% @include_params ||= false %>
+<h1>Listing <%= @activity -%> (<%= @logs.length -%>) by <%= @logs.map(&:investigator_id).compact.sort.uniq.length -%> investigators</h1>
+<% if @has_without %>
+<div><%= link_to "jump to investigators without entries", "#without" %>
+<% end %>
+
+<% unless @include_params %>
+<div style="float:right;padding-right:10px"><%= link_to "with params variable", request.path+"?params=true" %></div>
+<% else %>
+<div style="float:right;padding-right:10px"><%= link_to "without params variable", request.path %></div>
+<% end %>
+<p style="vertical-align:middle;">
+Email addresses for investigators who have <%= @activity -%>:  <textarea name="emails" id="emails" cols="150" rows="25"><%= @logs.map{|l| l.investigator.email unless l.investigator.blank?}.compact.sort.uniq.join(", ") %></textarea>
+</p>
+
+<table id="allLogsTable" class="tablesorter { sortList: [[2,0]] }"> 
+  <thead> 
+  <tr>
+	<th>#</th>
+	<th>Username</th>
+	<th>Name</th>
+	<th>email</th>
+	<th>Work phone</th>
+	<th>Campus</th>
+	<th><%= @log_entered %></th>
+	<th>Where</th>
+	<th>Activity</th>
+	<% if @include_params %><th width="150px">params</th><% end %>
+    <th>Edit</th>
+  </tr>
+ </thead> 
+ <tbody>
+<% @logs.each_with_index do |log_entry, i| %>
+  <tr>
+    <td><%= i+1 %></td>
+    <td><%=h log_entry.investigator.username unless log_entry.investigator.blank? %></td>
+    <td><%= if log_entry.investigator.blank? then log_entry.investigator_id else log_entry.investigator.sort_name end %></td>
+    <td><%= mail_to(log_entry.investigator.email, "email", 
+				:subject => "LatticeGrid Profile", 
+				:encode => "javascript", :title=>"Send email to this investigator") unless log_entry.investigator.blank? or log_entry.investigator.email.blank? %> </td>
+    <td><%=h log_entry.investigator.business_phone unless log_entry.investigator.blank? %></td>
+    <td><%=h log_entry.investigator.campus unless log_entry.investigator.blank? %></td>
+    <td><%= log_entry.created_at.to_s(:justdate) %></td>
+    <td><%= log_entry.created_ip %></td>
+    <td><%=h log_entry.activity %></td>
+    <% if @include_params %><td width="150px"><%=h log_entry.params %></td><% end %>
+     <td><%= link_to("Edit profile", edit_profile_path(log_entry.investigator_id)) unless log_entry.investigator.blank? %> <%= link_to("Edit pubs", edit_pubs_profile_path(log_entry.investigator_id)) unless log_entry.investigator.blank? %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+
+<% javascript_tag do %>
+jQuery(document).ready(function() { 
+    // call the tablesorter plugin 
+    jQuery("#allLogsTable").tablesorter(
+        // turn off sorting on the 1st and 4th header
+        { headers: { 0: {sorter: false}, 3: {sorter: false}, 9: {sorter: false}, 10: {sorter: false} } }
+    ); });
+<% end %>
+
+<% if @has_without %>
+<a name="without"></a>
+<h1>Listing investigators without entries (<%= @without_entries.length %>)</h1>
+
+<p>
+Emails for investigators without entries:  <textarea name="without_entry_emails" id="emails" cols="150" rows="25"><%= @without_entries.map(&:email).compact.join(", ") %></textarea>
+</p>
+<table id="withoutTable" class="tablesorter { sortList: [[2,0]] }" style="width=750px"> 
+  <thead> 
+  <tr>
+   <th>#</th>
+   <th>Username</th>
+   <th>Name</th>
+   <th>email</th>
+   <th>Work phone</th>
+   <th>Campus</th>
+   <th>Created on</th>
+   <th>Edit</th>
+  </tr>
+ </thead> 
+ <tbody>
+<% @without_entries.each_with_index do |investigator, i| %>
+  <tr>
+    <td><%= i+1 %></td>
+    <td><%=h investigator.username unless investigator.blank? %></td>
+    <td><%= if investigator.blank? then investigator_id else investigator.sort_name end %></td>
+    <td><%= mail_to(investigator.email, "email", 
+				:subject => "LatticeGrid Profile", 
+				:encode => "javascript", :title=>"Send email to this investigator") unless investigator.blank? or investigator.email.blank? %> </td>
+    <td><%=h investigator.business_phone unless investigator.blank? %></td>
+    <td><%=h investigator.campus unless investigator.blank? %></td>
+    <td><%= investigator.created_at.to_s(:justdate) unless investigator.blank? %></td>
+    <td><%= link_to("Edit profile", edit_profile_path(investigator.id)) unless investigator.blank? %> <%= link_to("Edit pubs", edit_pubs_profile_path(investigator.id)) unless investigator.blank? %>  </td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+
+<% javascript_tag do %>
+jQuery(document).ready(function() { 
+    // call the tablesorter plugin 
+    jQuery("#withoutTable").tablesorter(
+        // turn off sorting on the 1st and 4th header
+        { headers: { 0: {sorter: false}, 3: {sorter: false}, 7: {sorter: false} } }
+    ); });
+<% end %>
+
+<% end %>
+<br />
+<div>
+<!-- amstock script-->
+	<div id="admin_overview">
+		<strong>You need to upgrade your Flash Player</strong>
+	</div>
+
+	<script type="text/javascript">
+		// <![CDATA[		
+		var so = new SWFObject("<%= image_path('../flash/amstock.swf') %>", "amstock", "800", "400", "8", "#FFFFFF");
+		so.addVariable("path", "");
+		so.addVariable("settings_file", encodeURIComponent("<%= image_path('../settings/login_settings.xml') %>"));
+	    so.addVariable("preloader_color", "#000000");
+		so.write("admin_overview");
+		// ]]>
+	</script>
+<!-- end of amstock script -->
+
+</div>

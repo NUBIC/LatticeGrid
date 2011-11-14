@@ -1,8 +1,12 @@
 
-def generate_csv(data)
+def generate_csv(data, use_update_date=false)
   data_hash = Hash.new(0)
   data.each do |x|
-    the_date = x.created_at.to_s(:db_date)
+    if use_update_date
+      the_date = x.updated_at.to_s(:db_date)
+    else
+      the_date = x.created_at.to_s(:db_date)
+    end
     if data_hash.has_key?(the_date) then
       data_hash[the_date]=data_hash[the_date]+1
     else

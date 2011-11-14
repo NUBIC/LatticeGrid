@@ -14,9 +14,9 @@ rake importJournalImpact file=db/imports/jcr_recs_2009.txt
 rake importJournalImpact file=db/imports/jcr_recs_2010.txt
 rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
 rake cleanJournalISSNentries
-rake insertAllAbstracts
-rake nightlyBuild
-rake monthlyBuild
+rake insertAllAbstracts 
+rake nightlyBuild # repeat a few times a week
+rake monthlyBuild # repeat weekly or monthly - updates the mesh stats
 
 
 #Stanford November 2011 loads

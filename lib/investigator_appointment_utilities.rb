@@ -715,6 +715,17 @@ def deletePurgedInvestigators()
   end
 end
 
+def reinstateInvestigators(pis)
+  puts "reinstating #{pis.length} investigators"
+  pis.each do |pi|
+    puts "reinstating purged investigator  #{pi.name} username #{pi.username}" if LatticeGridHelper.verbose?
+    pi.deleted_at = nil
+    pi.end_date = nil
+    pi.save!
+  end
+end
+
+
 def count_faculty_updates()
   updated = Investigator.find_updated().length
   not_updated = Investigator.find_not_updated().length

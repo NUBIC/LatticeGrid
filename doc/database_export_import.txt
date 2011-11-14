@@ -9,7 +9,7 @@ pg_dump -Fc cinj_latticegrid_staging -U rhlccc_latticegrid -h pstage > cinjpubli
 
 # from my laptop
 
-pg_dump -Fc ucsf_latticegrid -U latticegrid > ucsf_latticegrid_20111109.dmp
+pg_dump -Fc ucsf_latticegrid -U latticegrid > ucsf_latticegrid_20111110.dmp
 
 pg_dump -Fc stanford_latticegrid -U latticegrid > stanford_latticegrid_20111109.dmp
 
@@ -21,6 +21,10 @@ pg_dump -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev
 pg_dump -Fc umich_latticegrid_development -U latticegrid > umich_latticegrid_dev_20110825.dmp
 
 pg_dump -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev_20110930.dmp
+
+scp  ucsf_latticegrid_20111110.dmp root@172.16.215.128:/root/ucsf_latticegrid_20111110.dmp
+
+scp  stanford_latticegrid_20111109.dmp root@172.16.215.128:/root/stanford_latticegrid_20111109.dmp
 
 scp fsmpublications_dev_20110930.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/fsmpublications_dev_20110930.dmp  
 

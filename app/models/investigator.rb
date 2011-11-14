@@ -2,6 +2,7 @@ class Investigator < ActiveRecord::Base
   acts_as_taggable  # for MeSH terms
   acts_as_tsearch :vectors => {:fields => ["first_name","last_name", "username", "title"]}
 
+  has_many :logs
   has_many :investigator_studies
   has_many :studies, 
     :through => :investigator_studies
@@ -107,9 +108,12 @@ has_many :investigator_appointments,
   named_scope :by_name, :order => "lower(last_name), lower(first_name)"
 
   named_scope :for_tag_ids, lambda { |*ids|
-      {:joins => [:taggings], 
-       :conditions => ['taggings.tag_id IN (:ids) ', {:ids => ids.first}] }
-    }
+    {:joins => [:taggings], 
+     :conditions => ['taggings.tag_id IN (:ids) ', {:ids => ids.first}] }
+  }
+  named_scope :complement_of_ids, lambda { |*ids|
+    {:conditions => ['investigators.id NOT IN (:ids)', {:ids => ids.first}] }
+  }
     
   default_scope :conditions => '(investigators.deleted_at is null and investigators.end_date is null)'
 #  default_scope :include => :abstracts
@@ -125,6 +129,12 @@ has_many :investigator_appointments,
       else
         find(id)
       end
+    end
+  end
+
+  def self.deleted_with_valid_abstracts
+    with_exclusive_scope do
+      all(:conditions=>"investigators.deleted_at is not null and  investigator_abstracts.is_valid = true and investigators.id = investigator_abstracts.investigator_id and investigator_abstracts.abstract_id = abstracts.id and abstracts.is_valid = true", :include=>[:investigator_abstracts, :abstracts] )
     end
   end
 

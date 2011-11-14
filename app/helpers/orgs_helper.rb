@@ -28,4 +28,17 @@ module OrgsHelper
     out+"</span>"
   end
   
+  def find_unit_by_id_or_name(val)
+    unit = OrganizationalUnit.find_by_abbreviation(val)
+    if unit.blank?
+      unit = OrganizationalUnit.find_by_name(val)
+    end
+    if unit.blank?
+      unit = OrganizationalUnit.find_by_search_name(val)
+    end
+    if unit.blank?
+      unit = OrganizationalUnit.find_by_division_id(val)
+    end
+    val
+  end
 end
