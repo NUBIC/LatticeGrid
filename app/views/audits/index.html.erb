@@ -3,15 +3,14 @@
 <p>LatticeGrid support tracking of logins and approvals. The 'who and when' for actions taken by LatticeGrid users. The following canned reports are available:</p>
 
 <h3>Audit Logs</h3>
-<ol>
+<ul>
 	<li><%= link_to "View Logins", view_logins_audits_url %>: provides an overview of login activities</li>
 	<li><%= link_to "View Profile Approvals", view_approved_profiles_audits_url %>: provides an overview of profile approval activities</li>
-	
 	<li><%= link_to "View Publications Approvals", view_approved_publications_audits_url %>: provides an overview of publication approval activities</li>
 </ol>
+
 <h3>Faculty-focused reports</h3>
-<ol>
-	
+<ul>
 	<li><%= link_to "View Logins that did not result in an approval", view_logins_without_approvals_audits_url %>: useful for understanding who logged in but did not finish the approval process</li>
 	<li><%= link_to "View Profile Approvers", view_profile_approvers_audits_url %>: Who has approved their profiles and when was the last approval</li>
 	<li><%= link_to "View Publication Approvers", view_publication_approvers_audits_url %>: Who has approved their publications and when was the last approval</li>
