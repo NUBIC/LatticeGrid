@@ -2,16 +2,19 @@
 <% @log_entered ||= "When" %>
 <% @has_without = (defined?(@without_entries) and @without_entries.length > 0)%>
 <% @include_params ||= false %>
+<a name="top"></a>
+<div style="float:right;padding:10px"><%= link_to "Audits home", audits_path %></div>
+<% unless @include_params %>
+<div style="float:right;padding:10px"><%= link_to "show params", request.path+"?params=true" %></div>
+<% else %>
+<div style="float:right;padding:10px"><%= link_to "hide params", request.path %></div>
+<% end %>
 <h1>Listing <%= @activity -%> (<%= @logs.length -%>) by <%= @logs.map(&:investigator_id).compact.sort.uniq.length -%> investigators</h1>
 <% if @has_without %>
-<div><%= link_to "jump to investigators without entries", "#without" %>
+<div><%= link_to "jump to investigators without entries", "#without" %></div>
 <% end %>
+<div><%= link_to "jump to graph", "#graph" %></div>
 
-<% unless @include_params %>
-<div style="float:right;padding-right:10px"><%= link_to "with params variable", request.path+"?params=true" %></div>
-<% else %>
-<div style="float:right;padding-right:10px"><%= link_to "without params variable", request.path %></div>
-<% end %>
 <p style="vertical-align:middle;">
 Email addresses for investigators who have <%= @activity -%>:  <textarea name="emails" id="emails" cols="150" rows="25"><%= @logs.map{|l| l.investigator.email unless l.investigator.blank?}.compact.sort.uniq.join(", ") %></textarea>
 </p>
@@ -111,6 +114,8 @@ jQuery(document).ready(function() {
 
 <% end %>
 <br />
+<a name="graph"></a>
+
 <div>
 <!-- amstock script-->
 	<div id="admin_overview">
@@ -129,3 +134,5 @@ jQuery(document).ready(function() {
 <!-- end of amstock script -->
 
 </div>
+<div><%= link_to "back to top", "#top" %></div>
+
