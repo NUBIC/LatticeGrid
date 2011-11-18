@@ -2,6 +2,7 @@ class OrgsController < ApplicationController
   caches_page(:show, :index, :departments, :centers, :programs, :show_investigators, :stats, :full_show, :tag_cloud, :short_tag_cloud) if LatticeGridHelper.CachePages()
   helper :sparklines
   include ApplicationHelper
+  include OrgsHelper
 
   require 'fastercsv' # for department_collaborations
 

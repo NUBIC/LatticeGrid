@@ -37,8 +37,11 @@ module OrgsHelper
       unit = OrganizationalUnit.find_by_search_name(val)
     end
     if unit.blank?
+      unit = OrganizationalUnit.find_by_id(val)
+    end
+    if unit.blank?
       unit = OrganizationalUnit.find_by_division_id(val)
     end
-    val
+    unit
   end
 end
