@@ -9,10 +9,9 @@ def show_regexp(a, re)
   end 
 end 
 
-def FindREmatch(str,re)
-  string=str.gsub( /\n|\r/, ';')
-  puts show_regexp(string, re) if LatticeGridHelper.debug?
-  if string =~ re then
+def SimpleFindREmatch(str,re)
+  return false if str.blank? 
+  if str =~ re then
     return true
   end
   return false
@@ -22,49 +21,56 @@ end
 
 # abstract.full_authors  string will look like: "Vorontsov, Ivan I\nMinasov, George\nBrunzelle, Joseph S\nShuvalova, Ludmilla\nKiryukhina, Olga\nCollart, Frank R\nAnderson, Wayne F"
 # full_authors string:  "Munoz, Lenka\n Ranaivo, Hantamalala Ralay\n Roy, Saktimayee M\n Hu, Wenhui\n Craft, Jeffrey M\n McNamara, Laurie K\n Chico, Laura Wing\n Van Eldik, LJ\n Watterson, DM"
+# full_authors string for some: "Shumaker, D K\nVann, L R\nGoldberg, M W\nAllen, T D\nWilson, K L" - this really looks like a authors string
 
 def GetAuthor(string, is_full)
   if is_full
     re = /([^,\n\r]+), +([^;\n\r ]+) *([^;\n\r ]*)/
   else
-    re = /([^,\n\r]+), +(.) *([^;\n\r ]*)/
+    re = /([^,\n\r]+), +(.)\.? *([^;\n\r\. ]*)/
   end
   re.match(string)
   return [$1, $2] if $3.blank?
   return [$1, $2, $3].compact
 end
 
+def AuthorRE(investigator, is_full)
+  if is_full
+    return /#{investigator.last_name}, #{investigator.first_name[0..3]}/i
+  else
+    return /#{investigator.last_name}, #{investigator.first_name.at(0)}/i
+  end
+end
+
 # used when inserting InvestigatorAbstract record
 def IsFirstAuthor(abstract,investigator)
   puts "searching for first author using PI #{investigator.last_name}, #{investigator.first_name} "  if LatticeGridHelper.debug?
-  if abstract.full_authors.blank?
-    return FindREmatch(abstract.authors,  /^#{investigator.last_name}, #{investigator.first_name.at(0)}/i)
-  else
-    return FindREmatch(abstract.full_authors,  /^#{investigator.last_name}, #{investigator.first_name[0..3]}/i) 
-  end
-  return false
+  auth_arry = abstract.author_array
+  return true if auth_arry.length == 1
+  SimpleFindREmatch(auth_arry.first, AuthorRE(investigator, abstract.has_full))
 end
 
 # used when inserting InvestigatorAbstract record
 def IsLastAuthor(abstract,investigator)
-  if abstract.full_authors.blank?
-    return FindREmatch(abstract.authors,  /#{investigator.last_name}, #{investigator.first_name.at(0)}[^;]*$/i)
-  else
-    return FindREmatch(abstract.full_authors,  /#{investigator.last_name}, #{investigator.first_name[0..3]}[^;]*$/i) 
-  end
-  return false
+  auth_arry = abstract.author_array
+  return true if auth_arry.length == 1
+  SimpleFindREmatch(auth_arry.last, AuthorRE(investigator,abstract.has_full))
 end
 
 def FindFirstAuthorInCitation(citation_investigators,abstract)
+  auth = abstract.author_array.first
+  is_full = abstract.has_full
   citation_investigators.each do |investigator|
-    return investigator.id if IsFirstAuthor(abstract,investigator) 
+    return investigator.id if SimpleFindREmatch(auth, AuthorRE(investigator, is_full))
   end
   0
 end
 
 def FindLastAuthorInCitation(citation_investigators,abstract)
+  auth = abstract.author_array.last
+  is_full = abstract.has_full
   citation_investigators.each do |investigator|
-    return investigator.id if IsLastAuthor(abstract,investigator) 
+    return investigator.id if SimpleFindREmatch(auth, AuthorRE(investigator, is_full))
   end
   0
 end
@@ -97,32 +103,21 @@ def GetInvestigatorIDfromAuthorRecord(author_rec, author_string="")
   0
 end  
 
-def GetAuthorStringArray(abstract, is_full)
-  if is_full
-    abstract.full_authors.split("\n")
-  else
-    abstract.authors.split("\n")
-  end
-end
-
 def FindFirstAuthor(abstract)
-  is_full = ! abstract.full_authors.blank?
-  author_array = GetAuthor(GetAuthorStringArray(abstract,is_full).first, is_full)
+  author_array = GetAuthor(abstract.author_array.first, abstract.has_full)
   return GetInvestigatorIDfromAuthorRecord(author_array)
 end
 
 def FindLastAuthor(abstract)
-  is_full = ! abstract.full_authors.blank?
-  author_array = GetAuthor(GetAuthorStringArray(abstract,is_full).last, is_full)
+  author_array = GetAuthor(abstract.author_array.last, abstract.has_full)
   return GetInvestigatorIDfromAuthorRecord(author_array)
 end
 
 def MatchInvestigatorsInCitation(abstract)
   matched_ids = []
-  is_full = ! abstract.full_authors.blank?
-  author_array = GetAuthorStringArray(abstract,is_full)
+  author_array = abstract.author_array
   author_array.each do | author |
-    author_ary = GetAuthor(author, is_full)
+    author_ary = GetAuthor(author, abstract.has_full)
     author_id = GetInvestigatorIDfromAuthorRecord(author_ary, author)
     matched_ids.push(author_id) if author_id > 0
   end

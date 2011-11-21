@@ -47,7 +47,42 @@ class Abstract < ActiveRecord::Base
     }
   default_scope :conditions => 'abstracts.is_valid = true'
 
+  def has_full
+    return false if self.full_authors.blank? 
+    return true if self.full_authors.split(/\n|\r/).first =~ /[^,]{2,}, +[^\. ]{2,}/
+    return false
+  end
 
+  def author_array
+    if self.has_full
+      self.full_authors.split(/\n|\r/)
+    else
+      self.authors.split(/\n|\r/)
+    end
+  end
+
+  def self.full_author_not_has_full
+    with_exclusive_scope do
+      abs = all(:conditions=>"abstracts.full_authors is not null and not abstracts.full_authors = '' ")
+      ary = []
+      abs.each do |ab|
+        ary << ab unless ab.has_full 
+      end
+      ary
+    end
+  end
+  
+  def self.full_author_has_full
+    with_exclusive_scope do
+      abs = all(:conditions=>"abstracts.full_authors is not null and not abstracts.full_authors = '' ")
+      ary = []
+      abs.each do |ab|
+        ary << ab if ab.has_full 
+      end
+      ary
+    end
+  end
+    
   def self.include_deleted( id=nil )
     with_exclusive_scope do
       if id.blank?

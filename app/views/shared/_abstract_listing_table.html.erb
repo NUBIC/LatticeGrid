@@ -32,7 +32,7 @@
 	<% end %>
 	<%= render( :partial => "shared/show_valid_checkboxes.html", :locals => { :publication => publication, :show_cancer_related_checkbox => show_cancer_related_checkbox }) if show_valid_checkboxes %>
 	<%= render :partial => "shared/publication_item.html", :locals => { :publication => publication, :bold_members => bold_members, :speed_display=>speed_display, :investigators_in_unit => investigators_in_unit, :link_abstract_to_pubmed => link_abstract_to_pubmed, :simple_links => simple_links } %>
-	<%= render :partial => "shared/publication_investigators_item.html", :locals => { :show_valid_checkboxes => show_valid_checkboxes, :publication => publication, :simple_links => simple_links }  if include_investigators %>
+	<%= render :partial => "shared/publication_investigators_item.html", :locals => { :show_valid_checkboxes => show_valid_checkboxes, :publication => publication, :simple_links => true }  if include_investigators %>
   </tr>
 <% end -%>
 </table>

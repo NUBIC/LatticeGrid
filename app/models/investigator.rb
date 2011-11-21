@@ -127,7 +127,7 @@ has_many :investigator_appointments,
       if id.blank?
         find(:all)
       else
-        find(id)
+        find_by_id(id)
       end
     end
   end

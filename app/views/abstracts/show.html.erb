@@ -1,7 +1,7 @@
 <div id="abstractcontent">
 <div id="publication">
 	<div id="authors">
-	<% if @publication.full_authors.length > 10 %>
+	<% if @publication.has_full %>
 		<%= highlightInvestigator(@publication, false, false, @publication.full_authors) %>
 	<% else %>
 		<%= highlightInvestigator(@publication) %>

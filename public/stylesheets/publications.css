@@ -530,6 +530,10 @@ div.notice {
 	background-color: peachpuff;
 	text-decoration: none;
 }
+.underlined {
+	color: #353;
+	text-decoration: underline;
+}
 .member_first_author, .member_last_author, .member_author {
 	font-weight: bold;
 }

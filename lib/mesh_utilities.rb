@@ -207,6 +207,7 @@ def AnalyzeInvestigatorColleague(investigator, update_only=true)
     next if ic_tag.taggable_id.to_i <= investigator.id.to_i
     return if ic_tag.total.to_i < 250
     colleague = Investigator.include_deleted(ic_tag.taggable_id)
+    next if colleague.nil?
     BuildInvestigatorColleague(investigator, colleague, update_only) if colleague.deleted_at.nil?
   end
 end

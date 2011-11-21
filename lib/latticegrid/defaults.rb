@@ -1,5 +1,6 @@
-  # class methods
+  require 'publication_utilities' #all the helper methods
   
+  # class methods
   def LatticeGridHelper.page_title
     return 'LatticeGrid Publications'
   end
@@ -153,70 +154,21 @@
      [':1','127.0.0.*','165.124.*','129.105.*','199.125.*','209.107.*','165.20.*','204.26.*','69.216.*']
    end
    
-
-
- def LatticeGridHelper.setInvestigatorClass(citation,investigator, isMember=false)
+ def LatticeGridHelper.setInvestigatorClass(citation, investigator, isMember=false)
    if isMember
-     if isInvestigatorLastAuthor(citation,investigator) : "member_last_author" 
-     elsif isInvestigatorFirstAuthor(citation,investigator) : "member_first_author"
+     if IsLastAuthor(citation,investigator) : "member_last_author" 
+     elsif IsFirstAuthor(citation,investigator) : "member_first_author"
      else
        "member_author"
      end
    else
-     if isInvestigatorLastAuthor(citation,investigator) : "last_author" 
-     elsif isInvestigatorFirstAuthor(citation,investigator) : "first_author"
+     if IsLastAuthor(citation,investigator) : "last_author" 
+     elsif IsFirstAuthor(citation,investigator) : "first_author"
      else
        "author"
      end
    end
  end
-
-
-def LatticeGridHelper.getFirstAuthorIDForCitation(citation)
-  citation.investigator_abstracts.each do |investigator_abstract|
-    return investigator_abstract.investigator_id if investigator_abstract.is_first_author
-  end
-  return nil
-end
-
-def LatticeGridHelper.getFirstAuthorForCitation(citation)
-  author_id = getFirstAuthorIDForCitation(citation)
-  return nil if author_id.blank?
-  citation.investigators.each do |investigator|
-    return investigator if investigator.id == author_id
-  end
-  return nil
-end
-
-def LatticeGridHelper.getLastAuthorIDForCitation(citation)
-  citation.investigator_abstracts.each do |investigator_abstract|
-    return investigator_abstract.investigator_id if investigator_abstract.is_last_author
-  end
-  return nil
-end
-
-def LatticeGridHelper.getLastAuthorForCitation(citation)
-  author_id = getLastAuthorIDForCitation(citation)
-  return nil if author_id.blank?
-  citation.investigators.each do |investigator|
-    return investigator if investigator.id == author_id
-  end
-  return nil
-end
-
-def LatticeGridHelper.isInvestigatorFirstAuthor(citation,investigator)
-  if getFirstAuthorForCitation(citation) == investigator
-    return true
-  end
-  return false
-end
-
-def LatticeGridHelper.isInvestigatorLastAuthor(citation,investigator)
-  if getLastAuthorForCitation(citation) == investigator
-    return true
-  end
-  return false
-end
 
 # LatticeGrid prefs:
 # turn on lots of output
@@ -353,12 +305,12 @@ end
     end
   end
 
-def link_to_investigator(citation, investigator, name=nil, isMember=false, speed_display=false, simple_links=false) 
+def link_to_investigator(citation, investigator, name=nil, isMember=false, speed_display=false, simple_links=false, class_name=nil) 
    name=investigator.last_name if name.blank?
   link_to( name, 
    show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
-     :class => ((speed_display) ? 'author' : LatticeGridHelper.setInvestigatorClass(citation, investigator, isMember)),
-     :title => (simple_links ? "Go to #{investigator.name}: #{investigator.total_publications} pubs" : "Go to #{investigator.name}: #{investigator.total_publications} pubs, " + (investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators") )
+     :class => ((class_name.blank?) ? (speed_display) ? 'author' : LatticeGridHelper.setInvestigatorClass(citation, investigator, isMember) : class_name),
+     :title => (simple_links ? "Go to #{investigator.full_name}: #{investigator.total_publications} pubs" : "Go to #{investigator.full_name}: #{investigator.total_publications} pubs, " + (investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators") )
 end
 
   # investigator highlighting
