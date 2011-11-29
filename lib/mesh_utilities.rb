@@ -66,6 +66,7 @@ def resolveDuplicateTags()
   tags_to_delete = []
   innercnt = 0
   last = tags.length-1
+  puts "Processing #{tags.length} tags for duplications"
   tags.each do |the_tag|
     innercnt +=1
     tags[innercnt..last].each do |inner_tag|
@@ -81,6 +82,7 @@ def resolveDuplicateTags()
   end
   deleteTags(tags_to_delete)
   tags = Tag.all
+  puts "Processing #{tags.length} tags for uppercase issues"
   tags.each do |the_tag|
     if the_tag.name.downcase != the_tag.name
       puts "Found tag name with caps: '#{the_tag.name}' id:#{the_tag.id} with #{the_tag.taggings.count} taggings. Making lowercase"
@@ -88,6 +90,7 @@ def resolveDuplicateTags()
       the_tag.save!
     end
   end
+  puts "Completed processing #{tags.length} tags"
   
 end
 
