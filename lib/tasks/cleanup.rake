@@ -458,6 +458,24 @@ namespace :cleanup do
       }
   end
   
+  task :find_duplicate_tags => :environment do
+     block_timing("cleanup:find_duplicate_tags") {
+       findDuplicateTags()
+      }
+  end
+
+  task :resolve_duplicate_tags => :environment do
+     block_timing("cleanup:resolve_duplicate_tags") {
+       resolveDuplicateTags()
+      }
+  end
+  
+  task :resolve_misformed_tags => :environment do
+     block_timing("cleanup:resolve_misformed_tags") {
+       resolveMisformedTags()
+      }
+  end
+  
   task :reinstate_investigators_with_valid_abstracts => :environment do
      block_timing("cleanup:reinstate_investigators_with_valid_abstracts") {
        investigators_to_reinstate = Investigators.deleted_with_valid_abstracts
