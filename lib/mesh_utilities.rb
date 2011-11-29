@@ -83,7 +83,7 @@ def resolveDuplicateTags()
   tags = Tag.all
   tags.each do |the_tag|
     if the_tag.name.downcase != the_tag.name
-      puts "Found tag name with caps: '#{the_tag.name}' id:#{the_tag.id} with #{the_tag.taggings.count} taggings"
+      puts "Found tag name with caps: '#{the_tag.name}' id:#{the_tag.id} with #{the_tag.taggings.count} taggings. Making lowercase"
       the_tag.name = the_tag.name.downcase
       the_tag.save!
     end
