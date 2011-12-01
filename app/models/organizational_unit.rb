@@ -62,7 +62,7 @@ class OrganizationalUnit < ActiveRecord::Base
     end
 
     def all_abstracts
-      self.self_and_descendants.collect{|unit| unit.abstracts}.flatten.sort {|x,y| y.year <=> x.year }.uniq
+      self.self_and_descendants.collect{|unit| unit.abstracts}.flatten.sort {|x,y| y.year+y.pubmed <=> x.year+x.pubmed }.uniq
     end
 
     def all_members

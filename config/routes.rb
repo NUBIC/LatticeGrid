@@ -66,6 +66,7 @@ ActionController::Routing::Routes.draw do |map|
   map.cytoscape_member "cytoscape/:id/:depth", :controller => 'cytoscape', :action => 'show'
   map.cytoscape_org "cytoscape/:id/org/:depth", :controller => 'cytoscape', :action => 'show_org'
   map.send_graphviz_image 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:start_date/:end_date/:program.:format', :controller => 'graphviz', :action => 'send_graphviz_image'
+  map.send_graphviz_image_orig 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:program.:format', :controller => 'graphviz', :action => 'send_graphviz_image'
   map.restless_graphviz 'get_graphviz/', :controller => 'graphviz', :action => 'get_graphviz'
     
 #  map.graphviz 'graph/:id/graphviz/:distance/:stingency/:program.:format', :controller => 'graphviz', :action => 'graphviz'

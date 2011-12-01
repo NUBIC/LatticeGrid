@@ -138,6 +138,8 @@ class GraphvizController < ApplicationController
   def handle_graphviz_setup
     # in 'graphviz_config'
     params[:program] ||= "neato"
+    params[:start_date] ||=5.years.ago.to_date.to_s(:justdate)
+    params[:end_date] ||=Date.tomorrow.to_s(:justdate)
     set_graphviz_defaults(params)
     # in the helper
     handle_graphviz_request()
