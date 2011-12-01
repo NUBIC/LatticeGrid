@@ -3,7 +3,7 @@ require 'graph_generator'
 def generate_cytoscape_schema()
 {
     :nodes => [{:name => "label", :type => "string"}, {:name => "tooltiptext", :type => "string"}, {:name => "weight", :type => "number"}, {:name => "depth", :type => "number"} ],
-    :edges => [{:name => "label", :type => "string"}, {:name => "tooltiptext", :type => "string"}, {:name => "weight", :type => "number"}, {:name => "directed", :type => "boolean", :defValue => true} ]
+    :edges => [{:name => "label", :type => "string"}, {:name => "edge_type", :type => "string"}, {:name => "tooltiptext", :type => "string"}, {:name => "weight", :type => "number"}, {:name => "directed", :type => "boolean", :defValue => true} ]
 }
 end
 
@@ -120,7 +120,7 @@ def generate_cytoscape_org_edges(org, depth, nodes_array_hash,edge_array=[], inc
   org_index = org.name
   org.all_primary_or_member_faculty.each do |investigator|
     investigator_index = investigator.id.to_s
-    edge_array << cytoscape_edge_hash(edge_array.length, org_index, investigator_index, "", 1, "member of #{org_index}")
+    edge_array << cytoscape_edge_hash(edge_array.length, org_index, investigator_index, "", 1, "member of #{org_index}", "org")
     edge_array = generate_cytoscape_edges(investigator, depth, nodes_array_hash, edge_array, include_intra_node_connections)
   end
   edge_array
@@ -135,14 +135,14 @@ def generate_cytoscape_edges(investigator, depth, nodes_array_hash, edge_array=[
     next unless colleague_index and cytoscape_array_has_key?(nodes_array_hash, colleague_index)
     if colleague_index and ! cytoscape_edge_array_has_key?(edge_array, colleague_index, investigator_index)
       tooltiptext=investigator_colleague_edge_tooltip(connection,investigator,connection.colleague)
-      edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, colleague_index, connection.publication_cnt.to_s, connection.publication_cnt, tooltiptext)
+      edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, colleague_index, connection.publication_cnt.to_s, connection.publication_cnt, tooltiptext, "publications")
       # go one more layer down to add all the intermediate edges
       if include_intra_node_connections
         connection.colleague.co_authors.each { |cc|
           cc_index = cc.colleague_id.to_s
           if cc_index and cytoscape_array_has_key?(nodes_array_hash, cc_index) and ! cytoscape_edge_array_has_key?(edge_array, colleague_index, cc_index)
             tooltiptext=investigator_colleague_edge_tooltip(cc,connection.colleague,cc.colleague)
-            edge_array << cytoscape_edge_hash(edge_array.length, colleague_index, cc_index, cc.publication_cnt.to_s, cc.publication_cnt, tooltiptext)
+            edge_array << cytoscape_edge_hash(edge_array.length, colleague_index, cc_index, cc.publication_cnt.to_s, cc.publication_cnt, tooltiptext, "publications")
           end
         }
       end
@@ -154,14 +154,15 @@ def generate_cytoscape_edges(investigator, depth, nodes_array_hash, edge_array=[
   edge_array
 end
 
- def cytoscape_edge_hash(edge_index, source_index, target_index, label="edge", value=1, tooltiptext="")
+ def cytoscape_edge_hash(edge_index, source_index, target_index, label="edge", value=1, tooltiptext="", edge_type="line")
    {
      :id => edge_index.to_s,
      :label => "#{label}",
      :tooltiptext => tooltiptext,
      :source => source_index,
      :target => target_index,
-     :weight  => value
+     :weight  => value,
+     :edge_type => edge_type
    }
  end
 
@@ -253,7 +254,7 @@ def generate_cytoscape_study_edges(investigator, depth, nodes_array_hash, edge_a
     study_index = "S_#{i_study.study_id}"
     if study_index and ! cytoscape_edge_array_has_key?(edge_array, study_index, investigator_index)
       tooltiptext=investigator_study_edge_tooltip(i_study,investigator,depth)
-      edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, study_index, i_study.role, i_study.study.investigator_studies.length, tooltiptext)
+      edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, study_index, i_study.role, i_study.study.investigator_studies.length, tooltiptext, "studies")
       # now add all the investigator - study connections
       edge_array = generate_cytoscape_study_investigator_edges(i_study.study,edge_array,depth)
       # go one more layer down to add all the intermediate edges
@@ -263,7 +264,7 @@ def generate_cytoscape_study_edges(investigator, depth, nodes_array_hash, edge_a
           if inv_study_index and cytoscape_array_has_key?(nodes_array_hash, inv_study_index) and ! cytoscape_edge_array_has_key?(edge_array, study_index, inv_study_index)
             unless inv_study.investigator.blank?
               tooltiptext=investigator_study_edge_tooltip(i_study,inv_study.investigator,depth)
-              edge_array << cytoscape_edge_hash(edge_array.length, study_index, inv_study_index, inv_study.role, i_study.study.investigator_studies.length, tooltiptext)
+              edge_array << cytoscape_edge_hash(edge_array.length, study_index, inv_study_index, inv_study.role, i_study.study.investigator_studies.length, tooltiptext, "studies")
             end
           end
         }
@@ -288,7 +289,7 @@ def generate_cytoscape_study_investigator_edges(study,edge_array, depth)
     if investigator_index and ! cytoscape_edge_array_has_key?(edge_array, study_index, investigator_index)
       unless inner_inv_study.investigator.blank?
         tooltiptext=investigator_study_edge_tooltip(inner_inv_study,inner_inv_study.investigator,depth)
-        edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, study_index, inner_inv_study.role, study.investigator_studies.length, tooltiptext)
+        edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, study_index, inner_inv_study.role, study.investigator_studies.length, tooltiptext, "studies")
       end
     end
   }
@@ -369,7 +370,7 @@ def generate_cytoscape_award_edges(investigator, depth, nodes_array_hash, edge_a
     award_index = "A_#{i_award.proposal_id}"
     if award_index and ! cytoscape_edge_array_has_key?(edge_array, award_index, investigator_index)
       tooltiptext=investigator_award_edge_tooltip(i_award,investigator,depth)
-      edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, award_index, i_award.role, i_award.proposal.total_amount, tooltiptext)
+      edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, award_index, i_award.role, i_award.proposal.total_amount, tooltiptext, "awards")
       # now add all the investigator - award connections
       edge_array = generate_cytoscape_award_investigator_edges(i_award.proposal,edge_array,depth)
       # go one more layer down to add all the intermediate edges
@@ -378,7 +379,7 @@ def generate_cytoscape_award_edges(investigator, depth, nodes_array_hash, edge_a
           inv_award_index = inv_award.investigator_id.to_s
           if inv_award_index and cytoscape_array_has_key?(nodes_array_hash, inv_award_index) and ! cytoscape_edge_array_has_key?(edge_array, award_index, inv_award_index)
             tooltiptext=investigator_award_edge_tooltip(i_award,inv_award.investigator,depth)
-            edge_array << cytoscape_edge_hash(edge_array.length, award_index, inv_award_index, inv_award.role, i_award.proposal.total_amount, tooltiptext)
+            edge_array << cytoscape_edge_hash(edge_array.length, award_index, inv_award_index, inv_award.role, i_award.proposal.total_amount, tooltiptext, "awards")
           end
         }
       end
@@ -402,7 +403,7 @@ def generate_cytoscape_award_investigator_edges(award,edge_array, depth)
     if investigator_index and ! cytoscape_edge_array_has_key?(edge_array, award_index, investigator_index)
       unless inner_inv_award.investigator.blank?
         tooltiptext=investigator_award_edge_tooltip(inner_inv_award,inner_inv_award.investigator,depth)
-        edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, award_index, inner_inv_award.role, award.total_amount, tooltiptext)
+        edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, award_index, inner_inv_award.role, award.total_amount, tooltiptext, "awards")
       end
     end
   }
