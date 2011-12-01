@@ -89,11 +89,22 @@
 </div>
 
 <% javascript_tag do %>
+	function convertDateToInteger(the_string) {
+		var new_date=the_string;
+		if (new_date.match(/([0-9]+)\/([0-9]+)\/([0-9]+)/)) {
+			new_date=new_date.replace(/([0-9]+)\/([0-9]+)\/([0-9]+)/, "$3$2$1");
+		}
+		if (new_date.match(/([0-9]+)\-([0-9]+)\-([0-9]+)/)) {
+			new_date=new_date.replace(/([0-9]+)\-([0-9]+)\-([0-9]+)/, "$1$2$3");
+		}
+		return new_date;
+	}
+	
 	<%= graphviz_remote_function('graph', 'program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans', 'start_date', 'end_date') %>
 	$('download_graph').observe('click', function(event){
 		var thelink=document.getElementById('download_graph');
 		var base_url = '<%= image_path("../send_graphviz_image") -%>';
-		var full_url = base_url + "/"+$('username').getValue() +"/"+$('analysis').getValue() +"/"+$('distance').getValue() +"/"+$('stringency').getValue() +"/"+$('include_orphans').getValue() +"/"+encodeURIComponent($('start_date').getValue()) +"/"+encodeURIComponent($('end_date').getValue()) +"/"+$('program').getValue() +"."+$('format').getValue();
+		var full_url = base_url + "/"+$('username').getValue() +"/"+$('analysis').getValue() +"/"+$('distance').getValue() +"/"+$('stringency').getValue() +"/"+$('include_orphans').getValue() +"/"+convertDateToInteger($('start_date').getValue()) +"/"+convertDateToInteger($('end_date').getValue()) +"/"+$('program').getValue() +"."+$('format').getValue();
 		thelink.href = full_url;
 		return true;
 	});
