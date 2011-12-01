@@ -51,14 +51,14 @@ if( FlashDetect.versionAtLeast(MIN_FLASH_VERSION) ) {
 	
 	function extract_id(event) {
 		var text = event.target.data.tooltiptext;
-		var id = event.target.data.tooltiptext.match(/(NetID|id|STU): ([^;: ]+)/)[2];
+		var id = event.target.data.tooltiptext.match(/(NetID|username|id|STU): ([^;: ]+)/)[2];
 		return id;
 	} 
 	function get_target_prefix(event) {
 		var text = event.target.data.tooltiptext;
-		var id = event.target.data.tooltiptext.match(/(NetID|id|STU): /)[1];
+		var id = event.target.data.tooltiptext.match(/(NetID|username|id|STU): /)[1];
 		var prefix;
-		if (id.search(/NetID/) == 0) {
+		if (id.search(/NetID|username/) == 0) {
 			prefix = '/cytoscape/'
 		} else if ( id.search(/STU/) == 0) {
 			prefix = '/studies/'

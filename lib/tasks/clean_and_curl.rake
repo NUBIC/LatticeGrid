@@ -12,7 +12,7 @@ namespace :cache do
   task :clear => :environment do
     block_timing("cache:clear") {
     if File.directory?(public_path) then
-        directories= %w{graphs abstracts investigators programs orgs member_nodes org_nodes copublications graphviz mesh cytoscape member_cytoscape_data investigators_search profiles investigators_search_all awards}
+        directories= %w{graphs abstracts investigators programs orgs member_nodes org_nodes copublications graphviz mesh cytoscape member_cytoscape_data org_cytoscape_data investigators_search profiles investigators_search_all awards}
       directories.each do |name|
         clear_directory(name)
       end

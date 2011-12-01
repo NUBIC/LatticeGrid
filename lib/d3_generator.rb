@@ -8,9 +8,10 @@ def d3_units_by_date_graph(units, start_date, end_date)
   graph_array = []
   investigator_array = []
   units.each do |unit|
+    faculty_ids = unit.primary_or_member_faculty.map(&:id)
+    next if faculty_ids.blank?
     graph_array << d3_unit_graph(unit)
-    faculty_ids = unit.associated_faculty.map(&:id)
-    unit.associated_faculty.each do |investigator|
+    unit.primary_or_member_faculty.each do |investigator|
       graph_array << d3_unit_investigator_by_date_graph(unit, investigator, faculty_ids, start_date, end_date)
     end
   end
@@ -21,9 +22,10 @@ def d3_all_units_graph(units)
   graph_array = []
   investigator_array = []
   units.each do |unit|
+    faculty_ids = unit.primary_or_member_faculty.map(&:id)
+    next if faculty_ids.blank?
     graph_array << d3_unit_graph(unit)
-    faculty_ids = unit.associated_faculty.map(&:id)
-    unit.associated_faculty.each do |investigator|
+    unit.primary_or_member_faculty.each do |investigator|
       graph_array << d3_unit_investigator_graph(unit, investigator, faculty_ids)
       
 #      if investigator_array.include?(investigator.username)
@@ -40,17 +42,18 @@ end
 def d3_master_unit_graph(units, master_unit)
   graph_array = []
   investigator_array = []
+  faculty_ids = master_unit.primary_or_member_faculty.map(&:id)
   graph_array << d3_unit_graph(master_unit)
-  faculty_ids = master_unit.associated_faculty.map(&:id)
-  master_unit.associated_faculty.each do |investigator|
+  master_unit.primary_or_member_faculty.each do |investigator|
     investigator_array << investigator.username
     graph_array << d3_unit_investigator_graph(master_unit, investigator, faculty_ids)
   end
   units.each do |unit|
     if unit.id != master_unit.id
+      faculty_ids = unit.all_primary_or_member_faculty.map(&:id)
+      next if faculty_ids.blank?
       graph_array << d3_unit_graph(unit)
-      faculty_ids = unit.associated_faculty.map(&:id)
-      unit.associated_faculty.each do |investigator|
+      unit.all_primary_or_member_faculty.each do |investigator|
         if investigator_array.include?(investigator.username)
           graph_array << d3_simple_unit_investigator_graph(unit, investigator)
         else

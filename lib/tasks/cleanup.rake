@@ -458,6 +458,13 @@ namespace :cleanup do
       }
   end
   
+  task :reinstate_investigators_with_valid_abstracts => :environment do
+     block_timing("cleanup:reinstate_investigators_with_valid_abstracts") {
+       investigators_to_reinstate = Investigators.deleted_with_valid_abstracts
+       reinstateInvestigators(investigators_to_reinstate)
+      }
+  end
+
   task :find_duplicate_tags => :environment do
      block_timing("cleanup:find_duplicate_tags") {
        findDuplicateTags()
@@ -476,12 +483,5 @@ namespace :cleanup do
       }
   end
   
-  task :reinstate_investigators_with_valid_abstracts => :environment do
-     block_timing("cleanup:reinstate_investigators_with_valid_abstracts") {
-       investigators_to_reinstate = Investigators.deleted_with_valid_abstracts
-       reinstateInvestigators(investigators_to_reinstate)
-      }
-  end
-
 end
 

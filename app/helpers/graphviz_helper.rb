@@ -78,12 +78,12 @@ module GraphvizHelper
     end
   end
 
-	def graphviz_remote_function(div_id, program_name,format_name, distance_name, stringency_name, id_name, analysis_name, include_orphans_name)
+	def graphviz_remote_function(div_id, program_name,format_name, distance_name, stringency_name, id_name, analysis_name, include_orphans_name, start_date_name, end_date_name)
     remote_function( :update =>  {:success => div_id, :failure => 'flash_notice'},
             :before => "new Element.update('#{div_id}','<p>Loading graph ...</p>')",
             :complete => "new Effect.Highlight('#{div_id}');",
             :url => restless_graphviz_path(),
-            :with => "'program='+encodeURIComponent( $('"+program_name.to_s+"').getValue())+'&format='+encodeURIComponent( $('"+format_name.to_s+"').getValue())+'&distance='+encodeURIComponent( $('"+distance_name.to_s+"').getValue())+'&stringency='+encodeURIComponent( $('"+stringency_name.to_s+"').getValue())+'&id='+encodeURIComponent( $('"+id_name.to_s+"').getValue())+'&analysis='+encodeURIComponent( $('"+analysis_name.to_s+"').getValue())+'&include_orphans='+encodeURIComponent( $('"+include_orphans_name.to_s+"').getValue())",
+            :with => "'program='+encodeURIComponent( $('"+program_name.to_s+"').getValue())+'&format='+encodeURIComponent( $('"+format_name.to_s+"').getValue())+'&distance='+encodeURIComponent( $('"+distance_name.to_s+"').getValue())+'&stringency='+encodeURIComponent( $('"+stringency_name.to_s+"').getValue())+'&id='+encodeURIComponent( $('"+id_name.to_s+"').getValue())+'&analysis='+encodeURIComponent( $('"+analysis_name.to_s+"').getValue())+'&include_orphans='+encodeURIComponent( $('"+include_orphans_name.to_s+"').getValue())+'&start_date='+encodeURIComponent( $('"+start_date_name.to_s+"').getValue())+'&end_date='+encodeURIComponent( $('"+end_date_name.to_s+"').getValue())",
             :method => :get)
 	end
 
@@ -104,13 +104,13 @@ module GraphvizHelper
      # params = set_graphviz_defaults(params)
      graph_dir = "public/#{@graph_path}"
      if ! graph_exists?( graph_dir, params[:program], @output_format )
-       graph = build_graph(params[:analysis],params[:program],params[:id], params[:distance], params[:stringency], params[:include_orphans])
+       graph = build_graph(params[:analysis],params[:program],params[:id], params[:distance], params[:stringency], params[:include_orphans], params[:start_date], params[:end_date])
        graph_output( graph, graph_dir, params[:program], @output_format )
      end
    end
    
-   def build_graph(analysis, program, id, distance, stringency, include_orphans)
-     # logger.warn "analysis=#{analysis}, program=#{program}, username=#{id}, distance=#{distance}, stringency=#{stringency}, include_orphans=#{include_orphans}"
+   def build_graph(analysis, program, id, distance, stringency, include_orphans, start_date, end_date)
+     # logger.warn "analysis=#{analysis}, program=#{program}, username=#{id}, distance=#{distance}, stringency=#{stringency}, include_orphans=#{include_orphans}, start_date=#{start_date}, end_date=#{end_date}"
      @graph_edges=[]
      #include_orphans = "0" if include_orphans.to_s != "1"
      graph = graph_new(program)

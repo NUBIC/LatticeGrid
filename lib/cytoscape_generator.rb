@@ -1,4 +1,5 @@
 require 'graph_generator'
+
 def generate_cytoscape_schema()
 {
     :nodes => [{:name => "label", :type => "string"}, {:name => "tooltiptext", :type => "string"}, {:name => "weight", :type => "number"}, {:name => "depth", :type => "number"} ],
@@ -14,13 +15,48 @@ def generate_cytoscape_data(investigator, max_depth)
 }
 end
 
+def generate_cytoscape_org_data(org, max_depth)
+  node_array_hash = generate_cytoscape_org_nodes(org, max_depth)
+{
+    :nodes => node_array_hash,
+    :edges => generate_cytoscape_org_edges(org, max_depth, node_array_hash)
+}
+end
+
+def generate_cytoscape_org_nodes(org, max_depth, node_array=[], depth=0)
+  #         nodes: [ { id: "n1", label: "Node 1", score: 1.0 },
+  #                  { id: "n2", label: "Node 2", score: 2.2 },
+  #                  { id: "n3", label: "Node 3", score: 3.5 } ]
+  return node_array if org.blank?
+  max_weight=max_org_pubs(org)
+  node_array << cytoscape_org_node_hash(org, max_weight, depth )
+  depth +=1
+  # first iteration - just insert the direct nodes - max depth set to depth
+  org.all_primary_or_member_faculty.each do |investigator|
+    node_array = generate_cytoscape_nodes(investigator, depth, node_array, depth ) unless cytoscape_array_has_key?(node_array, investigator.id)
+  end
+  if max_depth > depth
+    # second iteration - go deeper
+    org.all_primary_or_member_faculty.each do |investigator|
+      node_array = generate_cytoscape_nodes(investigator, max_depth, node_array, depth ) 
+    end
+  end
+  node_array
+end
+
 def generate_cytoscape_nodes(investigator, max_depth, node_array=[], depth=0)
   #         nodes: [ { id: "n1", label: "Node 1", score: 1.0 },
   #                  { id: "n2", label: "Node 2", score: 2.2 },
   #                  { id: "n3", label: "Node 3", score: 3.5 } ]
-  max_weight=max_colleague_pubs(investigator)
-  node_array << cytoscape_investigator_node_hash(investigator, max_weight+10, depth ) unless cytoscape_array_has_key?(node_array, investigator.id)
+  return node_array if investigator.blank?
+  if depth == 0
+    max_weight=max_colleague_pubs(investigator)+10
+  else
+    max_weight = investigator.total_publications
+  end
+  node_array << cytoscape_investigator_node_hash(investigator, max_weight, depth ) unless cytoscape_array_has_key?(node_array, investigator.id)
   depth +=1
+  return node_array if depth > max_depth
   investigator.co_authors.each { |connection| 
     node_array << cytoscape_investigator_node_hash(connection.colleague, connection.colleague.total_publications, depth) unless cytoscape_array_has_key?(node_array, connection.colleague_id)
   }
@@ -33,11 +69,27 @@ def generate_cytoscape_nodes(investigator, max_depth, node_array=[], depth=0)
 end
 
 def max_colleague_pubs(investigator)
+  return 0 if investigator.blank?
   max_pubs = investigator.total_publications
   investigator.co_authors.each { |connection| 
     max_pubs = connection.colleague.total_publications if connection.colleague.total_publications > max_pubs
   }
   max_pubs
+end
+
+def max_org_pubs(org)
+  return 0 if org.blank? || org.all_primary_or_member_faculty.blank?
+  org.all_primary_or_member_faculty.map(&:total_publications).max
+end
+
+def cytoscape_org_node_hash(org, weight=10, depth=1)
+ {
+   :id => org.name,
+   :label => org.name,
+   :weight => weight,
+   :depth => depth,
+   :tooltiptext => org.abbreviation || org.name
+ }
 end
 
 def cytoscape_investigator_node_hash(investigator, weight=10, depth=1,investigator_awards=nil, investigator_studies=nil)
@@ -56,7 +108,7 @@ def investigator_tooltip(investigator, depth, investigator_awards=nil, investiga
     "Last author pubs: #{investigator.num_last_pubs}; <br/>" +
     "intra-unit collab: #{investigator.num_intraunit_collaborators}; <br/>" +
     "inter-unit collabs: #{investigator.num_extraunit_collaborators}; <br/>" +
-    "NetID: #{investigator.username}; <br/>" +
+    "username: #{investigator.username}; <br/>" +
     (investigator_awards.blank? ? "" : "PI awards: $#{award_info(investigator_awards,'pd/pi')}; <br/>") +
     (investigator_awards.blank? ? "" : "All awards: $#{award_info(investigator_awards)}; <br/>") + 
     (investigator_studies.blank? ? "" : "Research studies: #{investigator_studies.length}; <br/>") + 
@@ -64,6 +116,15 @@ def investigator_tooltip(investigator, depth, investigator_awards=nil, investiga
     ((investigator.memberships.blank?) ? "" : "memberships: #{investigator.memberships.collect{|org| org.abbreviation || truncate_words(org.name,30) }.join(', <br/>&nbsp; &nbsp; &nbsp; &nbsp; ')}")
 end
 
+def generate_cytoscape_org_edges(org, depth, nodes_array_hash,edge_array=[], include_intra_node_connections=false)
+  org_index = org.name
+  org.all_primary_or_member_faculty.each do |investigator|
+    investigator_index = investigator.id.to_s
+    edge_array << cytoscape_edge_hash(edge_array.length, org_index, investigator_index, "", 1, "member of #{org_index}")
+    edge_array = generate_cytoscape_edges(investigator, depth, nodes_array_hash, edge_array, include_intra_node_connections)
+  end
+  edge_array
+end
 
 def generate_cytoscape_edges(investigator, depth, nodes_array_hash, edge_array=[], include_intra_node_connections=false)
   #         edges: [ { id: "e1", label: "Edge 1", weight: 1.1, source: "n1", target: "n3" },
@@ -71,6 +132,7 @@ def generate_cytoscape_edges(investigator, depth, nodes_array_hash, edge_array=[
   investigator_index = investigator.id.to_s
   investigator.co_authors.each { |connection| 
     colleague_index = connection.colleague_id.to_s
+    next unless colleague_index and cytoscape_array_has_key?(nodes_array_hash, colleague_index)
     if colleague_index and ! cytoscape_edge_array_has_key?(edge_array, colleague_index, investigator_index)
       tooltiptext=investigator_colleague_edge_tooltip(connection,investigator,connection.colleague)
       edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, colleague_index, connection.publication_cnt.to_s, connection.publication_cnt, tooltiptext)

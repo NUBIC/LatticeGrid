@@ -13,7 +13,7 @@ ActionController::Routing::Routes.draw do |map|
     :collection => { :stats => :get, :period_stats => [:get,:post], :list => :get, :centers => :get, :departments => :get, :programs => :get, :department_collaborations => :get, :investigator_abstracts_during_period => [:get, :post], :classifications => :get }, 
     :member => {:full_show => :get, :show_investigators => :get, :list_abstracts_during_period_rjs => :post, :classification_orgs => :get, :program_members => :get }
   map.resources :investigators, :only => [:index, :show], :member => {:full_show => :get, :show_all_tags => :get, :publications => :get, :abstract_count => :get, :preview => :get, :search => :get, :investigators_search => :get, :research_summary => :get, :tag_cloud_list => :get, :title => :get, :home_department => :get, :bio=>:get, :email=>:get, :affiliations=>:get}, :collection => { :list_all => :get, :listing => :get, :list_by_ids => [:post, :get] }
-  map.resources :cytoscape, :only => [:index, :show], :member => {:investigators => :get, :protovis => :get, :jit => :get, :awards => :get, :studies => :get, :d3_data => :get, :chord=>:get}, :collection => {:d3_data => :get, :chord=>:get, :chord_by_date => :get}
+  map.resources :cytoscape, :only => [:index, :show], :member => {:investigators => :get, :protovis => :get, :jit => :get, :awards => :get, :studies => :get, :d3_data => :get, :chord=>:get, :show_org=>:get}, :collection => {:d3_data => :get, :chord=>:get, :chord_by_date => :get}
   map.resources :awards, :only => [:index, :show], :collection => {:disallowed => :get, :listing => :get}, :member => {:investigator => :get, :org => :get}
   map.resources :studies, :only => [:index, :show], :collection => {:disallowed => :get, :listing => :get}, :member => {:investigator => :get, :org => :get}
   map.resources :profiles, :except=>[:destroy,:new], :member => {:edit_pubs => :get, :investigator_listing => [:get, :post]}, :collection => { :splash => :get, :ccsg => :get, :admin => :get, :list_investigators => :get, :edit_investigators => :get}
@@ -56,6 +56,7 @@ ActionController::Routing::Routes.draw do |map|
   map.publications_edit 'publications_edit/:id', :controller => 'profiles', :action => 'edit_pubs' #need this to work with a form
   map.member_protovis_data "member_protovis_data/:id", :controller => 'cytoscape', :action => 'member_protovis_data'
   map.member_cytoscape_data "member_cytoscape_data/:id/:depth/:include_awards/:include_studies", :controller => 'cytoscape', :action => 'member_cytoscape_data'
+  map.org_cytoscape_data "org_cytoscape_data/:id/:depth/:include_awards/:include_studies", :controller => 'cytoscape', :action => 'org_cytoscape_data'
   map.chord_date_data "cytoscape/:start_date/:end_date/d3_date_data.:format", :controller => 'cytoscape', :action => 'd3_date_data'
   map.chord_by_date "cytoscape/:start_date/:end_date/chord_by_date", :controller => 'cytoscape', :action => 'chord_by_date'
   map.investigators_search "investigators_search/:id", :controller => 'investigators', :action => 'investigators_search'
@@ -63,7 +64,8 @@ ActionController::Routing::Routes.draw do |map|
   map.direct_search "direct_search/:id", :controller => 'investigators', :action => 'direct_search', :format=>'xml'
   map.proxy_googlechart "proxy_googlechart/:id", :controller => 'sparklines', :action => 'proxy_googlechart'
   map.cytoscape_member "cytoscape/:id/:depth", :controller => 'cytoscape', :action => 'show'
-  map.send_graphviz_image 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:program.:format', :controller => 'graphviz', :action => 'send_graphviz_image'
+  map.cytoscape_org "cytoscape/:id/org/:depth", :controller => 'cytoscape', :action => 'show_org'
+  map.send_graphviz_image 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:start_date/:end_date/:program.:format', :controller => 'graphviz', :action => 'send_graphviz_image'
   map.restless_graphviz 'get_graphviz/', :controller => 'graphviz', :action => 'get_graphviz'
     
 #  map.graphviz 'graph/:id/graphviz/:distance/:stingency/:program.:format', :controller => 'graphviz', :action => 'graphviz'

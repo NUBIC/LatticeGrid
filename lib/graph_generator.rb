@@ -1,6 +1,69 @@
 require 'graphviz'
 require 'stringio'
 
+def graph_output( g, path, file_name, output_format )
+  output_format = 'svg' if output_format == 'xml'
+  file_name = clean_filename(file_name)
+#  logger.info "graph_output( #{g}, #{path}, #{file_name}, #{output_format} )"
+  graph_output_format = path+file_name+"."+output_format
+  check_path(path)
+  begin
+    Dir.entries(path)
+    g.output( output_format => graph_output_format )
+  rescue Exception => error
+    logger.error("graph_output error: #{error.message}")
+    logger.error("path is #{path}; filename is #{file_name}, outputformat is #{output_format}.")
+    puts "unable to link to directory #{path} or write out file"
+  end
+
+end
+
+def clean_filename(filename)
+  filename.downcase.gsub(/[^a-z0-9]+/,'_')
+end
+
+def check_path(path)
+  begin
+    Dir.entries(path)
+  rescue
+    dir=""
+    begin
+      path.split("/").each do |dir_name|
+        dir += dir_name+"/"
+        add_path(dir)
+      end
+    rescue Exception => error
+      logger.error("check_path error: #{error.message}")
+      puts "unable to create directory #{path}. Made it to #{dir}"
+    end
+  end
+end
+
+def add_path(path)
+  begin
+    Dir.entries(path)
+  rescue
+    Dir.mkdir(path)
+  end
+end
+
+def graph_exists?( path, file_name, output_format )
+  complete_name = path+file_name+"."+output_format
+  return File.exist?( complete_name )
+end
+
+def graph_no_data (g, message)
+  main        = g.add_node( "main", 
+                    :label=> message, 
+                    :URL => abstracts_url(), 
+                    :target=>'_top', 
+                    :shape => 'box',
+                    :color => LatticeGridHelper.white_fill_color,
+                    :fillcolor => LatticeGridHelper.white_fill_color,
+                    :tooltip => 'Data is unavailable - user or unit cannot be found')
+  return g
+end
+
 # gold: #FFAD33
 # existing gold (browner): #e8a820
 # pale gold: #ddaa66
@@ -74,68 +137,6 @@ def graph_new(program, gopts={}, nopts={}, eopts={})
   return g
 end
 
-def graph_output( g, path, file_name, output_format )
-  output_format = 'svg' if output_format == 'xml'
-  file_name = clean_filename(file_name)
-#  logger.info "graph_output( #{g}, #{path}, #{file_name}, #{output_format} )"
-  graph_output_format = path+file_name+"."+output_format
-  check_path(path)
-  begin
-    Dir.entries(path)
-    g.output( output_format => graph_output_format )
-  rescue Exception => error
-    logger.error("graph_output error: #{error.message}")
-    logger.error("path is #{path}; filename is #{file_name}, outputformat is #{output_format}.")
-    puts "unable to link to directory #{path} or write out file"
-  end
-
-end
-
-def clean_filename(filename)
-  filename.downcase.gsub(/[^a-z0-9]+/,'_')
-end
-
-def check_path(path)
-  begin
-    Dir.entries(path)
-  rescue
-    dir=""
-    begin
-      path.split("/").each do |dir_name|
-        dir += dir_name+"/"
-        add_path(dir)
-      end
-    rescue Exception => error
-      logger.error("check_path error: #{error.message}")
-      puts "unable to create directory #{path}. Made it to #{dir}"
-    end
-  end
-end
-
-def add_path(path)
-  begin
-    Dir.entries(path)
-  rescue
-    Dir.mkdir(path)
-  end
-end
-
-def graph_exists?( path, file_name, output_format )
-  complete_name = path+file_name+"."+output_format
-  return File.exist?( complete_name )
-end
-
-def graph_no_data (g, message)
-  main        = g.add_node( "main", 
-                    :label=> message, 
-                    :URL => abstracts_url(), 
-                    :target=>'_top', 
-                    :shape => 'box',
-                    :color => LatticeGridHelper.white_fill_color,
-                    :fillcolor => LatticeGridHelper.white_fill_color,
-                    :tooltip => 'Username is invalid')
-  return g
-end
 
 def node_label (node_object)
   "#{node_object.name}: " +

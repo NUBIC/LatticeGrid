@@ -2,16 +2,16 @@ require 'graph_generator'
 
 def build_graphviz_restfulpath(gparams, format='svg')
   # map to restful order
-  # 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:program.:format',
+  # 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/start_date/end_date/:program.:format',
   
-  send_graphviz_image_url(gparams[:id],gparams[:analysis],gparams[:distance],gparams[:stringency],gparams[:include_orphans], gparams[:program], format)
+  send_graphviz_image_url(gparams[:id],gparams[:analysis],gparams[:distance],gparams[:stringency],gparams[:include_orphans], gparams[:start_date], gparams[:end_date], gparams[:program], format)
 end
 
 def build_graphviz_filepath(gparams)
    # map to restful order
-   # 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:program.:format',
+   # 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/start_date/end_date/:program.:format',
 
-   "graphs/#{clean_filename(gparams[:id])}/#{gparams[:analysis]}/#{gparams[:distance]}/#{gparams[:stringency]}/#{gparams[:include_orphans]}/"
+   "graphs/#{clean_filename(gparams[:id])}/#{gparams[:analysis]}/#{gparams[:distance]}/#{gparams[:stringency]}/#{gparams[:include_orphans]}/#{gparams[:start_date].to_date.to_s(:integer_date)}/#{gparams[:end_date].to_date.to_s(:integer_date)}/"
  end
 
  # was handle_graphviz_params
@@ -19,6 +19,8 @@ def build_graphviz_filepath(gparams)
  def set_graphviz_defaults(gparams={})
    gparams[:program] ||= "neato" 
    gparams[:analysis] ||= "member"
+   gparams[:start_date] ||= 5.years.ago.to_date.to_s(:justdate)
+   gparams[:end_date] ||= Date.tomorrow.to_s(:justdate)
    gparams[:format] ||= "svg"
    if gparams[:analysis].include?("org_org")
      gparams[:stringency] ||= "10"

@@ -5,7 +5,7 @@ class GraphvizController < ApplicationController
   require 'graphviz_config'
   require 'csv_generator'
   require 'graph_generator'
-
+ 
   helper :all
 
   include ApplicationHelper
@@ -147,6 +147,8 @@ class GraphvizController < ApplicationController
   
   def show_core
     params[:program] ||= "neato"
+    params[:start_date] ||=5.years.ago.to_date.to_s(:justdate)
+    params[:end_date] ||=Date.tomorrow.to_s(:justdate)
     set_graphviz_defaults(params)
     
     params[:format] =  nil

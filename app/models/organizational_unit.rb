@@ -90,6 +90,14 @@ class OrganizationalUnit < ActiveRecord::Base
       self.self_and_descendants.collect(&:associated_faculty).flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
     end
 
+    def primary_or_member_faculty
+      (self.primary_faculty + self.members).sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+     end
+
+    def all_primary_or_member_faculty
+      (all_primary_faculty + all_members).sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    end
+
     def all_faculty
       (all_primary_faculty + all_associated_faculty).sort {|x,y| x.sort_name <=> y.sort_name }.uniq
     end

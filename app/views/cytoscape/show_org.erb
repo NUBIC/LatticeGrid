@@ -1,3 +1,4 @@
+<% @include_graph_link=true if @include_graph_link.nil? %>
   <!--[if IE]>
   <link rel="stylesheet" type="text/css" href="stylesheets/cytoscape/demo.ie.css" />
   <![endif]-->
@@ -5,7 +6,7 @@
 	<script type="text/javascript">
 	// globals
 	var vis;
-	var cytoscapeGraphURL = "<%= member_cytoscape_data_url(params[:id], params[:depth], params[:include_awards], params[:include_studies]) -%>";
+	var cytoscapeGraphURL = "<%= org_cytoscape_data_url(params[:id], params[:depth], params[:include_awards], params[:include_studies]) -%>";
 	var swfPath = "<%= image_path('../swf/CytoscapeWeb') %>";
 	var flashInstallerPath = "<%= image_path('../swf/playerProductInstall') %>";
 	</script>
@@ -30,9 +31,17 @@
             
 <div id="page" class="slice">
 	<div id="investigator_title">
-	<% all_abstracts = @all_abstracts || nil -%>
-	<% title = @title || nil -%>
-	<%= investigator_bio_heading(@investigator, all_abstracts, title) %>
+	<h1><%= @org.name %> Collaboration Diagram &nbsp;
+	    <% if ! @all_abstracts.nil? && @all_abstracts.length > 9 -%>
+		  <% publications_per_year=abstracts_per_year_as_string(@all_abstracts) -%>
+		  <span class='inlinebarchart' values='<%= publications_per_year -%>' title='publications per year: <%= publications_per_year -%>'>&nbsp;</span>
+	   	  <%= sparkline_barchart_setup({'barWidth'=>2,'barSpacing'=>2}) -%>
+	    <% end -%>
+	</h1>
+
+	<% if @include_graph_link %>
+	<p><%= org_nav_heading() %></p>
+	<% end %>
 	</div>
   <div>
 	<input type="checkbox" id="nodeLabelsVisibleCheckbox"> Show Node Labels &nbsp; &nbsp;
@@ -44,14 +53,14 @@
 	  <input type="radio" name="layout" value="Radial"> Radial
 	  <input type="radio" name="layout" value="Tree"> Tree
 	<!-- from Karthik Singh, July 2011 -->
-	<% if ! @investigator.blank? %>
+	<% if ! @org.blank? %>
 		<select name="jumpmenu" onChange="jumpto(document.form1.jumpmenu.options[document.form1.jumpmenu.options.selectedIndex].value);">
 			<option value="0">Distance...</option>
 			<% if params[:depth].blank? or params[:depth] == "1" %>
 			<option selected  value="0">One</option>
-			<option value='<%= cytoscape_member_url(@investigator.username, 2) %>'>Two</option>
+			<option value='<%= cytoscape_org_url(@org.id, 2) %>'>Two</option>
 			<% else %>
-			<option value='<%= cytoscape_member_url(@investigator.username, 1) %>' >One</option>
+			<option value='<%= cytoscape_org_url(@org.id, 1) %>' >One</option>
 			<option selected  value="0">Two</option>
 			<% end %>
 		</select> 
