@@ -18,5 +18,5 @@
 <% @heading = "Publications (#{@total_entries})" if @heading.blank? %>
 
 <% if ! @investigator.nil? %>
-<%= render :partial => "investigators/show_investigator", :locals => { :investigator => @investigator, :include_mesh => @include_mesh, :include_all_mesh => @include_all_mesh, :include_graph_link => @include_graph_link, :show_paginator => @show_paginator, :include_investigators => @include_investigators, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker, :abstracts => @abstracts, :all_abstracts => @all_abstracts, :total_entries => @total_entries, :heading => @heading, :investigator => @investigator, :year_array => year_array, :do_pagination => @do_pagination, } %>
+<%= render :partial => "investigators/show_investigator.html", :locals => { :investigator => @investigator, :include_mesh => @include_mesh, :include_all_mesh => @include_all_mesh, :include_graph_link => @include_graph_link, :show_paginator => @show_paginator, :include_investigators => @include_investigators, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker, :abstracts => @abstracts, :all_abstracts => @all_abstracts, :total_entries => @total_entries, :heading => @heading, :investigator => @investigator, :year_array => year_array, :do_pagination => @do_pagination, } %>
 <% end %>

@@ -25,7 +25,16 @@ class CytoscapeController < ApplicationController
     params[:include_studies] ||= "0"
     @title = "Publications Collaborations"
     @investigator=Investigator.find_by_username(params[:id])
+    render :action => :show
   end
+
+  def show_all
+    params[:depth] ||= "1"
+    params[:include_awards] ||= "1"
+    params[:include_studies] ||= "1"
+    show
+  end
+
 
   def show_org
     params[:depth] ||= "1"
@@ -68,19 +77,12 @@ class CytoscapeController < ApplicationController
   def member_cytoscape_data
     investigator=Investigator.find_by_username(params[:id])
     params[:depth] ||= "1"
-    depth = params[:depth].to_i
     params[:include_awards] ||= "1"
     params[:include_studies] ||= "0"
-    include_awards = params[:include_awards].to_i
-    include_studies = params[:include_studies].to_i
     data_schema = generate_cytoscape_schema()
-    if !include_studies.blank? and include_studies != 0
-      data = generate_cytoscape_study_data(investigator, depth)
-    elsif !include_awards.blank? and include_awards != 0
-      data = generate_cytoscape_award_data(investigator, depth)
-    else
-      data = generate_cytoscape_data(investigator, depth)
-    end
+    data = generate_cytoscape_study_data(investigator, params[:depth].to_i, params[:include_awards].to_i, params[:include_studies].to_i)
+    #data = generate_cytoscape_award_data(investigator, depth)
+    #data = generate_cytoscape_data(investigator, depth)
     respond_to do |format|
       format.json{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
       format.js{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }

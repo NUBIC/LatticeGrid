@@ -15,9 +15,9 @@
 <table class="borderless">
 <tr valign="top">
 	<td width="800px">
-		<%= render :partial => "investigators/investigator_bio", :locals => { :investigator => investigator, :all_abstracts => all_abstracts } %>
-		<%= render( :partial => "shared/abstract_listing", :locals => { :abstracts => abstracts, :do_pagination => do_pagination, :heading => heading, :show_paginator => show_paginator, :include_investigators => include_investigators, :include_pubmed_id => include_pubmed_id, :include_collab_marker => include_collab_marker}) if !abstracts.blank? %>
-		<%= render :partial => "shared/all_tags", :locals => { :investigator => investigator } if include_all_mesh %>
+		<%= render :partial => "investigators/investigator_bio.html", :locals => { :investigator => investigator, :all_abstracts => all_abstracts } %>
+		<%= render( :partial => "shared/abstract_listing.html", :locals => { :abstracts => abstracts, :do_pagination => do_pagination, :heading => heading, :show_paginator => show_paginator, :include_investigators => include_investigators, :include_pubmed_id => include_pubmed_id, :include_collab_marker => include_collab_marker}) if !abstracts.blank? %>
+		<%= render :partial => "shared/all_tags.html", :locals => { :investigator => investigator } if include_all_mesh %>
 		
 	</td>
 	<td>

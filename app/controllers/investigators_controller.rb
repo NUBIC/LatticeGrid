@@ -93,6 +93,13 @@ class InvestigatorsController < ApplicationController
       respond_to do |format|
         format.html { render :action => 'show' }
         format.xml  { render :layout => false, :xml  => @abstracts.to_xml() }
+        format.pdf do
+          @pdf = true
+          render( :pdf => "Publications for #{@investigator.full_name}", 
+              :stylesheets => "pdf", 
+              :template => "investigators/show.html",
+              :layout => "pdf")
+        end
       end
     end
   end
