@@ -8,7 +8,11 @@ module InvestigatorsHelper
       params[:id]=params[:id]+"."+params[:format]
     end
     if params[:name].blank? then
-      @investigator = Investigator.find_by_username_including_deleted(params[:id])
+      if params[:id] =~ /^[0-9]+$/
+        @investigator = Investigator.include_deleted(params[:id])
+      else
+        @investigator = Investigator.find_by_username_including_deleted(params[:id])
+      end
       if @investigator
         params[:investigator_id] = @investigator.id
         params[:name] =  @investigator.first_name + " " + @investigator.last_name
