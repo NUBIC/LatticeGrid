@@ -69,6 +69,7 @@ end
 def generate_cytoscape_org_edges(org, depth, node_array,edge_array=[])
   org_index = org.name
   org.all_primary_or_member_faculty.each do |investigator|
+    next if investigator.blank?
     investigator_index = investigator.id.to_s
     edge_array << cytoscape_edge_hash(edge_array.length, org_index, investigator_index, "", 1, "member of #{org_index}", "Org")
     edge_array = generate_cytoscape_publication_edges(investigator, depth, node_array, edge_array)
@@ -79,6 +80,7 @@ end
 def generate_cytoscape_publication_edges(investigator, depth, node_array, edge_array=[], add_intermediate_nodes=false)
   #         edges: [ { id: "e1", label: "Edge 1", weight: 1.1, source: "n1", target: "n3" },
   #                  { id: "e2", label: "Edge 2", weight: 3.3, source:"n2", target:"n1"} ]
+  return edge_array if investigator.blank?
   investigator_index = investigator.id.to_s
   investigator.co_authors.each { |connection| 
     next if connection.colleague.blank?

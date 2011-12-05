@@ -1,5 +1,5 @@
 class CytoscapeController < ApplicationController
-  before_filter :check_allowed, :only => [:awards, :studies]
+  before_filter :check_allowed, :only => [:awards, :studies, :show_all]
 
   caches_page( :show, :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data) if LatticeGridHelper.CachePages()
   caches_action( :listing, :investigator, :awards, :studies )  if LatticeGridHelper.CachePages()
@@ -24,7 +24,7 @@ class CytoscapeController < ApplicationController
     params[:include_publications] ||= "1"
     params[:include_awards] ||= "0"
     params[:include_studies] ||= "0"
-    @title = "Publications Collaborations"
+    @title ||= "Publications Collaborations"
     @investigator=Investigator.find_by_username(params[:id])
     render :action => :show
   end
@@ -34,6 +34,7 @@ class CytoscapeController < ApplicationController
     params[:include_publications] ||= "1"
     params[:include_awards] ||= "1"
     params[:include_studies] ||= "1"
+    @title = "Publication/Award/Study Collaborations"
     show
   end
 

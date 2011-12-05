@@ -68,11 +68,11 @@ $(function(){
 
 	var elementColorMapper = {
 	        attrName: "element_type",
-	        entries: [ { attrValue: "Award", value: "#7C9" },
-	                   { attrValue: "Publication", value: "#330" },
+	        entries: [ { attrValue: "Award", value: "#AE9" },
+	                   { attrValue: "Publication", value: "#770" },
 	                   { attrValue: "Org", value: "#00A" },
 	                   { attrValue: "Investigator", value: "#A99" },
-	                   { attrValue: "Study", value: "#CAA" } ]
+	                   { attrValue: "Study", value: "#EAA" } ]
 	};
 	
 	/*---- DEFAULT -----------------------------------------------------------------------------------*/

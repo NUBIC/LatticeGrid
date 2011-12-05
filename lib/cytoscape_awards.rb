@@ -57,7 +57,7 @@ def generate_cytoscape_award_edges(investigator, depth, node_array, edge_array=[
     award_index = "A_#{i_award.proposal_id}"
     if award_index and ! cytoscape_edge_array_has_key?(edge_array, award_index, investigator_index)
       tooltiptext=investigator_award_edge_tooltip(i_award,investigator,depth)
-      edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, award_index, i_award.role, i_award.proposal.total_amount, tooltiptext, "Award")
+      edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, award_index, i_award.role, i_award.proposal.investigator_proposals.length, tooltiptext, "Award")
       # now add all the investigator - award connections
       edge_array = generate_cytoscape_award_investigator_edges(i_award.proposal,edge_array,depth)
       # go one more layer down to add all the intermediate edges
@@ -66,7 +66,7 @@ def generate_cytoscape_award_edges(investigator, depth, node_array, edge_array=[
           inv_award_index = inv_award.investigator_id.to_s
           if inv_award_index and cytoscape_array_has_key?(node_array, inv_award_index) and ! cytoscape_edge_array_has_key?(edge_array, award_index, inv_award_index)
             tooltiptext=investigator_award_edge_tooltip(i_award,inv_award.investigator,depth)
-            edge_array << cytoscape_edge_hash(edge_array.length, award_index, inv_award_index, inv_award.role, i_award.proposal.total_amount, tooltiptext, "Award")
+            edge_array << cytoscape_edge_hash(edge_array.length, award_index, inv_award_index, inv_award.role, i_award.proposal.investigator_proposals.length, tooltiptext, "Award")
           end
         }
       end
@@ -90,7 +90,7 @@ def generate_cytoscape_award_investigator_edges(award,edge_array, depth)
     if investigator_index and ! cytoscape_edge_array_has_key?(edge_array, award_index, investigator_index)
       unless inner_inv_award.investigator.blank?
         tooltiptext=investigator_award_edge_tooltip(inner_inv_award,inner_inv_award.investigator,depth)
-        edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, award_index, inner_inv_award.role, award.total_amount, tooltiptext, "Award")
+        edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, award_index, inner_inv_award.role, inner_inv_award.proposal.investigator_proposals.length, tooltiptext, "Award")
       end
     end
   }
@@ -127,8 +127,12 @@ def award_weight(value)
   else
     10
   end
-
 end
+
+def award_edge_weight(value)
+  value = award_weight(value)/10
+end
+
 
 def current_award_info(investigator_awards,role="", split_allocations=false)
   return "" if investigator_awards.blank? or investigator_awards.length < 1

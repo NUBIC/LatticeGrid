@@ -1,3 +1,4 @@
+<% @include_graph_link=true if @include_graph_link.nil? %>
 <% params[:depth] ||= 1 %>
 <% params[:include_publications] ||= 1 %>
 <% params[:include_awards] ||= 1 %>
@@ -14,19 +15,6 @@
 	var flashInstallerPath = "<%= image_path('../swf/playerProductInstall') %>";
 	</script>
 
-	<script language="javascript" type="text/javascript" >
-	// from Karthik Singh, July 2011
-	<!-- hide
-
-	function jumpto(x){
-	  if (document.form1.jumpmenu.value != "null" && document.form1.jumpmenu.value != "0") {
-	    document.location.href = x
-	  }
-	}
-
-	// end hide -->
-	</script>
-
 <!-- script type="text/javascript" src="javascripts/cytoscape/ga.js" ><!/script -->
   
   <!--[if IE]>
@@ -38,7 +26,7 @@
 	<% title = @title || nil -%>
 	<%= investigator_bio_heading(@investigator, all_abstracts, title) %>
 	</div>
-  <div>
+  <div id="cytoscape_options">
 	<input type="checkbox" id="nodeLabelsVisibleCheckbox"> Show Node Labels &nbsp; &nbsp;
     <input type="checkbox" id="edgeLabelsVisibleCheckbox"> Show Edge Labels &nbsp; &nbsp;
     <span id="layoutradio">
@@ -47,9 +35,12 @@
 	  <input type="radio" name="layout" value="Circle"> Circle
 	  <input type="radio" name="layout" value="Radial"> Radial
 	  <input type="radio" name="layout" value="Tree"> Tree
+	</form>
+    </span>
 	<!-- from Karthik Singh, July 2011 -->
 	<% if ! @investigator.blank? %>
-		<select name="jumpmenu" onChange="jumpto(document.form1.jumpmenu.options[document.form1.jumpmenu.options.selectedIndex].value);">
+	<form id="tree_depth" name="tree_depth">
+		<select name="jumpmenu" onChange="jumpto(document.tree_depth.jumpmenu.options[document.tree_depth.jumpmenu.options.selectedIndex].value);">
 			<option value="0">Distance...</option>
 			<% if params[:depth].blank? or params[:depth] == "1" %>
 			<option selected  value="0">One</option>
@@ -59,11 +50,11 @@
 			<option selected  value="0">Two</option>
 			<% end %>
 		</select> 
+ 	</form>
 	<% end %>
-	</form>
-    </span>
-  </div>
-	<script type="text/javascript">
+ </div>
+	<script language="javascript" type="text/javascript" >
+	<!-- hide
 	jQuery("#nodeLabelsVisibleCheckbox").bind('click', function(event){
 		vis.nodeLabelsVisible(!vis.nodeLabelsVisible());
 		setItemCheckStatus("#nodeLabelsVisibleCheckbox",vis.nodeLabelsVisible())
@@ -100,6 +91,15 @@
 			}
 		)
 	}
+	// from Karthik Singh, July 2011
+
+	function jumpto(x){
+	  if (document.tree_depth.jumpmenu.value != "null" && document.tree_depth.jumpmenu.value != "0") {
+	    document.location.href = x
+	  }
+	}
+
+	// end hide -->
 	</script>
   
 	<!-- begin page content -->
@@ -110,4 +110,12 @@
 	<!-- end content -->
 	</div>
 <!-- end page -->
+<% if params[:depth] == "2" %>
+<script type="text/javascript">
+function callWhenLoaded() {
+	changeCytoscapeLayout("ForceDirected");
+ }
+</script>
+<% end %>
+
 </div> 

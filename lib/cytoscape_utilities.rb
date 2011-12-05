@@ -20,14 +20,14 @@ def cytoscape_edge_array_has_key?(edge_array, idx1, idx2)
   return false
 end
 
-def cytoscape_edge_hash(edge_index, source_index, target_index, label="edge", value=1, tooltiptext="", element_type="Investigator")
+def cytoscape_edge_hash(edge_index, source_index, target_index, label="edge", weight=1, tooltiptext="", element_type="Investigator")
   {
     :id => edge_index.to_s,
     :label => "#{label}",
     :tooltiptext => tooltiptext,
     :source => source_index,
     :target => target_index,
-    :weight  => value,
+    :weight  => weight,
     :element_type => element_type
   }
 end

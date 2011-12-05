@@ -195,6 +195,9 @@ if( FlashDetect.versionAtLeast(MIN_FLASH_VERSION) ) {
 			setItemCheckStatus("#nodeLabelsVisibleCheckbox",OPTIONS['nodeLabelsVisible']);
 			setItemCheckStatus("#edgeLabelsVisibleCheckbox",OPTIONS['edgeLabelsVisible']);
 			setSelectedLayout(OPTIONS.layout['name']);
+			if (typeof callWhenLoaded === "function") {
+				callWhenLoaded();
+			}
 			//vis.draw({network: data, layout: layout, visualStyle: GRAPH_STYLES["Circles"]});
 		})
     }

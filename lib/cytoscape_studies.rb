@@ -101,7 +101,7 @@ end
 def investigator_study_edge_tooltip(i_study,investigator,depth)
    "Investigator #{investigator.name}; <br/>" + 
    "Role: #{i_study.role}; <br/>" + 
-   "Study: #{i_study.study.title}; <br/>" 
+   "Study: #{truncate_words(i_study.study.title, 50)}; <br/>" 
 end
 
 def study_weight(value)
