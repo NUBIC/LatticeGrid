@@ -65,7 +65,15 @@ $(function(){
     //LAYOUTS["Tree"] = { orientation: ["topToBottom","bottomToTop","leftToRight","rightToLeft"], depthSpace: 50, breadthSpace: 30, subtreeSpace: 5 };
     LAYOUTS["Tree"] = { orientation: "leftToRight", depthSpace: 50, breadthSpace: 30, subtreeSpace: 5 };
 	
-	
+
+	var elementColorMapper = {
+	        attrName: "element_type",
+	        entries: [ { attrValue: "Award", value: "#7C9" },
+	                   { attrValue: "Publication", value: "#330" },
+	                   { attrValue: "Org", value: "#00A" },
+	                   { attrValue: "Investigator", value: "#A99" },
+	                   { attrValue: "Study", value: "#CAA" } ]
+	};
 	
 	/*---- DEFAULT -----------------------------------------------------------------------------------*/
 	
@@ -82,7 +90,7 @@ $(function(){
 				selectionFillOpacity: 0
 			},
 			nodes: {
-				size: 40,
+				size: 20,
 				color: "#ff9999",
 				borderColor: "#666666",
 				borderWidth: 1.5,
@@ -283,7 +291,7 @@ $(function(){
 		},
 			nodes: {
 				opacity: 1,
-				size: { continuousMapper: { attrName: "weight", minValue: 25, maxValue: 70, minAttrValue: 10, maxAttrValue: 100 } },
+				size: { continuousMapper: { attrName: "weight", minValue: 10, maxValue: 70, minAttrValue: 10, maxAttrValue: 200 } },
 				color: { continuousMapper: { attrName: "weight", minValue: "#003366", maxValue: "#99ff00" } },
 				borderWidth: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 6, minAttrValue: 10, maxAttrValue: 100 } },
 				borderColor: { continuousMapper: { attrName: "weight", minValue: "#99ff00", maxValue: "#003366" } },
@@ -318,20 +326,21 @@ $(function(){
 					}
 				},
 				tooltipFontSize: 12,
-				tooltipBackgroundColor: { defaultValue: "#e0e0e0", discreteMapper: nodeColorMapper },
+				tooltipBackgroundColor: { defaultValue: "#f0f0f0", discreteMapper: nodeColorMapper },
 				labelGlowOpacity: 0,
 				selectionGlowColor: "#ff0000"
 			},
 			edges: {
 				opacity: 1,
-				color: { continuousMapper: { attrName: "weight", minValue: "#aaaaaa", maxValue: "#333333" } },
-				width: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 6 } },
+//				color: { continuousMapper: { attrName: "weight", minValue: "#aaaaaa", maxValue: "#333333" } },
+				color: { defaultValue: "#999999", discreteMapper: elementColorMapper },
+				width: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 7 } },
 				mergeWidth: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 6 } },
 				tooltipText: "${tooltiptext}",
 				mergeTooltipText: "${tooltiptext}",
-				tooltipFontColor: "#000000",
+				tooltipFontColor: "#006",
 				tooltipFontSize: 10,
-				tooltipBackgroundColor: { defaultValue: "#fafafa", discreteMapper: edgeColorMapper },
+				tooltipBackgroundColor: { defaultValue: "#f0f0f0", discreteMapper: edgeColorMapper },
 				tooltipBorderColor: { defaultValue: "#fafafa", discreteMapper: edgeColorMapper },
 				selectionGlowColor: "#ff0000",
 				sourceArrowShape: "none",

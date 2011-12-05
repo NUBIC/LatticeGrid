@@ -21,6 +21,7 @@ class CytoscapeController < ApplicationController
   # cytoscape show
   def show
     params[:depth] ||= "1"
+    params[:include_publications] ||= "1"
     params[:include_awards] ||= "0"
     params[:include_studies] ||= "0"
     @title = "Publications Collaborations"
@@ -30,6 +31,7 @@ class CytoscapeController < ApplicationController
 
   def show_all
     params[:depth] ||= "1"
+    params[:include_publications] ||= "1"
     params[:include_awards] ||= "1"
     params[:include_studies] ||= "1"
     show
@@ -38,6 +40,7 @@ class CytoscapeController < ApplicationController
 
   def show_org
     params[:depth] ||= "1"
+    params[:include_publications] ||= "1"
     params[:include_awards] ||= "0"
     params[:include_studies] ||= "0"
     @title = "Publications Collaborations"
@@ -46,20 +49,22 @@ class CytoscapeController < ApplicationController
 
   def awards
     params[:depth] ||= "1"
+    params[:include_publications] ||= "0"
     params[:include_awards] ||= "1"
     params[:include_studies] ||= "0"
     @title = "Award Collaborations"
     @investigator=Investigator.find_by_username(params[:id])
-    render :action => :show
+    show
   end
 
   def studies
     params[:depth] ||= "1"
     params[:include_awards] ||= "0"
+    params[:include_publications] ||= "0"
     params[:include_studies] ||= "1"
     @title = "Research Study Collaborations"
     @investigator=Investigator.find_by_username(params[:id])
-    render :action => :show
+    show
   end
 
   def jit
@@ -78,11 +83,13 @@ class CytoscapeController < ApplicationController
     investigator=Investigator.find_by_username(params[:id])
     params[:depth] ||= "1"
     params[:include_awards] ||= "1"
-    params[:include_studies] ||= "0"
+    params[:include_studies] ||= "1"
+    params[:include_publications] ||= "1"
+    params[:include_publications] = "1" if params[:include_awards] == "0" and params[:include_studies] == "0"
     data_schema = generate_cytoscape_schema()
-    data = generate_cytoscape_study_data(investigator, params[:depth].to_i, params[:include_awards].to_i, params[:include_studies].to_i)
+    data = generate_cytoscape_data(investigator, params[:depth].to_i, params[:include_publications].to_i, params[:include_awards].to_i, params[:include_studies].to_i)
     #data = generate_cytoscape_award_data(investigator, depth)
-    #data = generate_cytoscape_data(investigator, depth)
+    #data = generate_cytoscape_study_data(investigator, depth)
     respond_to do |format|
       format.json{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
       format.js{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }

@@ -115,6 +115,11 @@ module InvestigatorsHelper
          out+= link_to( "Report", investigator_study_url(params[:id]) )
          out+= " &nbsp;  &nbsp; " 
        end
+       if not (controller.action_name == 'show_all' and controller.controller_name == 'cytoscape')
+         out+= " &nbsp;  Combined data: &nbsp; " 
+         out+= link_to( "Graph", show_all_cytoscape_url(params[:id]) )
+         out+= " &nbsp;  &nbsp; " 
+       end
      end
      out+"</span>"
    end

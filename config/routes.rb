@@ -55,7 +55,7 @@ ActionController::Routing::Routes.draw do |map|
   map.profile_edit 'profiles_edit/:id', :controller => 'profiles', :action => 'edit' #need this to work with a form
   map.publications_edit 'publications_edit/:id', :controller => 'profiles', :action => 'edit_pubs' #need this to work with a form
   map.member_protovis_data "member_protovis_data/:id", :controller => 'cytoscape', :action => 'member_protovis_data'
-  map.member_cytoscape_data "member_cytoscape_data/:id/:depth/:include_awards/:include_studies", :controller => 'cytoscape', :action => 'member_cytoscape_data'
+  map.member_cytoscape_data "member_cytoscape_data/:id/:depth/:include_publications/:include_awards/:include_studies", :controller => 'cytoscape', :action => 'member_cytoscape_data'
   map.org_cytoscape_data "org_cytoscape_data/:id/:depth/:include_awards/:include_studies", :controller => 'cytoscape', :action => 'org_cytoscape_data'
   map.chord_date_data "cytoscape/:start_date/:end_date/d3_date_data.:format", :controller => 'cytoscape', :action => 'd3_date_data'
   map.chord_by_date "cytoscape/:start_date/:end_date/chord_by_date", :controller => 'cytoscape', :action => 'chord_by_date'

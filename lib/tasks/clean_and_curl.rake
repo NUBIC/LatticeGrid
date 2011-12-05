@@ -109,11 +109,11 @@ namespace :cache do
       run_curl tag_count_mesh_url(:id => mesh.name)
       run_curl tag_count_mesh_url(:id => mesh.id)
       run_json_curl tag_count_mesh_url(:id => mesh.name, :format => 'json')
-      run_xml_curl  tag_count_mesh_url(:id => mesh.name, :format => 'xml')
+      #run_xml_curl  tag_count_mesh_url(:id => mesh.name, :format => 'xml')
       run_curl investigators_mesh_url(:id => mesh.name)
       run_curl investigators_mesh_url(:id => mesh.id)
       run_json_curl investigators_mesh_url(:id => mesh.name, :format => 'json')
-      run_xml_curl  investigators_mesh_url(:id => mesh.name, :format => 'xml')
+      #run_xml_curl  investigators_mesh_url(:id => mesh.name, :format => 'xml')
        #run_curl url_for :controller => 'investigators', :action => 'show', :id => inv.username, :page => 1
     end
   end
@@ -178,11 +178,14 @@ namespace :cache do
   def investigator_cytoscape
     @AllInvestigators.each do |inv|
       #study data
-      run_ajax_curl member_cytoscape_data_url(:id=>inv.username, :depth=>1, :include_awards=>0, :include_studies=>1)
+      run_ajax_curl member_cytoscape_data_url(:id=>inv.username, :depth=>1, :include_publications=>0, :include_awards=>0, :include_studies=>1)
       #award data
-      run_ajax_curl member_cytoscape_data_url(:id=>inv.username, :depth=>1, :include_awards=>1, :include_studies=>0)
+      run_ajax_curl member_cytoscape_data_url(:id=>inv.username, :depth=>1, :include_publications=>0, :include_awards=>1, :include_studies=>0)
       #publications data
-      run_ajax_curl member_cytoscape_data_url(:id=>inv.username, :depth=>1, :include_awards=>0, :include_studies=>0)
+      run_ajax_curl member_cytoscape_data_url(:id=>inv.username, :depth=>1, :include_publications=>1, :include_awards=>0, :include_studies=>0)
+      run_ajax_curl member_cytoscape_data_url(:id=>inv.username, :depth=>2, :include_publications=>1, :include_awards=>0, :include_studies=>0)
+      #all data
+      run_ajax_curl member_cytoscape_data_url(:id=>inv.username, :depth=>1, :include_publications=>1, :include_awards=>1, :include_studies=>1)
       puts "generated cytoscape data for #{inv.name}: #{inv.username}"
       break
      end
