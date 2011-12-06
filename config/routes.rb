@@ -56,7 +56,7 @@ ActionController::Routing::Routes.draw do |map|
   map.publications_edit 'publications_edit/:id', :controller => 'profiles', :action => 'edit_pubs' #need this to work with a form
   map.member_protovis_data "member_protovis_data/:id", :controller => 'cytoscape', :action => 'member_protovis_data'
   map.member_cytoscape_data "member_cytoscape_data/:id/:depth/:include_publications/:include_awards/:include_studies", :controller => 'cytoscape', :action => 'member_cytoscape_data'
-  map.org_cytoscape_data "org_cytoscape_data/:id/:depth/:include_awards/:include_studies", :controller => 'cytoscape', :action => 'org_cytoscape_data'
+  map.org_cytoscape_data "org_cytoscape_data/:id/:depth/:include_publications/:include_awards/:include_studies", :controller => 'cytoscape', :action => 'org_cytoscape_data'
   map.chord_date_data "cytoscape/:start_date/:end_date/d3_date_data.:format", :controller => 'cytoscape', :action => 'd3_date_data'
   map.chord_by_date "cytoscape/:start_date/:end_date/chord_by_date", :controller => 'cytoscape', :action => 'chord_by_date'
   map.investigators_search "investigators_search/:id", :controller => 'investigators', :action => 'investigators_search'
@@ -67,7 +67,7 @@ ActionController::Routing::Routes.draw do |map|
   map.cytoscape_show_all "cytoscape/:id/show_all/:depth", :controller => 'cytoscape', :action => 'show_all'
   map.cytoscape_awards "cytoscape/:id/awards/:depth", :controller => 'cytoscape', :action => 'awards'
   map.cytoscape_studies "cytoscape/:id/studies/:depth", :controller => 'cytoscape', :action => 'studies'
-   map.cytoscape_org "cytoscape/:id/org/:depth", :controller => 'cytoscape', :action => 'show_org'
+   map.cytoscape_show_org "cytoscape/:id/show_org/:depth", :controller => 'cytoscape', :action => 'show_org'
   map.send_graphviz_image 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:start_date/:end_date/:program.:format', :controller => 'graphviz', :action => 'send_graphviz_image'
   map.send_graphviz_image_orig 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:program.:format', :controller => 'graphviz', :action => 'send_graphviz_image'
   map.restless_graphviz 'get_graphviz/', :controller => 'graphviz', :action => 'get_graphviz'

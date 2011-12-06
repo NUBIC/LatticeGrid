@@ -24,7 +24,7 @@ def generate_cytoscape_publication_nodes(investigator, max_depth, node_array=[],
   }
   if max_depth > depth
     investigator.co_authors.each { |connection| 
-      node_array = generate_cytoscape_publication_nodes(connection.colleague, max_depth, node_array, depth)
+      node_array = generate_cytoscape_publication_nodes(connection.colleague, max_depth, node_array, depth, add_intermediate_nodes)
     }
   end
   node_array
@@ -64,17 +64,6 @@ def cytoscape_publication_node_hash(investigator_colleague, weight=10, depth=1)
    :depth => depth,
    :tooltiptext => investigator_colleague_edge_tooltip(investigator_colleague,investigator_colleague.investigator, investigator_colleague.colleague)
  }
-end
-
-def generate_cytoscape_org_edges(org, depth, node_array,edge_array=[])
-  org_index = org.name
-  org.all_primary_or_member_faculty.each do |investigator|
-    next if investigator.blank?
-    investigator_index = investigator.id.to_s
-    edge_array << cytoscape_edge_hash(edge_array.length, org_index, investigator_index, "", 1, "member of #{org_index}", "Org")
-    edge_array = generate_cytoscape_publication_edges(investigator, depth, node_array, edge_array)
-  end
-  edge_array
 end
 
 def generate_cytoscape_publication_edges(investigator, depth, node_array, edge_array=[], add_intermediate_nodes=false)

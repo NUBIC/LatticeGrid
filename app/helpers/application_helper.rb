@@ -19,6 +19,16 @@ module ApplicationHelper
     @year
   end
 
+  def base_path(remove_trailing_id=false)
+    the_path=request.env['REQUEST_URI']
+    if remove_trailing_id and the_path =~ /\/[0-9]+$/
+      the_path.sub!(/\/[0-9]+$/,"")
+    end
+    the_path += "/" unless the_path =~ /\/$/
+    the_path
+  end
+      
+    
   def allowed_ip(this_ip)
      ips = LatticeGridHelper.allowed_ips() # from config.rb in project lib directory
      ips.each do |ip|

@@ -1,7 +1,7 @@
 class CytoscapeController < ApplicationController
   before_filter :check_allowed, :only => [:awards, :studies, :show_all]
 
-  caches_page( :show, :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data) if LatticeGridHelper.CachePages()
+  caches_page( :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data) if LatticeGridHelper.CachePages()
   caches_action( :listing, :investigator, :awards, :studies )  if LatticeGridHelper.CachePages()
   
   require 'cytoscape_config'
@@ -20,49 +20,47 @@ class CytoscapeController < ApplicationController
 
   # cytoscape show
   def show
-    params[:depth] ||= "1"
-    params[:include_publications] ||= "1"
     params[:include_awards] ||= "0"
     params[:include_studies] ||= "0"
+    handle_data_params
     @title ||= "Publications Collaborations"
     @investigator=Investigator.find_by_username(params[:id])
+    @dataurl ||= member_cytoscape_data_url(params[:id], params[:depth], params[:include_publications], params[:include_awards], params[:include_studies])
+    @base_path_without_depth = base_path(true)
     render :action => :show
   end
 
   def show_all
-    params[:depth] ||= "1"
-    params[:include_publications] ||= "1"
-    params[:include_awards] ||= "1"
-    params[:include_studies] ||= "1"
+    handle_data_params
     @title = "Publication/Award/Study Collaborations"
     show
   end
 
 
   def show_org
-    params[:depth] ||= "1"
-    params[:include_publications] ||= "1"
     params[:include_awards] ||= "0"
     params[:include_studies] ||= "0"
+    handle_data_params
     @title = "Publications Collaborations"
     @org = find_unit_by_id_or_name(params[:id])
+    @dataurl = org_cytoscape_data_url(params[:id], params[:depth], params[:include_publications], params[:include_awards], params[:include_studies])
+    
+    show
   end
 
   def awards
-    params[:depth] ||= "1"
     params[:include_publications] ||= "0"
-    params[:include_awards] ||= "1"
     params[:include_studies] ||= "0"
+    handle_data_params
     @title = "Award Collaborations"
     @investigator=Investigator.find_by_username(params[:id])
     show
   end
 
   def studies
-    params[:depth] ||= "1"
     params[:include_awards] ||= "0"
     params[:include_publications] ||= "0"
-    params[:include_studies] ||= "1"
+    handle_data_params
     @title = "Research Study Collaborations"
     @investigator=Investigator.find_by_username(params[:id])
     show
@@ -81,16 +79,10 @@ class CytoscapeController < ApplicationController
   end
 
   def member_cytoscape_data
-    investigator=Investigator.find_by_username(params[:id])
-    params[:depth] ||= "1"
-    params[:include_awards] ||= "1"
-    params[:include_studies] ||= "1"
-    params[:include_publications] ||= "1"
-    params[:include_publications] = "1" if params[:include_awards] == "0" and params[:include_studies] == "0"
+    @investigator=Investigator.find_by_username(params[:id])
+    handle_data_params
     data_schema = generate_cytoscape_schema()
-    data = generate_cytoscape_data(investigator, params[:depth].to_i, params[:include_publications].to_i, params[:include_awards].to_i, params[:include_studies].to_i)
-    #data = generate_cytoscape_award_data(investigator, depth)
-    #data = generate_cytoscape_study_data(investigator, depth)
+    data = generate_cytoscape_data(@investigator, params[:depth].to_i, params[:include_publications].to_i, params[:include_awards].to_i, params[:include_studies].to_i)
     respond_to do |format|
       format.json{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
       format.js{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
@@ -99,20 +91,9 @@ class CytoscapeController < ApplicationController
 
   def org_cytoscape_data
     @org = find_unit_by_id_or_name(params[:id])
-    params[:depth] ||= "1"
-    depth = params[:depth].to_i
-    params[:include_awards] ||= "1"
-    params[:include_studies] ||= "0"
-    include_awards = params[:include_awards].to_i
-    include_studies = params[:include_studies].to_i
+    handle_data_params
     data_schema = generate_cytoscape_schema()
-    if !include_studies.blank? and include_studies != 0
-      data = generate_cytoscape_study_org_data(@org, depth)
-    elsif !include_awards.blank? and include_awards != 0
-      data = generate_cytoscape_award_org_data(@org, depth)
-    else
-      data = generate_cytoscape_org_data(@org, depth)
-    end
+    data = generate_cytoscape_org_data(@org, params[:depth].to_i, params[:include_publications].to_i, params[:include_awards].to_i, params[:include_studies].to_i)
     respond_to do |format|
       format.json{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
       format.js{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
@@ -198,6 +179,13 @@ class CytoscapeController < ApplicationController
        redirect_to disallowed_awards_url
      end
    end
-
+   
+   def handle_data_params
+     params[:depth] ||= "1"
+     params[:include_awards] ||= "1"
+     params[:include_studies] ||= "1"
+     params[:include_publications] ||= "1"
+     params[:include_publications] = "1" if params[:include_awards] == "0" and params[:include_studies] == "0"
+   end
  
 end

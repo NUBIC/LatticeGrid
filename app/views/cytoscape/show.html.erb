@@ -10,7 +10,7 @@
 	<script type="text/javascript">
 	// globals
 	var vis;
-	var cytoscapeGraphURL = "<%= member_cytoscape_data_url(params[:id], params[:depth], params[:include_publications], params[:include_awards], params[:include_studies]) -%>";
+	var cytoscapeGraphURL = "<%= @dataurl -%>";
 	var swfPath = "<%= image_path('../swf/CytoscapeWeb') %>";
 	var flashInstallerPath = "<%= image_path('../swf/playerProductInstall') %>";
 	</script>
@@ -22,9 +22,22 @@
             
 <div id="page" class="slice">
 	<div id="investigator_title">
+	<% if ! @org.blank? %>
+	<h1><%= @org.name %> Collaboration Diagram &nbsp;
+	    <% if ! @all_abstracts.nil? && @all_abstracts.length > 9 -%>
+		  <% publications_per_year=abstracts_per_year_as_string(@all_abstracts) -%>
+		  <span class='inlinebarchart' values='<%= publications_per_year -%>' title='publications per year: <%= publications_per_year -%>'>&nbsp;</span>
+	   	  <%= sparkline_barchart_setup({'barWidth'=>2,'barSpacing'=>2}) -%>
+	    <% end -%>
+	</h1>
+	<% if @include_graph_link %>
+	<p><%= org_nav_heading() %></p>
+	<% end %>
+	<% elsif ! @investigator.blank? %>
 	<% all_abstracts = @all_abstracts || nil -%>
 	<% title = @title || nil -%>
 	<%= investigator_bio_heading(@investigator, all_abstracts, title) %>
+	<% end %>
 	</div>
   <div id="cytoscape_options">
 	<input type="checkbox" id="nodeLabelsVisibleCheckbox"> Show Node Labels &nbsp; &nbsp;
@@ -38,15 +51,15 @@
 	</form>
     </span>
 	<!-- from Karthik Singh, July 2011 -->
-	<% if ! @investigator.blank? %>
+	<% unless @investigator.blank? and @org.blank? %>
 	<form id="tree_depth" name="tree_depth">
 		<select name="jumpmenu" onChange="jumpto(document.tree_depth.jumpmenu.options[document.tree_depth.jumpmenu.options.selectedIndex].value);">
 			<option value="0">Distance...</option>
 			<% if params[:depth].blank? or params[:depth] == "1" %>
 			<option selected  value="0">One</option>
-			<option value='<%= cytoscape_member_url(@investigator.username, 2) %>'>Two</option>
+			<option value='2'>Two</option>
 			<% else %>
-			<option value='<%= cytoscape_member_url(@investigator.username, 1) %>' >One</option>
+			<option value='1' >One</option>
 			<option selected  value="0">Two</option>
 			<% end %>
 		</select> 
@@ -95,7 +108,7 @@
 
 	function jumpto(x){
 	  if (document.tree_depth.jumpmenu.value != "null" && document.tree_depth.jumpmenu.value != "0") {
-	    document.location.href = x
+	    document.location.href = "<%= @base_path_without_depth -%>" + x;
 	  }
 	}
 
