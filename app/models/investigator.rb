@@ -165,11 +165,21 @@ has_many :investigator_appointments,
     end
   end
 
+  def self.find_all_by_username_including_deleted( val )
+    with_exclusive_scope do
+        find_all_by_username(val)
+    end
+  end
+
   def self.find_by_email_including_deleted( val )
     with_exclusive_scope do
         find_by_email(val)
     end
   end
+
+  def self.has_basis_without_connections(basis)
+      all(:conditions=>["investigators.appointment_basis = :basis and (not exists(select 'x' from investigator_abstracts where investigator_abstracts.investigator_id = investigators.id) and not exists(select 'x' from investigator_studies where investigator_studies.investigator_id = investigators.id) and not exists(select 'x' from investigator_proposals where investigator_proposals.investigator_id = investigators.id) )", {:basis=>basis}] )
+   end
   
   def colleague_coauthors
     co_authors.collect{|ca| ca.colleague}

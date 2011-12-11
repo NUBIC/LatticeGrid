@@ -465,6 +465,17 @@ namespace :cleanup do
       }
   end
 
+  task :reinstate_deleted_investigators => :environment do
+     block_timing("cleanup:reinstate_investigators_with_valid_abstracts") {
+       investigators_to_reinstate = Investigator.find_purged
+       puts "found #{investigators_to_reinstate.length} investigators to reinstate"
+       puts investigators_to_reinstate.map(&:username).inspect
+       investigators_to_reinstate = []
+       investigators_to_reinstate = Investigator.find_all_by_username_including_deleted(investigators_to_reinstate)
+       reinstateInvestigators(investigators_to_reinstate)
+      }
+  end
+
   task :find_duplicate_tags => :environment do
      block_timing("cleanup:find_duplicate_tags") {
        findDuplicateTags()
@@ -482,6 +493,18 @@ namespace :cleanup do
        resolveMisformedTags()
       }
   end
+
+  task :findServiceInvestigatorsWithoutActivities => :environment do
+     block_timing("cleanup:purgeServiceInvestigatorsWithoutActivities") {
+       FindParttimeInvestigatorsWithoutActivities()
+      }
+  end
   
+  task :purgeServiceInvestigatorsWithoutActivities => :environment do
+     block_timing("cleanup:purgeServiceInvestigatorsWithoutActivities") {
+       PurgeParttimeInvestigatorsWithoutActivities()
+      }
+  end
+
 end
 

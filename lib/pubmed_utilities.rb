@@ -269,6 +269,22 @@ def AddInvestigatorsToCitation(abstract_id, investigator_ids, first_author_id, l
   end
 end
 
+def SubtractKnownPubmedIDs(pubmed_ids)
+  novel_pubmed_ids=[]
+  start_slice = 0
+  slice_size = 500
+  while start_slice < pubmed_ids.length
+    the_ids = pubmed_ids.slice(start_slice,slice_size)
+    start_slice+=slice_size
+    found_abs = Abstract.find_all_by_pubmed_include_deleted(the_ids)
+    next if found_abs.length < 1
+    found_ids = found_abs.map(&:pubmed)
+    novel_ids = the_ids - found_ids
+    novel_pubmed_ids += novel_ids unless novel_ids.blank?
+  end
+  return novel_pubmed_ids
+end 
+
 # fetch pubmed record data based on array of pubmed_ids
 def FetchPublicationData(pubmed_ids)
   theCnt = 0

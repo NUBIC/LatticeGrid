@@ -116,6 +116,9 @@ def CreateInvestigatorFromHash(data_row)
       existing_pi.deleted_at = nil
       existing_pi.deleted_ip = nil
       existing_pi.deleted_id = nil
+      existing_pi.end_date = Date.today
+      existing_pi.save
+      existing_pi.end_date = nil
       existing_pi.save!
       pi = existing_pi
     end
@@ -391,8 +394,9 @@ def MergeInvestigatorData(dest_pi, source_pi, overwrite)
   dest_pi.title               = DoOverwrite(dest_pi.title, source_pi.title, overwrite)
   dest_pi.campus              = DoOverwrite(dest_pi.campus, source_pi.campus, overwrite)
   dest_pi.degrees             = DoOverwrite(dest_pi.degrees, source_pi.degrees, overwrite)
-  dest_pi.appointment_type    = DoOverwrite(dest_pi.appointment_type, source_pi.appointment_type, overwrite)
-  dest_pi.appointment_track   = DoOverwrite(dest_pi.appointment_track, source_pi.appointment_track, overwrite)
+  dest_pi.appointment_type    = DoOverwrite(dest_pi.appointment_type, source_pi.appointment_type, true)
+  dest_pi.appointment_track   = DoOverwrite(dest_pi.appointment_track, source_pi.appointment_track, true)
+  dest_pi.appointment_basis   = DoOverwrite(dest_pi.appointment_basis, source_pi.appointment_basis, true)
   dest_pi.faculty_keywords    = DoOverwrite(dest_pi.faculty_keywords, source_pi.faculty_keywords, overwrite)
   dest_pi.faculty_interests   = DoOverwrite(dest_pi.faculty_interests, source_pi.faculty_interests, overwrite)
   dest_pi.faculty_research_summary   = DoOverwrite(dest_pi.faculty_research_summary, source_pi.faculty_research_summary, overwrite)
@@ -421,6 +425,27 @@ def IdentifyExistingInvestigator(pi)
   end
   nil
 end
+
+def FindInvestigatorsWithBasisWithoutActivities(basis)
+  pis = Investigator.has_basis_without_connections(basis)
+  puts "Found #{pis.length} investigators tagged as #{basis} without activities" if LatticeGridHelper.verbose?
+  return pis
+end
+
+def FindParttimeInvestigatorsWithoutActivities()
+  basis_array = ["UNPD","CS","PT-L","PT-G"]
+  basis_array.each do |basis|
+    pis = FindInvestigatorsWithBasisWithoutActivities(basis)
+  end
+end  
+
+def PurgeParttimeInvestigatorsWithoutActivities()
+  basis_array = ["UNPD","CS","PT-L","PT-G"]
+  basis_array.each do |basis|
+    pis = FindInvestigatorsWithBasisWithoutActivities(basis)
+    purgeInvestigators(pis)
+  end
+end  
 
 def MergeInvestigatorDescriptionsFromHash(data_row)
   # assumed header values

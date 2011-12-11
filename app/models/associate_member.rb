@@ -1,0 +1,2 @@
+class AssociateMember < Member
+end

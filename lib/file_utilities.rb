@@ -79,8 +79,14 @@ def ReadInvestigatorDescriptionData(file_name)
 end
 
 def ReadInvestigatorPubmedData(file_name)
-  read_data_handler(Abstract,file_name) { |data| CreateAbstractsFromArrayHash(data) }
-  read_data_handler(InvestigatorAbstract,file_name) { |data|  row_iterator(data) {|data| CreateInvestigatorAbstractsFromHash(data)} }
+  novel_pubmed_ids = []
+  read_data_handler(Abstract,file_name) { |data| 
+    novel_pubmed_ids += CreateAbstractsFromArrayHash(data) 
+  }
+  # set novel_pubmed_ids to [] if you want to process every connection to look for new authors added to existing pubs
+  #novel_pubmed_ids = []
+  read_data_handler(InvestigatorAbstract,file_name) { |data|  
+    row_iterator(data) {|data| CreateInvestigatorAbstractsFromHash(data, novel_pubmed_ids)} }
 end
 
 def ReadJournalImpactData(file_name)

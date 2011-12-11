@@ -11,20 +11,25 @@ def CreateAbstractsFromArrayHash(data)
     pmid = data_row["PMID"]
     pubmed_ids << pmid if ! pmid.blank?
   end
-  puts "Total number of  abstracts: #{pubmed_ids.length}" if LatticeGridHelper.verbose?
+  puts "Total number of  pubmed ids: #{pubmed_ids.length}" if LatticeGridHelper.verbose?
   pubmed_ids = pubmed_ids.sort.uniq
-  puts "unique abstracts: #{pubmed_ids.length}" if LatticeGridHelper.verbose?
-  publications = FetchPublicationData(pubmed_ids)
+  puts "unique pubmed ids: #{pubmed_ids.length}" if LatticeGridHelper.verbose?
+  novel_pubmed_ids = SubtractKnownPubmedIDs(pubmed_ids)
+  puts "unknown pubmed ids: #{novel_pubmed_ids.length}" if LatticeGridHelper.verbose?
+  puts "unknown pubmed ids #{novel_pubmed_ids.inspect}" if novel_pubmed_ids.length < 200
+  publications = FetchPublicationData(novel_pubmed_ids)
   InsertPubmedRecords(publications)
+  return novel_pubmed_ids
 end
 
 
-def CreateInvestigatorAbstractsFromHash(data_row)
+def CreateInvestigatorAbstractsFromHash(data_row, pubmed_ids_to_process)
   # assumed header values
   # believe these investigator-abstract statements are true!
 	 # pmid
 	 # employee_id
   pubmed_id = data_row["PMID"]
+  return unless pubmed_ids_to_process.blank? or pubmed_ids_to_process.include?(pubmed_id)
   employee_id = data_row["EMPLOYEE_ID"] || data_row["NETID"] || data_row["USERNAME"]
   if pubmed_id.blank? || employee_id.blank? then
      puts "pubmed_id or employee_id was blank or missing. datarow="+data_row.inspect 

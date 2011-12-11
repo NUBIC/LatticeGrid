@@ -18,6 +18,9 @@ pg_dump -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev
 
 pg_dump -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev_20110825.dmp
 
+pg_dump -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev_20111210.dmp
+
+
 pg_dump -Fc umich_latticegrid_development -U latticegrid > umich_latticegrid_dev_20110825.dmp
 
 pg_dump -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev_20110930.dmp
@@ -55,6 +58,10 @@ scp fsmpublications_dev_20110614.dmp wakibbe@rails-prod2.nubic.northwestern.edu:
 scp fsmpublications_dev_20110825.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe
 
 scp fsmpublications_dev_20110825.dmp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe
+
+scp fsmpublications_dev_20111210.dmp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe
+
+
 
 scp umich_latticegrid_dev_20110825.dmp root@172.16.215.128:/root
 pg_restore -c -O -d umich_latticegrid_production -U latticegrid umich_latticegrid_dev_20110825.dmp

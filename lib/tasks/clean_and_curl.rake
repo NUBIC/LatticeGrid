@@ -133,6 +133,7 @@ namespace :cache do
       run_curl full_show_org_url(:id => org.id)
       run_ajax_curl tag_cloud_org_url(:id => org.id)
       run_ajax_curl short_tag_cloud_org_url(:id => org.id)
+      run_ajax_curl org_cytoscape_data_url(:id=>org.id, :depth=>1, :include_publications=>1, :include_awards=>0, :include_studies=>0)
     end
   end
 

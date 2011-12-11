@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>doc/database_export_import.txt</string>
+	<string>doc/publications_scripts.txt</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -21,6 +21,50 @@
 	<integer>503</integer>
 	<key>metaData</key>
 	<dict>
+		<key>app/models/center.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>12</integer>
+				<key>line</key>
+				<integer>1</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>app/models/investigator.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>27</integer>
+				<key>line</key>
+				<integer>167</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>143</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>11</integer>
+				<key>line</key>
+				<integer>167</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>49</integer>
+				<key>line</key>
+				<integer>167</integer>
+			</dict>
+		</dict>
 		<key>app/views/graphs/org_nodes.rxml</key>
 		<dict>
 			<key>caret</key>
@@ -49,102 +93,102 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>config/initializers/latticegrid.rb</key>
+		<key>db/schema.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>13</integer>
+				<integer>20</integer>
 				<key>line</key>
-				<integer>3</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>config/initializers/mime_types.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>13</integer>
+				<integer>83</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>76</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>17</integer>
 				<key>line</key>
-				<integer>12</integer>
+				<integer>83</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>21</integer>
 				<key>line</key>
-				<integer>13</integer>
+				<integer>83</integer>
 			</dict>
 		</dict>
-		<key>doc/database_export_import.txt</key>
+		<key>doc/example_loads.txt</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>49</integer>
+				<integer>17</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>3</integer>
-				<key>line</key>
-				<integer>48</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>49</integer>
-			</dict>
+			<integer>22</integer>
 		</dict>
 		<key>doc/publications_scripts.txt</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>8</integer>
+				<integer>21</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>3</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>doc/upgrading.txt</key>
+		<key>lib/investigator_appointment_utilities.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>3</integer>
+				<integer>40</integer>
 				<key>line</key>
-				<integer>4</integer>
+				<integer>125</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>105</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>19</integer>
+				<key>line</key>
+				<integer>125</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>40</integer>
+				<key>line</key>
+				<integer>125</integer>
+			</dict>
+		</dict>
+		<key>lib/organization_utilities.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>25</integer>
+				<key>line</key>
+				<integer>267</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
@@ -155,30 +199,94 @@
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
 				<integer>4</integer>
+				<key>line</key>
+				<integer>267</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>3</integer>
+				<integer>25</integer>
 				<key>line</key>
-				<integer>4</integer>
+				<integer>267</integer>
+			</dict>
+		</dict>
+		<key>lib/tasks/abstracts.rake</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>19</integer>
+				<key>line</key>
+				<integer>110</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>6</integer>
+				<key>line</key>
+				<integer>110</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>40</integer>
+				<key>line</key>
+				<integer>110</integer>
+			</dict>
+		</dict>
+		<key>lib/tasks/cleanup.rake</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>61</integer>
+				<key>line</key>
+				<integer>448</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>330</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>28</integer>
+				<key>line</key>
+				<integer>448</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>64</integer>
+				<key>line</key>
+				<integer>448</integer>
 			</dict>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
 		<string>doc/publications_scripts.txt</string>
-		<string>config/initializers/latticegrid.rb</string>
-		<string>config/initializers/mime_types.rb</string>
-		<string>doc/database_export_import.txt</string>
-		<string>doc/upgrading.txt</string>
+		<string>doc/example_loads.txt</string>
+		<string>lib/tasks/cleanup.rake</string>
+		<string>lib/tasks/abstracts.rake</string>
+		<string>db/schema.rb</string>
+		<string>app/models/center.rb</string>
+		<string>lib/investigator_appointment_utilities.rb</string>
+		<string>lib/organization_utilities.rb</string>
+		<string>app/models/investigator.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{4, 2}, {1101, 983}}</string>
+	<string>{{173, 126}, {1160, 955}}</string>
 </dict>
 </plist>

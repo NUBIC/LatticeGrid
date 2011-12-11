@@ -1,3 +1,52 @@
+# Feinberg December 2011 loads
+rake importDepartments file=db/imports/Feinberg/department_lookup_Dec2010.txt 
+rake importOrganizations file=db/imports/Feinberg/division_lookup_Sep2011.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/Feinberg/faculty_Dec2011.txt 
+rake cleanup:countFacultyUpdates
+rake cleanup:purgeUnupdatedFaculty
+rake importJointAppointments file=db/imports/Feinberg/joint_appointments_Sep2011.txt
+rake importSecondaryAppointments file=db/imports/Feinberg/secondary_appointments_Dec2011.txt 
+rake importCenterMemberships file=db/imports/Feinberg/center_memberships_Dec2011.txt 
+rake importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_Dec2011.txt 
+rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_interests_Dec2011.txt
+rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_descriptions_Dec2011.txt
+rake db:vacuum  #added a custom rake method for this
+rake cleanup:email
+rake cleanup:cleanInvestigatorsUsername
+
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalImpact file=db/imports/jcr_recs_2010.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake updateJournalISSNsFromPubmed
+rake cleanJournalISSNentries
+rake findAbstractswithoutJCRentries
+rake findAbstractswithJCRentries
+rake updateJournalISSNsFromPubmed
+rake setPreferredHighImpact
+
+rake awards:importData file=db/imports/Feinberg/private/award_data_20111206.txt
+rake awards:cleanPIassignments
+
+rake importStudies file=db/imports/Feinberg/private/studies_2011-12-06.csv
+rake importStudyInvestigators file=db/imports/Feinberg/private/study_roles_2011-12-06.csv
+rake findStudiesWithoutInvestigators
+
+rake checkValidAbstractsWithoutInvestigators
+rake removeValidAbstractsWithoutInvestigators
+
+rake nightlyBuild
+rake cleanup:findServiceInvestigatorsWithoutActivities
+rake cleanup:purgeServiceInvestigatorsWithoutActivities
+rake cleanup:resolve_duplicate_tags
+rake cleanup:resolve_misformed_tags
+rake monthlyBuild
+
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+
 # UCSF November 2011 loads
 rake db:drop
 rake db:create
@@ -64,8 +113,8 @@ rake cleanUpOrganizations
 rake log:clear
 rake importInvestigators file=db/imports/Feinberg/faculty_Sep2011.txt 
 rake importInvestigators file=db/imports/Feinberg/faculty_Aug2011b.txt 
-rake countFacultyUpdates
-rake purgeUnupdatedFaculty
+rake cleanup:countFacultyUpdates
+rake cleanup:purgeUnupdatedFaculty
 rake importJointAppointments file=db/imports/Feinberg/joint_appointments_Sep2011.txt
 rake importSecondaryAppointments file=db/imports/Feinberg/secondary_appointments_Sep2011.txt 
 rake importCenterMemberships file=db/imports/Feinberg/center_memberships_Sep2011.txt 
