@@ -45,7 +45,6 @@ class Investigator < ActiveRecord::Base
     :through => :investigator_nonpi_proposals,
     :conditions => ['proposals.award_end_date >= :now', {:now => Date.today }]
 
-
   has_many :investigator_abstracts
   
   has_many :investigator_colleagues
@@ -81,13 +80,16 @@ has_many :investigator_appointments,
   has_many :joints, :class_name => "Joint",
     :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
   has_many :secondaries, :class_name => "Secondary",
-      :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
+    :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
   has_many :member_appointments, :class_name => "Member",
-        :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
+    :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
+  has_many :associate_member_appointments, :class_name => "AssociateMember",
+    :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
   has_many :appointments, :source => :organizational_unit, :through => :investigator_appointments
   has_many :joint_appointments, :source => :organizational_unit, :through => :joints
   has_many :secondary_appointments, :source => :organizational_unit, :through => :secondaries
   has_many :memberships, :source => :organizational_unit, :through => :member_appointments
+  has_many :associate_memberships, :source => :organizational_unit, :through => :associate_member_appointments
   # foreign_key is a fix for an issue in rails 2.3.5 and earlier
   belongs_to :home_department, :class_name => 'OrganizationalUnit', :foreign_key => 'home_department_id'
 
@@ -324,10 +326,6 @@ has_many :investigator_appointments,
     (investigators.collect(&:id)+investigators2.collect(&:investigator_id)).uniq.length
   end
 
-  def self.investigators_tsearch(terms)
-    find_by_tsearch(terms)
-  end
-
   def self.all_tsearch(terms)
     investigators = find_by_tsearch(terms)
     abstract_ids = Abstract.find_by_tsearch(terms, :select => 'ID')
@@ -342,7 +340,10 @@ has_many :investigator_appointments,
     (investigators+investigators2).uniq
   end
 
-
+  def self.investigators_tsearch(terms)
+    find_by_tsearch(terms)
+  end
+  
   def self.display_tsearch(terms)
     find_by_tsearch(terms)
   end
@@ -378,19 +379,23 @@ has_many :investigator_appointments,
   end
   
   def self.distinct_primary_appointments()
-    find(:all, :select => 'DISTINCT home_department_id as organizational_unit_id' ).collect(&:organizational_unit_id)
+    all(:select => 'DISTINCT home_department_id as organizational_unit_id' ).collect(&:organizational_unit_id)
   end
 
   def self.distinct_joint_appointments()
-    find(:all, :joins => [:investigator_appointments], :select => 'DISTINCT organizational_unit_id', :conditions=>"type='Joint'").collect(&:organizational_unit_id)
+    all(:joins => [:investigator_appointments], :select => 'DISTINCT organizational_unit_id', :conditions=>"type='Joint'").collect(&:organizational_unit_id)
   end
 
   def self.distinct_secondary_appointments()
-     find(:all, :joins => [:investigator_appointments], :select => 'DISTINCT organizational_unit_id', :conditions=>"type='Secondary'").collect(&:organizational_unit_id)
+     all(:joins => [:investigator_appointments], :select => 'DISTINCT organizational_unit_id', :conditions=>"type='Secondary'").collect(&:organizational_unit_id)
   end
 
   def self.distinct_memberships()
-      find(:all, :joins => [:member_appointments], :select => 'DISTINCT organizational_unit_id').collect(&:organizational_unit_id)
+      all(:joins => [:member_appointments], :select => 'DISTINCT organizational_unit_id').collect(&:organizational_unit_id)
+  end
+
+  def self.distinct_associate_memberships()
+      all(:joins => [:associate_member_appointments], :select => 'DISTINCT organizational_unit_id').collect(&:organizational_unit_id)
   end
 
   def self.distinct_other_appointments_or_memberships()

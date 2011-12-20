@@ -23,7 +23,7 @@ class OrganizationalUnitTest < ActiveSupport::TestCase
     first_abstract = abstracts(:one)
     assert( ! first_abstract.blank?)
     assert( ! first_abstract.year.blank?)
-    assert( first_abstract.year ==  '2007')
+    assert( first_abstract.year ==  '2006')
   end
   
   test "test first abstract has organizations" do 

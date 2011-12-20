@@ -24,7 +24,7 @@ class AbstractTest < ActiveSupport::TestCase
     first_abstract = abstracts(:one)
     assert( ! first_abstract.blank?)
     assert( ! first_abstract.year.blank?)
-    assert( first_abstract.year ==  '2007')
+    assert( first_abstract.year ==  '2006')
   end
   
   test "test abstract display methods" do 
@@ -62,6 +62,9 @@ class AbstractTest < ActiveSupport::TestCase
     assert(abstracts[0].id == 1)
     assert_raise(NoMethodError,"abstracts.total_entries should not exist") {abstracts.total_entries}
     abstracts=Abstract.investigator_publications(investigators)
+    #investigator_publications finds only abstracts in the last 5 years are included!
+    assert(abstracts.length == 0)
+    abstracts=first_abstract.investigator_abstracts
     assert(abstracts.length == 1)
     assert(abstracts[0].id == 1)
     assert_raise(NoMethodError,"abstracts.total_entries should not exist") {abstracts.total_entries}

@@ -3,3 +3,13 @@ one:
   organizational_unit_id: 1
   investigator_id: 1
   type: Member
+
+two:
+  organizational_unit_id: 1
+  investigator_id: 1
+  type: Secondary
+
+associate:
+  organizational_unit_id: 1
+  investigator_id: 1
+  type: AssociateMember

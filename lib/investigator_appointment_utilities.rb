@@ -654,6 +654,8 @@ def doCleanInvestigators(investigators)
     begin
       pi.username = pi.username.split('.')[0]
       pi.username = pi.username.split('(')[0]
+      pi.username = pi.username.split(')').join("")
+      pi.username = pi.username.split('&').join("")
       pi.username.gsub!(/[' \t]+/,'')
       pi.save!
     rescue
