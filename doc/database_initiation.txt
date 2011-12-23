@@ -48,6 +48,7 @@ create database latticegrid_development;
 create database cinj_latticegrid_staging;
 create database latticegrid_test;
 create database latticegrid_production;
+create database fsm_latticegrid;
 
 # You can also use the shell script but this requires looser security, specifying access, or reassigning ownership of the database
 

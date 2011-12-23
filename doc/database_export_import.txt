@@ -61,6 +61,8 @@ scp fsmpublications_dev_20110825.dmp wakibbe@rails-staging2.nubic.northwestern.e
 
 scp fsmpublications_dev_20111210.dmp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe
 
+scp fsmpublications_dev_20111210.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe
+
 
 
 scp umich_latticegrid_dev_20110825.dmp root@172.16.215.128:/root
@@ -71,6 +73,8 @@ pg_restore -c -O -d umich_latticegrid_production -U latticegrid umich_latticegri
 pg_restore -c -O -d fsm_latticegrid_staging -U fsm_latticegrid -h pstage fsmpublications_dev_20110825.dmp
 
 pg_restore -c -O -d fsm_latticegrid_production -U fsm_latticegrid -h pprod fsmpublications_dev_20110825.dmp
+
+pg_restore -c -O -d fsm_latticegrid -U latticegrid -h pprod2 fsmpublications_dev_20111210.dmp
 
 #move to laptop from old rails-dev
 scp wakibbe@rails-dev.bioinformatics.northwestern.edu:/home/wakibbe/cinj_pubs/cinjpublications_dev_20110410.dmp  cinjpublications_dev_20110410.dmp

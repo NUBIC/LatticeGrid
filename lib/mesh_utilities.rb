@@ -14,10 +14,15 @@ end
 def CleanMeshTerm(mesh_term)
   # mesh terms appear to be composite - term root plus one or more categories. For now strip off everything after root
   return [] if mesh_term !~ /\*/ or mesh_term.blank? or mesh_term.length < 3
+  mesh_term = mesh_term.gsub(/\(|\)|\#|\!|\&|\./,'')
+  return [] if mesh_term.blank? or mesh_term.length < 3
+  
   mesh_array = mesh_term.downcase.split(/\//).collect{ |a| a.gsub(/\*/,'')}
   mesh_array.delete("humans")
   mesh_array.delete("animals")
   mesh_array.delete("metabolism")
+  mesh_array = mesh_array.collect{|term| (term.blank? or term.length < 3 or mesh_term.length > 80) ? nil : term}
+  #mesh_array.compact
   return mesh_array.collect{ |term| RearrangeTermsWithCommas(term)}
 end
 
@@ -340,6 +345,16 @@ def resolveMisformedTags()
       puts "Found tag name with spaces: '#{the_tag.name}' id:#{the_tag.id} with #{the_tag.taggings.count} taggings"
       the_tag.name = the_tag.name.strip
       the_tag.save!
+    end
+    if the_tag.name =~ /\(|\)|\#|\!|\&|\./
+      puts "Found tag name with bad characters: '#{the_tag.name}' id:#{the_tag.id} with #{the_tag.taggings.count} taggings"
+      the_tag.name = the_tag.name.gsub(/\(|\)|\#|\!|\&|\./,'')
+      begin
+        the_tag.save!
+      rescue
+        puts "Duplicate tag exists: '#{the_tag.name}' deleting"
+        tags_to_delete << the_tag
+      end
     end
     if the_tag.name.length < 3
       puts "Found short tag name: '#{the_tag.name}' id:#{the_tag.id} with #{the_tag.taggings.count} taggings"
