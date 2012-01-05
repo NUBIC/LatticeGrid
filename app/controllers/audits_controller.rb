@@ -18,25 +18,35 @@ class AuditsController < ApplicationController
   include ProfilesHelper
   
   def view_logins
+    @logs_after = LatticeGridHelper.logs_after
+    @logs = Log.logins_after(@logs_after)
+    @activity="logins"
+    render_view_activities
+  end
+
+  def view_all_logins
     @logs = Log.logins
     @activity="logins"
     render_view_activities
   end
 
   def view_approved_profiles
-    @logs = Log.approved_profiles
+    @logs_after = LatticeGridHelper.logs_after
+    @logs = Log.approved_profiles_after(@logs_after)
     @activity="Profile Approvals"
     render_view_activities
   end
   
   def view_approved_publications
-    @logs = Log.approved_publications
+    @logs_after = LatticeGridHelper.logs_after
+    @logs = Log.approved_publications_after(@logs_after)
     @activity="Publication Approvals"
-     render_view_activities
+    render_view_activities
   end
 
   def view_logins_without_approvals
-    logins = Log.logins_by_investigator_id.map(&:investigator_id)
+    @logs_after = LatticeGridHelper.logs_after
+    logins = Log.logins_by_investigator_id_after(@logs_after).map(&:investigator_id)
     approvals = Log.any_approval_by_investigator_id.map(&:investigator_id)
     @logs = Log.logins_for_investigator_ids(logins-approvals)
     @activity="Logins without approvals"
@@ -45,7 +55,8 @@ class AuditsController < ApplicationController
   end
 
   def view_profile_approvers
-    logs = Log.last_approved_profiles_by_id
+    @logs_after = LatticeGridHelper.logs_after
+    logs = Log.last_approved_profiles_by_id_after(@logs_after)
     @logs = Log.for_ids(logs.map(&:id))
     @activity="Profile Approvers"
     @log_entered = "Last Approved"
@@ -53,11 +64,12 @@ class AuditsController < ApplicationController
   end
 
   def view_publication_approvers
-     logs = Log.last_approved_publications_by_id
-     @logs = Log.for_ids(logs.map(&:id))
-     @activity="Publication Approvers"
-     @log_entered = "Last Approved"
-     render_view_activities
+    @logs_after = LatticeGridHelper.logs_after
+    logs = Log.last_approved_publications_by_id_after(@logs_after)
+    @logs = Log.for_ids(logs.map(&:id))
+    @activity="Publication Approvers"
+    @log_entered = "Last Approved"
+    render_view_activities
    end
   
   # calls for csv data by the amstock flash widget
@@ -74,13 +86,15 @@ class AuditsController < ApplicationController
   end
   
   def approved_profile_data
-    logs = Log.approved_profiles
+    @logs_after = LatticeGridHelper.logs_after
+    logs = Log.approved_profiles_after(@logs_after)
     data = generate_csv(logs, true)
     render :template => "shared/csv_data", :locals => {:data => data}, :layout => false
   end
   
   def approved_publication_data
-    logs = Log.approved_publications
+    @logs_after = LatticeGridHelper.logs_after
+    logs = Log.approved_publications_after(@logs_after)
     data = generate_csv(logs, true)
     render :template => "shared/csv_data", :locals => {:data => data}, :layout => false
   end

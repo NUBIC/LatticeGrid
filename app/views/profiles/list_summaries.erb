@@ -1,0 +1,45 @@
+<h2>Listing <%= @investigators.length -%> Investigator Summaries</h2>
+
+<table id="summaryTable" class="tablesorter { sortList: [[2,0]] }"> 
+  <thead> 
+  <tr>
+	<th>Name</th>
+	<th>email</th>
+	<th>Approvals<%= " after #{@approvals_after} " unless @approvals_after.blank? -%></th>
+	<th>Summary</th>
+	<th>Interests</th>
+    <th>Edit</th>
+  </tr>
+ </thead> 
+ <tbody>
+<% @investigators.each do |pi| %>
+  <% next if pi.blank? or pi.username.blank? %>
+  <tr>
+    <td><%=  pi.sort_name.gsub(/ /,'&nbsp;') unless pi.sort_name.blank? %></td>
+    <td><%= mail_to(pi.email, "email", 
+				:subject => "LatticeGrid Profile", 
+				:encode => "javascript", :title=>"Send email to #{pi.full_name}") unless pi.email.blank? %> </td>
+    <td><% if @approvals_after.blank? %>
+		<%= pi.logs.approved_profiles.map{|p| p.created_at.to_s(:justdate)}.join(", ") %>
+	<% else %>
+		<%= pi.logs.approved_profiles_after(@approvals_after).map{|p| p.created_at.to_s(:justdate)}.join(", ") %>
+	<% end %>
+	</td>
+    <td><%= pi.faculty_research_summary %></td>
+    <td><%= pi.faculty_interests %></td>
+    <td><%= link_to("Edit&nbsp;profile", edit_profile_path(pi.id)) %> <%= link_to("Edit&nbsp;pubs", edit_pubs_profile_path(pi.id))  %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+
+<% javascript_tag do %>
+jQuery(document).ready(function() { 
+    // call the tablesorter plugin 
+    jQuery("#summaryTable").tablesorter(
+        // turn off sorting on the 7th header
+        { headers: { 6: {sorter: false} } }
+    ); });
+<% end %>
+
+	

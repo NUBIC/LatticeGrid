@@ -9,9 +9,9 @@
 <% else %>
 <div style="float:right;padding:10px"><%= link_to "hide params", request.path %></div>
 <% end %>
-<h1>Listing <%= @activity -%> (<%= @logs.length -%>) by <%= @logs.map(&:investigator_id).compact.sort.uniq.length -%> investigators</h1>
+<h1>Listing <%= @activity -%> (<%= @logs.length -%>) by <%= @logs.map(&:investigator_id).compact.sort.uniq.length -%> investigators <%= "since #{@logs_after}" unless @logs_after.blank? %></h1>
 <% if @has_without %>
-<div><%= link_to "jump to investigators without entries", "#without" %></div>
+<div><%= link_to "jump to investigators without entries (#{@without_entries.length})", "#without" %></div>
 <% end %>
 <div><%= link_to "jump to graph", "#graph" %></div>
 
@@ -67,6 +67,9 @@ jQuery(document).ready(function() {
 
 <% if @has_without %>
 <a name="without"></a>
+<div><%= link_to "back to #{@activity} (#{@logs.length}) listing", "#top" %></div>
+<div><%= link_to "jump to graph", "#graph" %></div>
+
 <h1>Listing investigators without entries (<%= @without_entries.length %>)</h1>
 
 <p>

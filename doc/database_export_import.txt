@@ -33,6 +33,12 @@ scp fsmpublications_dev_20110930.dmp wakibbe@rails-prod2.nubic.northwestern.edu:
 
 pg_restore -c -O -d fsm_latticegrid_production -U fsm_latticegrid -h pprod fsmpublications_dev_20110930.dmp
 
+# latest laptop version
+
+pg_restore -c -O -d fsm_latticegrid -U latticegrid fsmpublications_dev_20111210.dmp
+
+pg_restore -c -O -d rhlccc_latticegrid -U latticegrid cancer_latticegrid_prod_20111001.dmp
+
 # through a ssh connection
 
 #set up a tunnel from my laptop to rails2-staging routing localhost port 5433 to pprod port 5432 (standard postgres port)

@@ -1,0 +1,777 @@
+# useful plugins
+
+# documentation: http://cardboardrocket.com/pages/paginating_find
+#no longer using this (5/5/2008)
+#script/plugin install http://svn.cardboardrocket.com/paginating_find
+
+# documentation: http://bparanj.blogspot.com/2007/09/how-to-use-will-paginate-20-rails.html
+# documentation: http://errtheblog.com/posts/56-im-paginating-again
+# replaced with mislav-will-paginate gem
+#script/plugin install svn://errtheblog.com/svn/plugins/will_paginate
+
+#ldap stuff
+# may need to register this site: http://rubyforge.org/projects/net-ldap/ 
+
+#ldap and authlogic
+
+http://www.liveandcode.com/2009/08/30/ldap-pass-through-authentication-with-authlogic-and-activeldap/
+# and slightly less useful but still good
+http://lbi.lostboys.nl/prikbord/ruby-on-rails-ldap-integration
+# and another post
+http://stackoverflow.com/questions/1690138/what-gems-should-i-use-to-have-a-ruby-app-talk-to-an-ldap-server
+# and to stop passwords in cleartext
+http://stackoverflow.com/questions/2682457/authlogic-ldap-encrypt-communication
+http://github.com/binarylogic/authlogic_ldap#readme
+
+sudo gem install ruby-net-ldap
+
+# sparklines
+sudo gem install sparklines
+sudo gem install sparklines_generator
+# may need to do this too:
+sudo gem install rmagick
+
+ruby script/generate sparklines
+# for sparklines, add to bottom of config/environment.rb
+require 'sparklines'
+
+# in the controller where you want to use a sparkline:
+
+#class MyController < ApplicationController
+helper :sparklines
+
+# call in any view for that controller:
+
+<%= sparkline_tag [10,20,30], :type => 'pie' %>
+
+#csv parser
+sudo gem install fastercsv
+
+
+#simple date select plugin
+script/plugin install svn://code.jeremyevans.net/rails/plugins/simple_date_select
+
+# acts_as_taggable
+#deprecated: script/plugin install http://svn.viney.net.nz/things/rails/plugins/acts_as_taggable_on_steroids
+script/plugin install git://github.com/jviney/acts_as_taggable_on_steroids.git
+
+
+# acts_as_nested_set
+# deprecated: script/plugin install acts_as_nested_set
+
+# awesome nested set plugin
+ script/plugin install git://github.com/collectiveidea/awesome_nested_set.git
+
+# prawn gem for pdf generation
+
+http://prawn.majesticseacreature.com/
+
+sudo gem install prawn 
+
+# a simpler pdf generater
+sudo gem install pdf-writer
+
+--PostgreSQL commands
+
+-- add this line to pg_hba.conf so you can connect to it on the local machine without a password, if you so desire
+
+local  all    fsmpublications   trust
+
+-- now login to postgres using psql
+
+psql postgres
+
+-- create the user (role)
+-- for a little bit of security, create a role. user is an alias for role that also specifies that the role is permitted to login
+
+CREATE USER fsmpublications with createdb;
+
+#if you need to add the createdb role to user, do it like this:
+ALTER USER fsmpublications with createdb;
+
+-- you can also specify a user and password:
+
+CREATE USER fsmpublications WITH PASSWORD 'jw8s0F4';
+-- or if the user has already been created:
+ALTER USER fsmpublications WITH PASSWORD 'jw8s0F4';
+
+
+-- or add a end date to the user:
+
+CREATE ROLE fsmpublications WITH LOGIN PASSWORD 'jw8s0F4' VALID UNTIL '2008-01-01';
+
+
+-- now switch to the new user
+
+\connect - fsmpublications
+
+
+-- now create the database
+
+create database fsmpublications_development;
+create database fsmpublications_test;
+create database fsmpublications_production;
+
+# You can also use the shell script but this requires looser security, specifying access, or reassigning ownership of the database
+
+createdb fsmpublications_development
+createdb fsmpublications_test
+
+-- and specify privileges if you did not create the database using the new user. Skip this step if you used the new user
+
+GRANT SELECT, INSERT, UPDATE ON TABLE schema_info TO fsmpublications_test;
+
+-- sequences
+
+GRANT SELECT, UPDATE ON  allele_types_id_seq, animal_model_publications_id_seq, animal_models_id_seq, model_types_id_seq, mutation_methods_id_seq, pi_contacts_id_seq,  tumor_types_id_seq TO animalmodels;
+
+# database dump and restore
+pg_dump -i -Fc fsmpublications_development -U fsmpublications -h pdev > fsmpublications_dev_201012315.dmp
+pg_restore -d fsmpublications_production -U fsmpublications -h pprod fsmpublications_dev_201012315.dmp
+
+# data dump from my laptop after a new build:
+psql --version
+#psql (PostgreSQL) 8.4.5
+#contains support for command-line editing
+pg_dump -i -Fc fsm_latticegrid_production -U fsm_latticegrid -h pprod > fsmpublications_prod_201103306.dmp
+
+pg_dump -i -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev_201103306.dmp
+#set up a tunnel from my laptop to rails2-prod routing localhost port 5433 to pprod port 5432 (standard postgres port)
+ssh -f wakibbe@rails-prod2.nubic.northwestern.edu -L 5433:pprod.bioinformatics.northwestern.edu:5432 -N
+#run pg_restore to get the data from my laptop into production. -O tells it to use the connection postgres user, not the one I extracted from
+pg_restore -c -O -d fsm_latticegrid_production -U fsm_latticegrid -h localhost -p 5433 fsmpublications_dev_201103306.dmp
+
+#copy it use scp
+scp fsmpublications_dev_201103306.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe
+
+#now restore
+pg_restore -O -d fsm_latticegrid_production -U fsm_latticegrid -h pprod fsmpublications_dev_201103306.dmp
+
+# using ssh tunneling 
+#set up a tunnel from my laptop to rails-dev routing localhost port 5433 to pdev port 5432 (standard postgres port)
+ssh -f wakibbe@rails-dev.bioinformatics.northwestern.edu -L 5433:pdev.bioinformatics.northwestern.edu:5432 -N
+#run pg_dump to get the data onto my laptop
+pg_dump -i -Fc fsmpublications_development -U fsmpublications -h localhost -p 5433 > fsmpublications_dev_201012315.dmp
+
+#set up a tunnel from my laptop to rails-prodv routing localhost port 5433 to pprod port 5432 (standard postgres port)
+ssh -f wakibbe@rails-prod.nubic.northwestern.edu -L 5433:pprod.bioinformatics.northwestern.edu:5432 -N
+#run pg_restore to get the data from my laptop into production. -O tells it to use the connection postgres user, not the one I extracted from
+pg_restore -c -O -d fsm_latticegrid_production -U fsm_latticegrid -h localhost -p 5433 fsmpublications_dev_201012315.dmp
+# create rails app
+rails -d postgresql fsmpublications 
+cd fsmpublications
+bbedit config/database.yml
+
+#make sure you have a section that looks like:
+
+development:
+  adapter: postgresql
+  database: fsmpublications_development
+  username: fsmpublications
+
+test:
+  adapter: postgresql
+  database: fsmpublications_test
+  username: fsmpublications
+
+
+# create the controller
+	script/generate controller abstracts
+	script/generate controller graphs
+	script/generate controller orgs
+	script/generate controller investigators
+	script/generate controller awards
+
+# create Models
+# now create a model
+
+	script/generate model abstract
+	script/generate model investigator
+	script/generate model investigator_abstract
+	script/generate model organizational_unit name:string search_name:string abbreviation:string organization_url:string type:string organization_classification:string organization_phone:string dept_id:integer division_id:integer has_appointments:boolean
+	script/generate model organization_abstract
+	script/generate model investigator_appointment #for join, secondary, and membership data
+	script/generate model proposal
+	script/generate model investigator_proposal
+	script/generate model study
+	script/generate model investigator_study
+	script/generate model investigator_relationship # for connections betweeen investigators
+
+	script/generate model journal journal_name:string journal_abbreviation:string issn:string score_year:integer total_cites:integer impact_factor:float impact_factor_five_year:float immediacy_index:float total_articles:integer eigenfactor_score:float article_influence_score:float
+	script/generate model last_load last_load_date:timestamp
+	# organizational_unit types
+	script/generate model school
+	script/generate model department
+	script/generate model home_department
+	script/generate model division
+	script/generate model program
+	script/generate model center
+	
+	script/generate model joint
+	script/generate model secondary
+	script/generate model member
+	script/generate model associate_member
+
+	
+
+	#headings from ISI web of science journal citations/impact factor index
+	#Abbreviated Journal Title;ISSN;{2008} Total Cites;Impact Factor;5-Year Impact Factor;Immediacy Index;{2008} Articles;Cited Half-Life;Eigenfactor Score;Article Influence Score
+	#example score for a journal
+	#ANAL CHEM;0003-2700;77792;5.712;5.918;0.831;1221;7.3;0.19839;1.679;
+	
+
+# for graphing the connections
+	script/generate controller graph
+	script/generate model graph
+
+# add some columns to investigators
+	script/generate migration add_total_pubs_columns
+
+# add some columns to asbtracts
+	script/generate migration add_is_cancer_and_pmc_columns
+
+# add abstract to investigator_appointments
+	script/generate migration add_investigator_appt_abstract_column
+
+# add abstract to investigator_appointments
+	script/generate migration add_investigator_appt_research_summary_column
+
+# add some columns to investigator_abstracts
+	script/generate migration add_delete_columns
+# add some unique indexes
+
+	script/generate migration add_uniques
+
+# add a migration to support tsearch2 and acts_as_tsearch
+script/generate migration tsearch_vectors
+
+# add a migration for updating investigator_abstracts
+script/generate migration update_investigator_abstracts
+
+		# and put in it
+		Abstract.create_vector  #doesn't hurt to try, even if it exists
+		Abstract.update_vector
+		Investigator.create_vector  #doesn't hurt to try, even if it exists
+		Investigator.update_vector
+
+script/generate migration modify_investigator_proposals
+
+script/generate migration modify_studies
+script/generate migration add_high_impact_journals
+
+
+# authenticated access
+
+script/generate controller profiles/investigator index show edit update abstract abstract_update
+
+script/generate controller studies show investigator listing
+
+# edit the db/migrate script
+
+bbedit db/migrate/001_create_abstracts.rb
+bbedit db/migrate/002_create_investigators.rb
+bbedit db/migrate/003_create_investigator_abstracts.rb
+bbedit db/migrate/004_create_organizational_units.rb
+bbedit db/migrate/005_create_investigator_appointment.rb
+
+# create the scaffolds
+script/generate scaffold abstract
+
+# after changing the table create script to create the necessary features, try it with rake:
+# test that the models can be generated and moved
+rake db:migrate
+
+# reverse the migration
+rake db:migrate VERSION=0
+# repeat
+rake db:migrate
+
+# do it in production:
+rake environment RAILS_ENV=production db:migrate
+
+# do it in test:
+rake environment RAILS_ENV=test db:migrate
+
+# install additional investigators using ldap
+rake getLDAP uid_list=aqw,wakibbe
+
+#RUN TESTS
+
+ruby test/unit/abstract_test.rb
+
+# October 2010 load org and people steps
+
+rake db:drop
+rake db:create
+rake db:migrate
+rake db:vacuum  #added a custom rake method for this
+
+# June 2011 loads
+rake importDepartments file=db/imports/department_lookup_Dec2010.txt 
+rake importOrganizations file=db/imports/division_lookup_June2011.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/faculty_June2011.txt 
+rake importJointAppointments file=db/imports/joint_appointments_June2011.txt
+rake importSecondaryAppointments file=db/imports/secondary_appointments_June2011.txt 
+rake importCenterMemberships file=db/imports/center_memberships_June2011.txt 
+rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids_June2011.txt 
+rake importAwardData file=db/imports/award_data_20110612.txt
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalImpact file=db/imports/jcr_recs_2009.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake updateJournalISSNsFromPubmed
+rake cleanJournalISSNentries
+rake findAbstractswithoutJCRentries
+rake findAbstractswithJCRentries
+
+rake cleanInvestigatorsUsername
+rake importInvestigatorDescriptions file=db/imports/faculty_interests_June2011.txt
+rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_June2011.txt
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+#June 2011 loads for BTI and Digestive Disease Program
+rake importCenterMemberships file=db/imports/additional_memberships_Apr2011.txt 
+
+# April 2011 loads
+rake importDepartments file=db/imports/department_lookup_Dec2010.txt 
+rake importOrganizations file=db/imports/division_lookup_Apr2011.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/faculty_Apr2011.txt 
+rake importJointAppointments file=db/imports/joint_appointments_Feb_2011.txt  #unchanged
+rake importSecondaryAppointments file=db/imports/secondary_appointments_Apr2011.txt 
+rake importCenterMemberships file=db/imports/center_memberships_Apr2011.txt 
+rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids_Apr2011.txt 
+rake importAwardData file=db/imports/Cognos_Awards.txt
+rake importAwardData file=db/imports/award_data_20110417.txt
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalImpact file=db/imports/jcr_recs_2009.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake updateJournalISSNsFromPubmed
+rake cleanJournalISSNentries
+rake findAbstractswithoutJCRentries
+rake findAbstractswithJCRentries
+
+rake cleanInvestigatorsUsername
+rake importInvestigatorDescriptions file=db/imports/faculty_interests_Apr2011.txt
+rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_Apr2011.txt
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+#April 2011 loads for BTI and Digestive Disease Program
+rake importCenterMemberships file=db/imports/additional_memberships_Apr2011.txt 
+
+# April 2011 loads
+rake RAILS_ENV=staging importDepartments file=db/imports/department_lookup_Dec2010.txt 
+rake RAILS_ENV=staging  importOrganizations file=db/imports/division_lookup_Apr2011.txt 
+rake RAILS_ENV=staging  cleanUpOrganizations
+rake RAILS_ENV=staging  log:clear
+rake RAILS_ENV=staging  importInvestigators file=db/imports/faculty_Apr2011.txt 
+rake RAILS_ENV=staging  importJointAppointments file=db/imports/joint_appointments_Feb_2011.txt  #unchanged
+rake RAILS_ENV=staging  importSecondaryAppointments file=db/imports/secondary_appointments_Apr2011.txt 
+rake RAILS_ENV=staging  importCenterMemberships file=db/imports/center_memberships_Apr2011.txt 
+rake RAILS_ENV=staging  importInvestigatorPubmedIDs file=db/imports/pubmed_ids_Apr2011.txt 
+rake RAILS_ENV=staging  importAwardData file=db/imports/Cognos_Awards.txt
+rake RAILS_ENV=staging  importAwardData file=db/imports/award_data_20110417.txt
+rake RAILS_ENV=staging  importJournalImpact file=db/imports/jcr_recs.txt
+rake RAILS_ENV=staging  importJournalImpact file=db/imports/jcr_recs_2009.txt
+rake RAILS_ENV=staging  importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake RAILS_ENV=staging  updateJournalISSNsFromPubmed
+rake RAILS_ENV=staging  cleanJournalISSNentries
+rake RAILS_ENV=staging  findAbstractswithoutJCRentries
+rake RAILS_ENV=staging  findAbstractswithJCRentries
+
+rake RAILS_ENV=staging  cleanInvestigatorsUsername
+rake RAILS_ENV=staging  importInvestigatorDescriptions file=db/imports/faculty_interests_Apr2011.txt
+rake RAILS_ENV=staging  importInvestigatorDescriptions file=db/imports/faculty_descriptions_Apr2011.txt
+rake RAILS_ENV=staging  db:vacuum  #added a custom rake method for this
+rake RAILS_ENV=staging  log:clear
+
+#April 2011 loads for BTI and Digestive Disease Program
+rake RAILS_ENV=staging  importCenterMemberships file=db/imports/additional_memberships_Apr2011.txt 
+
+
+# April 2011 loads
+rake RAILS_ENV=production importDepartments file=db/imports/department_lookup_Dec2010.txt 
+rake RAILS_ENV=production  importOrganizations file=db/imports/division_lookup_Apr2011.txt 
+rake RAILS_ENV=production  cleanUpOrganizations
+rake RAILS_ENV=production  log:clear
+rake RAILS_ENV=production  importInvestigators file=db/imports/faculty_Apr2011.txt 
+rake RAILS_ENV=production  importJointAppointments file=db/imports/joint_appointments_Feb_2011.txt  #unchanged
+rake RAILS_ENV=production  importSecondaryAppointments file=db/imports/secondary_appointments_Apr2011.txt 
+rake RAILS_ENV=production  importCenterMemberships file=db/imports/center_memberships_Apr2011.txt 
+rake RAILS_ENV=production  importInvestigatorPubmedIDs file=db/imports/pubmed_ids_Apr2011.txt 
+rake RAILS_ENV=production  importAwardData file=db/imports/Cognos_Awards.txt
+rake RAILS_ENV=production  importAwardData file=db/imports/award_data_20110417.txt
+rake RAILS_ENV=production  importJournalImpact file=db/imports/jcr_recs.txt
+rake RAILS_ENV=production  importJournalImpact file=db/imports/jcr_recs_2009.txt
+rake RAILS_ENV=production  importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake RAILS_ENV=production  updateJournalISSNsFromPubmed
+rake RAILS_ENV=production  cleanJournalISSNentries
+rake RAILS_ENV=production  findAbstractswithoutJCRentries
+rake RAILS_ENV=production  findAbstractswithJCRentries
+
+rake RAILS_ENV=production  cleanInvestigatorsUsername
+rake RAILS_ENV=production  importInvestigatorDescriptions file=db/imports/faculty_interests_Apr2011.txt
+rake RAILS_ENV=production  importInvestigatorDescriptions file=db/imports/faculty_descriptions_Apr2011.txt
+rake RAILS_ENV=production  db:vacuum  #added a custom rake method for this
+rake RAILS_ENV=production  log:clear
+
+#April 2011 loads for BTI and Digestive Disease Program
+rake RAILS_ENV=production  importCenterMemberships file=db/imports/additional_memberships_Apr2011.txt 
+
+
+
+# February 2011 loads
+rake importDepartments file=db/imports/department_lookup_Dec2010.txt 
+rake importOrganizations file=db/imports/division_lookup_Feb2011.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/faculty_Feb2011.txt 
+rake importJointAppointments file=db/imports/joint_appointments_Feb_2011.txt 
+rake importSecondaryAppointments file=db/imports/secondary_appointments_Feb2011.txt 
+rake importCenterMemberships file=db/imports/center_memberships_Feb2011.txt 
+rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids_Feb2011.txt 
+rake importAwardData file=db/imports/Cognos_Awards.txt
+rake importAwardData file=db/imports/award_data_20110417.txt
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake cleanInvestigatorsUsername
+rake importInvestigatorDescriptions file=db/imports/faculty_interests_Feb2011.txt
+rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_Feb2011.txt
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+
+# December 2010 loads
+rake importDepartments file=db/imports/department_lookup_Dec2010.txt 
+rake importOrganizations file=db/imports/division_lookup_Dec2010.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/faculty_Dec2010.txt 
+rake importJointAppointments file=db/imports/joint_appointments_Dec2010.txt 
+rake importSecondaryAppointments file=db/imports/secondary_appointments_Dec2010.txt 
+rake importCenterMemberships file=db/imports/center_memberships_Dec2010.txt 
+rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids_Dec2010.txt 
+rake importAwardData file=db/imports/Cognos_Awards.txt
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake cleanInvestigatorsUsername
+rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_Dec2010.txt
+rake importInvestigatorDescriptions file=db/imports/faculty_interests_Dec2010.txt
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+
+rake importDepartments file=db/imports/department_lookup_October2010.txt 
+rake importOrganizations file=db/imports/division_lookup_October2010.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/faculty_October2010.txt 
+rake importJointAppointments file=db/imports/joint_appointments_October2010.txt 
+rake importSecondaryAppointments file=db/imports/secondary_appointments_October2010.txt 
+rake importCenterMemberships file=db/imports/center_memberships_October2010.txt 
+rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids_October2010.txt 
+rake importAwardData file=db/imports/Cognos_Awards.txt
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake cleanInvestigatorsUsername
+rake importInvestigatorDescriptions file=db/imports/faculty_descriptions_October2010.txt
+rake importInvestigatorDescriptions file=db/imports/faculty_interests_October2010.txt
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+rake environment RAILS_ENV=production  db:drop
+rake environment RAILS_ENV=production  db:create
+rake environment RAILS_ENV=production  db:migrate
+rake environment RAILS_ENV=production  db:vacuum  #added a custom rake method for this
+rake environment RAILS_ENV=production  importDepartments file=db/imports/department_lookup_October2010.txt 
+rake environment RAILS_ENV=production  importOrganizations file=db/imports/division_lookup_October2010.txt 
+rake environment RAILS_ENV=production  cleanUpOrganizations
+rake log:clear
+rake environment RAILS_ENV=production  importInvestigators file=db/imports/faculty_October2010.txt 
+rake environment RAILS_ENV=production  importJointAppointments file=db/imports/joint_appointments_October2010.txt 
+rake environment RAILS_ENV=production  importSecondaryAppointments file=db/imports/secondary_appointments_October2010.txt 
+rake environment RAILS_ENV=production  importCenterMemberships file=db/imports/center_memberships_October2010.txt 
+rake environment RAILS_ENV=production  importInvestigatorPubmedIDs file=db/imports/pubmed_ids_October2010.txt 
+rake environment RAILS_ENV=production  importAwardData file=db/imports/Cognos_Awards.txt
+rake environment RAILS_ENV=production  importJournalImpact file=db/imports/jcr_recs.txt
+rake environment RAILS_ENV=production  importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake environment RAILS_ENV=production  cleanInvestigatorsUsername
+rake environment RAILS_ENV=production importInvestigatorDescriptions file=db/imports/faculty_descriptions_October2010.txt
+rake environment RAILS_ENV=production importInvestigatorDescriptions file=db/imports/faculty_interests_October2010.txt
+rake environment RAILS_ENV=production  db:vacuum  #added a custom rake method for this
+rake log:clear
+
+
+# June 2010 load org and people steps
+
+rake db:drop
+rake db:create
+rake db:migrate
+rake importDepartments file=db/imports/department_lookup_June2010.txt 
+rake importOrganizations file=db/imports/division_lookup_June2010.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/faculty_June2010.txt 
+rake importJointAppointments file=db/imports/joint_appointments_June2010.txt 
+rake importSecondaryAppointments file=db/imports/secondary_appointments_June2010.txt 
+rake importCenterMemberships file=db/imports/center_memberships_June2010.txt 
+rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids_June2010.txt 
+rake importAwardData file=db/imports/Cognos_Awards.txt
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake cleanInvestigatorsUsername
+rake log:clear
+
+rake environment RAILS_ENV=production  db:drop
+rake environment RAILS_ENV=production  db:create
+rake environment RAILS_ENV=production  db:migrate
+rake environment RAILS_ENV=production  importDepartments file=db/imports/department_lookup_June2010.txt 
+rake environment RAILS_ENV=production  importOrganizations file=db/imports/division_lookup_June2010.txt 
+rake environment RAILS_ENV=production  cleanUpOrganizations
+rake log:clear
+rake environment RAILS_ENV=production  importInvestigators file=db/imports/faculty_June2010.txt 
+rake environment RAILS_ENV=production  importJointAppointments file=db/imports/joint_appointments_June2010.txt 
+rake environment RAILS_ENV=production  importSecondaryAppointments file=db/imports/secondary_appointments_June2010.txt 
+rake environment RAILS_ENV=production  importCenterMemberships file=db/imports/center_memberships_June2010.txt 
+rake environment RAILS_ENV=production  importInvestigatorPubmedIDs file=db/imports/pubmed_ids_June2010.txt 
+rake environment RAILS_ENV=production  importAwardData file=db/imports/Cognos_Awards.txt
+rake environment RAILS_ENV=production  importJournalImpact file=db/imports/jcr_recs.txt
+rake environment RAILS_ENV=production  importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake environment RAILS_ENV=production  cleanInvestigatorsUsername
+rake log:clear
+
+# for the irb
+rake validateUsers file=db/imports/eirb.txt
+
+
+
+# previous methods
+
+#load organizations
+rake importDepartments file=db/imports/department_lookup.txt
+rake environment RAILS_ENV=production importDepartments file=db/imports/department_lookup.txt
+
+rake importOrganizations file=db/imports/division_lookup.txt
+rake environment RAILS_ENV=production importOrganizations file=db/imports/division_lookup.txt
+
+# sets any missing division_ids appropriately
+rake cleanUpOrganizations
+rake environment RAILS_ENV=production cleanUpOrganizations
+
+#load investigators
+rake importInvestigators file=db/imports/faculty.txt
+rake environment RAILS_ENV=production importInvestigators file=db/imports/faculty.txt
+
+#load investigators with additional data
+rake importInvestigators file=db/imports/FSM_Full_time_Faculty.txt
+rake environment RAILS_ENV=production importInvestigators file=db/imports/FSM_Full_time_Faculty.txt
+
+
+# load appointments
+rake importJointAppointments file=db/imports/joint_appointments.txt
+rake environment RAILS_ENV=production  importJointAppointments file=db/imports/joint_appointments.txt
+
+rake importSecondaryAppointments file=db/imports/secondary_appointments.txt
+rake environment RAILS_ENV=production  importSecondaryAppointments file=db/imports/secondary_appointments.txt
+
+rake importCenterMemberships file=db/imports/center_memberships.txt
+rake environment RAILS_ENV=production  importCenterMemberships file=db/imports/center_memberships.txt
+
+#load publications from database
+rake importInvestigatorPubmedIDs file=db/imports/pubmed_ids.txt
+rake environment RAILS_ENV=production  importInvestigatorPubmedIDs file=db/imports/pubmed_ids.txt
+
+#load awards from InfoEd
+rake importAwardData file=db/imports/Cognos_Awards.txt
+rake environment RAILS_ENV=production  importAwardData file=db/imports/Cognos_Awards.txt
+
+
+# test version for Dixon Kaufman
+rake importInvestigators file=db/imports/FSM_Dixon_test.txt
+
+# deprecated: build programs
+rake buildProgramsFromInvestigators
+rake environment RAILS_ENV=production buildProgramsFromInvestigators
+
+#insert ISI Web of Science Journal impact factor ratings
+
+#insert ISI Web of Science Journal impact factor ratings
+# you can download the ISI Journal Citation Records and process them
+# http://admin-apps.isiknowledge.com/JCR/JCR
+# cat jcr_recs.txt | sort -u > new_jcr_recs.txt
+
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake environment RAILS_ENV=production importJournalImpact file=db/imports/jcr_recs.txt
+
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake environment RAILS_ENV=production importJournalISOnames file=db/imports/jcr_iso_titles.txt
+
+# clean all usernames by removing any periods
+rake cleanInvestigatorsUsername
+rake environment RAILS_ENV=production cleanInvestigatorsUsername
+
+# you are now ready to start loading data
+
+# load data using the insertAbstracts rake task
+rake insertAbstracts
+rake RAILS_ENV=production insertAbstracts
+
+#insert all abstracts (10 years)
+# find abstracts: number of publications found for 10 years: 21064 in 180 seconds (staging)
+#pulled the abstracts in about 500 seconds (staging)
+# total of task insertAbstracts ran in 1820.23571395874 seconds
+rake insertAllAbstracts
+rake RAILS_ENV=production insertAllAbstracts
+
+# update publication information like first and last authors
+# for FSM, this takes about 30 minutes
+# decreased to under 10 minutes
+rake updateAbstractInvestigators
+rake RAILS_ENV=production updateAbstractInvestigators
+
+# update publication information like first and last authors
+# for FSM, this takes about 30 minutes
+# decreased to under 10 minutes
+rake buildCoauthors
+rake RAILS_ENV=production buildCoauthors
+
+#update publication information for each investigator, include collaboration information
+# runs in about 6 minutes for FSM
+rake updateInvestigatorInformation
+rake RAILS_ENV=production updateInvestigatorInformation
+
+#update publication information for each organization
+# runs in about 1 minute
+rake updateOrganizationAbstractInformation
+rake RAILS_ENV=production updateOrganizationAbstractInformation
+
+#all the expected tasks are run using this build command
+# runs these tasks: :insertAbstracts, :updateAbstractInvestigators, :buildCoauthors, :updateInvestigatorInformation, :updateOrganizationAbstractInformation
+rake nightlyBuild
+rake RAILS_ENV=production nightlyBuild
+
+# once a month (or after a number of nightly builds) run monthlyBuild
+# monthlyBuild runs these tasks:  :tagAbstractsWithMeshTerms, :tagInvestigatorsWithMeshTerms, :attachMeshInformationContent, :buildInvestigatorColleaguesMesh, :normalizeInvestigatorColleaguesMesh
+
+rake monthlyBuild
+rake RAILS_ENV=production monthlyBuild
+
+#create tags from MeSH data for each abstract
+# runs in 50 minutes
+rake tagAbstractsWithMeshTerms
+rake RAILS_ENV=production tagAbstractsWithMeshTerms
+
+#create tags from MeSH data for each investigator
+# runs in 25 minutes 
+rake tagInvestigatorsWithMeshTerms
+rake RAILS_ENV=production tagInvestigatorsWithMeshTerms
+
+# build the information content values for each tag
+# about 60 minutes for FSM wih 46000 abstracts and 12000 tags
+# before vacuuming the database, it was processing about 1000 tags in 40 minutes. After vacuuming, it was 1000 tags in 3.5 minutes
+# finished all 12,000 tags in less than 60 minutes
+rake attachMeshInformationContent
+
+# build the investigator association files
+# 4 minutes per 10 investigators, 130/hour, about 20 hours for the complete group
+# after 500 investigators, about 300 seconds/10 investigators
+# finished in 800 minutes, or about 13 hours
+# current FSM faculty list of 3700 faculty, 12000 tags takes about 20 hours
+
+rake buildInvestigatorColleaguesMesh
+
+# something to do weekly is:
+
+vacuumdb -fz fsmpublications_development -U fsmpublications
+vacuumdb -fz fsmpublications_production -U fsmpublications
+
+# added a custom rake task
+
+rake environment RAILS_ENV=production  db:vacuum 
+
+# logging in to psql
+psql fsmpublications_development -U fsmpublications
+psql fsmpublications_production -U fsmpublications
+
+Update investigators set pubmed_search_name = '((Abecassis MM[Author]) OR (Abecassis, Michael[Author]))', first_name = 'Michael' where username = 'mabecass';
+select count(*) from investigator_abstracts ia where investigator_id = 1 and not exists (select 'x' from investigator_abstracts ia2 where ia.abstract_id = ia2.abstract_id and ia.id <> ia2.id); 
+
+#all the mesh associations are run with this command
+#tasks: :attachMeshInformationContent, :buildInvestigatorColleagues
+rake monthlyBuild
+rake RAILS_ENV=production monthlyBuild
+
+# see file generateGraphs.sh for how to generate connection graphs for faculty publications
+
+#start web server
+    script/server
+
+# clear logs
+rake log:clear
+
+# passenger restart
+touch tmp/restart.txt
+
+# some quality control sql to run
+
+select count(*) from abstracts where year is null;
+select count(*) from abstracts where publication_date is null;
+select count(*) from abstracts where electronic_publication_date is null;
+select count(*), year from abstracts  group by year order by year;
+select count(*), year from abstracts where publication_date is null group by year order by year;
+select count(*), year from abstracts where electronic_publication_date is null group by year order by year;
+select count(*), year from abstracts where electronic_publication_date > publication_date  group by year order by year;
+
+# run to set up abstracts:
+# :insertAbstracts, :updateAbstractInvestigators, :buildCoauthors, :updateInvestigatorInformation, :updateOrganizationAbstractInformation
+rake --trace RAILS_ENV=production insertAbstracts
+rake --trace RAILS_ENV=production updateAbstractInvestigators
+rake --trace RAILS_ENV=production buildCoauthors
+rake --trace RAILS_ENV=production updateInvestigatorInformation
+rake --trace RAILS_ENV=production updateOrganizationAbstractInformation
+
+
+#
+rake --trace RAILS_ENV=production buildInvestigatorColleaguesMesh >> monthly_rake.log
+rake RAILS_ENV=production monthlyBuild
+
+rake updateAbstractInvestigators
+rake updateInvestigatorInformation
+rake buildCoauthors
+rake tagAbstractsWithMeshTerms
+rake tagInvestigatorsWithMeshTerms
+rake updateOrganizationAbstractInformation
+rake monthlyBuild
+
+# scripts for parsing a list of netids and showing the name and organizational affiliation of the netid
+rake reports:netids_to_orgs file=db/imports/studies_using_netids.txt
+rake reports:netids_to_orgs file=db/imports/study_netids_unresponsive.txt
+rake reports:netids_to_orgs file=db/imports/studies_not_using_services.txt
+
+
+# for console
+Log.logins.collect{|login| puts login.created_at.to_s + " " + ( if (! login.investigator.blank?) then  login.investigator.name else "" end)  }
+
+Log.logins.collect{|login| puts login.created_at.to_s + " \t" + ( if (! login.investigator.blank?) then  login.investigator.name + " \t https://latticegrid.cancer.northwestern.edu/investigators/" + login.investigator.username + "/show/1" else "" end)  }
+
+Log.all(:conditions=>"updated_at > '1-APR-2011' and action_name='update'").collect{|login| puts login.created_at.to_s + " \t" + ( if (! login.investigator.blank?) then  login.investigator.name + " \thttps://latticegrid.cancer.northwestern.edu/investigators/" + login.investigator.username + "/show/1" else "" end)  }
+
+roles = InvestigatorProposal.all(:select => 'DISTINCT role')
+
+InvestigatorProposal.count
+Proposal.count
+investigatorproposals = InvestigatorProposal.all
+investigatorproposals.collect{|inv_prop| inv_prop.delete}
+
+props = Proposal.all
+props.collect{|inv_prop| inv_prop.delete}
+
+InvestigatorProposal.count
+Proposal.count
+
+# reload awards
+ rake RAILS_ENV=production importAwardData file=db/imports/award_data_20110417.txt

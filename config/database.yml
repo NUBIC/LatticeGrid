@@ -6,7 +6,7 @@
 <% 
   require 'config/initializers/latticegrid'
   the_database = case LatticeGrid.the_instance
-    when 'RHLCCC' then "cancer_latticegrid"
+    when 'RHLCCC' then "rhlccc_latticegrid"
     when 'Feinberg' then "fsm_latticegrid"
     when 'UCSF' then "ucsf_latticegrid"
     when 'UWCCC' then "uwisc_latticegrid"

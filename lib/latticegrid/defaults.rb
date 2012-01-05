@@ -45,6 +45,10 @@
      "Lurie Cancer Center"
    end
 
+   def LatticeGridHelper.logs_after
+     "10/1/2011"
+   end
+
    def LatticeGridHelper.high_impact_issns
      []
    end

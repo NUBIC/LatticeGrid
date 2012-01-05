@@ -18,8 +18,8 @@ class ProfilesController < ApplicationController
   require 'publication_utilities' #all the helper methods
   require 'pubmed_utilities'  #loads including 'pubmed_config'  'bio' (bioruby) and 
   #  require 'pubmed_config' #look here to change the default time spans
-    # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-    # verify :method => :post, :only => [ :search ], :redirect_to => :current_abstracts_url
+  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
+  # verify :method => :post, :only => [ :search ], :redirect_to => :current_abstracts_url
   
   def index
     @username = (is_admin? ? params[:id] : current_user_model.username)
@@ -32,6 +32,18 @@ class ProfilesController < ApplicationController
       render
     end
   end
+
+  def list_summaries
+    if is_admin?
+      @javascripts_add = ['jquery.tablesorter.min']
+      @approvals_after = LatticeGridHelper.logs_after
+      @investigators = Investigator.by_name
+      render
+    else
+      redirect_to :index
+    end
+  end
+
 
   def unreviewed_valid_abstracts
     if is_admin? 

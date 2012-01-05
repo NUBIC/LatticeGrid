@@ -39,7 +39,7 @@ config.after_initialize do
       puts "loading local static aker file"
     else
       authorities :ldap
-      central '/etc/nubic/bcsec-staging.yml'
+      central '/etc/nubic/bcsec-local.yml'
     end
   end
 end
