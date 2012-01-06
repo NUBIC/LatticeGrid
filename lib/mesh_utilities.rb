@@ -2,6 +2,7 @@
 
 # added downcase to make sure all terms are atomic and not multi-cased!
 def RearrangeTermsWithCommas(term)
+  return nil if term.blank?
   a = term.split(",").collect{|x| x.strip}
   if a.length > 1 then
     d = a[1]+" "+a[0]

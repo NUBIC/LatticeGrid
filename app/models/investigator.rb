@@ -107,8 +107,6 @@ has_many :investigator_appointments,
   named_scope :clinician_only, :conditions => "appointment_track = 'Clinician'"
   named_scope :by_name, :order => "lower(last_name), lower(first_name)"
 
-  named_scope :by_name, :order => "lower(last_name), lower(first_name)"
-
   named_scope :for_tag_ids, lambda { |*ids|
     {:joins => [:taggings], 
      :conditions => ['taggings.tag_id IN (:ids) ', {:ids => ids.first}] }

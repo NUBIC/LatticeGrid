@@ -35,6 +35,8 @@ pg_restore -c -O -d fsm_latticegrid_production -U fsm_latticegrid -h pprod fsmpu
 
 # latest laptop version
 
+pg_restore -c -O -d stanford_latticegrid -U latticegrid stanford_latticegrid_20111109.dmp
+
 pg_restore -c -O -d fsm_latticegrid -U latticegrid fsmpublications_dev_20111210.dmp
 
 pg_restore -c -O -d rhlccc_latticegrid -U latticegrid cancer_latticegrid_prod_20111001.dmp
