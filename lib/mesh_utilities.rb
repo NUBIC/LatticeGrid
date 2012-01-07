@@ -15,7 +15,7 @@ end
 def CleanMeshTerm(mesh_term)
   # mesh terms appear to be composite - term root plus one or more categories. For now strip off everything after root
   return [] if mesh_term !~ /\*/ or mesh_term.blank? or mesh_term.length < 3
-  mesh_term = mesh_term.gsub(/\(|\)|\#|\!|\&|\./,'')
+  mesh_term = mesh_term.gsub(/\(|\)|\#|\!|\&|\.|\'/,'')
   return [] if mesh_term.blank? or mesh_term.length < 3
   
   mesh_array = mesh_term.downcase.split(/\//).collect{ |a| a.gsub(/\*/,'')}
@@ -347,9 +347,9 @@ def resolveMisformedTags()
       the_tag.name = the_tag.name.strip
       the_tag.save!
     end
-    if the_tag.name =~ /\(|\)|\#|\!|\&|\./
+    if the_tag.name =~ /\(|\)|\#|\!|\&|\.|\'/
       puts "Found tag name with bad characters: '#{the_tag.name}' id:#{the_tag.id} with #{the_tag.taggings.count} taggings"
-      the_tag.name = the_tag.name.gsub(/\(|\)|\#|\!|\&|\./,'')
+      the_tag.name = the_tag.name.gsub(/\(|\)|\#|\!|\&|\.|\'/,'')
       begin
         the_tag.save!
       rescue

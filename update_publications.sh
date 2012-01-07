@@ -40,14 +40,14 @@ bundle exec rake RAILS_ENV=staging cache:populate taskname=investigators >> buil
 bundle exec rake RAILS_ENV=staging cache:populate taskname=orgs >> buildCache.txt
 bundle exec rake RAILS_ENV=staging cache:populate taskname=investigator_graphs >> buildCache.txt
 bundle exec rake RAILS_ENV=staging cache:populate taskname=investigator_graphviz >> buildCache.txt
-bundle exec rake RAILS_ENV=staging cache:populate taskname=investigator_awards >> buildCache.txt
+bundle exec rake RAILS_ENV=staging cache:populate taskname=investigator_cytoscape >> buildCache.txt
 bundle exec rake RAILS_ENV=staging cache:populate taskname=org_graphs >> buildCache.txt
 bundle exec rake RAILS_ENV=staging cache:populate taskname=org_graphviz >> buildCache.txt
-bundle exec rake RAILS_ENV=staging cache:populate taskname=awards >> buildCache.txt
 bundle exec rake RAILS_ENV=staging cache:populate taskname=mesh >> buildCache.txt
+bundle exec rake RAILS_ENV=staging cache:populate taskname=awards >> buildCache.txt
+bundle exec rake RAILS_ENV=staging cache:populate taskname=investigator_awards >> buildCache.txt
 bundle exec rake RAILS_ENV=staging cache:populate taskname=investigator_studies >> buildCache.txt
 bundle exec rake RAILS_ENV=staging cache:populate taskname=studies >> buildCache.txt
-bundle exec rake RAILS_ENV=staging cache:populate taskname=investigator_cytoscape >> buildCache.txt
 
 # in development
 

@@ -188,7 +188,7 @@ namespace :cache do
       #all data
       run_ajax_curl member_cytoscape_data_url(:id=>inv.username, :depth=>1, :include_publications=>1, :include_awards=>1, :include_studies=>1)
       puts "generated cytoscape data for #{inv.name}: #{inv.username}"
-      break
+      #break
      end
   end
 
