@@ -61,7 +61,7 @@ my_env = 'home' if public_path =~ /Users/
 case 
   when my_env == 'home': 'http'
   when my_env == 'development': 'http'
-  when my_env == 'staging': 'http'
+  when my_env == 'staging': 'https'
   when my_env == 'production': 'http'
   else 'http'
 end 
