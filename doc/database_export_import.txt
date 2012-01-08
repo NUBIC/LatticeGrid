@@ -1,3 +1,5 @@
+pg_dump -Fc rhlccc_latticegrid_production -U rhlccc_latticegrid -h pprod > cancer_latticegrid_prod_20110930.dmp
+
 pg_dump -Fc fsmpublications_development -U fsmpublications -h pdev > fsmpublications_dev_20110512.dmp
 pg_restore -d fsmpublications_production -U fsmpublications -h pprod fsmpublications_dev_20110512.dmp
 

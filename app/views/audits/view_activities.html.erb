@@ -50,7 +50,7 @@ Email addresses for investigators who have <%= @activity -%>:  <textarea name="e
     <td><%= log_entry.created_ip %></td>
     <td><%=h log_entry.activity %></td>
     <% if @include_params %><td width="150px"><%=h log_entry.params %></td><% end %>
-     <td><%= link_to("Edit profile", edit_profile_path(log_entry.investigator.username)) unless log_entry.investigator.blank? %> <%= link_to("Edit pubs", edit_pubs_profile_path(log_entry.investigator.username)) unless log_entry.investigator.blank? %></td>
+     <td><%= link_to("Edit profile", edit_profile_url(log_entry.investigator.username)) unless log_entry.investigator.blank? %> <%= link_to("Edit pubs", edit_pubs_profile_url(log_entry.investigator.username)) unless log_entry.investigator.blank? %></td>
   </tr>
 <% end %>
 </tbody>
@@ -100,7 +100,7 @@ Emails for investigators without entries:  <textarea name="without_entry_emails"
     <td><%=h investigator.business_phone unless investigator.blank? %></td>
     <td><%=h investigator.campus unless investigator.blank? %></td>
     <td><%= investigator.created_at.to_s(:justdate) unless investigator.blank? %></td>
-    <td><%= link_to("Edit profile", edit_profile_path(investigator.username)) unless investigator.blank? %> <%= link_to("Edit pubs", edit_pubs_profile_path(investigator.username)) unless investigator.blank? %>  </td>
+    <td><%= link_to("Edit profile", edit_profile_url(investigator.username)) unless investigator.blank? %> <%= link_to("Edit pubs", edit_pubs_profile_url(investigator.username)) unless investigator.blank? %>  </td>
   </tr>
 <% end %>
 </tbody>

@@ -15,7 +15,7 @@
 <% @investigators.each do |pi| %>
   <% next if pi.blank? or pi.username.blank? %>
   <tr>
-    <td><%= link_to(pi.sort_name.gsub(/ /,'&nbsp;'), investigator_path(pi.username), :title=>"View public profile for #{pi.full_name}") unless pi.sort_name.blank? %></td>
+    <td><%= link_to(pi.sort_name.gsub(/ /,'&nbsp;'), investigator_url(pi.username), :title=>"View public profile for #{pi.full_name}") unless pi.sort_name.blank? %></td>
     <% unless @no_email %><td><%= mail_to(pi.email, "email", 
 				:subject => "LatticeGrid Profile", 
 				:encode => "javascript", :title=>"Send email to #{pi.full_name}") unless pi.email.blank? %> </td><% end %>
@@ -27,7 +27,7 @@
 	</td>
     <td><%= pi.faculty_research_summary %></td>
     <td><%= pi.faculty_interests %></td>
-    <td><%= link_to("Edit&nbsp;profile", edit_profile_path(pi.username)) %> <%= link_to("Edit&nbsp;pubs", edit_pubs_profile_path(pi.username))  %></td>
+    <td><%= link_to("Edit&nbsp;profile", edit_profile_url(pi.username)) %> <%= link_to("Edit&nbsp;pubs", edit_pubs_profile_url(pi.username))  %></td>
   </tr>
 <% end %>
 </tbody>
