@@ -1,5 +1,5 @@
 <h2>Listing <%= @investigators.length -%> Investigator Summaries <%= "for #{@program.name}" unless @program.blank? -%></h2>
-
+<p>generated  <%= Time.now.to_s(:long) %></p>
 <table id="summaryTable" class="tablesorter { sortList: [[2,0]] }"> 
   <thead> 
   <tr>
