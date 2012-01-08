@@ -16,7 +16,7 @@ namespace :cache do
       directories.each do |name|
         clear_directory(name)
       end
-      files = %w{programs.html orgs.html ccsg.html mesh.html mesh.json mesh.xml js.html xml.html json.html investigators_search.html test.html investigators_search_all.html}
+      files = %w{programs.html orgs.html ccsg.html mesh.html mesh.json mesh.xml js.html xml.html json.html investigators_search.html test.html investigators_search_all.html high_impact.html}
       files.each do |name|
         name="#{name}"
         clear_file(name)

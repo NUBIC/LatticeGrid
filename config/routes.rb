@@ -16,7 +16,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :cytoscape, :only => [:index, :show], :member => {:investigators => :get, :protovis => :get, :jit => :get, :awards => :get, :studies => :get, :d3_data => :get, :chord=>:get, :show_org=>:get, :show_all=>:get}, :collection => {:d3_data => :get, :chord=>:get, :chord_by_date => :get}
   map.resources :awards, :only => [:index, :show], :collection => {:disallowed => :get, :listing => :get}, :member => {:investigator => :get, :org => :get}
   map.resources :studies, :only => [:index, :show], :collection => {:disallowed => :get, :listing => :get}, :member => {:investigator => :get, :org => :get}
-  map.resources :profiles, :except=>[:destroy,:new], :member => {:edit_pubs => :get, :investigator_listing => [:get, :post]}, :collection => { :splash => :get, :ccsg => :get, :admin => :get, :list_summaries => :get, :list_investigators => :get, :edit_investigators => :get}
+  map.resources :profiles, :except=>[:destroy,:new], :member => {:edit_pubs => :get, :investigator_listing => [:get, :post]}, :collection => { :splash => :get, :ccsg => :get, :admin => :get, :list_summaries => :get, :list_summaries_by_program => [:get, :post], :list_investigators => :get, :edit_investigators => :get}
   map.resources :audits, :only => [:index, :show], :collection => { :view_logins => :get, :view_all_logins=> :get, :view_approved_profiles => :get, :view_approved_publications => :get, :faculty_data=>:get, :login_data=>:get, :approved_profile_data=>:get, :approved_publication_data=>:get, :view_publication_approvers=>:get, :view_profile_approvers=>:get, :view_logins_without_approvals=>:get}
   
   

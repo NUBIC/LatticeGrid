@@ -77,18 +77,30 @@
 		  <%= submit_tag 'List Publications by Unit' %>
 		<% end %> 
 	</div>
+	<p>&nbsp;</p>
+	<div id="summaries_one_unit">
+		<% form_for :date_range, :url => {:controller => :profiles, :action => :list_summaries_by_program}, :html => { :method => :post, :class => "p" }  do |form| %> 
+		<p>List the investigator summaries for the following unit:</p>
 
-		<p>&nbsp;</p>
-		<div id="list_by_ids">
-			<% form_for :lists, :url => {:controller => :investigators, :action => :list_by_ids}, :html => { :method => :post, :class => "p" }  do |form| %> 
-			<p>Use the below form for ad hoc listing of individuals :  Paste in a list of netids, email addresses, or employee ids you want to list:</p>
-			<p><%= text_area('', :investigator_ids, :cols => 40, :rows => 20) %> Paste investigator netids, email addresses, or employee ids</p>
-			<p><%= select_tag(:format, 
-					options_for_select([["HTML","html"], ["XML", "xml"],["PDF", "pdf"],["Excel", "xls"], ["Word", "doc"]], [params[:format]])  
-					) %> select format </p>
-			  <%= submit_tag 'List enumerated investigators' %>
-			<% end %> 
-		</div>
+	  	<p><%= collection_select( '', :id, @head_node.descendants.sort_by(&:name), :id, :name)  %> select unit </p>
+		<p><%= select_tag(:format, 
+				options_for_select([["HTML","html"], ["XML", "xml"],["PDF", "pdf"],["Excel", "xls"], ["Word", "doc"]], [params[:format]])  
+				) %> select format </p>
+		  <%= submit_tag 'List Summaries by Unit' %>
+		<% end %> 
+	</div>
+
+	<p>&nbsp;</p>
+	<div id="list_by_ids">
+		<% form_for :lists, :url => {:controller => :investigators, :action => :list_by_ids}, :html => { :method => :post, :class => "p" }  do |form| %> 
+		<p>Use the below form for ad hoc listing of individuals :  Paste in a list of netids, email addresses, or employee ids you want to list:</p>
+		<p><%= text_area('', :investigator_ids, :cols => 40, :rows => 20) %> Paste investigator netids, email addresses, or employee ids</p>
+		<p><%= select_tag(:format, 
+				options_for_select([["HTML","html"], ["XML", "xml"],["PDF", "pdf"],["Excel", "xls"], ["Word", "doc"]], [params[:format]])  
+				) %> select format </p>
+		  <%= submit_tag 'List enumerated investigators' %>
+		<% end %> 
+	</div>
 
 	<p>&nbsp;</p>
 	<div id="list_by_investigators">

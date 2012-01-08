@@ -35,6 +35,7 @@ rake RAILS_ENV=production cache:populate taskname=investigator_cytoscape >> buil
 # in staging
 bundle exec rake RAILS_ENV=staging tmp:cache:clear 
 bundle exec rake RAILS_ENV=staging cache:clear
+bundle exec rake RAILS_ENV=staging db:vacuum
 bundle exec rake RAILS_ENV=staging cache:populate taskname=abstracts > buildCache.txt
 bundle exec rake RAILS_ENV=staging cache:populate taskname=investigators >> buildCache.txt
 bundle exec rake RAILS_ENV=staging cache:populate taskname=orgs >> buildCache.txt

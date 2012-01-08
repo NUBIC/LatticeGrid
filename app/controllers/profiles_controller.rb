@@ -1,6 +1,7 @@
 class ProfilesController < ApplicationController
 
   caches_page( :show, :show_pubs, :ccsg ) if LatticeGridHelper.CachePages()
+  caches_action( :list_summaries )  if LatticeGridHelper.CachePages()
   before_filter :check_login
   after_filter  :log_request, :except => [:login, :welcome, :splash, :show_pubs, :edit, :edit_pubs, :ccsg]
   after_filter :check_login
@@ -12,6 +13,7 @@ class ProfilesController < ApplicationController
   include InvestigatorsHelper
   include ApplicationHelper
   include AbstractsHelper
+  include OrgsHelper
   
   include MeshHelper  #for the do_mesh_search method
 
@@ -39,6 +41,39 @@ class ProfilesController < ApplicationController
       @approvals_after = LatticeGridHelper.logs_after
       @investigators = Investigator.by_name
       render
+    else
+      redirect_to :index
+    end
+  end
+
+  def list_summaries_by_program
+    if is_admin?
+      @javascripts_add = ['jquery.tablesorter.min']
+      @approvals_after = LatticeGridHelper.logs_after
+      @program = find_unit_by_id_or_name(params[:id])
+      @investigators = @program.members.by_name
+      respond_to do |format|
+        format.html { render :action => 'list_summaries' }
+        format.xml  { render :xml => @investigators }
+        format.xls  { 
+          @no_email=true
+          send_data(render(:template => 'profiles/list_summaries', :layout => "excel"),
+          :filename => "summaries_listing_for#{@program.name}.xls",
+          :type => 'application/vnd.ms-excel',
+          :disposition => 'attachment') }
+        format.doc  { 
+          @no_email=true
+          send_data(render(:template => 'profiles/list_summaries', :layout => "excel"),
+          :filename => "summaries_listing_for#{@program.name}.doc",
+          :type => 'application/msword',
+          :disposition => 'attachment') }
+        format.pdf {
+          @no_email=true
+          render( :pdf => "summaries_listing_for" + @program.name, 
+              :stylesheets => "pdf", 
+              :template => "profiles/list_summaries",
+              :layout => "pdf") }
+      end
     else
       redirect_to :index
     end

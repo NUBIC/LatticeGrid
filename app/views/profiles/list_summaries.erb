@@ -1,10 +1,10 @@
-<h2>Listing <%= @investigators.length -%> Investigator Summaries</h2>
+<h2>Listing <%= @investigators.length -%> Investigator Summaries <%= "for #{@program.name}" unless @program.blank? -%></h2>
 
 <table id="summaryTable" class="tablesorter { sortList: [[2,0]] }"> 
   <thead> 
   <tr>
 	<th>Name</th>
-	<th>email</th>
+	<% unless @no_email %><th>email</th><% end %>
 	<th>Approvals<%= " after #{@approvals_after} " unless @approvals_after.blank? -%></th>
 	<th>Summary</th>
 	<th>Interests</th>
@@ -15,10 +15,10 @@
 <% @investigators.each do |pi| %>
   <% next if pi.blank? or pi.username.blank? %>
   <tr>
-    <td><%=  pi.sort_name.gsub(/ /,'&nbsp;') unless pi.sort_name.blank? %></td>
-    <td><%= mail_to(pi.email, "email", 
+    <td><%= link_to(pi.sort_name.gsub(/ /,'&nbsp;'), investigator_path(pi.username), :title=>"View public profile for #{pi.full_name}") unless pi.sort_name.blank? %></td>
+    <% unless @no_email %><td><%= mail_to(pi.email, "email", 
 				:subject => "LatticeGrid Profile", 
-				:encode => "javascript", :title=>"Send email to #{pi.full_name}") unless pi.email.blank? %> </td>
+				:encode => "javascript", :title=>"Send email to #{pi.full_name}") unless pi.email.blank? %> </td><% end %>
     <td><% if @approvals_after.blank? %>
 		<%= pi.logs.approved_profiles.map{|p| p.created_at.to_s(:justdate)}.join(", ") %>
 	<% else %>
@@ -27,12 +27,12 @@
 	</td>
     <td><%= pi.faculty_research_summary %></td>
     <td><%= pi.faculty_interests %></td>
-    <td><%= link_to("Edit&nbsp;profile", edit_profile_path(pi.id)) %> <%= link_to("Edit&nbsp;pubs", edit_pubs_profile_path(pi.id))  %></td>
+    <td><%= link_to("Edit&nbsp;profile", edit_profile_path(pi.username)) %> <%= link_to("Edit&nbsp;pubs", edit_pubs_profile_path(pi.username))  %></td>
   </tr>
 <% end %>
 </tbody>
 </table>
-
+<% unless @no_email %>
 <% javascript_tag do %>
 jQuery(document).ready(function() { 
     // call the tablesorter plugin 
@@ -41,5 +41,5 @@ jQuery(document).ready(function() {
         { headers: { 6: {sorter: false} } }
     ); });
 <% end %>
-
+<% end %>
 	
