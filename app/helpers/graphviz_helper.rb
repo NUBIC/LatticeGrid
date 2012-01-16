@@ -116,7 +116,7 @@ module GraphvizHelper
      graph = graph_new(program)
 
      graph = case analysis
-           when "member"      :  build_member_graph( graph, program, id, distance, stringency, include_orphans)
+           when "member"      :  build_member_graph( graph, program, id, distance, stringency, include_orphans, start_date, end_date)
            when "member_mesh" :  build_member_mesh_graph( graph, program, id, distance, stringency, include_orphans)
            when "member_awards" :  build_member_awards_graph( graph, program, id, distance, stringency, include_orphans)
            when "mesh"        :  build_mesh_graph( graph, program, id, distance, stringency, include_orphans)
@@ -128,7 +128,7 @@ module GraphvizHelper
      graph
    end
 
-   def build_member_graph(graph, program, id, distance, stringency, include_orphans)
+   def build_member_graph(graph, program, id, distance, stringency, include_orphans, start_date, end_date)
      @investigator = Investigator.find_by_username(id)
      if @investigator.nil?
        graph = graph_no_data(graph, "Investigator id #{id} was not found")

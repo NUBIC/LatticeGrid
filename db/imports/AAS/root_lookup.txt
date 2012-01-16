@@ -1,0 +1,1 @@
+ABBR	NODE_ID	NODE_NAME	ROOT_NAMEAAS	600000	Association for Academic Surgery	AAS

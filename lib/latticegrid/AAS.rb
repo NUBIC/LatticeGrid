@@ -20,7 +20,15 @@ end
 
 # for cancer centers to 'deselect' publications from inclusion in the CCSG report
 def LatticeGridHelper.show_cancer_related_checkbox?
-  return true
+  return false
+end
+
+def LatticeGridHelper.build_institution_search_string_from_department?
+  true
+end
+
+def LatticeGridHelper.affilation_name 
+  "Institution"
 end
 
 def LatticeGridHelper.page_title
@@ -106,4 +114,19 @@ end
 
 def LatticeGridHelper.do_ldap?
   false
+end
+
+def latticegrid_menu_script
+  
+"<div id='side_nav_menu' class='ddsmoothmenu-v'>
+<ul>
+	<li><a href='#'>Publications by year</a>
+		#{build_year_menu}
+	</li>
+ 	<li>#{link_to( 'High Impact', high_impact_by_month_abstracts_path, :title=>'Recent high-impact publications')} </li>
+	<li>#{link_to( 'MeSH tag cloud', tag_cloud_abstracts_path, :title=>'Display MeSH tag cloud for all publications')} </li>
+	<li>#{link_to( 'Institution Overview', departments_orgs_path, :title => 'Display an overview of all institutions')} </li>
+</ul>
+<br style='clear: left' />
+</div>"
 end

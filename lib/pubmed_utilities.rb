@@ -38,15 +38,19 @@ def BuildPISearch(pi, full_first_name=true)
   result = build_pi_search_string(pi, full_first_name)
   result = result + '[auth]' unless result =~ /\[auth|\(/
   if limit_to_institution(pi) then
-    result = LimitSearchToInstitution(result)
+    result = LimitSearchToInstitution(result, pi)
   end
   result
 end
 
-def LimitSearchToInstitution(term)
+def LimitSearchToInstitution(term, pi)
   # temporarily reverse logic limit by institution
   # term + " NOT " + LatticeGridHelper.institutional_limit_search_string()
-  "(" + term + ") AND (" + LatticeGridHelper.institutional_limit_search_string() + ")"
+  if LatticeGridHelper.build_institution_search_string_from_department?
+    "(" + term + ") AND (" + BuildAffiliationLimitString(pi.home_department_name) +")"
+  else
+    "(" + term + ") AND (" + LatticeGridHelper.institutional_limit_search_string() + ")"
+  end
 end
 
 def BuildSearchOptions (number_years, max_num_records=500)
@@ -56,6 +60,17 @@ def BuildSearchOptions (number_years, max_num_records=500)
      'reldate' => (365*number_years).to_i,
      'retmax' => max_num_records,
   }
+end
+
+def BuildAffiliationLimitString(str)
+  return "" if str.blank?
+  str_arr = str.split(" ")
+  out_arr = []
+  str_arr.each do |txt|
+    next if txt.length < 3
+    out_arr << txt+"[affil]"
+  end
+  out_arr.join(" AND ")
 end
 
 
@@ -77,7 +92,7 @@ def FindPubMedIDs (all_investigators, options, number_years, debug=false, smart_
         if entries.length < 1 && smart_filters && ! LatticeGridHelper.global_pubmed_search_full_first_name?() then
           keywords = BuildPISearch(investigator,false)
         elsif entries.length > (LatticeGridHelper.expected_max_pubs_per_year*number_years) && smart_filters && repeatCnt < 3 && ! limit_pubmed_search_to_institution() then
-          keywords = LimitSearchToInstitution(keywords)
+          keywords = LimitSearchToInstitution(keywords, investigator)
         else
           perform_esearch=false
         end

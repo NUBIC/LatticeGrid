@@ -6,21 +6,28 @@ def CreateSchoolDepartmentFromHash(data_row)
 # APPT_ENTITY_ID - same as dept_id or department_id
 # APPT_ENTITY_NAME - Name of the department
 # APPT_ENTITY_SCHOOL - name of the owning school
-  if data_row['APPT_ENTITY_SCHOOL'] == data_row['APPT_ENTITY_ABBR'] || data_row['APPT_ENTITY_NAME'] =~ /school/i || data_row['APPT_ENTITY_NAME'] =~ /college/i
-    org = School.new
+  node_abbrev = data_row['APPT_ENTITY_ABBR'] || data_row['ENTITY_ABBR'] || data_row['ABBR'] || data_row['ABBR_NAME']
+  node_name = data_row['APPT_ENTITY_NAME'] || data_row['NODE_NAME'] || data_row['ENTITY_NAME'] 
+  node_search_name = data_row['APPT_SEARCH_NAME'] || data_row['SEARCH_NAME'] 
+  node_label = data_row['LABEL_NAME'] || node_name
+  node_id = data_row['APPT_ENTITY_ID'] || data_row['ENTITY_ID'] || data_row['ID'] || data_row['NODE_ID'] || data_row['dept_id'] || data_row['department_id'] || data_row['DEPT_ID'] || data_row['DEPARTMENT_ID']
+  root_name = data_row['APPT_ENTITY_SCHOOL'] || data_row['ROOT'] || data_row['ROOT_NAME']
+
+  if root_name == node_abbrev || node_name =~ /school/i || node_name =~ /college/i
+    org = School.new  # this is the root
   else
     org = Department.new
-    school_org = HandleSchool(data_row['APPT_ENTITY_SCHOOL'] )
+    school_org = HandleSchool(root_name )
     # can't do this as nested set wants the object saved before moving!
     # org.move_to_child_of school_org if ! school_org.blank?
   end
-  org.department_id = data_row['APPT_ENTITY_ID'] || data_row['dept_id'] || data_row['department_id'] || data_row['DEPT_ID'] || data_row['DEPARTMENT_ID']
-  org.name = data_row['APPT_ENTITY_NAME']
-  org.name ||= data_row['LABEL_NAME']
-  org.abbreviation = data_row['APPT_ENTITY_ABBR']
-  org.abbreviation.strip! if ! org.abbreviation.blank?
-  org.search_name.strip! if ! org.search_name.blank?
-  org.name.strip! if ! org.name.blank?
+  org.department_id = node_id
+  org.name = node_label
+  org.abbreviation = node_abbrev
+  org.search_name = node_search_name
+  org.abbreviation.strip! unless org.abbreviation.blank?
+  org.search_name.strip! unless org.search_name.blank?
+  org.name.strip! unless org.name.blank?
   if org.name.blank? then
     puts "org #{org.name} #{org.abbreviation}  does not have a name"
     puts data_row.inspect
@@ -28,7 +35,7 @@ def CreateSchoolDepartmentFromHash(data_row)
     existing_org = OrganizationalUnit.find_by_name(org.name) || OrganizationalUnit.find_by_abbreviation(org.abbreviation)
     if existing_org.blank? then
       org.save!
-      org.move_to_child_of school_org if ! school_org.blank?
+      org.move_to_child_of school_org unless school_org.blank?
       org.save
     else
       existing_org.move_to_child_of school_org if existing_org.parent_id.blank? && ! school_org.nil?
@@ -50,8 +57,10 @@ def HandleSchool(school_name)
     if school_name =~ /school/i
       school.name = school_name
     else 
+      school.name = school_name
       school.abbreviation = school_name
     end
+    puts "creating school #{school_name}"
     school.save!
   end
   return school
@@ -87,6 +96,17 @@ def CleanUpOrganizationData()
       puts "division_id #{synthetic_division_id} already exists!"
     end
   end
+  all = OrganizationalUnit.all()
+  all.each do |unit|
+    unless unit.nil? or unit.department_id.blank? or !unit.parent_id.blank?
+      parent = School.find_by_department_id(unit.department_id)
+      if parent and parent.id != unit.id
+        puts "Moving #{unit.name} under #{parent.name}"
+        unit.parent_id = parent.id
+        unit.move_to_child_of parent if ! parent.nil?
+      end
+    end
+  end
   OrganizationalUnit.rebuild!
   all = OrganizationalUnit.all()
   all.each do |unit|
@@ -120,15 +140,15 @@ def CreateOrganizationFromHash(data_row)
     org = OrganizationalUnit.new
     org.name = data_row['NAME'] || data_row['DV_NAME'] || data_row['name'] || data_row['dv_name'] || data_row['LABEL_NAME'] || data_row['label_name']
     org.search_name = data_row['SEARCH_NAME'] || data_row['search_name'] || org.name
-    org.abbreviation = data_row['ABBREVIATION'] || data_row['DV_ABBR'] || data_row['abbreviation'] || data_row['dv_abbr']
-    org.department_id = data_row['DEPT_ID'] || data_row['dept_id'] || data_row['department_id'] || data_row['DEPARTMENT_ID']
-    org.division_id = data_row['DIVISION_ID'] || data_row['div_id'] || data_row['division_id']
+    org.abbreviation = data_row['ABBREVIATION'] || data_row['DV_ABBR'] || data_row['abbreviation'] || data_row['dv_abbr'] || org.name
+    org.department_id = data_row['DEPT_ID'] || data_row['dept_id'] || data_row['department_id'] || data_row['DEPARTMENT_ID'] || data_row['PARENT_ID']
+    org.division_id = data_row['DIVISION_ID'] || data_row['div_id'] || data_row['division_id'] || data_row['NODE_ID']
     org.organization_phone = data_row['DV_PHONE'] || data_row['PHONE'] || data_row['phone']
     org.organization_url = data_row['DV_URL'] || data_row['URL'] || data_row['dv_url']
     org.organization_classification = data_row['DV_TYPE'] || data_row['TYPE'] || data_row['dv_type'] #Research, Basic, Clinical, ??
-    org.abbreviation.strip! if ! org.abbreviation.blank?
-    org.search_name.strip! if ! org.search_name.blank?
-    org.name.strip! if ! org.name.blank?
+    org.abbreviation.strip! unless org.abbreviation.blank?
+    org.search_name.strip! unless org.search_name.blank?
+    org.name.strip! unless org.name.blank?
     if org.name =~ /rollup/i
       return org
     end
@@ -142,6 +162,11 @@ def CreateOrganizationFromHash(data_row)
       org.type = 'Program' #sub program
     else
       org.type = 'Division'
+    end
+    
+    if org.name.blank?
+      puts "org.name blank. data_row=#{data_row.inspect}, org=#{org.inspect}"
+      return
     end
     
     parent_org = GetParentOrg(org)
@@ -187,7 +212,7 @@ def GetParentOrg(org)
     return FindOrg(org.department_id)
   end
   return FindDepartment(org.department_id,'')
- end
+end
 
  def HasDepartment(datarow)
    return true if ! datarow["department"].blank? 

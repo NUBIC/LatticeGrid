@@ -201,6 +201,14 @@ def LatticeGridHelper.global_pubmed_search_full_first_name?
   true
 end
 
+def LatticeGridHelper.build_institution_search_string_from_department?
+  false
+end
+
+def LatticeGridHelper.affilation_name 
+  "Department"
+end
+
 # build LatticeGridHelper.institutional_limit_search_string to identify all the publications at your institution 
 
 def LatticeGridHelper.institutional_limit_search_string 

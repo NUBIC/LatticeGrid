@@ -95,7 +95,7 @@ task :buildInvestigatorColleaguesMesh => [:getInvestigators, :getMeshTags] do
   block_timing("buildInvestigatorColleaguesMesh") {
     start = Time.now
     num_processed = 0
-    cnt = 0 # start at zero or if you want to break this into shorter tasks, you could break it differently
+    cnt = 350 # start at zero or if you want to break this into shorter tasks, you could break it differently
     update_only=false
     last = @AllInvestigators.length-1
     to_process= last-cnt+1

@@ -15,6 +15,11 @@ task :purgeUnupdatedOrganizations => :getAllOrganizationsNotUpdated do
   }
 end
 
+task :importRoot => :environment do
+  read_file_handler("importRoot" ) {|filename| ReadRootOrgData(filename)}
+end
+
+
 task :importDepartments => :environment do
   read_file_handler("importDepartments" ) {|filename| ReadSchoolDepartmentData(filename)}
 end

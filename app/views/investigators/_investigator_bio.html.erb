@@ -8,7 +8,7 @@
 	<tr><td>
 	<table>
 		<%= handle_tr_format("Academic&nbsp;Title",investigator.title) %>
-		<%= handle_tr_format("Primary&nbsp;Department",link_to_primary_department(investigator)) %>
+		<%= handle_tr_format(LatticeGridHelper.affilation_name, link_to_primary_department(investigator)) %>
 		<%= handle_tr_format("Other&nbsp;Appointments", link_to_units(investigator.joint_appointments+investigator.secondary_appointments))%>
 		<%= handle_tr_format("Affiliations",link_to_units(investigator.memberships))%>
 		<%= handle_tr_format("Campus",investigator.campus) %>
@@ -28,7 +28,16 @@
 		<%= handle_tr_format("Description",investigator.faculty_research_summary||"No research description available") if LatticeGridHelper.show_research_description? %>
 		<% end %>
 		<%= handle_tr_format("Keywords",investigator.faculty_keywords) %>
-		<%= handle_tr_format("Interests",investigator.faculty_interests)%>
+		<%= handle_tr_format("Interests",investigator.faculty_interests) %>
+		<% unless all_abstracts.blank? %>
+		  <%= handle_tr_format("PubMed IDs", "<div id='show_pubmed'>Show  &#10162;</div><div id='pubmed_ids' style='display : none;'>#{all_abstracts.map(&:pubmed).join(', ')}</div>") %>
+		  <script type="text/javascript" language="JavaScript">
+			$j('#show_pubmed').click(function(event){
+			  $j('#pubmed_ids').toggle();
+			  event.preventDefault(); // Prevent link from following its href
+			});
+			</script>
+		<% end %>
 	</table>
 	</td></tr>
 </table>

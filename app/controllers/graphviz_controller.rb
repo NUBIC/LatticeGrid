@@ -119,7 +119,7 @@ class GraphvizController < ApplicationController
     #send_graphviz/:id/:analysis/:distance/:stringency/:program.:format'
     handle_graphviz_setup
     @file_name = "public/#{@graph_path}#{params[:program]}.#{@output_format}"
-
+    logger.warn "fgraphviz file name: #{@file_name}"
     send_file @file_name, :type=> @content_type, :disposition => 'inline'
    end
 
@@ -138,8 +138,8 @@ class GraphvizController < ApplicationController
   def handle_graphviz_setup
     # in 'graphviz_config'
     params[:program] ||= "neato"
-    params[:start_date] ||=5.years.ago.to_date.to_s(:justdate)
-    params[:end_date] ||=Date.tomorrow.to_s(:justdate)
+    params[:start_date] ||=(session[:last_load_date] - 5.years).to_date.to_s(:justdate)
+    params[:end_date] ||=session[:last_load_date].to_s(:justdate)
     set_graphviz_defaults(params)
     # in the helper
     handle_graphviz_request()
@@ -149,8 +149,8 @@ class GraphvizController < ApplicationController
   
   def show_core
     params[:program] ||= "neato"
-    params[:start_date] ||=5.years.ago.to_date.to_s(:justdate)
-    params[:end_date] ||=Date.tomorrow.to_s(:justdate)
+    params[:start_date] ||=(session[:last_load_date] - 5.years).to_date.to_s(:justdate)
+    params[:end_date] ||=session[:last_load_date].to_s(:justdate)
     set_graphviz_defaults(params)
     
     params[:format] =  nil

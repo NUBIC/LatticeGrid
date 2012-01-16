@@ -32,8 +32,9 @@ ruby test/unit/abstract_test.rb
 #example:
 rake getLDAP uid_list=aqw,wakibbe
 
-# you will need to load your list of departments, programs, etc into these files. 
+# you will need to load your list of institutions, departments, programs, etc into these files. The first data field in the first file loaded will be treated as the 'root'
 #load organizations
+rake importRoot file=db/imports/AAS/institution_lookup.txt
 rake importDepartments file=db/imports/UMich/department_lookup.txt
 rake importOrganizations file=db/imports/UMich/division_lookup.txt
 

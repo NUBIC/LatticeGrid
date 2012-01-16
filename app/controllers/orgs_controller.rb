@@ -127,7 +127,12 @@ class OrgsController < ApplicationController
 
   def departments
     @units = Department.find(:all, :order => "sort_order, lower(abbreviation)", :include => [:members,:organization_abstracts, :primary_faculty, :joint_faculty, :secondary_faculty])
-    @heading = "Current Department Listing"
+    @heading = "Current #{LatticeGridHelper.affilation_name} Listing"
+    if LatticeGridHelper.affilation_name != "Department"
+      @show_associated_faculty = false
+      @show_members = false
+      @show_unit_type = false
+    end
     respond_to do |format|
       format.html { render :action => :index }
       format.xml  { render :xml => @units }

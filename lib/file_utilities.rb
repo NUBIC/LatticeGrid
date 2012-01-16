@@ -54,6 +54,10 @@ def ReadOrganizationData(file_name)
   read_data_handler(OrganizationalUnit,file_name) {|data| row_iterator(data) {|data| CreateOrganizationFromHash(data)} }
 end
 
+def ReadRootOrgData(file_name)
+  read_data_handler(OrganizationalUnit,file_name) {|data| row_iterator(data) {|data| CreateSchoolDepartmentFromHash(data)} }
+end
+
 def ReadSchoolDepartmentData(file_name)
   read_data_handler(OrganizationalUnit,file_name) {|data| row_iterator(data) {|data| CreateSchoolDepartmentFromHash(data)} }
 end

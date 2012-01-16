@@ -27,7 +27,7 @@
 
 <% if Rails.env == 'development' %>
     <div id="debug" style="margin: 5px 5px 5px 5px;">
-        <a href="#" onclick="$j('#debug').toggle(); return false" style="text-decoration: none; color: #999;">Show Debug Info &#10162;</a>
+        <a href="#" onclick="$j('#debug_info').toggle(); return false" style="text-decoration: none; color: #999;">Show Debug Info &#10162;</a>
         <div id="debug_info" style="display : none;">
             <%= debug session %>
             <%= debug params %>

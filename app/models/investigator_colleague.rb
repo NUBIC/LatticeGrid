@@ -10,5 +10,6 @@ class InvestigatorColleague < ActiveRecord::Base
   end
   named_scope :mesh_ic, lambda { |*args| {:conditions => ['mesh_tags_ic >= :mesh_ic', {:mesh_ic => args.first} ] }}
   named_scope :shared_pubs, lambda { |*args| {:conditions => ['publication_cnt >= :shared_pubs', {:shared_pubs => args.first} ] }}
+  named_scope :shared_pubs_by_range, lambda { |*args| {:conditions => ['publication_cnt >= :shared_pubs', {:shared_pubs => args.first} ] }}
   
 end
