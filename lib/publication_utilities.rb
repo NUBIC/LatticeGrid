@@ -100,6 +100,10 @@ def GetInvestigatorIDfromAuthorRecord(author_rec, author_string="")
         {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase+'%'}] )
     return investigators[0].id if investigators.length == 1
     if investigators.length == 0 and author_rec[1] != author_rec[1].first then
+      investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name and (middle_name is NULL or middle_name = '')", 
+            {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase+'%'}] )
+    end
+    if investigators.length == 0 and author_rec[1] != author_rec[1].first then
       investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name ", 
             {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase+'%'}] )
     end
