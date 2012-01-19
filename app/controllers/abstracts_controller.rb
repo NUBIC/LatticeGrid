@@ -261,7 +261,9 @@ class AbstractsController < ApplicationController
   
   def add_pubmed_ids
     #should be an ajax call
-    @abstracts=Abstract.find(:all, :conditions => ["pubmed in (:pubmed_ids)", {:pubmed_ids=>params[:pubmed_ids].split}])
+    @pubmed_ids = params[:pubmed_ids]
+    @pubmed_ids = @pubmed_ids.gsub(/\, ?/,' ').split unless @pubmed_ids.blank?
+    @abstracts=Abstract.find(:all, :conditions => ["pubmed in (:pubmed_ids)", {:pubmed_ids=>@pubmed_ids}])
   end
   
   #called as xhr
@@ -285,7 +287,7 @@ class AbstractsController < ApplicationController
         if !(new_ids == [] ) then
           new_ids.each do |investigator_id|
             investigator = Investigator.find_by_id(investigator_id)
-            InsertInvestigatorPublication(abstract.id, investigator.id, IsFirstAuthor(abstract,investigator), IsLastAuthor(abstract,investigator), true) unless investigator.blank? or investigator.id.blank?
+            InsertInvestigatorPublication(abstract.id, investigator.id, (abstract.publication_date||abstract.electronic_publication_date||abstract.deposited_date), IsFirstAuthor(abstract,investigator), IsLastAuthor(abstract,investigator), true) unless investigator.blank? or investigator.id.blank?
           end
           abstract.reload()
         end

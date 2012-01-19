@@ -138,7 +138,7 @@ def graph_new(program, gopts={}, nopts={}, eopts={})
 end
 
 
-def node_label (node_object)
+def node_investigator_label(node_object)
   "#{node_object.name}: " +
   "Publications: #{node_object.total_publications}; " + 
   "First author pubs: #{node_object.num_first_pubs}; " +
@@ -147,7 +147,7 @@ def node_label (node_object)
   "inter-unit collabs: #{node_object.num_extraunit_collaborators}"
 end
 
-def node_award_label (node_object)
+def node_award_label(node_object)
   "#{node_object.title}: " +
   "Amount: #{node_object.total_amount}; " + 
   "Sponsor: #{node_object.sponsor_name}; " +
@@ -155,7 +155,7 @@ def node_award_label (node_object)
   (node_object.investigator_proposals.blank? ? " " : "Collaborators: #{node_object.investigator_proposals.length}; " )
 end
 
-def update_node (node_object, opts)
+def update_node(node_object, opts)
   keys = %w{ URL target tooltip label fontcolor fillcolor color fontsize shape }
   opts.keys.each do |key|
     if !opts[key].blank?
@@ -165,20 +165,25 @@ def update_node (node_object, opts)
   node_object
 end
 
+def set_node_defaults_investigator(investigator, aopts)
+  aopts[:URL]       = aopts[:URL]       || show_investigator_url(investigator.username, 1)
+  aopts[:target]    = aopts[:target]    || "_top"
+  aopts[:tooltip]   = aopts[:tooltip]   || node_investigator_label(investigator)
+  aopts[:label]     = aopts[:label]     || investigator.name
+  aopts[:fontcolor] = aopts[:fontcolor] || "#3d0d4c"
+  aopts[:fillcolor] = aopts[:fillcolor] || LatticeGridHelper.root_fill_color
+  aopts[:color]     = aopts[:color]     || "#904040"
+  aopts[:fontsize]  = aopts[:fontsize]  || 9
+  aopts
+end
+
 def graph_addroot(graph, root, aopts={} )
-  add_root = graph.get_node( root.id.to_s )
-  if add_root.nil? 
-    add_root = graph.add_node( root.id.to_s)
-    aopts[:URL]       = aopts[:URL]       || show_investigator_url(root.username, 1)
-    aopts[:target]    = aopts[:target]    || "_top"
-    aopts[:tooltip]   = aopts[:tooltip]   || node_label(root)
-    aopts[:label]     = aopts[:label]     || root.name
-    aopts[:fontcolor] = aopts[:fontcolor] || "#3d0d4c"
-    aopts[:fillcolor] = aopts[:fillcolor] || LatticeGridHelper.root_fill_color
-    aopts[:color]     = aopts[:color]     || "#904040"
-    aopts[:fontsize]  = aopts[:fontsize]  || 9
-  end
-  update_node(add_root, aopts) 
+  root_node = graph.get_node( root.id.to_s )
+  if root_node.nil? 
+    root_node = graph.add_node( root.id.to_s)
+    aopts = set_node_defaults_investigator(root, aopts)
+   end
+  update_node(root_node, aopts) 
 end
 
 def graph_newroot(graph, root, opts={} )

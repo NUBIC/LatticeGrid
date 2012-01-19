@@ -49,7 +49,7 @@ def CreateInvestigatorAbstractsFromHash(data_row, pubmed_ids_to_process)
     ['abstract_id = :abstract_id and investigator_id = :investigator_id ', 
       {:investigator_id => investigator.id, :abstract_id => abstract.id }])
   if ia.nil?
-    ia = InsertInvestigatorPublication(abstract.id, investigator.id, IsFirstAuthor(abstract,investigator), IsLastAuthor(abstract,investigator), true)
+    ia = InsertInvestigatorPublication(abstract.id, investigator.id, (abstract.publication_date||abstract.electronic_publication_date||abstract.deposited_date), IsFirstAuthor(abstract,investigator), IsLastAuthor(abstract,investigator), true)
   else
     ia.is_valid=true
     ia.save!

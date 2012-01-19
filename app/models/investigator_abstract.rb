@@ -17,5 +17,7 @@ class InvestigatorAbstract < ActiveRecord::Base
   named_scope :only_invalid,  :conditions => 'investigator_abstracts.is_valid = false'
   named_scope :remove_deleted,  :conditions => 'investigator_abstracts.end_date is null'
   named_scope :only_deleted,  :conditions => 'investigator_abstracts.end_date is not null'
-    
+  named_scope :by_range, lambda { |*args| {:conditions => ['investigator_abstracts.publication_date between :start_date and :end_date', 
+                {:start_date => args.first, :end_date => args.last} ] }}
+
 end

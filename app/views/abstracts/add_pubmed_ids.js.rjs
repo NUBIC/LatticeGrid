@@ -1,22 +1,25 @@
+pubmed_ids ||= @pubmed_ids
 update_id ||= @update_id
 update_id ||= 'added_pubmed_ids'
 tags ||= @tags #check for tags or @tags
 abstracts ||= @abstracts #check for abstracts or @abstracts
 include_breaks ||= @include_breaks
 include_breaks ||= false
-params[:pubmed_ids].split.each do |pubmed_id|
-  page << "if ($('pmid:#{pubmed_id}') == undefined ) {"
-    page.insert_html( :bottom, update_id, "<li id='pmid:#{pubmed_id}'>Finding for id: #{pubmed_id}</li>")
-  page << "}"
-end
-abstracts.each do |abstract|
-  page.replace_html('pmid:'+abstract.pubmed, "<span id='found'>Found pubmed id #{abstract.pubmed} authors: #{abstract.authors}</span>") 
-end
-params[:pubmed_ids].split.each do |pubmed_id|
-  page << "if ($('pmid:#{pubmed_id}').childElements().length && $('pmid:#{pubmed_id}').childElements()[0].id == 'found') {"
-    page.insert_html( :bottom, 'pmid:'+pubmed_id, "<p>Found item #{pubmed_id}</p>")
-  page << "} else {"
-  page.replace_html('pmid:'+pubmed_id, "Initiating search for item #{pubmed_id}") 
-  page << "}"
-  page.insert_html(:bottom,'pmid:'+pubmed_id, :partial=>'initiate_pubmed_search', :locals => { :id => pubmed_id.to_s, :dom_id => 'pmid:'+pubmed_id } )
+unless pubmed_ids.blank?
+  pubmed_ids.each do |pubmed_id|
+    page << "if ($('pmid:#{pubmed_id}') == undefined ) {"
+      page.insert_html( :bottom, update_id, "<li id='pmid:#{pubmed_id}'>Finding for id: #{pubmed_id}</li>")
+    page << "}"
+  end
+  abstracts.each do |abstract|
+    page.replace_html('pmid:'+abstract.pubmed, "<span id='found'>Found pubmed id #{abstract.pubmed} authors: #{abstract.authors}</span>") 
+  end
+  pubmed_ids.each do |pubmed_id|
+    page << "if ($('pmid:#{pubmed_id}').childElements().length && $('pmid:#{pubmed_id}').childElements()[0].id == 'found') {"
+      page.insert_html( :bottom, 'pmid:'+pubmed_id, "<p>Found item #{pubmed_id}</p>")
+    page << "} else {"
+    page.replace_html('pmid:'+pubmed_id, "Initiating search for item #{pubmed_id}") 
+    page << "}"
+    page.insert_html(:bottom,'pmid:'+pubmed_id, :partial=>'initiate_pubmed_search', :locals => { :id => pubmed_id.to_s, :dom_id => 'pmid:'+pubmed_id } )
+  end
 end

@@ -259,6 +259,8 @@ script/generate migration modify_investigator_proposals
 script/generate migration modify_studies
 script/generate migration add_high_impact_journals
 
+script/generate migration add_investigator_abstract_date
+
 
 # authenticated access
 

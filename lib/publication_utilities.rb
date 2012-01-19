@@ -80,22 +80,28 @@ def GetInvestigatorIDfromAuthorRecord(author_rec, author_string="")
   if author_rec.length > 2 then
     # search for last_name, first_name and middle_name
     investigators = Investigator.find(:all, 
-      :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name || '%' and lower(middle_name) like :middle_name || '%' ", 
-          {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase, :middle_name => author_rec[2].downcase}] )
+      :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name  and lower(middle_name) like :middle_name  ", 
+          {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase+'%', :middle_name => author_rec[2].downcase+'%'}] )
     if investigators.length == 0 and author_rec[1] != author_rec[1].first then
       # now look for last_name first_initial and middle_initial
       investigators = Investigator.find(:all, 
-        :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name || '%' and lower(middle_name) like :middle_name || '%' ", 
-            {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase, :middle_name => author_rec[2].first.downcase}] )
+        :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name and lower(middle_name) like :middle_name ", 
+            {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase+'%', :middle_name => author_rec[2].first.downcase+'%'}] )
+    end
+    if investigators.length == 0 then
+      # now look for last_name first_initial in entries where the middle name is blank!
+      investigators = Investigator.find(:all, 
+        :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name and (middle_name is NULL or middle_name = '') ", 
+            {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase+'%'}] )
     end
   else # last_name and first_name only
     # search for last_name and first_name
-    investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name || '%' ", 
-        {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase}] )
+    investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name  ", 
+        {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase+'%'}] )
     return investigators[0].id if investigators.length == 1
     if investigators.length == 0 and author_rec[1] != author_rec[1].first then
-      investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name || '%' ", 
-            {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase}] )
+      investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name ", 
+            {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase+'%'}] )
     end
   end
   puts "Multiple investigators matching #{author_rec.inspect} found. Author was #{author_string}" if investigators.length > 1 and LatticeGridHelper.debug?

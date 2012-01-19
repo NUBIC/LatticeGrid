@@ -170,7 +170,7 @@ def GetPubsForInvestigators(investigators)
   return investigators
 end
 
-def InsertInvestigatorPublication(abstract_id, investigator_id, is_first_author=false, is_last_author=false, is_valid=false)
+def InsertInvestigatorPublication(abstract_id, investigator_id, publication_date, is_first_author=false, is_last_author=false, is_valid=false)
   puts "InsertInvestigatorPublication: this shouldn't happen - abstract_id was nil" if abstract_id.nil?
   return if abstract_id.nil?
   puts "InsertInvestigatorPublication: this shouldn't happen - investigator_id was nil" if investigator_id.nil?
@@ -185,7 +185,8 @@ def InsertInvestigatorPublication(abstract_id, investigator_id, is_first_author=
          :is_first_author => is_first_author,
          :is_last_author  => is_last_author,
          :is_valid        => is_valid,
-         :reviewed_ip     => "inserted from pubmed"
+         :reviewed_ip     => "inserted from pubmed",
+         :publication_date => publication_date
        )
       rescue ActiveRecord::RecordInvalid
        if thePIPub.nil? then # something bad happened
@@ -260,28 +261,6 @@ def UpdateInvestigatorPublication(abstract_id, investigator_id, is_first_author,
      end
    end
    thePIPub.id
-end
-
-
-def AddInvestigatorsToCitation(abstract_id, investigator_ids, first_author_id, last_author_id)
-  puts "AddInvestigatorToCitation: this shouldn't happen - abstract_id was nil" if abstract_id.nil?
-  return if abstract_id.nil?
-  puts "AddInvestigatorToCitation: this shouldn't happen - investigator_ids was nil" if investigator_ids.nil?
-  return if investigator_ids.blank?
-  return if investigator_ids.length < 1
-  investigator_ids.each do |investigator_id|
-    if InvestigatorAbstract.find( :first,
-      :conditions => [" abstract_id = :abstract_id AND investigator_id = :investigator_id",
-          {:investigator_id => investigator_id, :abstract_id => abstract_id}])
-      # puts "found investigator/abstract pair"
-      if (last_author_id > 0 || first_author_id > 0) then 
-        UpdateInvestigatorRecords(abstract_id, investigator_id, !!(first_author_id == investigator_id),  !!(last_author_id == investigator_id), true)
-      end
-    else
-      puts "adding new investigator/abstract pair (investigator: #{Investigator.find(investigator_id).last_name}; abstract pubmed_id: #{Abstract.find(abstract_id).pubmed})" if LatticeGridHelper.verbose?
-      InsertInvestigatorPublication(abstract_id, investigator_id, !!(first_author_id == investigator_id),  !!(last_author_id == investigator_id), true)
-    end
-  end
 end
 
 def SubtractKnownPubmedIDs(pubmed_ids)

@@ -27,6 +27,12 @@ scp stanford_latticegrid_20120106.sql wakibbe@rails-staging2.nubic.northwestern.
 #import
 psql -h pstage2  -f stanford_latticegrid_20120106.sql stanford_latticegrid latticegrid  
 
+pg_dump aas_latticegrid -U latticegrid > aas_latticegrid_20120116.sql
+#transfer to rails-staging2
+scp aas_latticegrid_20120116.sql wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe/
+#import
+psql -h pstage2  -f aas_latticegrid_20120116.sql aas_latticegrid latticegrid  
+
 pg_dump -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev_20110512.dmp
 
 pg_dump -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev_20110825.dmp

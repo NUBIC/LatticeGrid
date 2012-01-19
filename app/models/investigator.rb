@@ -114,6 +114,14 @@ has_many :investigator_appointments,
   named_scope :complement_of_ids, lambda { |*ids|
     {:conditions => ['investigators.id NOT IN (:ids)', {:ids => ids.first}] }
   }
+  named_scope :with_abstract_ids, lambda { |*ids|
+    { :joins => [:investigator_abstracts],
+      :conditions => ['investigator_abstracts.abstract_id IN (:ids)', {:ids => ids.first}] }
+  }
+  named_scope :with_abstract_ids_and_not_investigator, lambda { |*ids|
+    { :joins => [:investigator_abstracts],
+      :conditions => ['investigator_abstracts.abstract_id IN (:ids) AND NOT investigator_abstracts.investigator_id = :investigator_id', {:ids => ids.first, :investigator_id => ids[1] }] }
+  }
     
   default_scope :conditions => '(investigators.deleted_at is null and investigators.end_date is null)'
 #  default_scope :include => :abstracts
@@ -178,9 +186,14 @@ has_many :investigator_appointments,
   end
 
   def self.has_basis_without_connections(basis)
-      all(:conditions=>["investigators.appointment_basis = :basis and (not exists(select 'x' from investigator_abstracts where investigator_abstracts.investigator_id = investigators.id) and not exists(select 'x' from investigator_studies where investigator_studies.investigator_id = investigators.id) and not exists(select 'x' from investigator_proposals where investigator_proposals.investigator_id = investigators.id) )", {:basis=>basis}] )
-   end
+    all(:conditions=>["investigators.appointment_basis = :basis and (not exists(select 'x' from investigator_abstracts where investigator_abstracts.investigator_id = investigators.id) and not exists(select 'x' from investigator_studies where investigator_studies.investigator_id = investigators.id) and not exists(select 'x' from investigator_proposals where investigator_proposals.investigator_id = investigators.id) )", {:basis=>basis}] )
+  end
   
+  def colleagues_by_date_range(start_date, end_date)
+    abstract_ids = self.investigator_abstracts.by_range(start_date, end_date).map(&:abstract_id)
+    Investigator.with_abstract_ids_and_not_investigator(abstract_ids, self.id)
+  end
+
   def colleague_coauthors
     co_authors.collect{|ca| ca.colleague}
   end

@@ -12,6 +12,16 @@ rake cleanup:email
 rake cleanup:cleanInvestigatorsUsername
 rake importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_Dec2011.txt 
 
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalImpact file=db/imports/jcr_recs_2010.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake updateJournalISSNsFromPubmed
+rake cleanJournalISSNentries
+rake findAbstractswithoutJCRentries
+rake findAbstractswithJCRentries
+rake updateJournalISSNsFromPubmed
+rake setPreferredHighImpact
+
 rake insertAllAbstracts 
 rake nightlyBuild # repeat a few times a week
 rake cleanup:find_duplicate_tags

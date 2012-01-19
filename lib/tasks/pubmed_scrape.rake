@@ -21,7 +21,7 @@ def do_insert_abstracts
         investigator.publications.each do |publication|
           abstract = InsertPublication(publication)
           if abstract.id > 0 then
-            thePIPub = InsertInvestigatorPublication( abstract.id, investigator.id, IsFirstAuthor(abstract,investigator), IsLastAuthor(abstract,investigator), (investigator.mark_pubs_as_valid || limit_pubmed_search_to_institution()) )
+            thePIPub = InsertInvestigatorPublication( abstract.id, investigator.id, (abstract.publication_date||abstract.electronic_publication_date||abstract.deposited_date), IsFirstAuthor(abstract,investigator), IsLastAuthor(abstract,investigator), (investigator.mark_pubs_as_valid || limit_pubmed_search_to_institution()) )
             # check to see if we should set as valid if it has not been reviewed!
             if (investigator.mark_pubs_as_valid || limit_pubmed_search_to_institution()) and ! thePIPub.is_valid 
               if (thePIPub.last_reviewed_at.blank? || thePIPub.last_reviewed_id == 0) and (thePIPub.last_reviewed_ip.blank? or thePIPub.last_reviewed_ip =~ /abstract|migration/i ) then
@@ -111,7 +111,7 @@ task :associateAbstractsWithInvestigators => [:getAbstracts] do
         puts "found new investigators for abstract #{abstract.id}. new investigator ids: #{new_ids.join(',')}; old investigator ids: #{old_investigator_ids.join(',')}" if LatticeGridHelper.debug?
         new_ids.each do |investigator_id|
           investigator=Investigator.find(investigator_id)
-          InsertInvestigatorPublication(abstract.id, investigator_id, IsFirstAuthor(abstract,investigator), IsLastAuthor(abstract,investigator), true)
+          InsertInvestigatorPublication(abstract.id, investigator_id, (abstract.publication_date||abstract.electronic_publication_date||abstract.deposited_date), IsFirstAuthor(abstract,investigator), IsLastAuthor(abstract,investigator), true)
         end
         # this fails on the server but not on my laptop...
         # abstract.investigators = Abstract.find(abstract.id).investigators
