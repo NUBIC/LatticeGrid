@@ -1,0 +1,2 @@
+class TertiaryMember < Member
+end

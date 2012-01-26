@@ -1,0 +1,2 @@
+class SecondaryAssociateMember < AssociateMember
+end

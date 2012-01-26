@@ -1,0 +1,2 @@
+class PrimaryMember < Member
+end

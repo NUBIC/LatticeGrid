@@ -18,7 +18,8 @@ class CopublicationsController < ApplicationController
       @do_pagination = "0"
       @show_paginator=false
       @investigator_colleague = InvestigatorColleague.find(params[:id], :joins=>[:investigator,:colleague])
-      @abstracts = @investigator_colleague.publications
+      #@abstracts = @investigator_colleague.publications
+      @abstracts = @investigator_colleague.investigator.shared_abstracts_with_investigator(@investigator_colleague.colleague.id)
       @total_entries=@abstracts.length
     end
   end

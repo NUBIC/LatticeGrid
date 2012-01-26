@@ -1,0 +1,2 @@
+class TertiaryAssociateMember < AssociateMember
+end

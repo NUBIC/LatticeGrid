@@ -120,9 +120,10 @@ has_many :investigator_appointments,
   }
   named_scope :with_abstract_ids_and_not_investigator, lambda { |*ids|
     { :joins => [:investigator_abstracts],
-      :conditions => ['investigator_abstracts.abstract_id IN (:ids) AND NOT investigator_abstracts.investigator_id = :investigator_id', {:ids => ids.first, :investigator_id => ids[1] }] }
+      :conditions => ['investigator_abstracts.abstract_id IN (:ids) AND NOT investigator_abstracts.investigator_id = :investigator_id', {:ids => ids.first, :investigator_id => ids[1] }] 
+    }
   }
-    
+
   default_scope :conditions => '(investigators.deleted_at is null and investigators.end_date is null)'
 #  default_scope :include => :abstracts
   #default_scope :order => 'lower(investigators.last_name),lower(investigators.first_name)'
@@ -130,6 +131,12 @@ has_many :investigator_appointments,
   validates_presence_of :username
   validates_uniqueness_of :username
 
+  def shared_abstracts_with_investigator(id)
+    Abstract.all(:joins => ", investigator_abstracts, investigator_abstracts ia2",
+        :conditions => ['investigator_abstracts.abstract_id  = abstracts.id and ia2.abstract_id = abstracts.id and investigator_abstracts.is_valid = true and ia2.is_valid = true and ia2.investigator_id = :id and  investigator_abstracts.investigator_id = :pi_id', {:id => id, :pi_id => self.id }]
+      )
+  end
+  
   def self.include_deleted( id=nil )
     with_exclusive_scope do
       if id.blank?
@@ -186,14 +193,9 @@ has_many :investigator_appointments,
   end
 
   def self.has_basis_without_connections(basis)
-    all(:conditions=>["investigators.appointment_basis = :basis and (not exists(select 'x' from investigator_abstracts where investigator_abstracts.investigator_id = investigators.id) and not exists(select 'x' from investigator_studies where investigator_studies.investigator_id = investigators.id) and not exists(select 'x' from investigator_proposals where investigator_proposals.investigator_id = investigators.id) )", {:basis=>basis}] )
+    all(:conditions=>["investigators.appointment_basis = :basis and (not exists(select 'x' from investigator_abstracts where investigator_abstracts.investigator_id = investigators.id and investigator_abstracts.is_valid = true) and not exists(select 'x' from investigator_studies where investigator_studies.investigator_id = investigators.id) and not exists(select 'x' from investigator_proposals where investigator_proposals.investigator_id = investigators.id) )", {:basis=>basis}] )
   end
   
-  def colleagues_by_date_range(start_date, end_date)
-    abstract_ids = self.investigator_abstracts.by_range(start_date, end_date).map(&:abstract_id)
-    Investigator.with_abstract_ids_and_not_investigator(abstract_ids, self.id)
-  end
-
   def colleague_coauthors
     co_authors.collect{|ca| ca.colleague}
   end

@@ -51,7 +51,7 @@ class Abstract < ActiveRecord::Base
     return false if self.full_authors.blank? 
     return true if self.full_authors.split(/\n|\r/).first =~ /[^,]{2,}, +[^\. ]{2,}/
     return false
-  end
+  end  
 
   def author_array
     if self.has_full

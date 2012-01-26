@@ -1,0 +1,2 @@
+class SecondaryMember < Member
+end

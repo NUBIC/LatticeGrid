@@ -134,13 +134,14 @@ module GraphvizHelper
        graph = graph_no_data(graph, "Investigator id #{id} was not found")
      else
        graph_newroot(graph, @investigator)
-       co_authors = @investigator.co_authors.shared_pubs(stringency)
-       graph = graph_add_nodes(program, graph, co_authors)
+       investigators = InvestigatorAbstract.investigator_shared_publication_count_by_date_range(@investigator.id, start_date, end_date)
+       graph = graph_add_investigator_nodes(program, graph, @investigator, investigators, stringency)
        if distance != "1"
          opts = {}
          opts[:fillcolor] = LatticeGridHelper.second_degree_other_fill_color # super pale green
-         co_authors.each do |co_author|
-            graph = graph_add_nodes(program, graph, co_author.colleague.co_authors.shared_pubs(stringency), false, opts)
+         investigators.each do |inv|
+           coauths = InvestigatorAbstract.investigator_shared_publication_count_by_date_range(inv.id, start_date, end_date)
+           graph = graph_add_investigator_nodes(program, graph, inv, coauths, stringency, false, opts)
          end
        end
      end
@@ -177,7 +178,7 @@ module GraphvizHelper
        opts = {}
        opts[:fillcolor] = LatticeGridHelper.second_degree_other_fill_color # super pale green
        awards.each do |award|
-          graph = graph_add_investigator_nodes(program, graph, award, award.investigators, false, opts)
+          graph = graph_add_award_investigator_nodes(program, graph, award, award.investigators, false, opts)
        end
      end
      graph

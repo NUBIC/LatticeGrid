@@ -20,6 +20,8 @@
   end
 %>
 
+# bcdatabase looks in /etc/nubic/db for a file called local_postgresql.yml in development, pstage.yml for staging, pprod.yml for production
+
 <%= bcdb.development :local_postgresql, the_database %>
 <%= bcdb.test :local_postgresql, :latticegrid_test %>
 <%= bcdb.staging :pstage, the_database %>
