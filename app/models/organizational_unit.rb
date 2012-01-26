@@ -184,7 +184,7 @@ class OrganizationalUnit < ActiveRecord::Base
     def abstract_data( page=1 )
        self.all_abstracts.paginate(:page => page,
         :per_page => 20, 
-        :order => "year DESC, publication_date DESC, electronic_publication_date DESC, authors ASC")
+        :order => "year DESC, abstracts.publication_date DESC, electronic_publication_date DESC, authors ASC")
     end
 
     def display_year_data( year=2008 )
@@ -199,7 +199,7 @@ class OrganizationalUnit < ActiveRecord::Base
       self.abstracts.all(
         :order => "year DESC, investigators.last_name ASC,authors ASC",
         :include => [:investigators],
-    		:conditions => [' publication_date between :start_date and :end_date', 
+    		:conditions => [' abstracts.publication_date between :start_date and :end_date', 
      		      {:start_date => start_date, :end_date => end_date }])
     end
 
@@ -222,15 +222,15 @@ class OrganizationalUnit < ActiveRecord::Base
       abstracts=Abstract.find(:all)
     elsif start_date.blank?
       abstracts=Abstract.find(:all,
-     		:conditions => [' publication_date <= :end_date or electronic_publication_date <= :end_date ', 
+     		:conditions => [' abstracts.publication_date <= :end_date or electronic_publication_date <= :end_date ', 
      		      {:end_date => end_date }])
     elsif end_date.blank?
       abstracts=Abstract.find(:all,
-     		:conditions => [' publication_date >= :start_date or electronic_publication_date >= :start_date ', 
+     		:conditions => [' abstracts.publication_date >= :start_date or electronic_publication_date >= :start_date ', 
      		      {:start_date => start_date}])
     else
       abstracts=Abstract.find(:all,
-     		:conditions => [' publication_date between :start_date and :end_date or electronic_publication_date between :start_date and :end_date ', 
+     		:conditions => [' abstracts.publication_date between :start_date and :end_date or electronic_publication_date between :start_date and :end_date ', 
      		      {:start_date => start_date, :end_date => end_date }])
     end
     primary_orgs = find(:all, :include => [:primary_faculty], :conditions => [' investigators.id > 0'])

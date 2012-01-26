@@ -26,16 +26,16 @@ class Abstract < ActiveRecord::Base
   has_many :organization_abstracts,
         :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
   named_scope :abstracts_last_five_years, 
-        :conditions => ['publication_date >= :start_date', 
+        :conditions => ['abstracts.publication_date >= :start_date', 
           {:start_date => 5.years.ago }]
   named_scope :abstracts_by_date, lambda { |*dates|
       {:conditions => 
-          [' publication_date between :start_date and :end_date ', 
+          [' abstracts.publication_date between :start_date and :end_date ', 
             {:start_date => dates.first, :end_date => dates.last } ] }
   }
   named_scope :ccsg_abstracts_by_date, lambda { |*dates|
       {:conditions => 
-          ['is_cancer = true and (publication_date between :start_date and :end_date) ', 
+          ['is_cancer = true and (abstracts.publication_date between :start_date and :end_date) ', 
             {:start_date => dates.first, :end_date => dates.last } ] }
     }
   named_scope :exclude_letters, 
@@ -316,7 +316,7 @@ class Abstract < ActiveRecord::Base
   def self.investigator_publications( investigators, number_years=5)
     cutoff_date=number_years.years.ago
     all(:joins => [:investigators, :investigator_abstracts],
-  		  :conditions => ['publication_date >= :start_date and investigator_abstracts.investigator_id IN (:investigators) and investigator_abstracts.is_valid = true', 
+  		  :conditions => ['abstracts.publication_date >= :start_date and investigator_abstracts.investigator_id IN (:investigators) and investigator_abstracts.is_valid = true', 
    		      {:start_date => cutoff_date, :investigators => investigators }])
   end
   

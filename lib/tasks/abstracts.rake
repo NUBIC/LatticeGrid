@@ -129,7 +129,7 @@ end
 
 task :updateAbstractsMissingPublicationDate => :environment do
   block_timing("checkAbstractsWithMissingDates") {
-    @abstractsWithMissingDates = Abstract.all(:conditions=>"publication_date is null")
+    @abstractsWithMissingDates = Abstract.all(:conditions=>"abstracts.publication_date is null")
     puts "processing #{@abstractsWithMissingDates.length} abstracts"
     @abstractsWithMissingDates.each do |abstract|
       unless abstract.pubmed.blank?
@@ -167,7 +167,7 @@ end
   
 task :countAbstractsMismatchingEPubDateAndCreationDate => :environment do
   block_timing("countAbstractsMismatchingEPubDateAndCreationDate") {
-    @abstractsWithMismatchedDates = Abstract.all(:conditions=>"pubmed_creation_date is not null and pubmed_creation_date != electronic_publication_date and publication_date is null ")
+    @abstractsWithMismatchedDates = Abstract.all(:conditions=>"pubmed_creation_date is not null and pubmed_creation_date != electronic_publication_date and abstracts.publication_date is null ")
     puts "#{@abstractsWithMismatchedDates.length} abstracts have a different pubmed_creation_date and electronic_publication_date"
     @abstractsWithMismatchedDates.each do |abstract|
       puts "crdt: #{abstract.pubmed_creation_date}; pmid: #{abstract.pubmed}; year: #{abstract.year}; edat - #{abstract.electronic_publication_date}"

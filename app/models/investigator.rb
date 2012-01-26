@@ -471,7 +471,7 @@ has_many :investigator_appointments,
    is_first_author = true
    self.investigator_abstracts.find(:all,
       :joins => [:abstract],
-      :conditions => ["(publication_date >= :pub_date or electronic_publication_date >= :pub_date) and investigator_abstracts.is_first_author = :is_first_author and investigator_abstracts.is_valid = true",
+      :conditions => ["investigator_abstracts.publication_date >= :pub_date and investigator_abstracts.is_first_author = :is_first_author and investigator_abstracts.is_valid = true",
            {:pub_date => Investigator.generate_date(), :is_first_author => is_first_author}] ).length
   end 
 
@@ -479,7 +479,7 @@ has_many :investigator_appointments,
     is_last_author = true
     self.investigator_abstracts.find(:all,
      :joins => [:abstract],
-         :conditions => ["(publication_date >= :pub_date or electronic_publication_date >= :pub_date) and investigator_abstracts.is_last_author = :is_last_author and investigator_abstracts.is_valid = true",
+         :conditions => ["investigator_abstracts.publication_date >= :pub_date and investigator_abstracts.is_last_author = :is_last_author and investigator_abstracts.is_valid = true",
              {:pub_date => Investigator.generate_date(), :is_last_author => is_last_author}] ).length
   end 
 
