@@ -12,7 +12,28 @@ class OrganizationalUnit < ActiveRecord::Base
       :conditions => ["investigator_appointments.type = 'Secondary' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
   has_many :memberships,
       :class_name => "InvestigatorAppointment",
-      :conditions => ["investigator_appointments.type = 'Member' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
+      :conditions => ["investigator_appointments.type IN ('Member', 'PrimaryMember', 'SecondaryMember', 'TertiaryMember') and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
+  has_many :primary_memberships,
+      :class_name => "InvestigatorAppointment",
+      :conditions => ["investigator_appointments.type = 'PrimaryMember' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
+  has_many :secondary_memberships,
+      :class_name => "InvestigatorAppointment",
+      :conditions => ["investigator_appointments.type = 'SecondaryMember' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
+  has_many :tertiary_memberships,
+      :class_name => "InvestigatorAppointment",
+      :conditions => ["investigator_appointments.type = 'TertiaryMember' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
+  has_many :associate_memberships,
+       :class_name => "InvestigatorAppointment",
+       :conditions => ["investigator_appointments.type IN ('AssociateMember', 'PrimaryAssociateMember', 'SecondaryAssociateMember', 'TertiaryAssociateMember') and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
+  has_many :primary_associate_memberships,
+      :class_name => "InvestigatorAppointment",
+      :conditions => ["investigator_appointments.type = 'PrimaryAssociateMember' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
+  has_many :secondary_associate_memberships,
+      :class_name => "InvestigatorAppointment",
+      :conditions => ["investigator_appointments.type = 'SecondaryAssociateMember' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
+  has_many :tertiary_associate_memberships,
+      :class_name => "InvestigatorAppointment",
+      :conditions => ["investigator_appointments.type = 'TertiaryAssociateMember' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
   has_many :primary_faculty,  
     :class_name => "Investigator",
     :foreign_key => "home_department_id"
@@ -32,6 +53,27 @@ class OrganizationalUnit < ActiveRecord::Base
   has_many :members,
     :source => :investigator,
     :through => :memberships
+  has_many :primary_members,
+    :source => :investigator,
+    :through => :primary_memberships
+  has_many :secondary_members,
+    :source => :investigator,
+    :through => :secondary_memberships
+  has_many :tertiary_members,
+    :source => :investigator,
+    :through => :tertiary_memberships
+  has_many :associate_members,
+    :source => :investigator,
+    :through => :associate_memberships
+  has_many :primary_associate_members,
+    :source => :investigator,
+    :through => :primary_associate_memberships
+  has_many :secondary_associate_members,
+    :source => :investigator,
+    :through => :secondary_associate_memberships
+  has_many :tertiary_associate_members,
+    :source => :investigator,
+    :through => :tertiary_associate_memberships
   has_many :organization_abstracts,
     :conditions => ['organization_abstracts.end_date is null']
   has_many :abstracts,
