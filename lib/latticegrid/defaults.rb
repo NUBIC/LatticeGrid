@@ -174,6 +174,10 @@
    end
  end
 
+ def LatticeGridHelper.member_types_map
+   {}
+ end
+
 # LatticeGrid prefs:
 # turn on lots of output
 def LatticeGridHelper.debug?
