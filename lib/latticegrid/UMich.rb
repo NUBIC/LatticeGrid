@@ -116,3 +116,7 @@ end
 def LatticeGridHelper.do_ldap?
   false
 end
+
+def LatticeGridHelper.valid_member_types
+  %w(Member AssociateMember)
+end

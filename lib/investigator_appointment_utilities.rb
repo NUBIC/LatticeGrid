@@ -146,6 +146,14 @@ def CreateInvestigatorFromHash(data_row)
 	end
 end
 
+def HandleMemberType(source)
+  if source['member_type'] && LatticeGridHelper.valid_member_types.include?(source['member_type'])
+    return Object.const_get(source['member_type'])
+  else
+    return Member
+  end
+end
+
 def HandleUsername(pi)
   if pi.username.blank? and !pi.last_name.blank? and !pi.first_name.blank?
     pi.username=pi.last_name+pi.first_name
