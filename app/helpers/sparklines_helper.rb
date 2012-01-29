@@ -43,9 +43,18 @@ module SparklinesHelper
     out="<script type='text/javascript'>
       jQuery.noConflict();
       jQuery(function() {
-            jQuery('.inlinebarchart').sparkline('html', {type: 'bar', barColor: 'darkgrey', zeroColor: 'red', barWidth: #{options['barWidth']}, barSpacing: #{options['barSpacing']}} );
+        jQuery('.inlinebarchart').sparkline('html', {type: 'bar', barColor: 'darkgrey', zeroColor: 'red', barWidth: #{options['barWidth']}, barSpacing: #{options['barSpacing']}} );
         });
       </script>"
+    out
+  end
+
+	def js_sparkline_barchart(id, data, options={})
+	  options["barSpacing"] ||= 1
+	  options["barWidth"] ||= 1
+    out="<script type='text/javascript'>
+    jQuery('.#{id}').sparkline([#{data}], {type: 'bar', barColor: 'darkgrey', zeroColor: 'red', barWidth: #{options['barWidth']}, barSpacing: #{options['barSpacing']}} );
+     </script>"
     out
   end
 

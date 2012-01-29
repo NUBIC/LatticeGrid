@@ -204,6 +204,7 @@ class OrgsController < ApplicationController
         format.html # show.html.erb
         format.xml  { render :xml => @unit }
         format.pdf do
+          @pdf = true
            render :pdf => "Show Investigators for " + @unit.name, 
               :stylesheets => "pdf", 
               :template => "orgs/show_investigators.html.erb",

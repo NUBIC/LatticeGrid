@@ -26,13 +26,15 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :copublications, :only => [:show], :member => {:investigator_colleagues => :get}
 
 # manually added rjs routes to enforce .js format
-  map.tag_cloud_side_investigator '/investigators/:id/tag_cloud_side.js', :action=>"tag_cloud_side", :controller=>"investigators",  :conditions => { :method => :get }
-  map.tag_cloud_side_copublication '/copublications/:id/tag_cloud_side.js', :action=>"tag_cloud_side", :controller=>"copublications",  :conditions => { :method => :get }
-  map.tag_cloud_investigator '/investigators/:id/tag_cloud.js', :action=>"tag_cloud", :controller=>"investigators",  :conditions => { :method => :get }
-  map.tag_cloud_copublication '/copublications/:id/tag_cloud.js', :action=>"tag_cloud", :controller=>"copublications",  :conditions => { :method => :get }
-  map.short_tag_cloud_org '/orgs/:id/short_tag_cloud.js', :action=>"short_tag_cloud", :controller=>"orgs",  :conditions => { :method => :get }
-  map.tag_cloud_org '/orgs/:id/tag_cloud.js', :action=>"tag_cloud", :controller=>"orgs",  :conditions => { :method => [:get, :post] }
-  map.tag_cloud_by_year_abstract '/abstracts/:id/tag_cloud_by_year.js', :action=>"tag_cloud_by_year", :controller=>"abstracts",  :conditions => { :method => :get }
+  map.collaborators_investigator 'investigators/:id/collaborators.js', :action=>"collaborators", :controller=>"investigators",  :conditions => { :method => :get }
+  map.barchart_investigator 'investigators/:id/barchart.js', :action=>"barchart", :controller=>"investigators",  :conditions => { :method => :get }
+  map.tag_cloud_side_investigator 'investigators/:id/tag_cloud_side.js', :action=>"tag_cloud_side", :controller=>"investigators",  :conditions => { :method => :get }
+  map.tag_cloud_side_copublication 'copublications/:id/tag_cloud_side.js', :action=>"tag_cloud_side", :controller=>"copublications",  :conditions => { :method => :get }
+  map.tag_cloud_investigator 'investigators/:id/tag_cloud.js', :action=>"tag_cloud", :controller=>"investigators",  :conditions => { :method => :get }
+  map.tag_cloud_copublication 'copublications/:id/tag_cloud.js', :action=>"tag_cloud", :controller=>"copublications",  :conditions => { :method => :get }
+  map.short_tag_cloud_org 'orgs/:id/short_tag_cloud.js', :action=>"short_tag_cloud", :controller=>"orgs",  :conditions => { :method => :get }
+  map.tag_cloud_org 'orgs/:id/tag_cloud.js', :action=>"tag_cloud", :controller=>"orgs",  :conditions => { :method => [:get, :post] }
+  map.tag_cloud_by_year_abstract 'abstracts/:id/tag_cloud_by_year.js', :action=>"tag_cloud_by_year", :controller=>"abstracts",  :conditions => { :method => :get }
 
 # manually added html route for the top mesh terms in the tag cloud
   map.tag_cloud_list '/investigators/:id/tag_cloud_list.json', :action=>"tag_cloud_list", :controller=>"investigators", :conditions => { :method => :get }

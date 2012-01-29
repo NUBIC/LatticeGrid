@@ -1,0 +1,6 @@
+investigator ||= @investigator
+collaborators = investigator.direct_coauthors unless investigator.blank?
+
+unless collaborators.blank?
+  page.replace_html("collaborators_#{investigator.username}", link_to_collaborators(collaborators, "<br/>") ) 
+end

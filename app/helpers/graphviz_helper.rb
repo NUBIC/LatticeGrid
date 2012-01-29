@@ -120,7 +120,7 @@ module GraphvizHelper
            when "member_mesh" :  build_member_mesh_graph( graph, program, id, distance, stringency, include_orphans)
            when "member_awards" :  build_member_awards_graph( graph, program, id, distance, stringency, include_orphans)
            when "mesh"        :  build_mesh_graph( graph, program, id, distance, stringency, include_orphans)
-           when "org"         :  build_org_graph( graph, program, id, distance, stringency, include_orphans)
+           when "org"         :  build_org_graph( graph, program, id, distance, stringency, include_orphans, start_date, end_date)
            when "org_org"     :  build_org_org_graph( graph, program, id, distance, stringency, include_orphans)
            when "org_mesh"    :  build_org_mesh_graph( graph, program, id, distance, stringency, include_orphans)
            else                  graph_no_data(graph, "Option #{analysis} was not found")
@@ -232,40 +232,48 @@ module GraphvizHelper
      graph
    end
 
-
-
-   def build_org_graph(graph, program, id, distance, stringency,include_orphans)
-     colleagues = get_colleagues(id)
-     #slogger.info "colleagues: #{colleagues.length}"
-     if colleagues.nil?
+   def build_org_graph(graph, program, id, distance, stringency, include_orphans, start_date, end_date)
+     org_members = get_colleagues(id)
+     #get_colleagues returns Investigator objects
+     #slogger.info "org_members: #{org_members.length}"
+     if org_members.nil?
        graph = graph_no_data(graph, "No colleagues found in #{org.name}")
      else
        #doing this twice so we don't miscolor the primaries
-       colleagues.each do |colleague|
-         co_authors = colleague.co_authors.shared_pubs(stringency)
-         if  distance == "0"
-           co_authors = co_authors.collect{|ic| colleagues.include?(ic.colleague) ? ic : nil }.compact
+       org_members.each do |investigator|
+         co_authors = InvestigatorAbstract.investigator_shared_publication_count_by_date_range(investigator.id, start_date, end_date)
+         #array of Investigator objects returned with a shared_publication_count attribute for each Investigator
+         #co_authors = investigator.co_authors.shared_pubs(stringency)
+         if  distance == "0" and ! co_authors.blank?
+           co_authors = co_authors.collect{|ic| (org_members.include?(ic) and ic.shared_publication_count >= stringency.to_i) ? ic : nil }.compact
+         elsif ! co_authors.blank?
+           co_authors = co_authors.collect{|ic| (ic.shared_publication_count >= stringency.to_i) ? ic : nil }.compact
          end
-         if include_orphans == "1" or co_authors.length > 0
-           graph_secondaryroot(graph, colleague) 
-           graph = graph_add_nodes(program, graph, co_authors) if co_authors.length > 0
+         if include_orphans == "1" or ! co_authors.blank?
+           graph_secondaryroot(graph, investigator) 
+           unless co_authors.blank?
+             # these take an Investigator instead of a InvestigatorColleague
+             graph = graph_add_investigator_nodes(program, graph, investigator, co_authors, stringency) 
+           end
          end
        end
        # now adding the secondaries, if any
        if distance == "2"
-         colleagues.each do |colleague|
-           co_authors = colleague.co_authors.shared_pubs(stringency)
-           if  distance == "0"
-             co_authors = co_authors.collect{|ic| colleagues.include?(ic.colleague) ? ic : nil }.compact
-           end
-           if include_orphans == "1" or co_authors.length > 0
-             graph_secondaryroot(graph, colleague) 
-             graph = graph_add_nodes(program, graph, co_authors) if co_authors.length > 0
+         org_members.each do |investigator|
+           co_authors = InvestigatorAbstract.investigator_shared_publication_count_by_date_range(investigator.id, start_date, end_date)
+            #array of Investigator objects returned with a shared_publication_count attribute for each Investigator
+            #co_authors = investigator.co_authors.shared_pubs(stringency)
+            if ! co_authors.blank?
+              co_authors = co_authors.collect{|ic| (ic.shared_publication_count >= stringency.to_i) ? ic : nil }.compact
+            end
+           unless co_authors.blank?
+             graph_secondaryroot(graph, investigator) 
+             graph = graph_add_investigator_nodes(program, graph, investigator, co_authors, stringency) unless co_authors.blank?
              opts = {}
              opts[:fillcolor] = LatticeGridHelper.second_degree_other_fill_color # super pale green
-             co_authors.each do |inner_colleague|
-               inner_coauthors=inner_colleague.colleague.co_authors.shared_pubs(stringency)
-               graph = graph_add_nodes(program, graph, inner_coauthors, false, opts)
+             co_authors.each do |inv|
+               inner_coauthors = InvestigatorAbstract.investigator_shared_publication_count_by_date_range(inv.id, start_date, end_date)
+               graph = graph_add_investigator_nodes(program, graph, inv, inner_coauthors, stringency, false, opts)
              end
            end
          end

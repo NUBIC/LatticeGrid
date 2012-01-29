@@ -10,11 +10,12 @@
 
 Click on the investigator to find all publications attributed to that investigator. <br/>
 
-<%= render( :partial=>"investigator_listing.html", :locals => { :investigators => @unit.all_primary_faculty, :heading => "Primary appointments" }) if @unit.primary_faculty.length > 0 %> 
-<%= render( :partial=>"investigator_listing.html", :locals => { :investigators => @unit.all_joint_faculty, :heading => "Joint appointments" }) if @unit.joint_faculty.length > 0 %> 
-<%= render( :partial=>"investigator_listing.html", :locals => { :investigators => @unit.all_secondary_faculty, :heading => "Secondary appointments" }) if @unit.secondary_faculty.length > 0 %> 
 <% if @unit.kind_of?(Center) or @unit.kind_of?(Program) %>
-<%= render :partial=>"investigator_listing.html", :locals => { :investigators => @unit.all_members, :heading => "Members" } %> 
+<%= render( :partial=>"investigator_listing.html", :locals => { :investigators => @unit.all_members, :heading => "Members" }) %> 
+<% else %>
+<%= render( :partial=>"investigator_listing.html", :locals => { :investigators => @unit.all_primary_faculty, :heading => "Primary appointments" }) if @unit.find_unit_by_id_or_name.length > 0 %> 
+<%= render( :partial=>"investigator_listing.html", :locals => { :investigators => @unit.all_joint_faculty, :heading => "Joint appointments" }) if @unit.all_joint_faculty.length > 0 %> 
+<%= render( :partial=>"investigator_listing.html", :locals => { :investigators => @unit.all_secondary_faculty, :heading => "Secondary appointments" }) if @unit.all_secondary_faculty.length > 0 %> 
 <% end %>
 <% if include_mesh %>
 <h3><%= "MeSH cloud from publications in <i>#{@unit.name}</i>" %></h3>

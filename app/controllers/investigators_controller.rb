@@ -1,5 +1,5 @@
 class InvestigatorsController < ApplicationController
-  caches_page( :show, :full_show, :list_all, :listing, :tag_cloud_side, :tag_cloud, :show_all_tags, :publications, :tag_cloud_list, :abstract_count, :preview, :search, :bio) if LatticeGridHelper.CachePages()
+  caches_page( :show, :full_show, :list_all, :listing, :tag_cloud_side, :tag_cloud, :show_all_tags, :publications, :tag_cloud_list, :abstract_count, :preview, :search, :bio, :barchart, :collaborators) if LatticeGridHelper.CachePages()
   helper :all
   include InvestigatorsHelper
   include ApplicationHelper
@@ -7,11 +7,11 @@ class InvestigatorsController < ApplicationController
   require 'pubmed_utilities'
 
   # <iframe frameborder="0" src="http://www.tagxedo.com/art/f6f2d766fb9d47e6" width="300" height="300" scrolling="no"></iframe>
-  skip_before_filter  :find_last_load_date, :only => [:tag_cloud_side, :tag_cloud, :search]
-  skip_before_filter  :handle_year, :only => [:tag_cloud_side, :tag_cloud, :search]
-  skip_before_filter  :get_organizations, :only => [:tag_cloud_side, :tag_cloud, :search]
-  skip_before_filter  :handle_pagination, :only => [:tag_cloud_side, :tag_cloud, :search]
-  skip_before_filter  :define_keywords, :only => [:tag_cloud_side, :tag_cloud, :search]
+  skip_before_filter  :find_last_load_date, :only => [:tag_cloud_side, :tag_cloud, :search, :collaborators, :barchart]
+  skip_before_filter  :handle_year, :only => [:tag_cloud_side, :tag_cloud, :search, :collaborators, :barchart]
+  skip_before_filter  :get_organizations, :only => [:tag_cloud_side, :tag_cloud, :search, :collaborators, :barchart]
+  skip_before_filter  :handle_pagination, :only => [:tag_cloud_side, :tag_cloud, :search, :collaborators, :barchart]
+  skip_before_filter  :define_keywords, :only => [:tag_cloud_side, :tag_cloud, :search, :collaborators, :barchart]
   
   def index
     redirect_to( current_abstracts_url )
@@ -76,6 +76,19 @@ class InvestigatorsController < ApplicationController
     end
   end
   
+  def collaborators
+      handle_member_name(false) # converts params[:id] to params[:investigator_id] and sets @investigator
+      respond_to do |format|
+        format.js { render :layout => false }
+      end
+  end
+  
+  def barchart
+      handle_member_name(false) # converts params[:id] to params[:investigator_id] and sets @investigator
+      respond_to do |format|
+        format.js { render :layout => false }
+      end
+  end
   
   def full_show
     if params[:id].nil? then

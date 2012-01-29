@@ -133,7 +133,8 @@ has_many :investigator_appointments,
 
   def shared_abstracts_with_investigator(id)
     Abstract.all(:joins => ", investigator_abstracts, investigator_abstracts ia2",
-        :conditions => ['investigator_abstracts.abstract_id  = abstracts.id and ia2.abstract_id = abstracts.id and investigator_abstracts.is_valid = true and ia2.is_valid = true and ia2.investigator_id = :id and  investigator_abstracts.investigator_id = :pi_id', {:id => id, :pi_id => self.id }]
+        :conditions => ['investigator_abstracts.abstract_id  = abstracts.id and ia2.abstract_id = abstracts.id and investigator_abstracts.is_valid = true and ia2.is_valid = true and ia2.investigator_id = :id and  investigator_abstracts.investigator_id = :pi_id', {:id => id, :pi_id => self.id }],
+        :order => 'abstracts.year DESC, abstracts.pubmed DESC'
       )
   end
   
@@ -485,10 +486,9 @@ has_many :investigator_appointments,
 
   def self.collaborators(investigator_id)
     self.find_by_sql("select distinct i2.* " + 
-        " FROM abstracts a, investigator_abstracts ia, investigator_abstracts ia2, investigators i2  "+
+        " FROM investigator_abstracts ia, investigator_abstracts ia2, investigators i2  "+
         " WHERE ia.investigator_id = #{investigator_id} "+
-        "  AND ia.abstract_id = a.id "+
-         "  AND a.publication_date > '#{generate_date}' "+
+         "  AND ia.publication_date > '#{generate_date}' "+
          " AND ia.abstract_id = ia2.abstract_id "+
          " AND ia.investigator_id <> ia2.investigator_id " +
          " AND ia2.investigator_id = i2.id" +
@@ -501,16 +501,15 @@ has_many :investigator_appointments,
 
   def self.intramural_collaborators_cnt(investigator_id)
     self.find_by_sql("select distinct ia2.investigator_id " + 
-        "  FROM abstracts a, investigator_abstracts ia, investigator_appointments ip, investigator_abstracts ia2, investigator_appointments ip2 "+
+        "  FROM investigator_abstracts ia, investigator_appointments ip, investigator_abstracts ia2, investigator_appointments ip2 "+
         " WHERE ia.investigator_id  = #{investigator_id} "+
-        "  AND ia.abstract_id = a.id "+
         "  AND ia.is_valid = true " +
-        "   AND ia.investigator_id = ip.investigator_id  "+
-        "   AND ip.organizational_unit_id = ip2.organizational_unit_id "+
-        "   AND ip2.investigator_id = ia2.investigator_id "+
-        "   AND ia.abstract_id = ia2.abstract_id "+
-        "   AND ia.investigator_id <> ia2.investigator_id " +
-        "   AND ia2.is_valid = true "
+        "  AND ia.investigator_id = ip.investigator_id  "+
+        "  AND ip.organizational_unit_id = ip2.organizational_unit_id "+
+        "  AND ip2.investigator_id = ia2.investigator_id "+
+        "  AND ia.abstract_id = ia2.abstract_id "+
+        "  AND ia.investigator_id <> ia2.investigator_id " +
+        "  AND ia2.is_valid = true "
     ).length
   end 
  

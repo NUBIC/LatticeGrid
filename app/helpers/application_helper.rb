@@ -64,7 +64,7 @@ module ApplicationHelper
   end   
 
   def abstracts_per_year_as_string(all_abstracts)
-    abstracts_per_year(all_abstracts, LatticeGridHelper.year_array.sort).join("; ")
+    abstracts_per_year(all_abstracts, LatticeGridHelper.year_array.sort).join(", ")
   end
   
   def link_to_faculty(faculty, delimiter=", ")

@@ -142,10 +142,11 @@ module InvestigatorsHelper
       out+= profile_link
       out+= " &nbsp;  &nbsp; "
     end
-    if defined?(all_abstracts) and ! all_abstracts.nil? and all_abstracts.length > 10
-      publications_per_year=abstracts_per_year_as_string(all_abstracts)
-      out+= "<span class='inlinebarchart' values='#{publications_per_year}' title='publications per year: #{publications_per_year}'>&nbsp;</span>"
-      out+= sparkline_barchart_setup()
+    if defined?(investigator) and ! investigator.blank?
+      out+= "<span class='barchart_#{investigator.username}' id='barchart_#{investigator.username}'> &nbsp; </span>"
+  		out+= "<script type='text/javascript' language='javascript'>"
+  		out+= remote_function(:url => barchart_investigator_path( investigator.username ), :method => :get, :before => "Element.show('spinner')", :complete => "Element.hide('spinner')" )
+  		out+= "</script>"
     end
     out+= "<br/>"
     out+=nav_heading()
