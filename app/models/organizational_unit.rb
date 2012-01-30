@@ -168,14 +168,6 @@ class OrganizationalUnit < ActiveRecord::Base
       faculty.collect(&:abstracts).flatten.uniq
     end
 
-    def all_ccsg_publications_by_date( faculty, start_date, end_date, exclude_letters=nil )
-      if exclude_letters.blank? or ! exclude_letters
-        faculty.collect{|f| f.abstracts.ccsg_abstracts_by_date(start_date, end_date)}.flatten.uniq
-      else
-        faculty.collect{|f| f.abstracts.exclude_letters.ccsg_abstracts_by_date(start_date, end_date)}.flatten.uniq
-      end
-    end
-
     def shared_with_org( org_id )
        abs = self.all_abstracts
        OrganizationalUnit.find(org_id).all_abstracts & abs

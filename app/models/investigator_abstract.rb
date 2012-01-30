@@ -5,10 +5,11 @@ class InvestigatorAbstract < ActiveRecord::Base
   has_many :investigator_appointments, 
     :through => :investigator, 
     :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
-  named_scope :first_author_publications, :conditions => ['investigator_abstracts.is_first_author = true and investigator_abstracts.is_valid = true']
+  named_scope :first_author_abstracts, :conditions => ['investigator_abstracts.is_first_author = true and investigator_abstracts.is_valid = true']
 
-  named_scope :last_author_publications, :conditions => ['investigator_abstracts.is_last_author = true and investigator_abstracts.is_valid = true']
+  named_scope :last_author_abstracts, :conditions => ['investigator_abstracts.is_last_author = true and investigator_abstracts.is_valid = true']
 
+  named_scope :first_or_last_author_abstracts, :conditions => ['(investigator_abstracts.is_first_author = true or investigator_abstracts.is_last_author = true) and investigator_abstracts.is_valid = true']
 
   validates_uniqueness_of :investigator_id, :scope => "abstract_id"
   
@@ -19,6 +20,8 @@ class InvestigatorAbstract < ActiveRecord::Base
   named_scope :only_deleted,  :conditions => 'investigator_abstracts.end_date is not null'
   named_scope :by_date_range, lambda { |*args| {:conditions => ['investigator_abstracts.publication_date between :start_date and :end_date', 
                 {:start_date => args.first, :end_date => args.last} ] }}
+  named_scope :for_investigator_ids, lambda { |*ids| {:conditions => ['investigator_abstracts.investigator_id IN (:pi_ids)', 
+                {:pi_ids => ids.first} ] }}
 
 
   def self.investigator_shared_publication_count_by_date_range(investigator_id,start_date,end_date)

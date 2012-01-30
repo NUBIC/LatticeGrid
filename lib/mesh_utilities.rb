@@ -43,7 +43,7 @@ def TagAbstractWithMeSH(abstract)
 end
 
 def LimitedTagInvestigatorWithMeSH(investigator) # not using this one anymore
-  invpubs = (investigator.investigator_abstracts.first_author_publications + investigator.investigator_abstracts.last_author_publications).uniq
+  invpubs = (investigator.investigator_abstracts.first_author_abstracts + investigator.investigator_abstracts.last_author_abstracts).uniq
   if (invpubs.length > 7)
     AddMeshTermstoObject(investigator,Abstract.by_ids(invpubs.collect(&:abstract_id)).collect(&:tag_list).flatten.uniq)
   else

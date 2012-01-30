@@ -58,7 +58,7 @@
 		<% form_for :date_range, :url => {:controller => :orgs, :action => :abstracts_during_period}, :html => { :method => :post, :class => "p" }  do |form| %> 
 		<p>Use the below form for printing:  List for one unit all articles published between the following dates:</p>
 
-	  	<p><%= collection_select '', 'id', @head_node.descendants.sort_by(&:name), :id, :name  %> select unit </p>
+	  	<p><%= collection_select '', 'id', @head_node.descendants.sort{|a,b| a.name.downcase <=> b.name.downcase}, :id, :name  %> select unit </p>
 		 <p><%= form.text_field(:start_date, :size => 20) %> to
 		  <%= form.text_field(:end_date, :size => 20) %>  select dates </p>
 		<p><%= select_tag(:format, 
@@ -74,7 +74,9 @@
 				  <% end %>
 				</ul>
 	   <p><%= check_box_tag 'exclude_letters', '1' -%> Exclude Reviews, Editorials, Letters, and Biographies</p>
-		  <%= submit_tag 'List Publications by Unit' %>
+	   <p><%= check_box_tag 'limit_to_first_last', '1' -%> Limit to articles with a first or last author from this unit</p>
+	   <p>Impact factor: <%= text_field_tag('impact_factor', nil, :size => 10, :maxlength => 3) %> Limit to articles with at least this impact factor (blank is no limit) </p>
+		<%= submit_tag 'List Publications by Unit' %>
 		<% end %> 
 	</div>
 	<p>&nbsp;</p>
@@ -82,7 +84,7 @@
 		<% form_for :date_range, :url => {:controller => :profiles, :action => :list_summaries_by_program}, :html => { :method => :post, :class => "p" }  do |form| %> 
 		<p>List the investigator summaries for the following unit:</p>
 
-	  	<p><%= collection_select( '', :id, @head_node.descendants.sort_by(&:name), :id, :name)  %> select unit </p>
+	  	<p><%= collection_select( '', :id, @head_node.descendants.sort{|a,b| a.name.downcase <=> b.name.downcase}, :id, :name)  %> select unit </p>
 		<p><%= select_tag(:format, 
 				options_for_select([["HTML","html"], ["XML", "xml"],["PDF", "pdf"],["Excel", "xls"], ["Word", "doc"]], [params[:format]])  
 				) %> select format </p>

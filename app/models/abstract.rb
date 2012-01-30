@@ -38,12 +38,23 @@ class Abstract < ActiveRecord::Base
           ['is_cancer = true and (abstracts.publication_date between :start_date and :end_date) ', 
             {:start_date => dates.first, :end_date => dates.last } ] }
     }
+  named_scope :with_impact_factor, lambda { |factor|
+      { :joins => [:journals],
+        :conditions => ['journals.impact_factor >= :impact_factor',  {:impact_factor => factor} ] }
+    }
+  named_scope :ccsg_abstracts, 
+      :conditions => ['abstracts.is_cancer = true']
+
   named_scope :exclude_letters, 
-        :conditions => ['publication_type NOT IN (:publication_types)', 
-          {:publication_types=> ["Dictionary", "Introductory Journal Article", "Interview", "Bibliography", "Retraction of Publication", "English Abstract", "Newspaper Article", "LETTER", "Lectures", "Interactive Tutorial", "News", "Letter", "Guideline", "Editorial", "Consensus Development Conference", "Historical Article", "Duplicate Publication", "Biography", "Addresses", "Video-Audio Media", "Comment", "Congresses", "EDITORIAL", "Clinical Conference"] }]
+        :conditions => ['lower(abstracts.publication_type) NOT IN (:publication_types)', 
+          {:publication_types=> ["dictionary", "introductory journal article", "interview", "bibliography", "retraction of publication", "english abstract", "newspaper article", "letter", "lectures", "interactive tutorial", "news", "letter", "guideline", "editorial", "consensus development conference", "historical article", "duplicate publication", "biography", "addresses", "video-audio media", "comment", "congresses", "editorial", "clinical conference"] }]
 
   named_scope :by_ids, lambda { |*ids|
-      {:conditions => ['id IN (:ids) ', {:ids => ids.first}] }
+      {:conditions => ['abstracts.id IN (:ids) ', {:ids => ids.first}] }
+    }
+  named_scope :by_investigator_ids, lambda { |*ids|
+      { :joins => [:investigator_abstracts],
+        :conditions => ['investigator_abstracts.investigator_id IN (:investigator_ids) ', {:investigator_ids => ids.first}] }
     }
   default_scope :conditions => 'abstracts.is_valid = true'
 
@@ -109,6 +120,23 @@ class Abstract < ActiveRecord::Base
     end
   end
   
+  def self.all_ccsg_publications_by_date( faculty_ids, start_date, end_date, exclude_letters=nil, first_last_only=false, impact_factor=nil )
+    #faculty_ids = faculty.map(&:id)
+    if first_last_only
+      abstract_ids = InvestigatorAbstract.for_investigator_ids(faculty_ids).first_or_last_author_abstracts.by_date_range(start_date, end_date).map(&:abstract_id)
+      abstracts = Abstract.by_ids(abstract_ids).ccsg_abstracts
+    else
+      abstracts = Abstract.by_investigator_ids(faculty_ids).ccsg_abstracts_by_date(start_date, end_date)
+    end
+    unless exclude_letters.blank? or ! exclude_letters
+      abstracts = abstracts.exclude_letters
+    end
+    unless impact_factor.blank? or impact_factor.to_s !~ /^\d+$/
+      abstracts = abstracts.with_impact_factor(impact_factor)
+    end
+    abstracts.uniq
+  end
+
   def self.abstracts_with_missing_dates()
      with_exclusive_scope do
        all(:conditions=>"abstracts.publication_date is null or abstracts.electronic_publication_date is null")

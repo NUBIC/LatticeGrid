@@ -270,8 +270,8 @@ class OrgsController < ApplicationController
       unit["pi_intra_abstracts"] = Array.new
       unit["pi_inter_abstracts"] = Array.new
       unit_faculty = unit.get_faculty_by_types(params[:affiliation_types])
-      unit_pis = unit_faculty.collect{|x| x.id}
-      unit["publications"]=unit.all_ccsg_publications_by_date( unit_faculty, params[:start_date], params[:end_date], @exclude_letters )
+      unit_pis = unit_faculty.map(&:id)
+      unit["publications"]=Abstract.all_ccsg_publications_by_date( unit_pis, params[:start_date], params[:end_date], @exclude_letters )
       unit.publications.each do |abstract| 
         abstract_investigators = abstract.investigators.collect{|x| x.id}
         intra_collaborators_arr = abstract_investigators & unit_pis  # intersection of the two sets
@@ -299,8 +299,8 @@ class OrgsController < ApplicationController
       unit["pi_intra_abstracts"] = Array.new
       unit["pi_inter_abstracts"] = Array.new
       unit_faculty = unit.get_faculty_by_types(params[:affiliation_types])
-      unit_pis = unit_faculty.collect{|x| x.id}
-      unit["publications"]=unit.all_ccsg_publications_by_date( unit_faculty, params[:start_date], params[:end_date], @exclude_letters )
+      unit_pis = unit_faculty.map(&:id)
+      unit["publications"]=Abstract.all_ccsg_publications_by_date( unit_pis, params[:start_date], params[:end_date], @exclude_letters )
       unit.publications.each do |abstract| 
         abstract_investigators = abstract.investigators.collect{|x| x.id}
         intra_collaborators_arr = abstract_investigators & unit_pis  # intersection of the two sets
@@ -348,23 +348,30 @@ class OrgsController < ApplicationController
     @faculty = @unit.get_faculty_by_types(params[:affiliation_types])
     @exclude_letters = ! params[:exclude_letters].blank?
     @faculty_affiliation_types = params[:affiliation_types]
-    @abstracts = @unit.all_ccsg_publications_by_date(@faculty, params[:start_date], params[:end_date], @exclude_letters )
+    faculty_ids = @faculty.map(&:id)
+    @abstracts = Abstract.all_ccsg_publications_by_date(faculty_ids, params[:start_date], params[:end_date], @exclude_letters )
   end
 
   def abstracts_during_period
     # for printing
     handle_start_and_end_date
     @unit = OrganizationalUnit.find(params[:id])
+    @faculty_affiliation_types = params[:affiliation_types]
     @faculty = @unit.get_faculty_by_types(params[:affiliation_types])
     @exclude_letters = ! params[:exclude_letters].blank?
-    @faculty_affiliation_types = params[:affiliation_types]
-    @abstracts = @unit.all_ccsg_publications_by_date(@faculty, params[:start_date], params[:end_date], @exclude_letters )
-    @investigators_in_unit = @faculty.collect(&:id)
+    @limit_to_first_last = ! params[:limit_to_first_last].blank?
+    @impact_factor = params[:impact_factor]
+    @investigators_in_unit = @faculty.map(&:id)
+        
+    @abstracts = Abstract.all_ccsg_publications_by_date(@investigators_in_unit, params[:start_date], params[:end_date], @exclude_letters, @limit_to_first_last, @impact_factor )
 
     @do_pagination = "0"
-    @heading = "#{@abstracts.length} publications. Publication Listing  "
+    @heading = "#{@abstracts.length} publications. Publication Listing"
+    @heading = @heading + " excluding letters" if @exclude_letters
+    @heading = @heading + " with at least an impact factor of #{@impact_factor}" unless @impact_factor.blank?
     @heading = @heading + " from #{@start_date} " if !params[:start_date].blank?
     @heading = @heading + " to #{@end_date}" if !params[:end_date].blank?
+    @heading = @heading + " limited to first and last authors who are part of #{@unit.name}" if @limit_to_first_last
     @include_mesh = false
     @include_graph_link = false
     @show_paginator = false

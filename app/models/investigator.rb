@@ -457,15 +457,11 @@ has_many :investigator_appointments,
 # used in the rake tasks to add to the investigator object attributes
 
   def first_author_publications_cnt()
-    self.investigator_abstracts.find(:all,
-       :conditions => ["investigator_abstracts.is_first_author = :is_first_author and investigator_abstracts.is_valid = true",
-            {:is_first_author => true}] ).length
+    self.investigator_abstracts.first_author_abstracts.length
   end 
 
   def last_author_publications_cnt()
-    self.investigator_abstracts.find(:all,
-        :conditions => [" investigator_abstracts.is_last_author = :is_last_author and investigator_abstracts.is_valid = true",
-            {:is_last_author => true}] ).length
+    self.investigator_abstracts.last_author_abstracts.length
   end 
 
   def first_author_publications_since_date_cnt()
