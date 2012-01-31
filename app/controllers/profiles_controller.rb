@@ -58,18 +58,18 @@ class ProfilesController < ApplicationController
         format.xls  { 
           @no_email=true
           send_data(render(:template => 'profiles/list_summaries', :layout => "excel"),
-          :filename => "summaries_listing_for#{@program.name}.xls",
+          :filename => "summaries_listing_for_#{@program.name}.xls",
           :type => 'application/vnd.ms-excel',
           :disposition => 'attachment') }
         format.doc  { 
           @no_email=true
           send_data(render(:template => 'profiles/list_summaries', :layout => "excel"),
-          :filename => "summaries_listing_for#{@program.name}.doc",
+          :filename => "summaries_listing_for_#{@program.name}.doc",
           :type => 'application/msword',
           :disposition => 'attachment') }
         format.pdf {
           @no_email=true
-          render( :pdf => "summaries_listing_for" + @program.name, 
+          render( :pdf => "summaries_listing_for_" + @program.name, 
               :stylesheets => "pdf", 
               :template => "profiles/list_summaries",
               :layout => "pdf") }
@@ -177,8 +177,6 @@ class ProfilesController < ApplicationController
     handle_member_name
     if params[:id].nil? then
       redirect_to( current_abstracts_url)
-    elsif  (!is_admin? and current_user_model.username != @investigator.username) then
-      redirect_to( profiles_url() )
     else
       @include_all_mesh = true
       respond_to do |format|
