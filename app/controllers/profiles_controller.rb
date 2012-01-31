@@ -51,7 +51,7 @@ class ProfilesController < ApplicationController
       @javascripts_add = ['jquery.tablesorter.min']
       @approvals_after = LatticeGridHelper.logs_after
       @program = find_unit_by_id_or_name(params[:id])
-      @investigators = @program.members.by_name
+      @investigators = @program.all_members.sort{|a,b| a.sort_name.downcase <=> b.sort_name.downcase}
       respond_to do |format|
         format.html { render :action => 'list_summaries' }
         format.xml  { render :xml => @investigators }
