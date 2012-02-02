@@ -119,7 +119,9 @@ end
 
 def LatticeGridHelper.member_types_map
   {
-    'Core' => Member,
-    'NonCore' => AssociateMember
+    'PrimaryCore' => PrimaryMember,
+    'PrimaryNonCore' => PrimaryAssociateMember,
+    'SecondaryCore' => SecondaryMember,
+    'SecondaryNonCore' => SecondaryAssociateMember
   }
 end
