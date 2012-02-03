@@ -27,7 +27,7 @@ GEM
       activesupport (>= 2.0)
       highline (~> 1.5)
       i18n
-    bio (1.4.1)
+    bio (1.4.2)
     castanet (1.0.1)
     fastercsv (1.5.4)
     haml (3.0.25)

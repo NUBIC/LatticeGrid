@@ -252,6 +252,7 @@ def check_date(pub_date, edate, created_date, pubmed_id)
   begin 
     pub_date.to_date
   rescue
+    today = Date.today
     if pub_date =~ /([0-9]+)-([a-zA-Z]+)-([0-9]+)/
       day = $1
       month = $2
@@ -259,16 +260,16 @@ def check_date(pub_date, edate, created_date, pubmed_id)
       day = 1 unless (day === (1..28))
       month = 'Jan' unless month =~ /jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec/i
       unless (year === (1800..today.year) )
-        year = edate.year unless edate.blank?
-        year = created_date.year if year.blank? and ! created_date.blank?
+        year = edate.to_date.year unless edate.blank?
+        year = created_date.to_date.year if year.blank? and ! created_date.blank?
         year = today.year if year.blank?
       end
       puts "check_date ERROR handling: invalid date for #{pubmed_id} was #{pub_date} and is #{day}-#{month}-#{year}"
     else
       day = '1'
       month = 'Jan'
-      year = edate.year unless edate.blank?
-       year = created_date.year if year.blank? and ! created_date.blank?
+      year = edate.to_date.year unless edate.blank?
+       year = created_date.to_date.year if year.blank? and ! created_date.blank?
        year = today.year if year.blank?x
       puts "check_date ERROR handling: INVALID DATE FORMAT: date for #{pubmed_id} was #{pub_date} and is #{day}-#{month}-#{year}"
     end
