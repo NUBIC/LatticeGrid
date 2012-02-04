@@ -7,10 +7,12 @@ require 'rubygems'
 
 namespace :reports do
 
+  desc "useful for taking a list of netids and looking up in the FSM faculty database and resolving against LDAP"
   task :netids_to_orgs => :environment do
     read_file_handler("netids_to_organization" ) {|filename| ReadNetIDgenerateReport(filename)}
   end
-
+  
+  desc "useful for taking an investigator name and breaking into first_name, middle_name, last_name, suffix"
   task :name_to_fields => :environment do
     read_file_handler("name_to_fields" ) {|filename| ReadNamesAndSplit(filename)}
   end

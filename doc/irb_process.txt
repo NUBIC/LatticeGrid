@@ -1,0 +1,3 @@
+#process a file with netids and perform lookups. Outputs a table report
+
+rake reports:netids_to_orgs file=db/imports/IRB/all_users_2012-01-27.txt > irb_netid_report.txt

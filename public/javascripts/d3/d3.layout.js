@@ -113,16 +113,19 @@ d3.layout.chord = function() {
     k = (2 * Math.PI - padding * n) / k;
 
     // Compute the start and end angle for each group and subgroup.
+    // Note: Opera has a bug reordering object literal properties!
     x = 0, i = -1; while (++i < n) {
       x0 = x, j = -1; while (++j < n) {
         var di = groupIndex[i],
-            dj = subgroupIndex[i][j],
-            v = matrix[di][dj];
+            dj = subgroupIndex[di][j],
+            v = matrix[di][dj],
+            a0 = x,
+            a1 = x += v * k;
         subgroups[di + "-" + dj] = {
           index: di,
           subindex: dj,
-          startAngle: x,
-          endAngle: x += v * k,
+          startAngle: a0,
+          endAngle: a1,
           value: v
         };
       }
@@ -153,7 +156,9 @@ d3.layout.chord = function() {
 
   function resort() {
     chords.sort(function(a, b) {
-      return sortChords(a.target.value, b.target.value);
+      return sortChords(
+          (a.source.value + a.target.value) / 2,
+          (b.source.value + b.target.value) / 2);
     });
   }
 
@@ -313,16 +318,11 @@ d3.layout.force = function() {
       }
     }
 
-    event.tick.dispatch({type: "tick", alpha: alpha});
+    event.tick({type: "tick", alpha: alpha});
 
     // simulated annealing, basically
     return (alpha *= .99) < .005;
   }
-
-  force.on = function(type, listener) {
-    event[type].add(listener);
-    return force;
-  };
 
   force.nodes = function(x) {
     if (!arguments.length) return nodes;
@@ -470,6 +470,7 @@ d3.layout.force = function() {
   // use `node.call(force.drag)` to make nodes draggable
   force.drag = function() {
     if (!drag) drag = d3.behavior.drag()
+        .origin(Object)
         .on("dragstart", dragstart)
         .on("drag", d3_layout_forceDrag)
         .on("dragend", d3_layout_forceDragEnd);
@@ -484,7 +485,7 @@ d3.layout.force = function() {
     d3_layout_forceDragForce = force;
   }
 
-  return force;
+  return d3.rebind(force, event, "on");
 };
 
 var d3_layout_forceDragForce,
@@ -505,8 +506,8 @@ function d3_layout_forceDragEnd() {
 }
 
 function d3_layout_forceDrag() {
-  d3_layout_forceDragNode.px += d3.event.dx;
-  d3_layout_forceDragNode.py += d3.event.dy;
+  d3_layout_forceDragNode.px = d3.event.x;
+  d3_layout_forceDragNode.py = d3.event.y;
   d3_layout_forceDragForce.resume(); // restart annealing
 }
 
@@ -600,48 +601,44 @@ d3.layout.partition = function() {
 };
 d3.layout.pie = function() {
   var value = Number,
-      sort = null,
+      sort = d3_layout_pieSortByValue,
       startAngle = 0,
       endAngle = 2 * Math.PI;
 
   function pie(data, i) {
+
+    // Compute the numeric values for each data element.
+    var values = data.map(function(d, i) { return +value.call(pie, d, i); });
 
     // Compute the start angle.
     var a = +(typeof startAngle === "function"
         ? startAngle.apply(this, arguments)
         : startAngle);
 
-    // Compute the angular range (end - start).
-    var k = (typeof endAngle === "function"
+    // Compute the angular scale factor: from value to radians.
+    var k = ((typeof endAngle === "function"
         ? endAngle.apply(this, arguments)
-        : endAngle) - startAngle;
+        : endAngle) - startAngle)
+        / d3.sum(values);
 
     // Optionally sort the data.
     var index = d3.range(data.length);
-    if (sort != null) index.sort(function(i, j) {
-      return sort(data[i], data[j]);
-    });
-
-    // Compute the numeric values for each data element.
-    var values = data.map(value);
-
-    // Convert k into a scale factor from value to angle, using the sum.
-    k /= values.reduce(function(p, d) { return p + d; }, 0);
+    if (sort != null) index.sort(sort === d3_layout_pieSortByValue
+        ? function(i, j) { return values[j] - values[i]; }
+        : function(i, j) { return sort(data[i], data[j]); });
 
     // Compute the arcs!
-    var arcs = index.map(function(i) {
-      return {
+    // They are stored in the original data's order.
+    var arcs = [];
+    index.forEach(function(i) {
+      arcs[i] = {
         data: data[i],
         value: d = values[i],
         startAngle: a,
         endAngle: a += d * k
       };
     });
-
-    // Return the arcs in the original data's order.
-    return data.map(function(d, i) {
-      return arcs[index[i]];
-    });
+    return arcs;
   }
 
   /**
@@ -693,6 +690,8 @@ d3.layout.pie = function() {
 
   return pie;
 };
+
+var d3_layout_pieSortByValue = {};
 // data is two-dimensional array of x,y; we populate y0
 d3.layout.stack = function() {
   var values = Object,
@@ -1115,10 +1114,10 @@ d3.layout.hierarchy = function() {
 
 // A method assignment helper for hierarchy subclasses.
 function d3_layout_hierarchyRebind(object, hierarchy) {
-  object.sort = d3.rebind(object, hierarchy.sort);
-  object.children = d3.rebind(object, hierarchy.children);
+  d3.rebind(object, hierarchy, "sort", "children", "value");
+
+  // Add an alias for links, for convenience.
   object.links = d3_layout_hierarchyLinks;
-  object.value = d3.rebind(object, hierarchy.value);
 
   // If the new API is used, enabling inlining.
   object.nodes = function(d) {
@@ -1204,7 +1203,7 @@ function d3_layout_packIntersects(a, b) {
   var dx = b.x - a.x,
       dy = b.y - a.y,
       dr = a.r + b.r;
-  return (dr * dr - dx * dx - dy * dy) > .001; // within epsilon
+  return dr * dr - dx * dx - dy * dy > .001; // within epsilon
 }
 
 function d3_layout_packCircle(nodes) {
@@ -1263,28 +1262,20 @@ function d3_layout_packCircle(nodes) {
         if (isect == 1) {
           for (k = a._pack_prev; k !== j._pack_prev; k = k._pack_prev, s2++) {
             if (d3_layout_packIntersects(k, c)) {
-              if (s2 < s1) {
-                isect = -1;
-                j = k;
-              }
               break;
             }
           }
         }
 
         // Update node chain.
-        if (isect == 0) {
+        if (isect) {
+          if (s1 < s2 || (s1 == s2 && b.r < a.r)) d3_layout_packSplice(a, b = j);
+          else d3_layout_packSplice(a = k, b);
+          i--;
+        } else {
           d3_layout_packInsert(a, c);
           b = c;
           bound(c);
-        } else if (isect > 0) {
-          d3_layout_packSplice(a, j);
-          b = j;
-          i--;
-        } else { // isect < 0
-          d3_layout_packSplice(j, b);
-          a = j;
-          i--;
         }
       }
     }
@@ -1391,7 +1382,7 @@ d3.layout.cluster = function() {
     // Second walk, normalizing x & y to the desired size.
     d3_layout_treeVisitAfter(root, function(node) {
       node.x = (node.x - x0) / (x1 - x0) * size[0];
-      node.y = (1 - node.y / root.y) * size[1];
+      node.y = (1 - (root.y ? node.y / root.y : 1)) * size[1];
     });
 
     return nodes;
@@ -1782,26 +1773,26 @@ d3.layout.treemap = function() {
         v = u ? round(row.area / u) : 0,
         o;
     if (u == rect.dx) { // horizontal subdivision
-      if (flush || v > rect.dy) v = v ? rect.dy : 0; // over+underflow
+      if (flush || v > rect.dy) v = rect.dy; // over+underflow
       while (++i < n) {
         o = row[i];
         o.x = x;
         o.y = y;
         o.dy = v;
-        x += o.dx = v ? round(o.area / v) : 0;
+        x += o.dx = Math.min(rect.x + rect.dx - x, v ? round(o.area / v) : 0);
       }
       o.z = true;
       o.dx += rect.x + rect.dx - x; // rounding error
       rect.y += v;
       rect.dy -= v;
     } else { // vertical subdivision
-      if (flush || v > rect.dx) v = v ? rect.dx : 0; // over+underflow
+      if (flush || v > rect.dx) v = rect.dx; // over+underflow
       while (++i < n) {
         o = row[i];
         o.x = x;
         o.y = y;
         o.dx = v;
-        y += o.dy = v ? round(o.area / v) : 0;
+        y += o.dy = Math.min(rect.y + rect.dy - y, v ? round(o.area / v) : 0);
       }
       o.z = false;
       o.dy += rect.y + rect.dy - y; // rounding error

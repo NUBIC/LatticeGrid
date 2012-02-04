@@ -128,6 +128,7 @@ def CreateInvestigatorFromHash(data_row)
         throw "unable to match program #{data_row['program']} for user #{pi.username}"
       end
       # replace this logic with a STI model of 'member??'
+      
       membership = InvestigatorAppointment.find(:first, 
           :conditions=>['investigator_id=:investigator_id and organizational_unit_id=:program_id and type in (:types)', 
             {:program_id => theProgram.id, :investigator_id => pi.id, :types => ["Member"]}])
@@ -484,26 +485,6 @@ def MergeInvestigatorDescriptionsFromHash(data_row)
     existing_investigator.save!
   else
     puts "could not find Investigator: name: #{investigator.name}; email: #{investigator.email}; username: #{investigator.username} for data_row: #{data_row.inspect}"  if LatticeGridHelper.debug?
-  end
-end
-  
-def InsertInvestigatorProgramsFromDepartments(pis)
-  pis.each do |pi|
-    theProgram = CreateProgramFromDepartment(pi.home_department)
-    InsertInvestigatorProgram(pi,theProgram)
-    theProgram = CreateProgramFromDepartment(pi.secondary)
-    InsertInvestigatorProgram(pi,theProgram)
-   end
-end
-
-def InsertInvestigatorProgram(pi,program)
-  if !program.blank? && !program.id.blank? && !pi.id.blank? then
-    begin
-      ip = InvestigatorProgram.create :program_id => program.id, :investigator_id => pi.id, :program_appointment => 'member', :start_date => Time.now
-    rescue Exception => error
-       puts "something happened"+error
-       throw pi.inspect
-    end
   end
 end
 

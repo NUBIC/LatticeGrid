@@ -57,15 +57,6 @@ task :importInvestigatorDescriptions => :getInvestigators do
   read_file_handler("importInvestigatorDescriptions" ) {|filename| ReadInvestigatorDescriptionData(filename)}
 end
 
-task :buildProgramsFromInvestigators => [:getInvestigators,:getPrimaryAppointments,:getAllOrganizationsWithInvestigators] do
-  block_timing("buildProgramsFromInvestigators") {
-    puts "number of investigatorPrograms = #{InvestigatorProgram.find(:all).length}"
-    CreateProgramsFromDepartments(@AllPrimaryAppointments)
-    InsertInvestigatorProgramsFromDepartments(@AllInvestigators)
-    puts "number of investigatorPrograms = #{InvestigatorProgram.find(:all).length}"
-  }
-end
-
 task :validateUsers => :environment do
   read_file_handler("ValidateUsers" ) {|filename| ReadUsers(filename)}
 end
