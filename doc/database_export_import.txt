@@ -50,6 +50,10 @@ scp  stanford_latticegrid_20111109.dmp root@172.16.215.128:/root/stanford_lattic
 
 scp fsmpublications_dev_20110930.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/fsmpublications_dev_20110930.dmp  
 
+scp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/nucats_assist_prod_20120131.dmp nucats_assist_prod_20120131.dmp  
+
+scp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/cancer_latticegrid_prod_20120131.dmp cancer_latticegrid_prod_20120131.dmp  
+
 pg_restore -c -O -d fsm_latticegrid_production -U fsm_latticegrid -h pprod fsmpublications_dev_20110930.dmp
 
 # latest laptop version
@@ -59,6 +63,8 @@ pg_restore -c -O -d stanford_latticegrid -U latticegrid stanford_latticegrid_201
 pg_restore -c -O -d fsm_latticegrid -U latticegrid fsmpublications_dev_20111210.dmp
 
 pg_restore -c -O -d rhlccc_latticegrid -U latticegrid cancer_latticegrid_prod_20111001.dmp
+
+pg_restore -c -O -d rhlccc_latticegrid -U latticegrid cancer_latticegrid_prod_20120131.dmp
 
 pg_restore -c -O -d stanford_latticegrid -U latticegrid -h pstage2 stanford_latticegrid_20120105.dmp
 

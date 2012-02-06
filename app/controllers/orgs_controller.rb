@@ -386,19 +386,26 @@ class OrgsController < ApplicationController
       format.html { render :layout => 'printable', :controller=> :orgs, :action => :show }# show.html.erb
       format.xml  { render :xml => @abstracts }
       format.pdf do
-         render :pdf => "Abstracts for " + @unit.name, 
-            :stylesheets => "pdf", 
-            :template => "orgs/show.html.erb",
-            :layout => "pdf"
+        @pdf = true
+        render :pdf => "Abstracts for " + @unit.name, 
+          :stylesheets => "pdf", 
+          :template => "orgs/show.html.erb",
+          :layout => "pdf"
       end
-      format.xls  { send_data(render(:template => 'orgs/show.html', :layout => "excel"),
-        :filename => "Abstracts for #{@unit.name}.xls",
-        :type => 'application/vnd.ms-excel',
-        :disposition => 'attachment') }
-      format.doc  { send_data(render(:template => 'orgs/show.html', :layout => "excel"),
-        :filename => "Abstracts for #{@unit.name}.doc",
-        :type => 'application/msword',
-        :disposition => 'attachment') }
+      format.xls  { 
+        @pdf = true
+        send_data(render(:template => 'orgs/show.html', :layout => "excel"),
+          :filename => "Abstracts for #{@unit.name}.xls",
+          :type => 'application/vnd.ms-excel',
+          :disposition => 'attachment') 
+      }
+      format.doc  { 
+        @pdf = true
+        send_data(render(:template => 'orgs/show.html', :layout => "excel"),
+          :filename => "Abstracts for #{@unit.name}.doc",
+          :type => 'application/msword',
+          :disposition => 'attachment') 
+      }
     end
   end
 

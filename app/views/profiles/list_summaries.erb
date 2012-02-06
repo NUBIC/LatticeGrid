@@ -4,6 +4,7 @@
   <thead> 
   <tr>
 	<th>Name</th>
+	<th>Username</th>
 	<% unless @no_email %><th>email</th><% end %>
 	<th>Approvals<%= " after #{@approvals_after} " unless @approvals_after.blank? -%></th>
 	<th>Summary</th>
@@ -16,6 +17,7 @@
   <% next if pi.blank? or pi.username.blank? %>
   <tr>
     <td><%= link_to(pi.sort_name.gsub(/ /,'&nbsp;'), investigator_url(pi.username), :title=>"View public profile for #{pi.full_name}") unless pi.sort_name.blank? %></td>
+    <td><%= pi.username %></td>
     <% unless @no_email %><td><%= mail_to(pi.email, "email", 
 				:subject => "LatticeGrid Profile", 
 				:encode => "javascript", :title=>"Send email to #{pi.full_name}") unless pi.email.blank? %> </td><% end %>

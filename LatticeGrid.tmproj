@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>app/controllers/profiles_controller.rb</string>
+	<string>lib/investigator_appointment_utilities.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -21,79 +21,33 @@
 	<integer>392</integer>
 	<key>metaData</key>
 	<dict>
-		<key>app/controllers/profiles_controller.rb</key>
+		<key>app/controllers/cytoscape_controller.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>76</integer>
 				<key>line</key>
-				<integer>179</integer>
+				<integer>118</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>159</integer>
+			<integer>111</integer>
 		</dict>
-		<key>app/models/organizational_unit.rb</key>
+		<key>app/views/cytoscape/chord.html.erb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>15</integer>
+				<integer>55</integer>
 				<key>line</key>
-				<integer>109</integer>
+				<integer>26</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>92</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>8</integer>
-				<key>line</key>
-				<integer>109</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>19</integer>
-				<key>line</key>
-				<integer>109</integer>
-			</dict>
-		</dict>
-		<key>app/views/abstracts/ccsg.html.erb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>92</integer>
-				<key>line</key>
-				<integer>83</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
 			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>53</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>74</integer>
-				<key>line</key>
-				<integer>83</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>99</integer>
-				<key>line</key>
-				<integer>83</integer>
-			</dict>
 		</dict>
 		<key>app/views/graphs/org_nodes.rxml</key>
 		<dict>
@@ -123,48 +77,64 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>config/initializers/latticegrid.rb</key>
+		<key>app/views/layouts/cytoscape.html.erb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>13</integer>
+				<integer>4</integer>
 				<key>line</key>
-				<integer>3</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>doc/project_history.txt</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>262</integer>
+				<integer>12</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>226</integer>
+			<integer>7</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>96</integer>
+				<key>line</key>
+				<integer>12</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>4</integer>
+				<key>line</key>
+				<integer>12</integer>
+			</dict>
+		</dict>
+		<key>config/database.yml</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>22</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>261</integer>
+				<integer>28</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>262</integer>
+				<integer>22</integer>
 			</dict>
 		</dict>
 		<key>doc/publications_scripts.txt</key>
@@ -172,28 +142,58 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>23</integer>
 				<key>line</key>
-				<integer>2</integer>
+				<integer>147</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>99</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>5</integer>
+				<key>line</key>
+				<integer>147</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>33</integer>
+				<key>line</key>
+				<integer>147</integer>
+			</dict>
+		</dict>
+		<key>lib/investigator_appointment_utilities.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>17</integer>
+				<key>line</key>
+				<integer>617</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>589</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
 		<string>doc/publications_scripts.txt</string>
-		<string>doc/project_history.txt</string>
-		<string>config/initializers/latticegrid.rb</string>
-		<string>app/views/abstracts/ccsg.html.erb</string>
-		<string>app/controllers/profiles_controller.rb</string>
-		<string>app/models/organizational_unit.rb</string>
+		<string>config/database.yml</string>
+		<string>app/controllers/cytoscape_controller.rb</string>
+		<string>app/views/cytoscape/chord.html.erb</string>
+		<string>lib/investigator_appointment_utilities.rb</string>
+		<string>app/views/layouts/cytoscape.html.erb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{229, 183}, {1412, 995}}</string>
+	<string>{{152, 323}, {1053, 663}}</string>
 </dict>
 </plist>
