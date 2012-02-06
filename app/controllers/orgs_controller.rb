@@ -383,7 +383,7 @@ class OrgsController < ApplicationController
     @simple_links = true
 
     respond_to do |format|
-      format.html { render :layout => 'printable', :controller=> :orgs, :action => :show }# show.html.erb
+      format.html { render :layout => 'printable', :controller=> :orgs, :action => :show } # show.html.erb
       format.xml  { render :xml => @abstracts }
       format.pdf do
         @pdf = true
@@ -413,18 +413,21 @@ class OrgsController < ApplicationController
     # for printing
     handle_start_and_end_date
     @exclude_letters = ! params[:exclude_letters].blank?
+    @impact_factor = params[:impact_factor]
+    @limit_to_first_last = ! params[:limit_to_first_last].blank?
     @unit = OrganizationalUnit.new(:name=>'Ad hoc unit', :abbreviation=>'Ad hoc')
-    @investigators_in_unit = Investigator.find_investigators_in_list(params[:investigator_ids])
+    @faculty = Investigator.find_investigators_in_list(params[:investigator_ids])
+    @investigators_in_unit = @faculty.map(&:id)
     if @exclude_letters
-      @abstracts = Abstract.exclude_letters.investigator_publications_by_date( @investigators_in_unit, params[:start_date], params[:end_date])
+      @abstracts = Abstract.exclude_letters.investigator_publications_by_date( @faculty, params[:start_date], params[:end_date])
     else
-      @abstracts = Abstract.investigator_publications_by_date( @investigators_in_unit, params[:start_date], params[:end_date])
+      @abstracts = Abstract.investigator_publications_by_date( @faculty, params[:start_date], params[:end_date])
     end
     @do_pagination = "0"
     @heading = "#{@abstracts.length} publications. Selected publications  "
     @heading = @heading + " from #{@start_date} " if !params[:start_date].blank?
     @heading = @heading + " to #{@end_date}" if !params[:end_date].blank?
-    @heading = @heading + " <br/>Investigators explicitly included: #{@investigators_in_unit.collect{|pi| pi.name unless pi.blank?}.uniq.join(', ')}" if @investigators_in_unit.length > 0
+    @heading = @heading + " <br/>Investigators explicitly included: #{@faculty.collect{|pi| pi.name unless pi.blank?}.uniq.join(', ')}" if @faculty.length > 0
     @include_mesh = false
     @include_graph_link = false
     @show_paginator = false
@@ -433,24 +436,32 @@ class OrgsController < ApplicationController
     @include_collab_marker = true
     @bold_members = true
     @include_impact_factor = true
+    @simple_links = true
 
     respond_to do |format|
-      format.html { render :layout => 'printable', :controller=> :orgs, :action => :show }# show.html.erb
+      format.html { render :layout => 'printable', :controller=> :orgs, :action => :show } # show.html.erb
       format.xml  { render :xml => @abstracts }
       format.pdf do
+        @pdf = true
          render :pdf => "Abstracts for " + @unit.name, 
             :stylesheets => "pdf", 
             :template => "orgs/show.html.erb",
             :layout => "pdf"
       end
-      format.xls  { send_data(render(:template => 'orgs/show.html', :layout => "excel"),
+      format.xls  { 
+        @pdf = true
+        send_data(render(:template => 'orgs/show.html', :layout => "excel"),
         :filename => "Abstracts for #{@unit.name}.xls",
         :type => 'application/vnd.ms-excel',
-        :disposition => 'attachment') }
-      format.doc  { send_data(render(:template => 'orgs/show.html', :layout => "excel"),
+        :disposition => 'attachment') 
+      }
+      format.doc  { 
+        @pdf = true
+        send_data(render(:template => 'orgs/show.html', :layout => "excel"),
         :filename => "Abstracts for #{@unit.name}.doc",
         :type => 'application/msword',
-        :disposition => 'attachment') }
+        :disposition => 'attachment') 
+      }
     end
   end
 end
