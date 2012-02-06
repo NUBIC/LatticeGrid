@@ -81,6 +81,8 @@ def CreateInvestigatorFromHash(data_row)
   pi = HandleUsername(pi)
   pi = SetInvestigatorInformation(pi,data_row)
   pi = SetInvestigatorAddress(pi,data_row)
+
+  member_type = HandleMemberType(data_row)
   
   if pi.username.blank? then
     puts "investigator #{pi.first_name} #{pi.last_name} does not have a username"
@@ -131,10 +133,10 @@ def CreateInvestigatorFromHash(data_row)
       
       membership = InvestigatorAppointment.find(:first, 
           :conditions=>['investigator_id=:investigator_id and organizational_unit_id=:program_id and type in (:types)', 
-            {:program_id => theProgram.id, :investigator_id => pi.id, :types => ["Member"]}])
+            {:program_id => theProgram.id, :investigator_id => pi.id, :types => [member_type.to_s]}])
       if membership.blank?
         puts "Membership of #{pi.name} in #{theProgram.name} created" if LatticeGridHelper.verbose?
-        Member.create :organizational_unit_id => theProgram.id, :investigator_id => pi.id, :start_date => Time.now
+        member_type.create :organizational_unit_id => theProgram.id, :investigator_id => pi.id, :start_date => Time.now
       else
         puts "Membership of #{pi.name} in #{theProgram.name} updated" if LatticeGridHelper.debug?
         membership.end_date = nil
@@ -145,6 +147,15 @@ def CreateInvestigatorFromHash(data_row)
       puts 'no program datarow' if LatticeGridHelper.debug?
 	  end
 	end
+end
+
+def HandleMemberType(data)
+  key = data['member_type']
+  if !key.blank? && LatticeGridHelper.member_types_map.has_key?(key)
+    return LatticeGridHelper.member_types_map[key]
+  else
+    return Member
+  end
 end
 
 def HandleUsername(pi)
