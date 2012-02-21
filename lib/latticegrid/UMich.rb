@@ -116,3 +116,12 @@ end
 def LatticeGridHelper.do_ldap?
   false
 end
+
+def LatticeGridHelper.member_types_map
+  {
+    'PrimaryCore' => PrimaryMember,
+    'PrimaryNonCore' => PrimaryAssociateMember,
+    'SecondaryCore' => SecondaryMember,
+    'SecondaryNonCore' => SecondaryAssociateMember
+  }
+end
