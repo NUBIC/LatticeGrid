@@ -3,6 +3,7 @@ class InvestigatorsController < ApplicationController
   helper :all
   include InvestigatorsHelper
   include ApplicationHelper
+  include SparklinesHelper
 
   require 'pubmed_utilities'
 

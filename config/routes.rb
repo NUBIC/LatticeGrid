@@ -28,6 +28,7 @@ ActionController::Routing::Routes.draw do |map|
 # manually added rjs routes to enforce .js format
   map.collaborators_investigator 'investigators/:id/collaborators.js', :action=>"collaborators", :controller=>"investigators",  :conditions => { :method => :get }
   map.barchart_investigator 'investigators/:id/barchart.js', :action=>"barchart", :controller=>"investigators",  :conditions => { :method => :get }
+  map.barchart_org 'orgs/:id/barchart.js', :action=>"barchart", :controller=>"orgs",  :conditions => { :method => :get }
   map.tag_cloud_side_investigator 'investigators/:id/tag_cloud_side.js', :action=>"tag_cloud_side", :controller=>"investigators",  :conditions => { :method => :get }
   map.tag_cloud_side_copublication 'copublications/:id/tag_cloud_side.js', :action=>"tag_cloud_side", :controller=>"copublications",  :conditions => { :method => :get }
   map.tag_cloud_investigator 'investigators/:id/tag_cloud.js', :action=>"tag_cloud", :controller=>"investigators",  :conditions => { :method => :get }

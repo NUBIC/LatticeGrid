@@ -6,7 +6,7 @@
   <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
   <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
 
-	<% @javascripts ||= [ 'cytoscape/cytoscapeweb.min', 'cytoscape/jquery-1.3.2.min', 'cytoscape/flash_detect_min', 'cytoscape/jquery.cytoscapeweb', 'cytoscape/json2.min', 'AC_OETags.min', 'cytoscape/cytoscapeweb.min', 'cytoscape/cytoscapeweb-defaults', 'cytoscape/cytoscapeweb-file', 'cytoscape/home' ] %>
+	<% @javascripts ||= [ 'cytoscape/cytoscapeweb.min', 'cytoscape/jquery-1.3.2.min', 'cytoscape/flash_detect_min', 'cytoscape/jquery.cytoscapeweb', 'cytoscape/json2.min', 'AC_OETags.min', 'cytoscape/cytoscapeweb.min', 'cytoscape/cytoscapeweb-defaults', 'cytoscape/cytoscapeweb-file', 'cytoscape/home', 'jquery.min', 'jquery.sparkline.min' ] %>
 	<!-- include JIT Library File -->
 	<%= javascript_include_tag @javascripts %> 
 	<!-- CSS Files -->

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>lib/investigator_appointment_utilities.rb</string>
+	<string>lib/tasks/reports.rake</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -21,33 +21,19 @@
 	<integer>392</integer>
 	<key>metaData</key>
 	<dict>
-		<key>app/controllers/cytoscape_controller.rb</key>
+		<key>app/controllers/orgs_controller.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>76</integer>
+				<integer>91</integer>
 				<key>line</key>
-				<integer>118</integer>
+				<integer>385</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>111</integer>
-		</dict>
-		<key>app/views/cytoscape/chord.html.erb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>55</integer>
-				<key>line</key>
-				<integer>26</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>374</integer>
 		</dict>
 		<key>app/views/graphs/org_nodes.rxml</key>
 		<dict>
@@ -77,36 +63,6 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>app/views/layouts/cytoscape.html.erb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>4</integer>
-				<key>line</key>
-				<integer>12</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>7</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>96</integer>
-				<key>line</key>
-				<integer>12</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>4</integer>
-				<key>line</key>
-				<integer>12</integer>
-			</dict>
-		</dict>
 		<key>config/database.yml</key>
 		<dict>
 			<key>caret</key>
@@ -135,6 +91,50 @@
 				<integer>0</integer>
 				<key>line</key>
 				<integer>22</integer>
+			</dict>
+		</dict>
+		<key>config/initializers/latticegrid.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>15</integer>
+				<key>line</key>
+				<integer>3</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>doc/example_loads.txt</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>17</integer>
+				<key>line</key>
+				<integer>29</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>5</integer>
+				<key>line</key>
+				<integer>29</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>33</integer>
+				<key>line</key>
+				<integer>29</integer>
 			</dict>
 		</dict>
 		<key>doc/publications_scripts.txt</key>
@@ -167,33 +167,33 @@
 				<integer>147</integer>
 			</dict>
 		</dict>
-		<key>lib/investigator_appointment_utilities.rb</key>
+		<key>lib/tasks/reports.rake</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>17</integer>
+				<integer>16</integer>
 				<key>line</key>
-				<integer>617</integer>
+				<integer>10</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>589</integer>
+			<integer>0</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
 		<string>doc/publications_scripts.txt</string>
+		<string>doc/example_loads.txt</string>
 		<string>config/database.yml</string>
-		<string>app/controllers/cytoscape_controller.rb</string>
-		<string>app/views/cytoscape/chord.html.erb</string>
-		<string>lib/investigator_appointment_utilities.rb</string>
-		<string>app/views/layouts/cytoscape.html.erb</string>
+		<string>app/controllers/orgs_controller.rb</string>
+		<string>lib/tasks/reports.rake</string>
+		<string>config/initializers/latticegrid.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{152, 323}, {1053, 663}}</string>
+	<string>{{10, 172}, {1132, 856}}</string>
 </dict>
 </plist>

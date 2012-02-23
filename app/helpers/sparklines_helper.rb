@@ -58,4 +58,11 @@ module SparklinesHelper
     out
   end
 
+	def jquery_sparkline_barchart(id, data, options={})
+	  options["barSpacing"] ||= 1
+	  options["barWidth"] ||= 1
+    out="jQuery('.#{id}').sparkline([#{data}], {type: 'bar', barColor: 'darkgrey', zeroColor: 'red', barWidth: #{options['barWidth']}, barSpacing: #{options['barSpacing']}} );"
+    out
+  end
+
 end

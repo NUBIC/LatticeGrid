@@ -3,10 +3,10 @@
 <% params[:include_publications] ||= 1 %>
 <% params[:include_awards] ||= 1 %>
 <% params[:include_studies] ||= 1 %>
-  <!--[if IE]>
+ <!--[if IE]>
   <link rel="stylesheet" type="text/css" href="stylesheets/cytoscape/demo.ie.css" />
   <![endif]-->
-  
+
 	<script type="text/javascript">
 	// globals
 	var vis;
@@ -16,17 +16,24 @@
 	</script>
 
 <!-- script type="text/javascript" src="javascripts/cytoscape/ga.js" ><!/script -->
-  
+
   <!--[if IE]>
   <![endif]-->
-            
 <div id="page" class="slice">
 	<div id="investigator_title">
 	<% if ! @org.blank? %>
 	<h1><%= @org.name %> Collaboration Diagram &nbsp;
-		<span class='barchart_<%=investigator.username%>' id='barchart_<%=investigator.username%>'> &nbsp; </span>
+		<% div_id = 'barchart_'+@org.id.to_s %>
+		<span class='<%= div_id %>' id='<%= div_id %>'> ... </span>
+		<%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? -%>
+				
   		<script type='text/javascript' language='javascript'>
-  		<%= remote_function(:url => barchart_investigator_path( investigator.username ), :method => :get, :before => "Element.show('spinner')", :complete => "Element.hide('spinner')" ) %>
+
+		var request = jQuery.ajax({
+		    url: '<%= barchart_org_path( @org.id ) %>',
+		 	type: 'GET',
+			dataType: 'script'
+		});		
   		</script>
 	</h1>
 	<% if @include_graph_link %>

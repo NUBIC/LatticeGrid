@@ -1,8 +1,16 @@
 class OrgsController < ApplicationController
-  caches_page(:show, :index, :departments, :centers, :programs, :show_investigators, :stats, :full_show, :tag_cloud, :short_tag_cloud) if LatticeGridHelper.CachePages()
+  caches_page(:show, :index, :departments, :centers, :programs, :show_investigators, :stats, :full_show, :tag_cloud, :short_tag_cloud, :barchart) if LatticeGridHelper.CachePages()
+
+  skip_before_filter  :find_last_load_date, :only => [:barchart]
+  skip_before_filter  :handle_year, :only => [:barchart]
+  skip_before_filter  :get_organizations, :only => [ :barchart]
+  skip_before_filter  :handle_pagination, :only => [:barchart]
+  skip_before_filter  :define_keywords, :only => [:barchart]
+
   helper :sparklines
   include ApplicationHelper
   include OrgsHelper
+  include SparklinesHelper
 
   require 'fastercsv' # for department_collaborations
 
@@ -257,6 +265,16 @@ class OrgsController < ApplicationController
       render :action => 'show'
     end
   end
+  
+  def barchart
+      @unit = find_unit_by_id_or_name(params[:id])
+      publications_per_year=abstracts_per_year_as_string(@unit.abstracts) 
+      
+      respond_to do |format|
+        format.js { render :layout => false, :js => jquery_sparkline_barchart('barchart_'+@unit.id.to_s, publications_per_year)  }
+      end
+  end
+  
 
   def period_stats
     # get all publications by  members
