@@ -94,7 +94,7 @@
 
 	<p>&nbsp;</p>
 	<div id="awards_one_unit">
-		<% form_for :date_range, :url => {:controller => :awards, :action => :org}, :html => { :method => :get, :class => "p" }  do |form| %> 
+		<% form_for :date_range, :url => {:controller => :awards, :action => :org}, :html => { :method => :post, :class => "p" }  do |form| %> 
 		<p>List the investigator awards for the following unit:</p>
 
 	  	<p><%= collection_select( '', :id, @head_node.descendants.sort{|a,b| a.name.downcase <=> b.name.downcase}, :id, :name)  %> select unit </p>
