@@ -3,6 +3,8 @@ class AwardsController < ApplicationController
   include AwardsHelper
   include FormatHelper
   include ApplicationHelper
+  include OrgsHelper
+  
   require 'cytoscape_generator'
 
   before_filter :check_allowed, :except => [:disallowed]
@@ -79,6 +81,50 @@ class AwardsController < ApplicationController
     end
    end 
   
+   def org 
+     @javascripts_add = ['jquery-ui.min']
+     @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]
+     if params[:id].nil? then
+       redirect_to( current_abstracts_url)
+     else
+       @unit = find_unit_by_id_or_name(params[:id])
+       @investigators = @unit.all_primary_or_member_faculty
+       @investigator_ids = @investigators.map(&:id)
+       @awards = Proposal.belonging_to_pi_ids(@investigator_ids)
+       previous = nil
+       @awards_total = @awards.map{ |a| 
+          val = (previous.blank? or previous != a.id ) ? a.total_amount : 0 
+          previous = a.id
+          val}.inject(0){|sum, element| sum+element}
+       respond_to do |format|
+         format.html { 
+         	render
+         }
+         format.xml  { 
+            render :xml => @investigator.proposals }
+         format.xls  { 
+           @pdf = 1
+            send_data(render(:template => 'awards/org.html', :layout => "excel"),
+           :filename => "award_listing_for_#{@unit.name}.xls",
+           :type => 'application/vnd.ms-excel',
+           :disposition => 'attachment') }
+         format.doc  { 
+           @pdf = 1
+           send_data(render(:template => 'awards/org.html', :layout => "excel"),
+           :filename => "award_listing_for_#{@unit.name}.doc",
+           :type => 'application/msword',
+           :disposition => 'attachment') }
+         format.pdf do
+           @pdf = 1
+           render( :pdf => "Award listing for " + @unit.name, 
+               :stylesheets => "pdf", 
+               :template => "awards/org.html",
+               :layout => "pdf")
+         end
+       end
+     end
+    end 
+
   private
   
   def check_allowed

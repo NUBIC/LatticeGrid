@@ -1,10 +1,11 @@
 module AwardsHelper
   
-  def link_to_investigator_awards(investigator, name=nil) 
+  def link_to_investigator_awards(investigator, name=nil, the_class=nil) 
     name=investigator.last_name if name.blank?
+    the_class = 'investigator_awards' if the_class.blank?
     link_to name, 
       investigator_award_url(:id=>investigator.username), # can't use this form for usernames including non-ascii characters
-       :class => 'investigator_awards',
+       :class => the_class,
        :title => "Go to #{name}: #{investigator.total_publications} pubs"
   end
   

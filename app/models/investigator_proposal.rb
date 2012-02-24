@@ -4,8 +4,8 @@ class InvestigatorProposal < ActiveRecord::Base
   named_scope :by_role, 
     :order => "investigator_proposals.role DESC, proposals.project_start_date DESC", :joins => :proposal
   named_scope :distinct_roles, 
-    :order => "role", :select => 'role, count(*) as count', :group => 'role'
+    :order => "role", :select => 'investigator_proposals.role, count(*) as count', :group => 'investigator_proposals.role'
   named_scope :pis, 
-    :conditions=>"role = 'PD/PI'"
+    :conditions=>"investigator_proposals.role = 'PD/PI'"
   
 end

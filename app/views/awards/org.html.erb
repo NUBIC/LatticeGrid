@@ -1,0 +1,139 @@
+<% @all_abstracts = nil unless defined?(@all_abstracts) %>
+
+<% unless @awards.blank? %>
+<% unless defined?(@pdf) and @pdf %>
+<h1><%= @unit.name %> Funding Overview &nbsp;
+    <% if ! @all_abstracts.nil? && @all_abstracts.length > 9 -%>
+	  <% publications_per_year=abstracts_per_year_as_string(@all_abstracts) -%>
+	  <span class='inlinebarchart' values='<%= publications_per_year -%>' title='publications per year: <%= publications_per_year -%>'>&nbsp;</span>
+   	  <%= sparkline_barchart_setup({'barWidth'=>2,'barSpacing'=>2}) -%>
+    <% end -%>
+</h1>
+<span id='data_title' class='h2'>Award data: <%= number_to_humanized(@awards_total) %></span>
+<div style="float:right;padding-right:5px;">
+	<%= link_to( "as Word", org_award_url(params[:id],'doc'))  %>
+	<%= link_to( "as Excel", org_award_url(params[:id],'xls')) %>
+	<%= link_to( "as PDF", org_award_url(params[:id],'pdf'))  %>
+</div>
+<% end %>
+
+<script>
+  jQuery(document).ready(function() {
+    jQuery("#roles_definitions").dialog({ 
+		autoOpen: false, 
+		width: 1000,
+		buttons: {
+			"Ok": function() { 
+				jQuery(this).dialog("close"); 
+			}, 
+			"Cancel": function() { 
+				jQuery(this).dialog("close"); 
+			} 
+		},
+		hide: 'slide',  
+		modal: true, 
+		show: 'slide' });
+    jQuery(".roles").click(function() {
+	     jQuery("#roles_definitions").dialog("open");
+		return false;
+	   })
+
+  });
+
+</script>
+  
+
+<div id="roles_definitions" title="Roles Definitions">
+	<p><b>Definitions:</b></p>
+	<div id="note">
+	<p>The <b>PD/PI</b> role in InfoEd is listed as one of: <b>PI/PD</b>, <b>Principal Investigator</b>, <b>Director</b>, <b>Co-Program Director</b>, <b>Co-Director</b>, <b>Investigator</b>, or <b>Contact P. I.</b>  </p>
+	<p>The <b>Co-Investigator</b> role in InfoEd is listed as one of: <b>Co-Investigator</b>, <b>Co-I</b>, or <b>Co-PD/PI</b>. </p>
+	<p>The <b>Fellow</b> role in InfoEd is listed as one of: <b>Fellow</b>, <b>Postdoc</b>, or <b>Post Doctoral</b>. </p>
+	<p>The <b>Faculty</b> role in InfoEd is listed as one of: <b>Faculty</b>, <b>Asst. Professor</b>, <b>Collaborator</b>, <b>Mentor</b>, or <b>Co-Mentor</b>. </p>
+	<p>The <b>Biostatistician</b> role in InfoEd is listed as one of: <b>Biostatistician</b>, <b>Statistician</b>, <b>Analyst</b>, or <b>Data Mgmt</b>.</p>
+
+	<p>The <b>Other</b> role consists of the remaining roles, including <b>Other</b>, <b>O.S.P</b>, <b>Advisory Board Member</b>, <b>Postdoc</b>, or <b>Post Doctoral</b> </p>
+	</div>
+</div>
+
+<div id="listing">
+  <table cellpadding="2" cellspacing="0" class="borderless"> 
+	<tr valign="bottom" class="header">
+		<td class="list-title-left">
+			#
+		</td>
+		<td class="list-title-left">
+			PI
+		</td>
+		<td class="list-title-left">
+			<span class="roles">Role <%= image_tag("information.png") %></span>
+		</td>
+		<td class="list-title-left">
+			Effort
+		</td>
+		<td class="list-title-left">
+			Title
+		</td>
+		<td class="list-title-left">
+			Agency
+		</td>
+		<td class="list-title-left">
+			Award period
+		</td>
+		<td class="list-title-left">
+			Project period
+		</td>
+		<td class="list-title-left">
+			Total Amount
+		</td>
+		<td colspan="2" class="list-title-left">
+			Collaborators
+		</td>
+	</tr>
+ <% cnt = 0 %>
+<% previous = nil %>
+ <% for award in @awards %>
+	<% next if cnt > 0 and award.id == previous.id %>
+	<% previous = award %>
+	<% cnt+=1 %>
+	<tr class="<%= cycle('even', 'odd') %>">
+		<td class="list-left">
+			<%= cnt %>
+		</td>
+		<td class="list-left">
+			<%= award.pi.name  %>
+		</td>
+		<td class="list-left">
+			PD/PI
+		</td>
+		<td class="list-right">
+			<%= award.pi_award.percent_effort %> %
+		</td>
+		<td class="list-left">
+			<%= link_to( award.title, award_url(award.id)) %>
+		</td>
+		<td class="list-left">
+			<%= award.sponsor_name %>
+		</td>
+		<td class="list-left">
+			<%= formatted_date(award.award_start_date) + " to " + formatted_date(award.award_end_date) %>
+		</td>
+		<td class="list-left">
+			<%= formatted_date(award.project_start_date) + " to " + formatted_date(award.project_end_date) %>
+		</td>
+		<td class="list-left">
+			<%= number_to_humanized(award.total_amount) %>
+		</td>
+		<td class="list-left">
+			<%=  award.investigator_proposals.count %>
+		</td>
+		<td class="list-left">
+			<%=  award.investigators.collect{|pi| link_to_investigator_awards(pi, pi.name, ((@investigator_ids.include?(pi.id)) ? "member_author" : "investigator_awards") )}.join(", ") %>
+		</td>
+	</tr>
+  <% end %>
+  </table>
+
+<br/>
+</div>
+<% end %>

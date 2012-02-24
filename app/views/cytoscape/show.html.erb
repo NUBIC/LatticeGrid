@@ -131,9 +131,9 @@
 <!-- end page -->
 <% if params[:depth] == "2" %>
 <script type="text/javascript">
-function callWhenLoaded() {
+vis.ready(function () {
 	changeCytoscapeLayout("ForceDirected");
- }
+ });
 </script>
 <% end %>
 
