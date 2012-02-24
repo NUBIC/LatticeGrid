@@ -101,13 +101,13 @@
 			<%= cnt %>
 		</td>
 		<td class="list-left">
-			<%= award.pi.name  %>
+			<%= award.pi.name unless award.pi.blank?  %>
 		</td>
 		<td class="list-left">
 			PD/PI
 		</td>
 		<td class="list-right">
-			<%= award.pi_award.percent_effort %> %
+			<%= award.pi_award.percent_effort unless award.pi_award.blank? %> %
 		</td>
 		<td class="list-left">
 			<%= link_to( award.title, award_url(award.id)) %>
