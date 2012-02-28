@@ -48,14 +48,14 @@ def generate_cytoscape_award_nodes(investigator, max_depth, node_array=[], depth
   node_array
 end
 
-
 def generate_cytoscape_award_edges(investigator, depth, node_array, edge_array=[], include_intra_node_connections=false)
   #         edges: [ { id: "e1", label: "Edge 1", weight: 1.1, source: "n1", target: "n3" },
   #                  { id: "e2", label: "Edge 2", weight: 3.3, source:"n2", target:"n1"} ]
   investigator_index = investigator.id.to_s
   investigator.investigator_proposals.each { |i_award| 
     award_index = "A_#{i_award.proposal_id}"
-    if award_index and ! cytoscape_edge_array_has_key?(edge_array, award_index, investigator_index)
+    next if i_award.proposal.blank?
+    if award_index and ! cytoscape_edge_array_has_key?(edge_array, award_index, investigator_index) and cytoscape_array_has_key?(node_array, award_index)
       tooltiptext=investigator_award_edge_tooltip(i_award,investigator,depth)
       edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, award_index, i_award.role, i_award.proposal.investigator_proposals.length, tooltiptext, "Award")
       # now add all the investigator - award connections

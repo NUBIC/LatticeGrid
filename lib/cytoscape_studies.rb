@@ -53,7 +53,7 @@ def generate_cytoscape_study_edges(investigator, depth, node_array, edge_array=[
   investigator_index = investigator.id.to_s
   investigator.investigator_studies.each { |i_study| 
     study_index = "S_#{i_study.study_id}"
-    if study_index and ! cytoscape_edge_array_has_key?(edge_array, study_index, investigator_index)
+    if study_index and ! cytoscape_edge_array_has_key?(edge_array, study_index, investigator_index) and cytoscape_array_has_key?(node_array, study_index)
       tooltiptext=investigator_study_edge_tooltip(i_study,investigator,depth)
       edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, study_index, i_study.role, i_study.study.investigator_studies.length, tooltiptext, "Study")
       # now add all the investigator - study connections

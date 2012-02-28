@@ -36,7 +36,6 @@ class CytoscapeController < ApplicationController
     show
   end
 
-
   def show_org
     params[:include_awards] ||= "0"
     params[:include_studies] ||= "0"
@@ -57,12 +56,41 @@ class CytoscapeController < ApplicationController
     show
   end
 
+  def awards_org
+    params[:include_publications] ||= "0"
+    params[:include_studies] ||= "0"
+    params[:include_awards] ||= "1"
+    handle_data_params
+    @title = "Award Collaborations"
+    @org = find_unit_by_id_or_name(params[:id])
+    @dataurl = org_cytoscape_data_url(params[:id], params[:depth], params[:include_publications], params[:include_awards], params[:include_studies])
+    show
+  end
+
   def studies
     params[:include_awards] ||= "0"
     params[:include_publications] ||= "0"
     handle_data_params
     @title = "Research Study Collaborations"
     @investigator=Investigator.find_by_username(params[:id])
+    show
+  end
+
+  def studies_org
+    params[:include_awards] ||= "0"
+    params[:include_publications] ||= "0"
+    handle_data_params
+    @title = "Research Study Collaborations"
+    @org = find_unit_by_id_or_name(params[:id])
+    @dataurl = org_cytoscape_data_url(params[:id], params[:depth], params[:include_publications], params[:include_awards], params[:include_studies])
+    show
+  end
+
+  def org_all
+    handle_data_params
+    @title = "Publication/Award/Study Collaborations"
+    @org = find_unit_by_id_or_name(params[:id])
+    @dataurl = org_cytoscape_data_url(params[:id], params[:depth], params[:include_publications], params[:include_awards], params[:include_studies])
     show
   end
 

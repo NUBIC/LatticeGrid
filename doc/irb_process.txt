@@ -5,3 +5,5 @@ rake reports:netids_to_orgs file=db/imports/IRB/all_users_2012-01-27.txt > irb_n
 rake reports:netids_to_orgs file=db/imports/IRB/mss_netids_20120207.txt > mss_netid_report.txt
 
 rake reports:netids_to_orgs file=db/imports/IRB/fsm_policy_no_acks_20120220.txt > fsm_no_acks_report.txt
+
+rake reports:netids_to_orgs file=db/imports/IRB/core_survey_netids_20120227.txt > core_survey_20120227_report.txt

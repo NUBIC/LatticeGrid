@@ -74,11 +74,11 @@ def generate_cytoscape_publication_edges(investigator, depth, node_array, edge_a
   investigator.co_authors.each { |connection| 
     next if connection.colleague.blank?
     colleague_index = connection.colleague_id.to_s
-    publication_index = "IC_#{connection.id}"
     next unless cytoscape_array_has_key?(node_array, colleague_index) 
-    next if add_intermediate_nodes and not cytoscape_array_has_key?(node_array, publication_index)
     tooltiptext=investigator_colleague_edge_tooltip(connection,investigator,connection.colleague)
     if add_intermediate_nodes
+      publication_index = "IC_#{connection.id}"
+      next unless cytoscape_array_has_key?(node_array, publication_index)
       unless cytoscape_edge_array_has_key?(edge_array, investigator_index, publication_index)
         edge_array << cytoscape_edge_hash(edge_array.length, investigator_index, publication_index, connection.publication_cnt.to_s, connection.publication_cnt, tooltiptext, "Publication")
         edge_array << cytoscape_edge_hash(edge_array.length, publication_index, colleague_index, connection.publication_cnt.to_s, connection.publication_cnt, tooltiptext, "Publication")

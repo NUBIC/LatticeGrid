@@ -13,9 +13,9 @@ ActionController::Routing::Routes.draw do |map|
     :collection => { :stats => :get, :period_stats => [:get,:post], :list => :get, :centers => :get, :departments => :get, :programs => :get, :department_collaborations => :get, :investigator_abstracts_during_period => [:get, :post], :classifications => :get }, 
     :member => {:full_show => :get, :show_investigators => :get, :list_abstracts_during_period_rjs => :post, :classification_orgs => :get, :program_members => :get }
   map.resources :investigators, :only => [:index, :show], :member => {:full_show => :get, :show_all_tags => :get, :publications => :get, :abstract_count => :get, :preview => :get, :search => :get, :investigators_search => :get, :research_summary => :get, :tag_cloud_list => :get, :title => :get, :home_department => :get, :bio=>:get, :email=>:get, :affiliations=>:get}, :collection => { :list_all => :get, :listing => :get, :list_by_ids => [:post, :get] }
-  map.resources :cytoscape, :only => [:index, :show], :member => {:investigators => :get, :protovis => :get, :jit => :get, :awards => :get, :studies => :get, :d3_data => :get, :chord=>:get, :show_org=>:get, :show_all=>:get}, :collection => {:d3_data => :get, :chord=>:get, :chord_by_date => :get}
-  map.resources :awards, :only => [:index, :show], :collection => {:disallowed => :get, :listing => :get}, :member => {:investigator => :get, :org => [:get, :post]}, :collection => {:org => [:get, :post]}
-  map.resources :studies, :only => [:index, :show], :collection => {:disallowed => :get, :listing => :get}, :member => {:investigator => :get, :org => :get}
+  map.resources :cytoscape, :only => [:index, :show], :member => {:investigators => :get, :protovis => :get, :jit => :get, :awards => :get, :studies => :get, :d3_data => :get, :chord=>:get, :show_org=>:get, :awards_org=>:get, :studies_org=>:get, :show_all=>:get, :org_all=>:get}, :collection => {:d3_data => :get, :chord=>:get, :chord_by_date => :get}
+  map.resources :awards, :only => [:index, :show], :collection => {:disallowed => [:get, :post], :listing => :get}, :member => {:investigator => :get, :org => [:get, :post]}, :collection => {:org => [:get, :post]}
+  map.resources :studies, :only => [:index, :show], :collection => {:disallowed => [:get, :post], :listing => :get}, :member => {:investigator => :get, :org => :get}
   map.resources :profiles, :except=>[:destroy,:new], :member => {:edit_pubs => :get, :investigator_listing => [:get, :post]}, :collection => { :splash => :get, :ccsg => :get, :admin => :get, :list_summaries => :get, :list_summaries_by_program => [:get, :post], :list_investigators => :get, :edit_investigators => :get}
   map.resources :audits, :only => [:index, :show], :collection => { :view_logins => :get, :view_all_logins=> :get, :view_approved_profiles => :get, :view_approved_publications => :get, :faculty_data=>:get, :login_data=>:get, :approved_profile_data=>:get, :approved_publication_data=>:get, :view_publication_approvers=>:get, :view_profile_approvers=>:get, :view_logins_without_approvals=>:get}
   
@@ -70,7 +70,8 @@ ActionController::Routing::Routes.draw do |map|
   map.cytoscape_show_all "cytoscape/:id/show_all/:depth", :controller => 'cytoscape', :action => 'show_all'
   map.cytoscape_awards "cytoscape/:id/awards/:depth", :controller => 'cytoscape', :action => 'awards'
   map.cytoscape_studies "cytoscape/:id/studies/:depth", :controller => 'cytoscape', :action => 'studies'
-   map.cytoscape_show_org "cytoscape/:id/show_org/:depth", :controller => 'cytoscape', :action => 'show_org'
+  map.cytoscape_show_org "cytoscape/:id/show_org/:depth", :controller => 'cytoscape', :action => 'show_org'
+  map.cytoscape_awards_org "cytoscape/:id/awards_org/:depth", :controller => 'cytoscape', :action => 'awards_org'
   map.send_graphviz_image 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:start_date/:end_date/:program.:format', :controller => 'graphviz', :action => 'send_graphviz_image'
   map.send_graphviz_image_orig 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:program.:format', :controller => 'graphviz', :action => 'send_graphviz_image'
   map.restless_graphviz 'get_graphviz/', :controller => 'graphviz', :action => 'get_graphviz'
