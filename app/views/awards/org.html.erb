@@ -1,4 +1,5 @@
 <% @all_abstracts = nil unless defined?(@all_abstracts) %>
+<% @include_graph_link=true if @include_graph_link.nil? %>
 
 <% unless @awards.blank? %>
 <% unless defined?(@pdf) and @pdf %>
@@ -15,6 +16,9 @@
 	<%= link_to( "as Excel", org_award_url(params[:id],'xls')) %>
 	<%= link_to( "as PDF", org_award_url(params[:id],'pdf'))  %>
 </div>
+<% if @include_graph_link %>
+<p><%= org_nav_heading() %></p>
+<% end %>
 <% end %>
 
 <script>

@@ -4,9 +4,10 @@ class StudiesController < ApplicationController
   include FormatHelper
   include ApplicationHelper
   require 'cytoscape_generator'
+  include OrgsHelper
 
   before_filter :check_allowed, :except => [:disallowed]
-  caches_action( :listing, :investigator, :show )  if LatticeGridHelper.CachePages()
+  caches_action( :listing, :investigator, :show, :org )  if LatticeGridHelper.CachePages()
   
   def show
     if params[:id].nil? then
@@ -62,6 +63,45 @@ class StudiesController < ApplicationController
       end
     end
   end
+
+  def org 
+    @javascripts_add = ['jquery-ui.min']
+    @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]
+    if params[:id].nil? then
+      redirect_to( current_abstracts_url)
+    else
+      @unit = find_unit_by_id_or_name(params[:id])
+      @investigators = @unit.all_primary_or_member_faculty
+      @investigator_ids = @investigators.map(&:id)
+      @studies = Study.belonging_to_pi_ids(@investigator_ids)
+      respond_to do |format|
+        format.html { 
+        	render
+        }
+        format.xml  { 
+           render :xml => @studies }
+        format.xls  { 
+          @pdf = 1
+           send_data(render(:template => 'studies/org.html', :layout => "excel"),
+          :filename => "study_listing_for_#{@unit.name}.xls",
+          :type => 'application/vnd.ms-excel',
+          :disposition => 'attachment') }
+        format.doc  { 
+          @pdf = 1
+          send_data(render(:template => 'studies/org.html', :layout => "excel"),
+          :filename => "study_listing_for_#{@unit.name}.doc",
+          :type => 'application/msword',
+          :disposition => 'attachment') }
+        format.pdf do
+          @pdf = 1
+          render( :pdf => "Study listing for " + @unit.name, 
+              :stylesheets => "pdf", 
+              :template => "studies/org.html",
+              :layout => "pdf")
+        end
+      end
+    end
+   end 
 
   def listing
     @javascripts_add = ['jquery.min', 'jquery.tablesorter.min', 'jquery.fixheadertable.min']

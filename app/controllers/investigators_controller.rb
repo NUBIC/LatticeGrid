@@ -37,7 +37,7 @@ class InvestigatorsController < ApplicationController
     if params[:investigator_ids].nil? then
       redirect_to( year_list_abstracts_url )
     else
-      @investigators = Investigator.find_investigators_in_list(params[:investigator_ids]).sort{|x,y| x.last_name+x.first_name <=> y.last_name+y.first_name}
+      @investigators = Investigator.find_investigators_in_list(params[:investigator_ids]).sort{|x,y| x.last_name+' '+x.first_name <=> y.last_name+' '+y.first_name}
       respond_to do |format|
         format.html { render :action => 'list_all', :layout => 'printable'}
         format.xml  { render :xml => @investigators }

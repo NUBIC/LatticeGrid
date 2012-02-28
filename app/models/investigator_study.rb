@@ -6,5 +6,6 @@ class InvestigatorStudy < ActiveRecord::Base
   named_scope :distinct_roles, 
     :order => "role", :select => 'role, count(*) as count', :group => 'role'
   named_scope :pis, 
+    :joins => :investigator,
     :conditions=>"role = 'PI'"
 end
