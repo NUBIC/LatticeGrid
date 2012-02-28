@@ -434,7 +434,7 @@ class OrgsController < ApplicationController
     @impact_factor = params[:impact_factor]
     @limit_to_first_last = ! params[:limit_to_first_last].blank?
     @unit = OrganizationalUnit.new(:name=>'Ad hoc unit', :abbreviation=>'Ad hoc')
-    @faculty = Investigator.find_investigators_in_list(params[:investigator_ids])
+    @faculty = Investigator.find_investigators_in_list(params[:investigator_ids]).sort{|x,y| x.last_name+' '+x.first_name <=> y.last_name+' '+y.first_name}
     @investigators_in_unit = @faculty.map(&:id)
     if @exclude_letters
       @abstracts = Abstract.exclude_letters.investigator_publications_by_date( @faculty, params[:start_date], params[:end_date])

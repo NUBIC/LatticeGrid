@@ -535,7 +535,9 @@ div.notice {
 	text-decoration: underline;
 }
 .member_first_author, .member_last_author, .member_author {
+	color: #330;
 	font-weight: bold;
+	font-size : larger;
 }
 .author:hover, .first_author:hover, .last_author:hover, .member_first_author:hover, .member_last_author:hover, .member_author:hover {
 	background: #AAA;

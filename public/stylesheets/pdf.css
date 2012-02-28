@@ -360,6 +360,8 @@ td.list-title-right {
 	text-decoration: none;
 }
 .member_first_author, .member_last_author, .member_author {
+	color: #330;
+	font-size : larger;
 	font-weight: bold;
 }
 .author:hover, .first_author:hover, .last_author:hover, .member_first_author:hover, .member_last_author:hover, .member_author:hover {

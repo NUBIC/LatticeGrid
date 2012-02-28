@@ -330,7 +330,8 @@ has_many :investigator_appointments,
   def self.find_investigators_in_list(terms)
     terms = terms.split(/[, ;\r\n]/).collect{|term| term.downcase.strip}.uniq
     numeric_terms = terms.collect{|term| (term =~ /^[0-9]+$/) ? term : nil }.uniq
-    [Investigator.find_all_by_username(terms) + Investigator.all(:conditions=>[ 'lower(email) in (:terms)', {:terms=>terms}] ) + Investigator.find_all_by_employee_id(numeric_terms) ].flatten.uniq
+    [Investigator.find_all_by_username(terms) + 
+      Investigator.all(:conditions=>[ 'lower(email) in (:terms)', {:terms=>terms}] ) + Investigator.find_all_by_employee_id(numeric_terms) ].flatten.uniq
   end
   
   def self.count_all_tsearch(terms)
