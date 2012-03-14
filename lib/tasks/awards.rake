@@ -43,7 +43,9 @@ namespace :awards do
           has_pi_employee_id = false
           pis.each do |pi|
             main_pi+=1 if pi.is_main_pi
-            has_pi_employee_id = true if pi.investigator.employee_id.to_i == award.pi_employee_id.to_i
+            unless pi.investigator.blank?
+              has_pi_employee_id = true if pi.investigator.employee_id.to_i == award.pi_employee_id.to_i
+            end
           end
           if main_pi == 0
             puts "no main pi for an award with multiple pis. #{award.inspect}"
@@ -52,9 +54,11 @@ namespace :awards do
           elsif main_pi > 1 and has_pi_employee_id
             corrected_pi_cnt+=1
             pis.each do |pi|
-              if  pi.investigator.employee_id.to_i != award.pi_employee_id.to_i
-                pi.role = 'Co-Investigator'
-                pi.save!
+              unless pi.investigator.blank?
+                if  pi.investigator.employee_id.to_i != award.pi_employee_id.to_i
+                  pi.role = 'Co-Investigator'
+                  pi.save!
+                end
               end
             end
           else

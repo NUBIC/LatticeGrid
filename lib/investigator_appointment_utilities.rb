@@ -747,8 +747,11 @@ end
 
 def count_faculty_updates()
   updated = Investigator.find_updated().length
-  not_updated = Investigator.find_not_updated().length
-  puts "#{updated} faculty updated. #{not_updated} faculty were not updated."
+  not_updated_array = Investigator.find_not_updated()
+  puts "#{updated} faculty updated. #{not_updated_array.length} faculty were not updated."
+  not_updated_array.each do |inv|
+    puts "#{inv.username}\t#{inv.full_name}\t#{inv.appointment_type}\t#{inv.appointment_track}\t#{inv.appointment_basis}"
+  end
 end
 
 def prune_unupdated_faculty()

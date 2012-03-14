@@ -25,7 +25,7 @@ module OrgsHelper
       out+= link_to( "Unit-to-Unit co-authorship network", show_org_org_graphviz_url(params[:id]))
       out+= " &nbsp;  &nbsp; "  
     end
-    out+="<br/>"
+    out+="<br/>Radial Graphs: "
     if not (controller.action_name == 'show_org' and controller.controller_name == 'cytoscape')
       out+= link_to( "Publications network", show_org_cytoscape_url(params[:id]) )
       out+= " &nbsp;  &nbsp; " 
@@ -39,7 +39,7 @@ module OrgsHelper
       out+= " &nbsp;  &nbsp; " 
     end
     if not (controller.action_name == 'studies_org' and controller.controller_name == 'cytoscape')
-      out+= link_to( "Clinical Research network", studies_org_cytoscape_url(params[:id]) )
+      out+= link_to( "Studies network", studies_org_cytoscape_url(params[:id]) )
       out+= " &nbsp;  &nbsp; " 
     end
     if not (controller.action_name == 'org' and controller.controller_name == 'studies')

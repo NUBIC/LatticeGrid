@@ -46,9 +46,9 @@ task :findStudiesWithoutInvestigators => :environment do
   block_timing("findStudiesWithoutInvestigators") {
     studies_without_investigators = Study.without_investigators()
     puts "studies without investigators: #{studies_without_investigators.length}"
-    puts "report\teIRB STU\tApproved on\tReviewed on\tCompleted on\tReview type\tresearch type"
+    puts "eIRB STU\tReview type\tresearch type\tID\tApproved on\tReviewed on\tCompleted on\tTitle"
     studies_without_investigators.each do |x|
-      puts "studies_without_investigators\t #{x.title}\t#{x.irb_study_number}\t#{x.enotis_study_id}\t#{x.approved_date}\t#{x.next_review_date}\t#{x.completed_date}\t#{x.review_type}\t#{x.research_type}"
+      puts "#{x.irb_study_number}\t#{x.review_type}\t#{x.research_type}\t#{x.enotis_study_id}\t#{x.approved_date}\t#{x.next_review_date}\t#{x.completed_date}\t#{x.title}"
     end
     puts "Count of studies without investigators: #{studies_without_investigators.length}"
   }

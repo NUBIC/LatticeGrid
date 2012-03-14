@@ -1,3 +1,53 @@
+# Feinberg March 2012 loads
+
+#rake importDepartments file=db/imports/Feinberg/department_lookup_Dec2010.txt 
+#rake importOrganizations file=db/imports/Feinberg/division_lookup_Sep2011.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/Feinberg/private/faculty_Mar2012.txt 
+rake cleanup:countFacultyUpdates
+rake cleanup:purgeUnupdatedFaculty
+rake cleanup:update_titles_and_home_from_ldap
+rake importJointAppointments file=db/imports/Feinberg/joint_appointments_Mar2012.txt
+rake importSecondaryAppointments file=db/imports/Feinberg/secondary_appointments_Mar2012.txt 
+rake importCenterMemberships file=db/imports/Feinberg/center_memberships_Mar2012.txt 
+rake importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_Mar2012.txt 
+
+rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_interests_Mar2012.txt
+rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_descriptions_Mar2012.txt
+rake db:vacuum  #added a custom rake method for this
+rake cleanup:email
+rake cleanup:cleanInvestigatorsUsername
+
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalImpact file=db/imports/jcr_recs_2010.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake updateJournalISSNsFromPubmed
+rake cleanJournalISSNentries
+rake findAbstractswithoutJCRentries
+rake findAbstractswithJCRentries
+rake updateJournalISSNsFromPubmed
+rake setPreferredHighImpact
+
+rake awards:importData file=db/imports/Feinberg/private/award_data_20120307.txt
+rake awards:cleanPIassignments
+
+rake importStudies file=db/imports/Feinberg/private/studies_2012-03-14.csv
+rake importStudyInvestigators file=db/imports/Feinberg/private/study_roles_2012-03-14.csv
+rake findStudiesWithoutInvestigators
+
+rake checkValidAbstractsWithoutInvestigators
+rake removeValidAbstractsWithoutInvestigators
+
+rake nightlyBuild
+rake cleanup:findServiceInvestigatorsWithoutActivities
+rake cleanup:purgeServiceInvestigatorsWithoutActivities
+rake cleanup:resolve_duplicate_tags
+rake cleanup:resolve_misformed_tags
+rake monthlyBuild
+
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
 
 # December 2011 loads, RHLCCC
 rake importInvestigators file=db/imports/RHLCCC/new_faculty_Dec2011.txt

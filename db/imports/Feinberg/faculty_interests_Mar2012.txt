@@ -5573,7 +5573,7 @@ EMPLOYEE_ID	INTEREST
 1068247	Attention deficit/hyperactivity disorder(ADHD)
 1068247	Child and Adolescent psychiatry
 1068247	Psychotherapy and pharmacotherapy in psychiatry
-1068287	<B>ACCEPTING NEW PATIENTS FOR: general rheumatology (anyone with an arthritic or related condition)</B> <A HREF="http://www.nmff.org/appointment/">Request an appointment with Dr. Mandelin</A>
+1068287	<B>ACCEPTING NEW PATIENTS FOR: general rheumatology (anyone with an arthritic or related condition)</B> 
 1068287	Arthritis - Psoriatic
 1068287	Arthritis - Rheumatoid
 1068287	Autoimmune Diseases
@@ -5584,11 +5584,11 @@ EMPLOYEE_ID	INTEREST
 1068287	Medical Informatics
 1068287	Outcome measures
 1068287	RESEARCH PROJECT: laboratory research regarding the role of synovial fibroblasts and apoptosis in rheumatoid arthritis
-1068287	RESEARCH PROJECT: phase 1b clinical trial of ARRY-371797 in rheumatoid arthritis (<A HREF="http://clinicaltrials.gov/ct2/show/NCT00729209?term=array-797-103&rank=1">ARRAY-797-301</A> trial; <B>recruiting new patients now!</B>)
-1068287	RESEARCH PROJECT: phase 2 clinical trial of ARRY-371797 in ankylosing spondylitis (<A HREF="http://clinicaltrials.gov/ct2/show/NCT00811499?term=array-797-201&rank=1">ARRAY-797-201</A> trial; <B>recruiting new patients soon!</B>)
-1068287	RESEARCH PROJECT: phase 3 clinical trial of ocrelizumab in rheumatoid arthritis (<A HREF="http://clinicaltrials.gov/ct2/show/NCT00406419?term=stage&id=stage&rank=2">STAGE</A> trial; not recruiting new patients)
-1068287	RESEARCH PROJECT: phase 3 clinical trial of rituximab in rheumatoid arthritis (<A HREF="http://clinicaltrials.gov/ct2/show/NCT00299104?term=IMAGE&id=image&rank=2">IMAGE</A> trial; not recruiting new patients)
-1068287	RESEARCH PROJECT: phase 3 clinical trial of rituximab with methotrexate vs. methotrexate alone in rheumatoid arthritis (<A HREF="http://www.clinicaltrials.gov/ct2/show/NCT00299130?term=SERENE&rank=1">SERENE</A> trial; not recruiting new patients)
+1068287	RESEARCH PROJECT: phase 1b clinical trial of ARRY-371797 in rheumatoid arthritis (<A HREF='http://clinicaltrials.gov/ct2/show/NCT00729209?term=array-797-103&rank=1'>ARRAY-797-301</A> trial; <B>recruiting new patients now!</B>)
+1068287	RESEARCH PROJECT: phase 2 clinical trial of ARRY-371797 in ankylosing spondylitis (<A HREF='http://clinicaltrials.gov/ct2/show/NCT00811499?term=array-797-201&rank=1'>ARRAY-797-201</A> trial; <B>recruiting new patients soon!</B>)
+1068287	RESEARCH PROJECT: phase 3 clinical trial of ocrelizumab in rheumatoid arthritis (<A HREF='http://clinicaltrials.gov/ct2/show/NCT00406419?term=stage&id=stage&rank=2'>STAGE</A> trial; not recruiting new patients)
+1068287	RESEARCH PROJECT: phase 3 clinical trial of rituximab in rheumatoid arthritis (<A HREF='http://clinicaltrials.gov/ct2/show/NCT00299104?term=IMAGE&id=image&rank=2'>IMAGE</A> trial; not recruiting new patients)
+1068287	RESEARCH PROJECT: phase 3 clinical trial of rituximab with methotrexate vs. methotrexate alone in rheumatoid arthritis (<A HREF='http://www.clinicaltrials.gov/ct2/show/NCT00299130?term=SERENE&rank=1'>SERENE</A> trial; not recruiting new patients)
 1068287	Rheumatology
 1068287	Systemic Lupus Erythematosus
 1068431	Global Health
