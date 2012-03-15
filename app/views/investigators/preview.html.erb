@@ -1,8 +1,9 @@
 <div id="listing">
-<%= image_tag( "#{lattice_grid_instance}/logo_small.png", :style=>"float: left; margin-right: 20px;") %>
-<h3><%= LatticeGridHelper.direct_preview_title %><br/> Top 10 Search Results for <i><%= params[:id] %></i> </h3>
-  <% if @investigators.length > 0 %>
-<div style="margin-left:50px;">
+<div style="margin-left:5px;">
+<%= image_tag( "#{lattice_grid_instance}/logo_small.png", :style=>"margin-right: 20px;") %>
+<h3><%= LatticeGridHelper.direct_preview_title %></h3>
+<h3>Top <%= @investigators.length %> Search Results for <i><%= params[:id] %></i> </h3>
+<% if @investigators.length > 0 %>
   <table cellpadding="2" cellspacing="0" class="borderless"> 
 	<% cnt = 0 %>
 	<tr valign="bottom" class="header">
@@ -25,8 +26,8 @@
 	</tr>
   <% end %>
   </table>
-</div>
   <% end %>
+</div>
 
 <br/>
 </div>

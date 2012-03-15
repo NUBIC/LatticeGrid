@@ -19,7 +19,7 @@ def LatticeGridHelper.header_title
 end
 
 def LatticeGridHelper.direct_preview_title
-   'Northwestern University'
+   ''
 end
 
 def LatticeGridHelper.home_url
