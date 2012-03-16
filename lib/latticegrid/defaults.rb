@@ -61,6 +61,10 @@
      true
    end
 
+   def LatticeGridHelper.google_analytics
+     ""
+   end
+   
    def LatticeGridHelper.curl_host
    	my_env = Rails.env
    	my_env = 'home' if public_path =~ /Users/ 

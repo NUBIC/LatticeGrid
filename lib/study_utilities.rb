@@ -1,3 +1,4 @@
+require 'text_utilities'
 
 def CurrentStudies()
   studies = Investigator.all.collect{|a| a.irb_study_number}.sort.uniq
@@ -43,6 +44,10 @@ def CreateStudyFromHash(data_row)
   s.irb_study_number =  data_row['irb_number']
   s.title =  data_row['title']
   s.abstract =  data_row['description']
+  # clean out the non-ASCII characters
+  s.title = CleanNonUTFtext(s.title)
+  s.abstract = CleanNonUTFtext(s.abstract)
+  
   s.enotis_study_id =  data_row['study_id']
   s.research_type =  data_row['research_type']
   s.review_type =  data_row['review_type_requested']

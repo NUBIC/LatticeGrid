@@ -12,7 +12,7 @@
   <%= File.read("#{RAILS_ROOT}/public/stylesheets/high_impact.css") %>
   <%= @css if defined?(@css) %>
   </style>
-
+  <%= LatticeGridHelper.google_analytics -%>
 </head>
 <body>
 

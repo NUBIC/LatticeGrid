@@ -44,6 +44,9 @@ pg_dump -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev
 
 pg_dump -Fc fsmpublications_development -U fsmpublications > fsmpublications_dev_20111210.dmp
 
+pg_dump -E UTF8 -Fc fsm_latticegrid -U latticegrid > fsmpublications_dev_20120315.dmp
+pg_dump -Fc fsm_latticegrid -U latticegrid > fsmpublications_dev_20120315.dmp
+
 
 pg_dump -Fc umich_latticegrid_development -U latticegrid > umich_latticegrid_dev_20110825.dmp
 
@@ -54,6 +57,8 @@ scp  ucsf_latticegrid_20111110.dmp root@172.16.215.128:/root/ucsf_latticegrid_20
 scp  stanford_latticegrid_20111109.dmp root@172.16.215.128:/root/stanford_latticegrid_20111109.dmp
 
 scp fsmpublications_dev_20110930.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/fsmpublications_dev_20110930.dmp  
+
+scp fsmpublications_dev_20120315.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/fsmpublications_dev_20120315.dmp  
 
 scp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/nucats_assist_prod_20120131.dmp nucats_assist_prod_20120131.dmp  
 
@@ -116,6 +121,21 @@ pg_restore -c -O -d fsm_latticegrid_staging -U fsm_latticegrid -h pstage fsmpubl
 pg_restore -c -O -d fsm_latticegrid_production -U fsm_latticegrid -h pprod fsmpublications_dev_20110825.dmp
 
 pg_restore -c -O -d fsm_latticegrid -U latticegrid -h pprod2 fsmpublications_dev_20111210.dmp
+
+
+pg_dump -E utf8 -Fc fsm_latticegrid -U latticegrid > fsmpublications_dev_20120315.dmp
+
+pg_dump -E utf8 fsm_latticegrid -U latticegrid > fsmpublications_dev_20120315.sql
+
+scp fsmpublications_dev_20120315.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/fsmpublications_dev_20120315.dmp  
+
+pg_restore -c -O -d fsm_latticegrid -U latticegrid -h pprod2 fsmpublications_dev_20120315.dmp
+
+#transfer to rails
+scp fsmpublications_dev_20120315.sql wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/fsmpublications_dev_20120315.sql  
+#import
+psql -h pprod2  -f fsmpublications_dev_20120315.sql fsm_latticegrid latticegrid  
+
 
 #move to laptop from old rails-dev
 scp wakibbe@rails-dev.bioinformatics.northwestern.edu:/home/wakibbe/cinj_pubs/cinjpublications_dev_20110410.dmp  cinjpublications_dev_20110410.dmp

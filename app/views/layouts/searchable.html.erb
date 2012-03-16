@@ -11,6 +11,7 @@
 	<% @stylesheets ||= [ "publications", "latticegrid/#{lattice_grid_instance}" ] %>
 	<%= stylesheet_link_tag @stylesheets %>
 	<link rel="shortcut icon" href='<%= image_path("favicon.ico") -%>' />
+  <%= LatticeGridHelper.google_analytics -%>
 </head>
 <body>
 

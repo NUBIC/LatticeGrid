@@ -1,6 +1,7 @@
 # to enable truncate
 require "#{RAILS_ROOT}/app/helpers/application_helper"
 include ApplicationHelper
+require 'text_utilities'
 
 def CurrentAwards()
   awards = Proposal.all
@@ -186,8 +187,13 @@ def CreateProposalRecord(data_row)
     j.sponsor_type_code = '' 
     j.sponsor_type_name = ''
   end
+  # clean out the non-ASCII characters
+  j.original_sponsor_name = CleanNonUTFtext(j.original_sponsor_name)
+  j.sponsor_name = CleanNonUTFtext(j.sponsor_name)
   award_title = data_row['Proposal Title'] || data_row['PROPOSAL_TITLE']
-  j.title = truncate_words(award_title, 220) if !award_title.blank?
+  j.title = truncate_words(award_title, 220) unless award_title.blank?
+  j.title = CleanNonUTFtext(j.title)
+  
   j.project_start_date = data_row['Project Award Start Date'] || data_row['PROJECT_BEGIN_DATE']
   j.project_end_date = data_row['Project Award End Date'] || data_row['PROJECT_END_DATE']
   j.award_start_date = data_row['Project Award Start Date'] || data_row['AWARD_BEGIN_DATE']
@@ -205,6 +211,19 @@ def CreateProposalRecord(data_row)
   if existing_award.blank? && ! j.institution_award_number.blank? then
     j.save
     existing_award = j
+  end
+  return existing_award if existing_award.blank? or existing_award.id.blank?
+  if !j.title.blank? and existing_award.title != j.title 
+    existing_award.title = j.title
+    existing_award.save
+  end
+  if !j.original_sponsor_name.blank? and  existing_award.original_sponsor_name != j.original_sponsor_name 
+    existing_award.original_sponsor_name = j.original_sponsor_name 
+    existing_award.save
+  end
+  if !j.sponsor_name.blank? and existing_award.sponsor_name != j.sponsor_name
+    existing_award.sponsor_name = j.sponsor_name 
+    existing_award.save
   end
   existing_award
 end
