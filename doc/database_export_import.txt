@@ -1,9 +1,66 @@
 scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/enotis/tmp/study_roles_2012-03-14.csv study_roles_2012-03-14.csv
 scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/enotis/tmp/studies_2012-03-14.csv studies_2012-03-14.csv
 
+# export all, reimport as a UTF8 postgres database
+
+pg_dump -E utf8 -Fc aas_latticegrid -U latticegrid > aas_latticegrid_20120322.dmp
+pg_dump -E utf8 -Fc fsm_latticegrid -U latticegrid > fsm_latticegrid_20120322.dmp
+pg_dump -E utf8 -Fc rhlccc_latticegrid -U latticegrid > rhlccc_latticegrid_20120322.dmp
+pg_dump -E utf8 -Fc stanford_latticegrid -U latticegrid > stanford_latticegrid_20120322.dmp
+pg_dump -E utf8 -Fc health_locator -U health_locator > health_locator_20120322.dmp
+pg_dump -E utf8 -Fc isb_colleagues -U isb_colleagues > isb_colleagues_20120322.dmp
+pg_dump -E utf8 -Fc nucats_assist -U nucats_assist > nucats_assist_20120322.dmp
+
+# initdb with UTF8
+initdb -E UTF8 -D /Users/_wakibbe/pgdata
+
+# create users
+psql postgres
+
+CREATE USER latticegrid with createdb;
+ALTER USER latticegrid with superuser;
+ALTER USER latticegrid with login;
+
+CREATE USER health_locator with createdb;
+ALTER USER health_locator with superuser;
+ALTER USER health_locator with login;
+
+CREATE USER isb_colleagues with createdb;
+ALTER USER isb_colleagues with superuser;
+ALTER USER isb_colleagues with login;
+
+CREATE USER nucats_assist with createdb;
+ALTER USER nucats_assist with superuser;
+ALTER USER nucats_assist with login;
+
+\connect - latticegrid
+
+CREATE DATABASE aas_latticegrid;
+CREATE DATABASE fsm_latticegrid;
+CREATE DATABASE rhlccc_latticegrid;
+CREATE DATABASE stanford_latticegrid;
+
+\connect - health_locator
+CREATE DATABASE health_locator;
+
+\connect - isb_colleagues
+CREATE DATABASE isb_colleagues;
+
+\connect - nucats_assist
+CREATE DATABASE nucats_assist;
 
 
-m# move from pprod to pprod2
+# restore individual databases
+
+pg_restore -c -O -d aas_latticegrid -U latticegrid aas_latticegrid_20120322.dmp
+pg_restore -c -O -d fsm_latticegrid -U latticegrid fsm_latticegrid_20120322.dmp
+pg_restore -c -O -d rhlccc_latticegrid -U latticegrid rhlccc_latticegrid_20120322.dmp
+pg_restore -c -O -d stanford_latticegrid -U latticegrid stanford_latticegrid_20120322.dmp
+pg_restore -c -O -d health_locator -U latticegrid health_locator_20120322.dmp
+pg_restore -c -O -d isb_colleagues -U latticegrid isb_colleagues_20120322.dmp
+pg_restore -c -O -d nucats_assist -U latticegrid nucats_assist_20120322.dmp
+
+# move from pprod to pprod2
 pg_dump -Fc rhlccc_latticegrid_production -U rhlccc_latticegrid -h pprod > cancer_latticegrid_prod_20120107.dmp
 pg_restore -d rhlccc_latticegrid -U latticegrid -h pprod2 cancer_latticegrid_prod_20120107.dmp
 
