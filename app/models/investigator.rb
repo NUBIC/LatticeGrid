@@ -441,6 +441,11 @@ has_many :investigator_appointments,
       all( :joins => [:member_appointments])
   end
 
+  def self.all_with_membership()
+    all( :conditions => ["exists(select 'x' from investigator_appointments where investigator_appointments.investigator_id = investigators.id and investigator_appointments.type = 'Member')"])
+  end
+
+
   def self.not_members()
     allmembers  = self.all_members()
     all(:conditions=>["id not in (:all)", {:all => allmembers}])
