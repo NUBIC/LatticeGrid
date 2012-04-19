@@ -338,6 +338,7 @@ class InvestigatorsController < ApplicationController
       @investigators = Investigator.investigators_tsearch(params[:id])
       if @investigators.length == 1
         params[:investigator_id] = @investigators[0].username
+        params[:id] = @investigators[0].username
         params[:page] = 1
         show
         render :action => :show
