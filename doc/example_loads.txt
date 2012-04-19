@@ -1,10 +1,10 @@
 # March 2012 loads, RHLCCC
 bundle exec rake importInvestigators file=db/imports/RHLCCC/new_faculty_Mar2012.txt
-bundle exec rake importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsMar2012.txt
-bundle exec rake getAllMembers  
-bundle exec rake checkForInvestigatorsWithNoPrograms
-bundle exec rake deleteInvestigatorsWithNoPrograms
-bundle exec rake importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_Mar2012.txt 
+bundle exec rake RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsMar2012.txt
+bundle exec rake RAILS_ENV=production getAllMembers  
+bundle exec rake RAILS_ENV=production checkForInvestigatorsWithNoPrograms
+bundle exec rake RAILS_ENV=production deleteInvestigatorsWithNoPrograms
+bundle exec rake RAILS_ENV=production importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_Mar2012.txt 
 
 #rake importInvestigatorDescriptions file=db/imports/RHLCCC/example_summaries_nov2011.txt
 
