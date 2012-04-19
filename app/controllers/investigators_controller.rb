@@ -337,11 +337,7 @@ class InvestigatorsController < ApplicationController
     if !params[:id].blank? then
       @investigators = Investigator.investigators_tsearch(params[:id])
       if @investigators.length == 1
-        params[:investigator_id] = @investigators[0].username
-        params[:id] = @investigators[0].username
-        params[:page] = 1
-        show
-        render :action => :show
+        redirect_to show_investigator_path(:id=>@investigators[0].username, :page=>1)
       else
         @heading = "There were #{@investigators.length} matches to search term <i>"+params[:id].downcase+"</i>"
         @include_mesh=false
