@@ -1,0 +1,19 @@
+<p><span id='nav_links'>
+  Overview:
+   &nbsp; <%= conditional_link("Investigators", show_investigators_org_url(:id=>params[:id])) %>
+  &nbsp;&nbsp; <%= conditional_link("Publications", show_org_url(:id=>params[:id], :page=>1)) %>
+  <br /> Authorship Graphs:
+  &nbsp; <%= conditional_link("Co-authorship graph", show_org_graph_url(params[:id])) %>
+  &nbsp;&nbsp; <%= conditional_link("Co-authorship network", show_org_graphviz_url(params[:id])) %>
+  &nbsp;&nbsp; <%= conditional_link("MeSH similarities network", show_org_mesh_graphviz_url(params[:id])) %>
+  &nbsp;&nbsp; <%= conditional_link("Unit-to-Unit co-authorship network", show_org_org_graphviz_url(params[:id])) %>
+  <br /> Radial Graphs:
+  &nbsp; <%= conditional_link("Collaboration network", show_org_cytoscape_url(params[:id])) %>
+  <% if defined?(LatticeGridHelper.include_awards?) and LatticeGridHelper.include_awards?() %>
+    &nbsp;&nbsp; <%= conditional_link("Funding network", awards_org_cytoscape_url(params[:id])) %>
+    &nbsp;&nbsp; <%= conditional_link("Funding report", org_award_url(:id=>params[:id], :page=>1)) %>
+    &nbsp;&nbsp; <%= conditional_link("Studies network", studies_org_cytoscape_url(params[:id])) %>
+    &nbsp;&nbsp; <%= conditional_link("Studies report", org_study_url(:id=>params[:id], :page=>1)) %>
+    &nbsp;&nbsp; <%= conditional_link("Combined network", org_all_cytoscape_url(params[:id])) %>
+  <% end %>
+</span></p>

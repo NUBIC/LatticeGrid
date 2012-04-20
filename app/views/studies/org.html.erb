@@ -32,7 +32,7 @@
 	<%= link_to( "as PDF", org_award_url(params[:id],'pdf'))  %>
 </div>
 <% if @include_graph_link %>
-<p><%= org_nav_heading() %></p>
+<%= render :partial => 'shared/org_graph_nav' %>
 <% end %>
 
 <% end %>

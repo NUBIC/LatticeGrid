@@ -1,0 +1,58 @@
+<%
+  all_abstracts = nil if not defined? all_abstracts
+  title = nil if not defined? title
+%>
+<table class='borderless' width='100%'>
+  <tr>
+    <td style='vertical-align: top'>
+      <% if !investigator.blank? %>
+        <span id='full_name'><%= investigator.full_name%></span>
+      <% end %>
+      <% if !title.blank? %>
+        <br /><span id='page_title'><%= title %></span>
+      <% end
+         profile_link = edit_profile_link()
+         unless profile_link.blank? %>
+        <br /><%= profile_link %>&nbsp;&nbsp;
+      <% end %>
+      &nbsp;
+    </td><td>
+      <% if !investigator.blank? %>
+        <%= conditional_link('Publications', show_investigator_url(:id=>params[:id], :page=>1) ) %>
+        &nbsp;&nbsp;
+        <span class='barchart_#{investigator.username}' id='barchart_#{investigator.username}'> &nbsp; </span>
+        <script type='text/javascript' language='javascript'>
+          <%= remote_function(:url => barchart_investigator_path( investigator.username ), :method => :get, :before => "Element.show('spinner')", :complete => "Element.hide('spinner')" ) %>
+        </script>
+      <% end %>
+      <br/>
+        <span id='nav_links'>
+          Publication Graphs:
+          &nbsp; <%= conditional_link('Flash', show_member_graph_url(params[:id])) %>
+          &nbsp;&nbsp; <%= conditional_link("Graphviz", show_member_graphviz_url(params[:id]) )%>
+          &nbsp;&nbsp; <%= conditional_link('Wheel', investigator_wheel_graphviz_url(params[:id]) )%>
+          &nbsp;&nbsp; <%= conditional_link('Cytoscape', cytoscape_url(params[:id]))%>
+        </span>
+      <br/>
+        <span id='nav_links2'>
+          <% if defined?(LatticeGridHelper.include_awards?) and LatticeGridHelper.include_awards?() %>
+            Award data:
+            &nbsp; <%= conditional_link('Graph', awards_cytoscape_url(params[:id]) ) %>
+            &nbsp;&nbsp; <%= conditional_link( "Report", investigator_award_url(params[:id]) ) %>
+          <% end %>
+          MeSH:
+          &nbsp; <%= conditional_link( "similarities graph", show_member_mesh_graphviz_url(params[:id])) %>
+        </span>
+      <br/>
+         <span id='nav_links3'>
+         <% if defined?(LatticeGridHelper.include_studies?) and LatticeGridHelper.include_studies?() %>
+           Study data:
+             &nbsp; <%= conditional_link('Graph', studies_cytoscape_url(params[:id]) ) %>
+             &nbsp;&nbsp; <%= conditional_link("Report", investigator_study_url(params[:id]) ) %>
+             &nbsp; Combined data: &nbsp;
+             <%= conditional_link( "Graph", show_all_cytoscape_url(params[:id]) ) %>
+         <% end %>
+        </span>
+    </td>
+  </tr>
+</table>

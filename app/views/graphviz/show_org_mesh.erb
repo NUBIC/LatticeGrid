@@ -1,6 +1,6 @@
 <h1>MeSH-based network diagram for <%= @name %></h1>
 
-<p><%= org_nav_heading() %></p>
+<%= render :partial => 'shared/org_graph_nav' %>
 
 <%= render( :partial => "graphviz_template" ) %>
 

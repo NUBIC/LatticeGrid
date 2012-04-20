@@ -1,6 +1,6 @@
-<h1>Network diagram for <%= @name %></h1>
+<h1>Co-authorship network diagram for <%= @name %></h1>
 
-<p><%= org_nav_heading() %></p>
+<%= render :partial => 'shared/org_graph_nav' %>
 
 <%= render( :partial => "graphviz_template" ) %>
 

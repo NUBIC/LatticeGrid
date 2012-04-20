@@ -21,7 +21,7 @@
 </h1>
 
 <% if @include_graph_link %>
-<p><%= org_nav_heading() %></p>
+<%= render :partial => 'shared/org_graph_nav' %>
 <% end %>
 
 <% if @faculty.length > 0 %>
