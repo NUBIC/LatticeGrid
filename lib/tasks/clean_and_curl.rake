@@ -233,6 +233,7 @@ namespace :cache do
       run_curl build_graphviz_restfulpath(params, params[:format]) 
       params[:analysis] = "org_org"
       params[:stringency] = "1"
+      params[:distance] = "0"
       run_curl build_graphviz_restfulpath(params, params[:format]) 
       params[:analysis] = "org_mesh"
       params[:stringency] = "2000"

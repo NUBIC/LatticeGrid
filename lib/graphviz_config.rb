@@ -24,7 +24,7 @@ def build_graphviz_filepath(gparams)
    gparams[:program] ||= "neato" 
    gparams[:analysis] ||= "member"
    gparams[:start_date] ||= 5.years.ago.to_date.to_s(:justdate)
-   gparams[:end_date] ||= Date.tomorrow.to_s(:justdate)
+   gparams[:end_date] ||= Date.today.to_s(:justdate)
    gparams[:format] ||= "svg"
    if gparams[:analysis].include?("org_org")
      gparams[:stringency] ||= "10"
