@@ -26,6 +26,39 @@
 <ul id="added_pubmed_ids">
 </ul>
 
+<script type="text/javascript" language="JavaScript">
+
+$j(function () { // this line makes sure this code runs on page load
+	$j('.checkall').live('click',function () {
+		var is_checked = this.checked;
+		if (is_checked) {
+			$j('input[type=checkbox]:not(:checked).valid').trigger('click');
+		} else {
+			$j('input:checkbox:checked.valid').trigger('click');
+		}
+	});	
+	$j('.checkallcancer').live('click',function () {
+		var is_checked = this.checked;
+		if (is_checked) {
+			$j('input[type=checkbox]:not(:checked).cancer_related').trigger('click');
+		} else {
+			$j('input:checkbox:checked.cancer_related').trigger('click');
+		}
+	});	
+	$j('.checkallfaculty').live('click',function () {
+		var is_checked = this.checked;
+		if (is_checked) {
+			$j('input[type=checkbox].valid_faculty').not(':checked').trigger('click');
+		} else {
+			$j('input:checkbox:checked.valid_faculty').trigger('click');
+		}
+	});	
+});
+</script>
+
+<input type="checkbox" class="checkall" value="Yes"> mark all valid<br/>
+<input type="checkbox" class="checkallcancer" value="Yes"> mark all cancer<br/>
+<input type="checkbox" class="checkallfaculty" value="Yes"> mark all faculty<br/>
 
 <%= render :partial => "shared/abstract_listing.html", 
 	:locals => { :abstracts => @abstracts, :investigators_in_unit => @investigators_in_unit, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker, :include_investigators => @include_investigators, :show_valid_checkboxes => @show_valid_checkboxes, :show_paginator => @show_paginator, :heading => @heading, :link_abstract_to_pubmed => @link_abstract_to_pubmed, :include_impact_factor => @include_impact_factor } %>

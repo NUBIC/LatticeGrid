@@ -38,9 +38,15 @@ end
 
 def clean_date(the_date)
   return nil if the_date.blank?
-  the_date = the_date.to_date if the_date.class.to_s != /date|time/i
+  begin
+    the_date = the_date.to_date if the_date.class.to_s != /date|time/i
+  rescue
+    puts "error converting #{the_date} to a date"
+    the_date = the_date.to_date
+  end
   return the_date + 2000.years if the_date < '01/01/0070'.to_date
   return the_date + 1900.years if the_date < '01/01/0100'.to_date
+  return the_date
 end
 
 
@@ -194,27 +200,64 @@ def CreateProposalRecord(data_row)
   j.title = truncate_words(award_title, 220) unless award_title.blank?
   j.title = CleanNonUTFtext(j.title)
   
-  j.project_start_date = data_row['Project Award Start Date'] || data_row['PROJECT_BEGIN_DATE']
-  j.project_end_date = data_row['Project Award End Date'] || data_row['PROJECT_END_DATE']
-  j.award_start_date = data_row['Project Award Start Date'] || data_row['AWARD_BEGIN_DATE']
-  j.award_end_date = data_row['Project Award End Date'] || data_row['AWARD_END_DATE']
+  project_start_date = data_row['Project Award Start Date'] || data_row['PROJECT_BEGIN_DATE']
+  project_end_date = data_row['Project Award End Date'] || data_row['PROJECT_END_DATE']
+  award_start_date = data_row['Project Award Start Date'] || data_row['AWARD_BEGIN_DATE']
+  award_end_date = data_row['Project Award End Date'] || data_row['AWARD_END_DATE']
+
   
-  j.project_start_date = clean_date(j.project_start_date)
-  j.project_end_date = clean_date(j.project_end_date)
-  j.award_start_date = clean_date(j.award_start_date)
-  j.award_end_date = clean_date(j.award_end_date)
+  j.project_start_date = clean_date(project_start_date)
+  j.project_end_date = clean_date(project_end_date)
+  j.award_start_date = clean_date(award_start_date)
+  j.award_end_date = clean_date(award_end_date)
+  
+  unless project_start_date.blank?
+    puts "project_start_date was not converted: #{project_start_date}" if j.project_start_date.blank?
+  end
+  if j.project_start_date.blank?
+    puts "project_start_date was not set for row: #{data_row.inspect}"
+  end
   
   j.award_category = data_row["Program Type"]
   j.award_type = data_row['Instrument Type']
+  
+  if j.institution_award_number.blank?
+    puts "institutional award number was blank for row: #{data_row.inspect}"
+    return nil
+  end
+  if j.title.blank?
+    puts "award title was blank for row: #{data_row.inspect}"
+    return nil
+  end
 
   existing_award = Proposal.find_by_institution_award_number(j.institution_award_number)
   if existing_award.blank? && ! j.institution_award_number.blank? then
     j.save
     existing_award = j
+    return existing_award
   end
-  return existing_award if existing_award.blank? or existing_award.id.blank?
+  if existing_award.blank? or existing_award.id.blank?
+    puts "existing_award was blank. Shouldn't happen. Data for row: #{data_row.inspect}"
+    return nil  
+  end
   if !j.title.blank? and existing_award.title != j.title 
     existing_award.title = j.title
+    existing_award.save
+  end
+  if !j.project_start_date.blank? and existing_award.project_start_date != j.project_start_date 
+    existing_award.project_start_date = j.project_start_date
+    existing_award.save!
+  end
+  if !j.project_end_date.blank? and existing_award.project_end_date != j.project_end_date 
+    existing_award.project_end_date = j.project_end_date
+    existing_award.save
+  end
+  if !j.award_start_date.blank? and existing_award.award_start_date != j.award_start_date 
+    existing_award.award_start_date = j.award_start_date
+    existing_award.save
+  end
+  if !j.award_end_date.blank? and existing_award.award_end_date != j.award_end_date 
+    existing_award.award_end_date = j.award_end_date
     existing_award.save
   end
   if !j.original_sponsor_name.blank? and  existing_award.original_sponsor_name != j.original_sponsor_name 

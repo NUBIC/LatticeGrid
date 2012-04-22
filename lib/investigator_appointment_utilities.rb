@@ -105,13 +105,18 @@ def CreateInvestigatorFromHash(data_row)
     else
       # overwrite existing record ?
       overwrite=true
-      existing_pi.employee_id = pi.employee_id if existing_pi.employee_id.blank? and ! pi.employee_id.blank?
+      if existing_pi.employee_id.blank? and ! pi.employee_id.blank?
+        existing_pi.employee_id = pi.employee_id 
+        puts "Adding employee ID (#{pi.employee_id}) to #{existing_pi.name} (#{existing_pi.username})"
+      end
       if existing_pi.first_name != pi.first_name
         puts "Existing first name and new first name different: existing: #{existing_pi.name}, username: #{existing_pi.username}, email: #{existing_pi.email}; new record: #{pi.name}, username #{pi.username}, email: #{pi.email}"
         overwrite=false
       end
-      if existing_pi.email != pi.email and !pi.email.blank?
-        puts "Existing email is different: existing: #{existing_pi.name}, username: #{existing_pi.username}, email: #{existing_pi.email}; merging record: #{pi.name}, username #{pi.username}, email: #{pi.email}"
+      if existing_pi.email.blank? and !pi.email.blank?
+        puts "Adding email (#{pi.email}) to #{existing_pi.name} (#{existing_pi.username})"
+      elsif existing_pi.email != pi.email and !pi.email.blank?
+        puts "Existing email is different: existing: #{existing_pi.name}, username: #{existing_pi.username}, email: #{existing_pi.email}; new email: #{pi.email}"
       end
       existing_pi = MergeInvestigatorData(existing_pi, pi, overwrite)
       # in case this investigator was marked as deleted/expired
@@ -510,14 +515,17 @@ def CreateProgramMembershipsFromHash(data_row, type='Member')
   # LastName
   # FirstName
   # email
+  # username or netid
   last_name = data_row["LastName"] || data_row["last_name"] || data_row["LAST_NAME"]
   first_name = data_row["FirstName"] || data_row["first_name"] || data_row["FIRST_NAME"]
   unit_abbreviation = data_row["Program"] || data_row["program"] || data_row["PROGRAM"]
   email = data_row["email"] || data_row["EMAIL"]
+  username = data_row["username"] || data_row["USERNAME"] || data_row["netid"] || data_row["NETID"] 
   if unit_abbreviation.blank? || (last_name.blank? and email.blank?) then
      puts "unit_abbreviation or email was blank or missing. datarow="+data_row.inspect
      return
   end
+  username.strip! if !username.blank?
   last_name.strip! if !last_name.blank?
   first_name.strip! if !first_name.blank?
   email.downcase.strip! if !email.blank?
@@ -525,7 +533,8 @@ def CreateProgramMembershipsFromHash(data_row, type='Member')
   appt = InvestigatorAppointment.new
   program = OrganizationalUnit.find_by_abbreviation(unit_abbreviation)
   investigator=nil
-  investigators = Investigator.find_all_by_email(email)
+  investigators = Investigator.find_all_by_username(username) unless username.blank?
+  investigators = Investigator.find_all_by_email(email) if investigators.blank? or investigators.length != 1
   if investigators.length == 1
     investigator = investigators[0]
   else

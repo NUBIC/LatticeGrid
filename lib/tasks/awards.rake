@@ -6,12 +6,16 @@ require 'rubygems'
 require 'pathname'
 
 namespace :awards do
-  task :importData => :getInvestigators do
+  task :importData => :environment do
+    @AllAwards = Proposal.all
+    puts "count of all proposals is #{@AllAwards.length}" if LatticeGridHelper.verbose?
     read_file_handler("awards:importData" ) {|filename| ReadAwardData(filename)}
     if defined?(@not_found_employee_messages)
       puts "Number of employees not found: #{@not_found_employee_messages.length}"
       puts @not_found_employee_messages.join("\n")
     end
+    @AllAwards = Proposal.all
+    puts "count of all proposals is #{@AllAwards.length}" if LatticeGridHelper.verbose?
   end
 
   task :cleanDates => :getAwards do

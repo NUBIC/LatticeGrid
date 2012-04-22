@@ -41,8 +41,12 @@ end
 
 task :checkValidAbstractsWithoutInvestigators => :environment do
   block_timing("checkValidAbstracts") {
-    @AbstractsNoInvestigators = Abstract.without_valid_investigators()
+    
+    @AbstractsNoInvestigators = Abstract.without_investigators()
     puts "abstracts without investigators: #{@AbstractsNoInvestigators.length}"
+    
+    @AbstractsNoInvestigators = Abstract.without_valid_investigators()
+    puts "abstracts without valid investigators: #{@AbstractsNoInvestigators.length}"
   }
 end
 

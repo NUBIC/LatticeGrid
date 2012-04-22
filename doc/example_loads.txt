@@ -1,3 +1,49 @@
+# CCNE March 2012 load
+
+bundle exec rake db:vacuum 
+bundle exec rake log:clear
+bundle exec rake importRoot file=db/imports/CCNE/root_lookup.txt 
+bundle exec rake importOrganizations file=db/imports/CCNE/institution_lookup.txt 
+bundle exec rake cleanUpOrganizations
+bundle exec rake log:clear
+bundle exec rake importInvestigators file=db/imports/CCNE/faculty_Mar2012.txt 
+bundle exec rake cleanup:countFacultyUpdates
+bundle exec rake cleanup:email
+bundle exec rake cleanup:cleanInvestigatorsUsername
+bundle exec rake importProgramMembership  file=db/imports/CCNE/members_Mar2012.txt
+bundle exec rake importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_Mar2012.txt 
+
+
+bundle exec rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_interests_Mar2012.txt
+bundle exec rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_descriptions_Mar2012.txt
+
+bundle exec rake importJournalImpact file=db/imports/jcr_recs.txt
+bundle exec rake importJournalImpact file=db/imports/jcr_recs_2010.txt
+bundle exec rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+bundle exec rake updateJournalISSNsFromPubmed
+bundle exec rake cleanJournalISSNentries
+bundle exec rake findAbstractswithoutJCRentries
+bundle exec rake findAbstractswithJCRentries
+bundle exec rake updateJournalISSNsFromPubmed
+bundle exec rake setPreferredHighImpact
+
+bundle exec rake awards:importData file=db/imports/Feinberg/private/award_data_20120307.txt
+bundle exec rake awards:cleanPIassignments
+
+bundle exec rake importStudies file=db/imports/Feinberg/private/studies_2012-03-14.csv
+bundle exec rake importStudyInvestigators file=db/imports/Feinberg/private/study_roles_2012-03-14.csv
+bundle exec rake findStudiesWithoutInvestigators
+
+bundle exec rake checkValidAbstractsWithoutInvestigators
+bundle exec rake removeValidAbstractsWithoutInvestigators
+
+bundle exec rake insertAllAbstracts 
+bundle exec rake nightlyBuild
+bundle exec rake cleanup:find_duplicate_tags
+bundle exec rake cleanup:resolve_duplicate_tags
+bundle exec rake cleanup:resolve_misformed_tags
+bundle exec rake monthlyBuild
+
 # March 2012 loads, RHLCCC
 bundle exec rake importInvestigators file=db/imports/RHLCCC/new_faculty_Mar2012.txt
 bundle exec rake RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsMar2012.txt

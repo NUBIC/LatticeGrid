@@ -89,8 +89,20 @@ def ReadInvestigatorPubmedData(file_name)
   }
   # set novel_pubmed_ids to [] if you want to process every connection to look for new authors added to existing pubs
   #novel_pubmed_ids = []
+  existing_pubmed_ids = Abstract.include_deleted.map(&:pubmed).compact.uniq
+  existing_employee_ids = Investigator.all.map(&:employee_id).compact.uniq
+  existing_investigator_abstracts = InvestigatorAbstract.all
+   
+  puts "Total number of novel pubmed ids: #{novel_pubmed_ids.length}" if LatticeGridHelper.verbose?
+  puts "Total number of existing pubmed ids: #{existing_pubmed_ids.length}" if LatticeGridHelper.verbose?
+  puts "Total number of existing employee ids: #{existing_employee_ids.length}" if LatticeGridHelper.verbose?
+  puts "Total number of existing investigator_abstracts: #{existing_investigator_abstracts.length}" if LatticeGridHelper.verbose?
+  cnt = 0
   read_data_handler(InvestigatorAbstract,file_name) { |data|  
-    row_iterator(data) {|data| CreateInvestigatorAbstractsFromHash(data, novel_pubmed_ids)} }
+    row_iterator(data) {|data| if CreateInvestigatorAbstractsFromHash(data, novel_pubmed_ids, existing_pubmed_ids, existing_employee_ids) != nil then cnt+=1 end } }
+  final_investigator_abstracts = InvestigatorAbstract.all
+  puts "Total number of investigator abstracts saved: #{cnt}" if LatticeGridHelper.verbose?
+  puts "Total number of existing final_investigator_abstracts: #{final_investigator_abstracts.length}" if LatticeGridHelper.verbose?
 end
 
 def ReadJournalImpactData(file_name)
