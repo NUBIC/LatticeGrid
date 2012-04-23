@@ -22,6 +22,7 @@ the_relative_url_root = case LatticeGrid.the_instance
   when 'RHLCCC' then "cancer-latticegrid"
   when 'Feinberg' then "fsm-latticegrid"
   when 'Stanford' then "stanford-latticegrid"
+  when 'CCNE' then "ccne-latticegrid"
   when 'UCSF' then "ucsf-latticegrid"
   when 'UWCCC' then "uwisc-latticegrid"
   when 'UMich' then "umich-latticegrid"

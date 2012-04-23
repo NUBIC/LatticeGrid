@@ -76,6 +76,14 @@ pg_dump -Fc cinj_latticegrid_staging -U rhlccc_latticegrid -h pstage > cinjpubli
 
 # from my laptop
 
+pg_dump -Fc ccne_latticegrid -U latticegrid > ccne_latticegrid_20120423.dmp
+scp ccne_latticegrid_20120423.dmp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe/
+#run console
+script/console staging
+Bcdatabase.load[:pstage, :ccne_latticegrid]['password']
+pg_restore -d ccne_latticegrid -U latticegrid -h pstage2 ccne_latticegrid_20120423.dmp
+
+
 pg_dump -Fc ucsf_latticegrid -U latticegrid > ucsf_latticegrid_20111110.dmp
 
 pg_dump -Fc stanford_latticegrid -U latticegrid > stanford_latticegrid_20111109.dmp
