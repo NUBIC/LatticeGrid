@@ -134,7 +134,14 @@ namespace :cache do
     run_curl stats_orgs_url
     @AllOrganizations.each do |org|
       run_curl show_investigators_org_url(org.id)
-      run_curl url_for :controller => 'orgs', :action => 'show', :id => org.id, :page => 1
+
+      abs = org.abstract_data
+      puts "Total pages for #{org.name}: #{abs.total_pages}."
+      # Only do the first 10 pages.
+      (1..[abs.total_pages, 10].min).each do |i|
+        run_curl url_for :controller => 'orgs', :action => 'show', :id => org.id, :page => i
+      end
+
       run_curl full_show_org_url(:id => org.id)
       run_ajax_curl tag_cloud_org_url(:id => org.id)
       run_ajax_curl short_tag_cloud_org_url(:id => org.id)
