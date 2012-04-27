@@ -4,7 +4,7 @@ class AuditsController < ApplicationController
   skip_before_filter  :handle_pagination
   skip_before_filter  :define_keywords
 
-  #caches_page( :show, :show_pubs, :ccsg ) if LatticeGridHelper.CachePages()
+  #caches_page( :show, :show_pubs ) if LatticeGridHelper.CachePages()
   before_filter :check_login
   
   #after_filter  :log_request, :except => [:login]

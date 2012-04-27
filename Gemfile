@@ -1,13 +1,13 @@
 source :gemcutter
 gem 'bundler'
-gem "rails", "~>2.3.5", :require => nil
+gem "rails", "2.3.14", :require => nil
 gem 'rmagick', :require => nil
 gem 'ruby-graphviz'
 #gem 'sparklines'
 gem 'fastercsv'
 gem 'pg'
 gem 'haml'
-gem 'will_paginate'
+gem 'will_paginate', "2.3.16"
 gem 'awesome_nested_set', "~> 1.4"
 #gem "acts_as_taggable_on_steroids", "~> 1.2"
 gem "princely", "~> 1.2.5"

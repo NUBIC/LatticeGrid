@@ -11,7 +11,7 @@ def CreateAbstractsFromArrayHash(data)
   puts "Total number of existing pubmed ids: #{existing_pubmed_ids.length}" if LatticeGridHelper.verbose?
   existing_employee_ids = Investigator.all.map(&:employee_id).compact.uniq
   puts "Total number of existing employee ids: #{existing_employee_ids.length}" if LatticeGridHelper.verbose?
-  puts "Existing employee ids: #{existing_employee_ids.inspect}" if LatticeGridHelper.verbose?
+  #puts "Existing employee ids: #{existing_employee_ids.inspect}" if LatticeGridHelper.verbose?
   cnt=0
   data.each do |data_row|
     cnt+=1

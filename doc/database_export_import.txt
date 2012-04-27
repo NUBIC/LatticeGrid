@@ -1,6 +1,9 @@
 scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/enotis/tmp/study_roles_2012-03-14.csv study_roles_2012-03-14.csv
 scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/enotis/tmp/studies_2012-03-14.csv studies_2012-03-14.csv
 
+scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/enotis/tmp/study_roles_2012-04-26.csv study_roles_20120426.csv
+scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/enotis/tmp/studies_2012-04-26.csv studies_20120426.csv
+
 # export all, reimport as a UTF8 postgres database
 
 pg_dump -E utf8 -Fc aas_latticegrid -U latticegrid > aas_latticegrid_20120322.dmp

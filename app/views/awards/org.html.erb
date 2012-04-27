@@ -1,26 +1,42 @@
 <% @all_abstracts = nil unless defined?(@all_abstracts) %>
 <% @include_graph_link=true if @include_graph_link.nil? %>
+<% @investigator_ids = [] if @investigator_ids.blank? %>
+<% @include_graph_link=false if @org.nil? %>
 
-<% unless @awards.blank? %>
+
+<% unless @awards.nil? %>
+<% if @unit.blank? %>
+	<h1><%= @title unless @title.blank? %></h1>
+<% else %>
+	<h1><%= @unit.name %> Funding Overview &nbsp;
+	<% unless defined?(@pdf) and @pdf %>
+	    <% if ! @all_abstracts.nil? && @all_abstracts.length > 9 -%>
+		  <% publications_per_year=abstracts_per_year_as_string(@all_abstracts) -%>
+		  <span class='inlinebarchart' values='<%= publications_per_year -%>' title='publications per year: <%= publications_per_year -%>'>&nbsp;</span>
+	   	  <%= sparkline_barchart_setup({'barWidth'=>2,'barSpacing'=>2}) -%>
+	    <% end -%>
+	<% end -%>
+	</h1>
+<% end %>
+
 <% unless defined?(@pdf) and @pdf %>
-<h1><%= @unit.name %> Funding Overview &nbsp;
-    <% if ! @all_abstracts.nil? && @all_abstracts.length > 9 -%>
-	  <% publications_per_year=abstracts_per_year_as_string(@all_abstracts) -%>
-	  <span class='inlinebarchart' values='<%= publications_per_year -%>' title='publications per year: <%= publications_per_year -%>'>&nbsp;</span>
-   	  <%= sparkline_barchart_setup({'barWidth'=>2,'barSpacing'=>2}) -%>
-    <% end -%>
-</h1>
-<span id='data_title' class='h2'>Award data: <%= number_to_humanized(@awards_total) %></span>
-<div style="float:right;padding-right:5px;">
-	<%= link_to( "as Word", org_award_url(params[:id],'doc'))  %>
-	<%= link_to( "as Excel", org_award_url(params[:id],'xls')) %>
-	<%= link_to( "as PDF", org_award_url(params[:id],'pdf'))  %>
-</div>
-<% if @include_graph_link %>
-<p><%= org_nav_heading() %></p>
-<% end %>
+	<span id='data_title' class='h2'>Award data: $<%= number_to_humanized(@awards_total) %> for <%= @awards.length %> awards.</span>
+	<% unless params[:id].blank? %>
+		<div style="float:right;padding-right:5px;">
+			<%= link_to( "as Word", org_award_url(params[:id],'doc'))  %>
+			<%= link_to( "as Excel", org_award_url(params[:id],'xls')) %>
+			<%= link_to( "as PDF", org_award_url(params[:id],'pdf'))  %>
+		</div>
+	<% end %>
+	<% if @include_graph_link %>
+	<p><%= org_nav_heading() %></p>
+	<% end %>
 <% end %>
 
+<% if @awards.length == 0 %>
+<h2>No data was found</h2>
+<% else %>
+<% unless defined?(@pdf) and @pdf %>
 <script>
   jQuery(document).ready(function() {
     jQuery("#roles_definitions").dialog({ 
@@ -41,7 +57,6 @@
 	     jQuery("#roles_definitions").dialog("open");
 		return false;
 	   })
-
   });
 
 </script>
@@ -56,9 +71,10 @@
 	<p>The <b>Faculty</b> role in InfoEd is listed as one of: <b>Faculty</b>, <b>Asst. Professor</b>, <b>Collaborator</b>, <b>Mentor</b>, or <b>Co-Mentor</b>. </p>
 	<p>The <b>Biostatistician</b> role in InfoEd is listed as one of: <b>Biostatistician</b>, <b>Statistician</b>, <b>Analyst</b>, or <b>Data Mgmt</b>.</p>
 
-	<p>The <b>Other</b> role consists of the remaining roles, including <b>Other</b>, <b>O.S.P</b>, <b>Advisory Board Member</b>, <b>Postdoc</b>, or <b>Post Doctoral</b> </p>
+	<p>The <b>Other</b> role consists of the remaining roles, including <b>Other</b>, <b>O.S.P</b>, <b>Advisory Board Member</b>, <b>Postdoc</b>, or <b>Post Doctoral</b></p>
 	</div>
 </div>
+<% end %>
 
 <div id="listing">
   <table cellpadding="2" cellspacing="0" class="borderless"> 
@@ -129,10 +145,10 @@
 			<%= number_to_humanized(award.total_amount) %>
 		</td>
 		<td class="list-left">
-			<%=  award.investigator_proposals.count %>
+			<%=  (award.investigator_proposals.count-1) %>
 		</td>
 		<td class="list-left">
-			<%=  award.investigators.collect{|pi| link_to_investigator_awards(pi, pi.name, ((@investigator_ids.include?(pi.id)) ? "member_author" : "investigator_awards") )}.join(", ") %>
+			<%=  award.investigators.collect{|pi| link_to_investigator_awards(pi, pi.name, ((@investigator_ids.include?(pi.id)) ? "member_author" : "investigator_awards") ) if award.pi.blank? or pi.id != award.pi.id }.compact.join(", ") %>
 		</td>
 	</tr>
   <% end %>
@@ -140,4 +156,5 @@
 
 <br/>
 </div>
+<% end %>
 <% end %>

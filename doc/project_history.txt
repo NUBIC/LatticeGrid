@@ -261,6 +261,8 @@ script/generate migration add_high_impact_journals
 
 script/generate migration add_investigator_abstract_date
 
+script/generate migration add_investigator_era_commons_name
+
 
 # authenticated access
 
@@ -278,6 +280,9 @@ bbedit db/migrate/005_create_investigator_appointment.rb
 
 # create the scaffolds
 script/generate scaffold abstract
+
+# script/generate mailer Notifier
+
 
 # after changing the table create script to create the necessary features, try it with rake:
 # test that the models can be generated and moved

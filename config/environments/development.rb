@@ -18,7 +18,12 @@ config.action_controller.perform_caching             = true
 config.action_controller.relative_url_root           = '/cancer' if ENV["HOME"] =~ /home/
 
 # Don't care if the mailer can't send
-config.action_mailer.raise_delivery_errors = false
+config.action_mailer.raise_delivery_errors = true
+config.action_mailer.delivery_method = :smtp
+config.action_mailer.smtp_settings = {
+    :address => "mail.it.northwestern.edu",
+    :port => 25,
+    :domain => "northwestern.edu" }
 
 
 config.after_initialize do

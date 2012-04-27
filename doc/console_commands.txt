@@ -49,3 +49,19 @@ ias = InvestigatorAbstract.all(:select=> "distinct abstract_id", :conditions=>"l
 abstract_ids = ias.map(&:abstract_id).uniq
 
 ias = InvestigatorAbstract.all(:conditions=>["last_reviewed_id=0 and abstract_id not in (:ids)", {:ids=>abstract_ids}])
+
+ics = InvestigatorColleague.all(:conditions=> "investigator_id=89 and colleague_id=3837")
+
+i = Investigator.find_by_username("wakibbe")
+i = Investigator.find_by_username("nlk432")
+
+ic = InvestigatorColleague.first(:conditions=> "investigator_id=89 and colleague_id=3837")
+colleague = ic.colleague
+investigator = ic.investigator
+mesh_tag_ids = investigator.abstracts.collect{|x| x.tags.collect(&:id)}.flatten & colleague.abstracts.collect{|x| x.tags.collect(&:id)}.flatten
+mesh_tag_ids = investigator.tags.map(&:id) & colleague.tags.map(&:id)
+mesh_tags = investigator.tag_list & colleague.tag_list
+Tag.find_by_name("algorithms").inspect
+Tagging.first(:conditions=>"tag_id = 6304 and taggable_type = 'Abstract'")
+Tagging.first(:joins=>[:tag], :conditions => " taggable_type = 'Abstract' AND tags.name = 'algorithms'").information_content
+

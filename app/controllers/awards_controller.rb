@@ -8,7 +8,7 @@ class AwardsController < ApplicationController
   require 'cytoscape_generator'
 
   before_filter :check_allowed, :except => [:disallowed]
-  caches_action( :listing, :investigator, :show )  if LatticeGridHelper.CachePages()
+  caches_action( :listing, :investigator, :show, :org )  if LatticeGridHelper.CachePages()
   
   def show 
     if params[:id].nil? then
@@ -80,50 +80,90 @@ class AwardsController < ApplicationController
       end
     end
    end 
-  
-   def org 
-     @javascripts_add = ['jquery-ui.min']
-     @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]
-     if params[:id].nil? then
-       redirect_to( current_abstracts_url)
-     else
-       @unit = find_unit_by_id_or_name(params[:id])
-       @investigators = @unit.all_primary_or_member_faculty
-       @investigator_ids = @investigators.map(&:id)
-       @awards = Proposal.belonging_to_pi_ids(@investigator_ids)
-       previous = nil
-       @awards_total = @awards.map{ |a| 
+
+    def recent 
+      if params[:funding_type].nil? or params[:start_date].nil? or params[:end_date].nil? then
+        redirect_to( current_abstracts_url)
+      else
+        @javascripts_add = ['jquery.min', 'jquery.tablesorter.min', 'jquery.fixheadertable.min', 'jquery-ui.min']
+        @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]
+        @awards = Proposal.recents_by_type(params[:funding_type], params[:start_date], params[:end_date])
+        previous = nil
+        @css =  "#main {width:1900px;}"
+        @title = "Funding awards started between #{params[:start_date]} and #{params[:end_date]} for source type #{params[:funding_type]}"
+        @awards_total = @awards.map{ |a| 
           val = (previous.blank? or previous != a.id ) ? a.total_amount : 0 
           previous = a.id
           val}.inject(0){|sum, element| sum+element}
-       respond_to do |format|
-         format.html { 
-         	render
-         }
-         format.xml  { 
-            render :xml => @investigator.proposals }
-         format.xls  { 
-           @pdf = 1
+        respond_to do |format|
+          format.html { render :action => :org, :layout => 'printable' }
+          format.xml  { render :xml => @awards }
+          format.xls  { 
+            @pdf = 1
             send_data(render(:template => 'awards/org.html', :layout => "excel"),
-           :filename => "award_listing_for_#{@unit.name}.xls",
-           :type => 'application/vnd.ms-excel',
-           :disposition => 'attachment') }
-         format.doc  { 
-           @pdf = 1
-           send_data(render(:template => 'awards/org.html', :layout => "excel"),
-           :filename => "award_listing_for_#{@unit.name}.doc",
-           :type => 'application/msword',
-           :disposition => 'attachment') }
-         format.pdf do
-           @pdf = 1
-           render( :pdf => "Award listing for " + @unit.name, 
-               :stylesheets => "pdf", 
-               :template => "awards/org.html",
-               :layout => "pdf")
-         end
-       end
-     end
+              :filename => "award_listing_for_#{params[:funding_type]}.xls",
+              :type => 'application/vnd.ms-excel',
+              :disposition => 'attachment') }
+          format.doc  { 
+            @pdf = 1
+            send_data(render(:template => 'awards/org.html', :layout => "excel"),
+              :filename => "award_listing_for_#{params[:funding_type]}.doc",
+              :type => 'application/msword',
+              :disposition => 'attachment') }
+          format.pdf do
+            @pdf = 1
+            render( :pdf => "Award listing for " + params[:funding_type], 
+              :stylesheets => "pdf", 
+              :template => "awards/org.html",
+              :layout => "pdf")
+          end
+        end
+      end
     end 
+
+  
+  def org 
+    @javascripts_add = ['jquery-ui.min']
+    @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]
+    if params[:id].nil? then
+      redirect_to( current_abstracts_url)
+    else
+      @unit = find_unit_by_id_or_name(params[:id])
+      @investigators = @unit.all_primary_or_member_faculty
+      @investigator_ids = @investigators.map(&:id)
+      @awards = Proposal.belonging_to_pi_ids(@investigator_ids)
+      previous = nil
+      @awards_total = @awards.map{ |a| 
+        val = (previous.blank? or previous != a.id ) ? a.total_amount : 0 
+        previous = a.id
+        val}.inject(0){|sum, element| sum+element}
+      respond_to do |format|
+      format.html { render }
+      format.xml  { render :xml => @investigator.proposals }
+      format.xls  { 
+        @pdf = 1
+        send_data(render(:template => 'awards/org.html', :layout => "excel"),
+          :filename => "award_listing_for_#{@unit.name}.xls",
+          :type => 'application/vnd.ms-excel',
+          :disposition => 'attachment') 
+      }
+      format.doc  { 
+        @pdf = 1
+        send_data(render(:template => 'awards/org.html', :layout => "excel"),
+          :filename => "award_listing_for_#{@unit.name}.doc",
+          :type => 'application/msword',
+          :disposition => 'attachment') 
+      }
+      format.pdf do
+        @pdf = 1
+        render( :pdf => "Award listing for " + @unit.name, 
+           :stylesheets => "pdf", 
+           :template => "awards/org.html",
+           :layout => "pdf")
+      end
+      end
+    end
+  end 
 
   private
   

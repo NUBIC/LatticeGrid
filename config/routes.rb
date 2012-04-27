@@ -9,6 +9,7 @@ ActionController::Routing::Routes.draw do |map|
   map.abstracts_search 'abstracts/search', {:controller => 'abstracts', :action => 'search', :conditions => { :method => :get } }
   map.investigator_listing 'profiles/investigator_listing/:id', {:controller => 'profiles', :action => 'investigator_listing'}
   map.award_listing 'awards/listing', {:controller => 'awards', :action => 'listing'}
+  map.recent_awards 'awards/recent', {:controller => 'awards', :action => 'recent', :conditions => { :method =>  [:get, :post] } }
   map.index_orgs 'orgs/index', :controller => 'orgs', :action => 'index'  #handle the route for orgs_path to make sure it is cached properly
   map.resources :orgs, :only => [:index, :show], 
     :collection => { :stats => :get, :period_stats => [:get,:post], :list => :get, :centers => :get, :orgs => :get, :departments => :get, :programs => :get, :department_collaborations => :get, :investigator_abstracts_during_period => [:get, :post], :classifications => :get }, 
@@ -17,9 +18,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :cytoscape, :only => [:index, :show], :member => {:investigators => :get, :protovis => :get, :jit => :get, :awards => :get, :studies => :get, :d3_data => :get, :chord=>:get, :show_org=>:get, :awards_org=>:get, :studies_org=>:get, :show_all=>:get, :org_all=>:get}, :collection => {:d3_data => :get, :chord=>:get, :chord_by_date => :get}
   map.resources :awards,  :only => [:index, :show], :collection => {:disallowed => [:get, :post], :listing => [:get, :post], :org => [:get, :post]}, :member => {:investigator => :get, :org => [:get, :post]}
   map.resources :studies, :only => [:index, :show], :collection => {:disallowed => [:get, :post], :listing => [:get, :post]}, :member => {:investigator => :get, :org => :get}
-  map.resources :profiles, :except=>[:destroy,:new], :member => {:edit_pubs => :get, :investigator_listing => [:get, :post]}, :collection => { :splash => :get, :ccsg => :get, :admin => :get, :list_summaries => :get, :list_summaries_by_program => [:get, :post], :list_investigators => :get, :edit_investigators => :get}
+  map.resources :profiles, :except=>[:destroy,:new], :member => {:reminder => :get, :edit_pubs => :get, :investigator_listing => [:get, :post]}, :collection => { :splash => :get, :ccsg => :get, :admin => :get, :list_summaries => :get, :list_summaries_by_program => [:get, :post], :list_investigators => :get, :edit_investigators => :get}
   map.resources :audits, :only => [:index, :show], :collection => { :view_logins => :get, :view_all_logins=> :get, :view_approved_profiles => :get, :view_approved_publications => :get, :faculty_data=>:get, :login_data=>:get, :approved_profile_data=>:get, :approved_publication_data=>:get, :view_publication_approvers=>:get, :view_profile_approvers=>:get, :view_logins_without_approvals=>:get}
-  
   
   map.resources :mesh, :only => [:index], :member => {:search => :get, :investigators => :get, :investigator => :get, :investigator_tags => :get, :tag_count => :get, :investigator_count => :get}
   map.investigator_mesh_tags 'mesh/investigator/:username.:format', {:controller => "mesh", :action => "investigator", :conditions => { :method => :get }  }

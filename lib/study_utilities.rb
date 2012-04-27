@@ -207,7 +207,7 @@ end
 def complain_not_equal(new_rec, old_rec, attr_name, replace=true)
   return if new_rec.blank? or new_rec[attr_name].blank? 
   return if new_rec[attr_name] == old_rec[attr_name] 
-  puts "new #{attr_name} not the same as the old: new #{new_rec[attr_name]}; old: #{old_rec[attr_name]}" if  ! old_rec[attr_name].blank?
+  puts "new #{attr_name} not the same as the old: new #{new_rec[attr_name]}; old: #{old_rec[attr_name]}" if  ! old_rec[attr_name].blank? and new_rec[attr_name].length < 50
   if replace
     do_replace(old_rec, attr_name, new_rec[attr_name] )
   end

@@ -175,7 +175,7 @@ def CreateOrganizationFromHash(data_row)
       puts "org #{org.name} #{org.search_name} #{org.abbreviation}  does not have a name"
       puts data_row.inspect
     else
-      existing_org = OrganizationalUnit.find_by_name(org.name) || OrganizationalUnit.find_by_abbreviation(org.abbreviation)
+      existing_org = OrganizationalUnit.find_by_name(org.name) || OrganizationalUnit.find_by_abbreviation(org.abbreviation) || OrganizationalUnit.find_by_division_id(org.division_id)
       if existing_org.blank? then
         puts "creating org #{org.name} #{org.search_name} #{org.abbreviation} "
         org.save!

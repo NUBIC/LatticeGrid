@@ -32,4 +32,25 @@ class Proposal < ActiveRecord::Base
      		      {:ids => ids}]
     )
   end
+  
+  def self.recents_by_type(funding_type, start_date, end_date)
+
+    # Funding_type is one of the following in NU InfoEd
+    # ASSOC
+    # EDUC
+    # FED
+    # FORGOV
+    # FOUND
+    # HOSP
+    # ILAGEN
+    # INDUS
+    # VOLHEAL
+    
+    
+    all(
+      :conditions => [ "proposals.sponsor_type_code in (:funding_type) and (proposals.project_start_date between :start_date and :end_date or proposals.award_start_date between :start_date and :end_date)", 
+   		      {:funding_type => funding_type, :start_date=>start_date, :end_date=>end_date }],
+   		:order=> "proposals.sponsor_code, proposals.award_start_date"
+    )
+  end
 end

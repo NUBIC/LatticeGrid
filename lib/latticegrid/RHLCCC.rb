@@ -4,6 +4,11 @@ def LatticeGridHelper.require_authentication?
   return true
 end
 
+# email_from address for messages coming from LatticeGrid
+def LatticeGridHelper.from_address
+  return 'Warren Kibbe <wakibbe@northwestern.edu>'
+end
+
 # support editing investigator profiles? Implies that authentication is supported!
 def LatticeGridHelper.allow_profile_edits?
   return true

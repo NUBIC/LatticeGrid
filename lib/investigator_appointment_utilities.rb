@@ -109,6 +109,10 @@ def CreateInvestigatorFromHash(data_row)
         existing_pi.employee_id = pi.employee_id 
         puts "Adding employee ID (#{pi.employee_id}) to #{existing_pi.name} (#{existing_pi.username})"
       end
+      if existing_pi.era_comons_name.blank? and ! pi.era_comons_name.blank?
+        existing_pi.era_comons_name = pi.era_comons_name 
+        puts "Adding eRA Commons Name (#{pi.era_comons_name}) to #{existing_pi.name} (#{existing_pi.username})"
+      end
       if existing_pi.first_name != pi.first_name
         puts "Existing first name and new first name different: existing: #{existing_pi.name}, username: #{existing_pi.username}, email: #{existing_pi.email}; new record: #{pi.name}, username #{pi.username}, email: #{pi.email}"
         overwrite=false
@@ -130,7 +134,7 @@ def CreateInvestigatorFromHash(data_row)
       existing_pi.save!
       pi = existing_pi
     end
-    if ! data_row['program'].blank? then
+    unless data_row['program'].blank? then
       theProgram = CreateProgramFromName(data_row['program'].strip)
       if theProgram.blank? then
         throw "unable to match program #{data_row['program']} for user #{pi.username}"
@@ -172,7 +176,7 @@ def HandleUsername(pi)
     pi.username = pi.email
     pi.username = pi.username.gsub(/[\.]+/,'_')
   end
-  if !pi.username.blank?
+  unless pi.username.blank?
     pi.username = pi.username.split('.')[0]
     pi.username = pi.username.split('(')[0]
     pi.username = pi.username.gsub(/[' \t]+/,'')
@@ -196,23 +200,23 @@ def SetInvestigatorIdentity(pi, data_row)
   pi.middle_name = data_row['MI'] || data_row['MIDDLE_NAME'] || data_row['mi'] || data_row['middle_name']
   pi.last_name = data_row['LAST_NAME'] || data_row['last_name'] 
   pi.email = data_row['EMAIL'] || data_row['email'] 
+  pi.era_comons_name = data_row['ERA_COMMONS_ID'] || data_row['ERA_COMMONS_NAME']  || data_row['era_comons_name'] || data_row['era_comons_id']
 
-  pi.username.downcase.strip! if ! pi.username.blank?
-  pi.first_name = pi.first_name.gsub(/\./,' ').strip if ! pi.first_name.blank?
-  pi.middle_name = pi.middle_name.gsub(/\./,' ').strip if ! pi.middle_name.blank?
-  pi.last_name = pi.last_name.gsub(/\./,' ').strip if ! pi.last_name.blank?
-  pi.email.downcase.strip! if ! pi.email.blank?
-  pi.employee_id.to_s.strip! if ! pi.employee_id.blank?
-  pi.employee_id.to_s.downcase! if ! pi.employee_id.blank?
+  pi.username.downcase.strip! unless pi.username.blank?
+  pi.first_name = pi.first_name.gsub(/\./,' ').strip unless pi.first_name.blank?
+  pi.middle_name = pi.middle_name.gsub(/\./,' ').strip unless pi.middle_name.blank?
+  pi.last_name = pi.last_name.gsub(/\./,' ').strip unless pi.last_name.blank?
+  pi.email.downcase.strip! unless pi.email.blank?
+  pi.employee_id.to_s.strip! unless pi.employee_id.blank?
+  pi.employee_id.to_s.downcase! unless pi.employee_id.blank?
+  pi.era_comons_name.upcase.strip! unless pi.era_comons_name.blank?
+  pi.email.downcase.strip! unless pi.email.blank?
  
   if pi.last_name.blank? && !data_row['NAME'].blank?
       pi=HandleName(pi,data_row['NAME'])
   end
   if pi.last_name.blank? && !data_row['name'].blank?
       pi=HandleName(pi,data_row['name'])
-  end
-  if !pi.email.blank?
-    pi.email.downcase!
   end
   pi
 end
@@ -238,24 +242,24 @@ def SetInvestigatorInformation(pi, data_row)
   pi.appointment_track = data_row['CAREER_TRACK'] || data_row['career_track'] # research, clinician, clinician for CS, Clinician-Investigator
   pi.appointment_basis = data_row['BASIS'] || data_row['basis']
   pi.degrees = data_row['DEGREE'] || data_row['degree'] || data_row['DEGREES'] || data_row['degrees'] 
-  pi.degrees = pi.degrees.gsub(/\//,",") if ! pi.degrees.blank?
+  pi.degrees = pi.degrees.gsub(/\//,",") unless pi.degrees.blank?
   pi.pubmed_search_name = data_row['pubmed_search_name'] 
-  pi.pubmed_limit_to_institution = data_row['pubmed_limit_to_institution'] if !data_row['pubmed_limit_to_institution'].blank?
+  pi.pubmed_limit_to_institution = data_row['pubmed_limit_to_institution'] unless data_row['pubmed_limit_to_institution'].blank?
   pi.faculty_interests = data_row['interest'] || data_row['INTEREST'] || data_row['faculty_interest'] || data_row['FACULTY_INTEREST']
   pi.faculty_research_summary = data_row['description'] || data_row['DESCRIPTION'] || data_row['faculty_description'] || data_row['FACULTY_DESCRIPTION'] || data_row['summary'] || data_row['SUMMARY'] || data_row['research_summary'] || data_row['RESEARCH_SUMMARY']
   pi.faculty_keywords = data_row['keywords'] || data_row['KEYWORDS'] || data_row['faculty_keywords'] || data_row['FACULTY_KEYWORDS'] || data_row['research_keywords'] || data_row['RESEARCH_KEYWORDS']
 
 
-  pi.title.strip! if ! pi.title.blank?
-  pi.appointment_type.strip! if ! pi.appointment_type.blank?
-  pi.appointment_track.strip! if ! pi.appointment_track.blank?
-  pi.appointment_basis.strip! if ! pi.appointment_basis.blank?
-  pi.degrees.strip! if ! pi.degrees.blank?
-  pi.pubmed_search_name.strip! if ! pi.pubmed_search_name.blank?
-  # pi.pubmed_limit_to_institution.strip! if ! pi.pubmed_limit_to_institution.blank? # fails for booleans
-  pi.faculty_interests.strip! if ! pi.faculty_interests.blank?
-  pi.faculty_research_summary.strip! if ! pi.faculty_research_summary.blank?
-  pi.faculty_keywords.strip! if ! pi.faculty_keywords.blank?
+  pi.title.strip! unless pi.title.blank?
+  pi.appointment_type.strip! unless pi.appointment_type.blank?
+  pi.appointment_track.strip! unless pi.appointment_track.blank?
+  pi.appointment_basis.strip! unless pi.appointment_basis.blank?
+  pi.degrees.strip! unless pi.degrees.blank?
+  pi.pubmed_search_name.strip! unless pi.pubmed_search_name.blank?
+  # pi.pubmed_limit_to_institution.strip! unless pi.pubmed_limit_to_institution.blank? # fails for booleans
+  pi.faculty_interests.strip! unless pi.faculty_interests.blank?
+  pi.faculty_research_summary.strip! unless pi.faculty_research_summary.blank?
+  pi.faculty_keywords.strip! unless pi.faculty_keywords.blank?
 
   pi.faculty_research_summary = CleanNonUTFtext(pi.faculty_research_summary)
   pi
@@ -277,7 +281,7 @@ def SetInvestigatorAddress(pi,data_row)
   # postal_code || zip
   # country
   pi.campus = data_row['CAMPUS'] || data_row['campus'] 
-  pi.campus = pi.campus.gsub(/ *campus */i,'') if ! pi.campus.blank?
+  pi.campus = pi.campus.gsub(/ *campus */i,'') unless pi.campus.blank?
   pi.business_phone = data_row['BUSINESS_PHONE'] || data_row['business_phone'] || data_row['OFFICE_PHONE'] || data_row['office_phone'] 
   pi.home_phone = data_row['home_phone'] || data_row['HOME_PHONE'] || data_row['mobile_phone'] || data_row['MOBILE_PHONE'] || data_row['cell_phone'] || data_row['CELL_PHONE']
   pi.lab_phone = data_row['lab_phone'] || data_row['LAB_PHONE']
@@ -291,19 +295,19 @@ def SetInvestigatorAddress(pi,data_row)
   pi.postal_code = data_row['postal_code'] || data_row['POSTAL_CODE'] || data_row['zip'] || data_row['ZIP']
   pi.country = data_row['country'] || data_row['COUNTRY'] 
 
-  pi.campus.strip! if ! pi.campus.blank?
-  pi.business_phone.strip! if ! pi.business_phone.blank?
-  pi.home_phone.strip! if ! pi.home_phone.blank?
-  pi.lab_phone.strip! if ! pi.lab_phone.blank?
-  pi.fax.strip! if ! pi.fax.blank?
-  pi.pager.strip! if ! pi.pager.blank?
-  pi.mailcode.to_s.strip! if ! pi.mailcode.blank?
-  pi.address1.strip! if ! pi.address1.blank?
-  pi.address2.strip! if ! pi.address2.blank?
-  pi.city.strip! if ! pi.city.blank?
-  pi.state.strip! if ! pi.state.blank?
-  pi.postal_code.to_s.strip! if ! pi.postal_code.blank?
-  pi.country.strip! if ! pi.country.blank?
+  pi.campus.strip! unless pi.campus.blank?
+  pi.business_phone.strip! unless pi.business_phone.blank?
+  pi.home_phone.strip! unless pi.home_phone.blank?
+  pi.lab_phone.strip! unless pi.lab_phone.blank?
+  pi.fax.strip! unless pi.fax.blank?
+  pi.pager.strip! unless pi.pager.blank?
+  pi.mailcode.to_s.strip! unless pi.mailcode.blank?
+  pi.address1.strip! unless pi.address1.blank?
+  pi.address2.strip! unless pi.address2.blank?
+  pi.city.strip! unless pi.city.blank?
+  pi.state.strip! unless pi.state.blank?
+  pi.postal_code.to_s.strip! unless pi.postal_code.blank?
+  pi.country.strip! unless pi.country.blank?
 
   pi.campus = nil if pi.campus.blank?
   pi.business_phone = nil if pi.business_phone.blank?
@@ -326,7 +330,7 @@ end
 def BuildAddressField(pi)
   mailcode = nil
   city_state_zip = [[pi.city,pi.state].join(', '), pi.postal_code].join(" ").gsub(/^, +/,'')
-  mailcode = "campus mailcode: #{pi.mailcode}" if !pi.mailcode.blank?
+  mailcode = "campus mailcode: #{pi.mailcode}" unless pi.mailcode.blank?
   pi.address1 = [mailcode, pi.address1, pi.address2, city_state_zip,pi.country].join("$")
   pi.address1 = pi.address1.gsub(/ *\$+[, ]*\$+/,"$").gsub(/\$$/,'')
   pi.address1 = nil if pi.address1.blank?
@@ -361,7 +365,7 @@ def DoOverwrite(dest, source, overwrite)
   if overwrite and !source.blank?
     return source
   end
-  if !overwrite and dest.blank?
+  if ! overwrite and dest.blank?
     return source
   end
   return dest
@@ -388,12 +392,12 @@ end
 
 def IdentifyExistingInvestigator(pi)
   return nil if pi.blank?
-  existing = Investigator.find_by_username(pi.username) if ! pi.username.blank?
-  return existing if ! existing.blank?
-  existing = Investigator.find_by_employee_id(pi.employee_id) if ! pi.employee_id.blank?
-  return existing if ! existing.blank?
-  existing = Investigator.find_by_email(pi.email) if ! pi.email.blank?
-  return existing if ! existing.blank?
+  existing = Investigator.find_by_username(pi.username) unless pi.username.blank?
+  return existing unless existing.blank?
+  existing = Investigator.find_by_employee_id(pi.employee_id) unless pi.employee_id.blank?
+  return existing unless existing.blank?
+  existing = Investigator.find_by_email(pi.email) unless pi.email.blank?
+  return existing unless existing.blank?
   existing = Investigator.find(:all, 
     :conditions => ['lower(last_name) = lower(:last_name) and lower(first_name) = lower(:first_name)', 
       {:first_name=>pi.first_name,  :last_name=>pi.last_name}])  if (! pi.first_name.blank?) and (! pi.last_name.blank?)
@@ -440,7 +444,7 @@ def MergeInvestigatorDescriptionsFromHash(data_row)
   investigator = HandleUsername(investigator)
   investigator = SetInvestigatorInformation(investigator,data_row)
   existing_investigator = IdentifyExistingInvestigator(investigator)
-  if !existing_investigator.blank?
+  unless existing_investigator.blank?
     puts "merging data: #{existing_investigator.name}; #{existing_investigator.username}." if LatticeGridHelper.debug?
     # uncomment this if you are merging multiple research summaries
     #    if !investigator.faculty_research_summary.blank? and (existing_investigator.faculty_research_summary =~ Regexp.new(investigator.faculty_research_summary[0..20].gsub(/\//,'?')) ).blank?
@@ -525,11 +529,11 @@ def CreateProgramMembershipsFromHash(data_row, type='Member')
      puts "unit_abbreviation or email was blank or missing. datarow="+data_row.inspect
      return
   end
-  username.strip! if !username.blank?
-  last_name.strip! if !last_name.blank?
-  first_name.strip! if !first_name.blank?
-  email.downcase.strip! if !email.blank?
-  unit_abbreviation.strip! if !unit_abbreviation.blank?
+  username.strip! unless username.blank?
+  last_name.strip! unless last_name.blank?
+  first_name.strip! unless first_name.blank?
+  email.downcase.strip! unless email.blank?
+  unit_abbreviation.strip! unless unit_abbreviation.blank?
   appt = InvestigatorAppointment.new
   program = OrganizationalUnit.find_by_abbreviation(unit_abbreviation)
   investigator=nil
@@ -646,7 +650,7 @@ end
 
 def UpdateHomeDepartmentAndTitle(pi)
   return if pi.blank? or pi.username.blank?
-  pi.home_department_name=pi.home_department.name if !pi.home_department.blank?
+  pi.home_department_name=pi.home_department.name unless pi.home_department.blank?
   if ( LatticeGridHelper.ldap_perform_search?)
     begin
       pi_data = GetLDAPentry(pi.username)
