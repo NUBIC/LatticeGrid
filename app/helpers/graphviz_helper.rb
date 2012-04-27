@@ -125,6 +125,10 @@ module GraphvizHelper
            when "org_mesh"    :  build_org_mesh_graph( graph, program, id, distance, stringency, include_orphans)
            else                  graph_no_data(graph, "Option #{analysis} was not found")
      end
+
+     if graph.node_count == 0
+      graph = graph_empty_data(graph, "There is no data available for this graph.\nTry decreasing the stringency to see more information.")
+     end
      graph
    end
 

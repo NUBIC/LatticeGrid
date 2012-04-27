@@ -64,6 +64,18 @@ def graph_no_data (g, message)
   return g
 end
 
+def graph_empty_data (g, message)
+  g.add_node( "main",
+              :label=> message,
+              # :URL => abstracts_url(),
+              # :target=>'_top',
+              :shape => 'box',
+              :color => LatticeGridHelper.white_fill_color,
+              :fillcolor => LatticeGridHelper.white_fill_color)
+  g[:viewport] = '400,400'
+  return g
+end
+
 # gold: #FFAD33
 # existing gold (browner): #e8a820
 # pale gold: #ddaa66
