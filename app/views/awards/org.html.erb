@@ -34,48 +34,9 @@
 <% end %>
 
 <% if @awards.length == 0 %>
-<h2>No data was found</h2>
+<h2>No awards were found</h2>
 <% else %>
-<% unless defined?(@pdf) and @pdf %>
-<script>
-  jQuery(document).ready(function() {
-    jQuery("#roles_definitions").dialog({ 
-		autoOpen: false, 
-		width: 1000,
-		buttons: {
-			"Ok": function() { 
-				jQuery(this).dialog("close"); 
-			}, 
-			"Cancel": function() { 
-				jQuery(this).dialog("close"); 
-			} 
-		},
-		hide: 'slide',  
-		modal: true, 
-		show: 'slide' });
-    jQuery(".roles").click(function() {
-	     jQuery("#roles_definitions").dialog("open");
-		return false;
-	   })
-  });
-
-</script>
-  
-
-<div id="roles_definitions" title="Roles Definitions">
-	<p><b>Definitions:</b></p>
-	<div id="note">
-	<p>The <b>PD/PI</b> role in InfoEd is listed as one of: <b>PI/PD</b>, <b>Principal Investigator</b>, <b>Director</b>, <b>Co-Program Director</b>, <b>Co-Director</b>, <b>Investigator</b>, or <b>Contact P. I.</b>  </p>
-	<p>The <b>Co-Investigator</b> role in InfoEd is listed as one of: <b>Co-Investigator</b>, <b>Co-I</b>, or <b>Co-PD/PI</b>. </p>
-	<p>The <b>Fellow</b> role in InfoEd is listed as one of: <b>Fellow</b>, <b>Postdoc</b>, or <b>Post Doctoral</b>. </p>
-	<p>The <b>Faculty</b> role in InfoEd is listed as one of: <b>Faculty</b>, <b>Asst. Professor</b>, <b>Collaborator</b>, <b>Mentor</b>, or <b>Co-Mentor</b>. </p>
-	<p>The <b>Biostatistician</b> role in InfoEd is listed as one of: <b>Biostatistician</b>, <b>Statistician</b>, <b>Analyst</b>, or <b>Data Mgmt</b>.</p>
-
-	<p>The <b>Other</b> role consists of the remaining roles, including <b>Other</b>, <b>O.S.P</b>, <b>Advisory Board Member</b>, <b>Postdoc</b>, or <b>Post Doctoral</b></p>
-	</div>
-</div>
-<% end %>
-
+<p>Awards are organized by source and agency</p>
 <div id="listing">
   <table cellpadding="2" cellspacing="0" class="borderless"> 
 	<tr valign="bottom" class="header">
@@ -86,7 +47,7 @@
 			PI
 		</td>
 		<td class="list-title-left">
-			<span class="roles">Role <%= image_tag("information.png") %></span>
+			Source
 		</td>
 		<td class="list-title-left">
 			Sponsor award id
@@ -124,7 +85,7 @@
 			<%=  link_to_investigator_awards(award.pi,  award.pi.name, "investigator_awards")  unless award.pi.blank?  %>
 		</td>
 		<td class="list-left">
-			PD/PI
+			<%= award.sponsor_type_code %>
 		</td>
 		<td class="list-left">
 			<%= award.sponsor_award_number %>

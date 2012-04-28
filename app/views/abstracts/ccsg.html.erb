@@ -166,11 +166,19 @@
 	<h2>Funding listing by funding source and award start</h2>
 	<div id="funding_listing">
 		<% form_for( :abstract, :url => recent_awards_path, :html => { :method => :post, :class => "p" })  do |form| %> 
-		<p>Select a type of funding and a date range for the start date of the funding.</p>
-		<p><%= select_tag(:funding_type, 
-				options_for_select([["Federal Agencies", "FED"],["Foreign Governments", "FORGOV"],["Associations", "ASSOC"],["Educational Institutions", "EDUC"],["Foundations", "FOUND"],["Hospitals and Medical Centers", "HOSP"],["Industry and Trade Organizations", "INDUS"],["State of Illinois Agencies", "ILAGEN"],["Voluntary Health and Medical Organizations", "VOLHEAL"]], [params[:funding_type]])  
-				) %> select format </p>
+		<p>Select a type of funding. Selecting none is the same as selecting all.</p>
 
+				<ul class="noBullets">
+				  <% [["Federal Agencies", "FED"],["Foreign Governments", "FORGOV"],["Associations", "ASSOC"],["Educational Institutions", "EDUC"],["Foundations", "FOUND"],["Hospitals and Medical Centers", "HOSP"],["Industry and Trade Organizations", "INDUS"],["State of Illinois Agencies", "ILAGEN"],["Voluntary Health and Medical Organizations", "VOLHEAL"]].each do |funding_type| %>
+				      <li>
+				        <%= check_box_tag 'funding_types[]', funding_type[1] -%>
+				        <%= funding_type[0] -%>
+				      </li>
+				  <% end %>
+				</ul>
+		<p>Select the award start date range to include in the report.</p>
+		<% params[:start_date] = '1/1/2012' if params[:start_date].blank? %>
+		<% params[:end_date] = '1/1/2014' if params[:end_date].blank? %>
 		 <p>Award start: <%= text_field_tag(:start_date, params[:start_date], :size => 20) %> to
 		  <%= text_field_tag(:end_date, params[:end_date], :size => 20) %>  select dates </p>
 

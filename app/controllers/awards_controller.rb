@@ -82,15 +82,22 @@ class AwardsController < ApplicationController
    end 
 
     def recent 
-      if params[:funding_type].nil? or params[:start_date].nil? or params[:end_date].nil? then
+      if params[:start_date].nil? or params[:end_date].nil? then
         redirect_to( current_abstracts_url)
       else
         @javascripts_add = ['jquery.min', 'jquery.tablesorter.min', 'jquery.fixheadertable.min', 'jquery-ui.min']
         @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]
-        @awards = Proposal.recents_by_type(params[:funding_type], params[:start_date], params[:end_date])
+        @awards = Proposal.recents_by_type(params[:funding_types], params[:start_date], params[:end_date])
         previous = nil
         @css =  "#main {width:1900px;}"
-        @title = "Funding awards started between #{params[:start_date]} and #{params[:end_date]} for source type #{params[:funding_type]}"
+        if params[:funding_types].blank?
+          funding_source = ""
+        elsif params[:funding_types].class.to_s =~ /array/i
+          funding_source = " for source types " + params[:funding_types].join(", ")
+        else
+          funding_source = " for source type " + params[:funding_types]
+        end
+        @title = "Funding awards started between #{params[:start_date]} and #{params[:end_date]} #{funding_source}"
         @awards_total = @awards.map{ |a| 
           val = (previous.blank? or previous != a.id ) ? a.total_amount : 0 
           previous = a.id
