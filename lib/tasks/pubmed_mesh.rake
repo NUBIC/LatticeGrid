@@ -111,6 +111,7 @@ end
 
 task :normalizeInvestigatorColleaguesMesh => :environment do
   block_timing("normalizeInvestigatorColleaguesMesh") {
+    puts "updating null mesh_tags_ic: " + InvestigatorColleague.update_all( "mesh_tags_ic = 0", "mesh_tags_ic is null")
     max_mesh_ic = InvestigatorColleague.find(:first, :order => 'mesh_tags_ic desc').mesh_tags_ic
     if max_mesh_ic < 100
       puts "Unable to normalize. max_mesh_ic = #{max_mesh_ic};"

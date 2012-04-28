@@ -245,9 +245,9 @@ def BuildInvestigatorColleague(investigator, colleague, update_only=true)
   mesh_information_content=CalculateMeSHinformationContent(investigator, colleague, mesh_tag_ids, citation_overlap)
 
   if InvestigatorColleagueInclusionCriteria(citation_overlap, mesh_information_content) then
-    InsertUpdateInvestigatorColleague(investigator.id,colleague.id,citation_overlap,mesh_tag_ids,mesh_information_content)
+    InsertUpdateInvestigatorColleague(investigator.id,colleague.id,citation_overlap,mesh_tag_ids,mesh_information_content, mesh_tags_overlap)
     #repeat as inverse
-    InsertUpdateInvestigatorColleague(colleague.id,investigator.id,citation_overlap,mesh_tag_ids,mesh_information_content) 
+    InsertUpdateInvestigatorColleague(colleague.id,investigator.id,citation_overlap,mesh_tag_ids,mesh_information_content, mesh_tags_overlap) 
     #puts "Found relationship: #{investigator.name} and #{colleague.name}: citations: #{citation_overlap.join(', ')}; mesh_ic: #{mesh_information_content} " if LatticeGridHelper.verbose? && citation_overlap.length > 0 
   end
 end
@@ -271,7 +271,7 @@ def UpdateInvestigatorColleague(ir,citation_overlap,mesh_overlap=[],mesh_informa
 
     ir.publication_cnt = citation_overlap.length
     ir.publication_list = citation_overlap.join(',')
-    ir.tag_list = mesh_tag_list
+    ir.tag_list = mesh_tag_list.join(", ")
     ir.save!
   rescue ActiveRecord::RecordInvalid
     if ir.nil? then # something bad happened
@@ -288,7 +288,7 @@ def InsertInvestigatorColleague(investigator_id,colleague_id,citation_overlap,me
        :colleague_id  => colleague_id,
        :mesh_tags_cnt => mesh_overlap.length,
        :mesh_tags_ic => mesh_information_content,
-       :tag_list => mesh_tag_list,
+       :tag_list => mesh_tag_list.join(", "),
        :publication_cnt => citation_overlap.length,
        :publication_list => citation_overlap.join(',')
      )
