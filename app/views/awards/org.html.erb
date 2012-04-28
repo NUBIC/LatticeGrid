@@ -121,7 +121,7 @@
 			<%= cnt %>
 		</td>
 		<td class="list-left">
-			<%= award.pi.name unless award.pi.blank?  %>
+			<%=  link_to_investigator_awards(award.pi,  award.pi.name, "investigator_awards")  unless award.pi.blank?  %>
 		</td>
 		<td class="list-left">
 			PD/PI

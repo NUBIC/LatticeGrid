@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>lib/tasks/pubmed_mesh.rake</string>
+	<string>doc/example_loads.txt</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -114,12 +114,28 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>46</integer>
+				<integer>6</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>6</integer>
+			</dict>
 		</dict>
 		<key>lib/mesh_utilities.rb</key>
 		<dict>
@@ -156,30 +172,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>32</integer>
+				<integer>42</integer>
 				<key>line</key>
-				<integer>111</integer>
+				<integer>113</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>68</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>6</integer>
-				<key>line</key>
-				<integer>111</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>41</integer>
-				<key>line</key>
-				<integer>111</integer>
-			</dict>
+			<integer>73</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
@@ -194,6 +194,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{185, 0}, {1472, 1028}}</string>
+	<string>{{387, 0}, {1279, 1028}}</string>
 </dict>
 </plist>
