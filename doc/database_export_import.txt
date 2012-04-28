@@ -18,6 +18,14 @@ pg_dump -Fc fsm_latticegrid -U latticegrid > fsm_latticegrid_20120426.dmp
 scp fsm_latticegrid_20120426.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/fsm_latticegrid_20120426.dmp  
 pg_restore -d fsm_latticegrid -U latticegrid -h pprod2 fsm_latticegrid_20120426.dmp
 
+# award and study data
+
+scp db/imports/Feinberg/private/award_data_20120426.txt wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/apps/cancerpublications/db/imports/Feinberg/private/award_data_20120426.txt  
+
+scp db/imports/Feinberg/private/studies_20120426.csv wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/apps/cancerpublications/db/imports/Feinberg/private/studies_20120426.csv  
+
+scp db/imports/Feinberg/private/study_roles_20120426.csv wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/apps/cancerpublications/db/imports/Feinberg/private/study_roles_20120426.csv  
+
 # initdb with UTF8
 initdb -E UTF8 -D /Users/_wakibbe/pgdata
 
