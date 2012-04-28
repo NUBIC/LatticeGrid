@@ -89,7 +89,7 @@
 			<span class="roles">Role <%= image_tag("information.png") %></span>
 		</td>
 		<td class="list-title-left">
-			Effort
+			Sponsor award id
 		</td>
 		<td class="list-title-left">
 			Title
@@ -127,7 +127,7 @@
 			PD/PI
 		</td>
 		<td class="list-right">
-			<%= award.pi_award.percent_effort unless award.pi_award.blank? %> %
+			<%= award.sponsor_award_number %>
 		</td>
 		<td class="list-left">
 			<%= link_to( award.title, award_url(award.id)) %>
