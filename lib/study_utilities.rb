@@ -50,7 +50,7 @@ def CreateStudyFromHash(data_row)
     s.abstract = CleanNonUTFtext(s.abstract)
   rescue Exception => err
     puts "CleanNonUTFtext failed for #{data_row.inspect} with error #{err.message}"
-    raise
+    puts "s.title is #{s.title.length} and s.abstract is #{s.abstract.length} characters."
   end
   s.enotis_study_id =  data_row['study_id']
   s.research_type =  data_row['research_type']
