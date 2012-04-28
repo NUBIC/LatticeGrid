@@ -45,9 +45,12 @@ def CreateStudyFromHash(data_row)
   s.title =  data_row['title']
   s.abstract =  data_row['description']
   # clean out the non-ASCII characters
-  s.title = CleanNonUTFtext(s.title)
-  s.abstract = CleanNonUTFtext(s.abstract)
-  
+  begin
+    s.title = CleanNonUTFtext(s.title)
+    s.abstract = CleanNonUTFtext(s.abstract)
+  rescue
+    puts "CleanNonUTFtext failed for #{data_row.inspect}"
+  end
   s.enotis_study_id =  data_row['study_id']
   s.research_type =  data_row['research_type']
   s.review_type =  data_row['review_type_requested']
