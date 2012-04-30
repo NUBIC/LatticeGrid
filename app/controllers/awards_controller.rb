@@ -127,8 +127,52 @@ class AwardsController < ApplicationController
         end
       end
     end 
-
-  
+    
+    def ad_hoc_by_pi 
+      if params[:start_date].nil? or params[:end_date].nil? then
+        redirect_to( current_abstracts_url)
+      else
+        @javascripts_add = ['jquery.min', 'jquery.tablesorter.min', 'jquery.fixheadertable.min', 'jquery-ui.min']
+        @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]
+        
+        @faculty = Investigator.find_investigators_in_list(params[:investigator_ids]).sort{|x,y| x.last_name+' '+x.first_name <=> y.last_name+' '+y.first_name}
+        @investigators_in_unit = @faculty.map(&:id).sort.uniq
+         
+        @awards = Proposal.recents_by_pi(@investigators_in_unit, params[:start_date], params[:end_date])
+        previous = nil
+        @css =  "#main {width:1900px;}"
+        @title = "Funding awards started between #{params[:start_date]} and #{params[:end_date]}"
+         
+        @awards_total = @awards.map{ |a| 
+          val = (previous.blank? or previous != a.id ) ? a.total_amount : 0 
+          previous = a.id
+          val}.inject(0){|sum, element| sum+element}
+        respond_to do |format|
+          format.html { render :action => :org, :layout => 'printable' }
+          format.xml  { render :xml => @awards }
+          format.xls  { 
+            @pdf = 1
+            send_data(render(:template => 'awards/org.html', :layout => "excel"),
+              :filename => "award_listing_for_#{params[:funding_type]}.xls",
+              :type => 'application/vnd.ms-excel',
+              :disposition => 'attachment') }
+          format.doc  { 
+            @pdf = 1
+            send_data(render(:template => 'awards/org.html', :layout => "excel"),
+              :filename => "award_listing_for_#{params[:funding_type]}.doc",
+              :type => 'application/msword',
+              :disposition => 'attachment') }
+          format.pdf do
+            @pdf = 1
+            render( :pdf => "Award listing for " + params[:funding_type], 
+              :stylesheets => "pdf", 
+              :template => "awards/org.html",
+              :layout => "pdf")
+          end
+        end
+      end
+    end 
+   
   def org 
     @javascripts_add = ['jquery-ui.min']
     @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]

@@ -1,6 +1,7 @@
 <% @all_abstracts = nil unless defined?(@all_abstracts) %>
 <% @include_graph_link=true if @include_graph_link.nil? %>
 <% @investigator_ids = [] if @investigator_ids.blank? %>
+<% @faculty = [] if @faculty.blank? %>
 <% @include_graph_link=false if @org.nil? %>
 
 
@@ -19,8 +20,12 @@
 	</h1>
 <% end %>
 
+<% if @faculty.length > 0 %>
+<p>Faculty (<%= @faculty.length -%>) included in chart: <%= link_to_faculty(@faculty) %></p>
+<% end %>
+<span id='data_title' class='h2'>Award data: $<%= number_to_humanized(@awards_total) %> for <%= @awards.length %> awards.</span>
+
 <% unless defined?(@pdf) and @pdf %>
-	<span id='data_title' class='h2'>Award data: $<%= number_to_humanized(@awards_total) %> for <%= @awards.length %> awards.</span>
 	<% unless params[:id].blank? %>
 		<div style="float:right;padding-right:5px;">
 			<%= link_to( "as Word", org_award_url(params[:id],'doc'))  %>
@@ -36,7 +41,7 @@
 <% if @awards.length == 0 %>
 <h2>No awards were found</h2>
 <% else %>
-<p>Awards are organized by source and agency</p>
+<p>Awards are organized by category and agency</p>
 <div id="listing">
   <table cellpadding="2" cellspacing="0" class="borderless"> 
 	<tr valign="bottom" class="header">
@@ -47,7 +52,7 @@
 			PI
 		</td>
 		<td class="list-title-left">
-			Source
+			Category
 		</td>
 		<td class="list-title-left">
 			Sponsor award id

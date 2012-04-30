@@ -119,7 +119,48 @@ class StudiesController < ApplicationController
       end
     end
   end
-
+  
+  def ad_hoc_by_pi 
+    if params[:start_date].nil? or params[:end_date].nil? then
+      redirect_to( current_abstracts_url)
+    else
+      @javascripts_add = ['jquery.min', 'jquery.tablesorter.min', 'jquery.fixheadertable.min', 'jquery-ui.min']
+      @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]
+      
+      @faculty = Investigator.find_investigators_in_list(params[:investigator_ids]).sort{|x,y| x.last_name+' '+x.first_name <=> y.last_name+' '+y.first_name}
+      @investigators_in_unit = @faculty.map(&:id).sort.uniq
+       
+      @studies = Study.recents_by_pi(@investigators_in_unit, params[:start_date], params[:end_date])
+ 
+      @css =  "#main {width:1900px;}"
+      @title = "Research studies active between #{params[:start_date]} and #{params[:end_date]}"
+       
+      respond_to do |format|
+        format.html { render :action => :org, :layout => 'printable' }
+        format.xml  { render :xml => @studies }
+        format.xls  { 
+          @pdf = 1
+           send_data(render(:template => 'studies/org.html', :layout => "excel"),
+          :filename => "study_listing_for_#{@unit.name}.xls",
+          :type => 'application/vnd.ms-excel',
+          :disposition => 'attachment') }
+        format.doc  { 
+          @pdf = 1
+          send_data(render(:template => 'studies/org.html', :layout => "excel"),
+          :filename => "study_listing_for_#{@unit.name}.doc",
+          :type => 'application/msword',
+          :disposition => 'attachment') }
+        format.pdf do
+          @pdf = 1
+          render( :pdf => "Study listing for " + @unit.name, 
+              :stylesheets => "pdf", 
+              :template => "studies/org.html",
+              :layout => "pdf")
+        end
+      end
+    end
+  end 
+ 
   private
   
   def check_allowed

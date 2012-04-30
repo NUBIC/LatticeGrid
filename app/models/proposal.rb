@@ -33,6 +33,15 @@ class Proposal < ActiveRecord::Base
     )
   end
   
+  def self.recents_by_pi(pi_ids, start_date, end_date)
+    all(
+      :joins => [:investigator_proposals],
+      :conditions => [ " investigator_proposals.role = 'PD/PI' AND investigator_proposals.investigator_id in (:ids) and (proposals.project_start_date between :start_date and :end_date or proposals.award_start_date between :start_date and :end_date)", 
+   		      {:ids => pi_ids, :start_date=>start_date, :end_date=>end_date }],
+   		:order=> "proposals.sponsor_type_code,proposals.sponsor_code, proposals.award_start_date"
+    )
+  end
+  
   def self.recents_by_type(funding_types, start_date, end_date)
 
     # Funding_type is one of the following in NU InfoEd

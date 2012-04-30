@@ -33,4 +33,14 @@ class Study < ActiveRecord::Base
     )
   end
   
+  def self.recents_by_pi(pi_ids, start_date, end_date)
+     all(
+       :joins => [:investigator_studies],
+       :conditions => [ " investigator_studies.role = 'PI' AND investigator_studies.investigator_id in (:ids) and ( studies.approved_date < :end_date) and ( studies.next_review_date >= :start_date) and ( studies.closed_date is null or studies.closed_date >= :start_date)", 
+    		      {:ids => pi_ids, :start_date=>start_date, :end_date=>end_date }],
+    		:order=> "studies.approved_date"
+     )
+   end
+  
+  
 end

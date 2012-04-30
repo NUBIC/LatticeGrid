@@ -10,6 +10,9 @@ ActionController::Routing::Routes.draw do |map|
   map.investigator_listing 'profiles/investigator_listing/:id', {:controller => 'profiles', :action => 'investigator_listing'}
   map.award_listing 'awards/listing', {:controller => 'awards', :action => 'listing'}
   map.recent_awards 'awards/recent', {:controller => 'awards', :action => 'recent', :conditions => { :method =>  [:get, :post] } }
+  map.ad_hoc_by_pi_awards 'awards/ad_hoc_by_pi', {:controller => 'awards', :action => 'ad_hoc_by_pi', :conditions => { :method =>  [:get, :post] } }
+  map.ad_hoc_by_pi_studies 'studies/ad_hoc_by_pi', {:controller => 'studies', :action => 'ad_hoc_by_pi', :conditions => { :method =>  [:get, :post] } }
+  
   map.index_orgs 'orgs/index', :controller => 'orgs', :action => 'index'  #handle the route for orgs_path to make sure it is cached properly
   map.resources :orgs, :only => [:index, :show], 
     :collection => { :stats => :get, :period_stats => [:get,:post], :list => :get, :centers => :get, :orgs => :get, :departments => :get, :programs => :get, :department_collaborations => :get, :investigator_abstracts_during_period => [:get, :post], :classifications => :get }, 

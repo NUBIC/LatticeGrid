@@ -1,17 +1,29 @@
 <% @all_abstracts = nil if !defined?(@all_abstracts) %>
 <% @include_graph_link=true if @include_graph_link.nil? %>
+<% @include_graph_link=false if @unit.nil? %>
 
 <% unless @studies.blank? %>
 <% if !defined?(@pdf) and ! @pdf %>
 
-<h1><%= @unit.name %> Clinical Research Study Overview &nbsp;
-    <% if ! @all_abstracts.nil? && @all_abstracts.length > 9 -%>
-	  <% publications_per_year=abstracts_per_year_as_string(@all_abstracts) -%>
-	  <span class='inlinebarchart' values='<%= publications_per_year -%>' title='publications per year: <%= publications_per_year -%>'>&nbsp;</span>
-   	  <%= sparkline_barchart_setup({'barWidth'=>2,'barSpacing'=>2}) -%>
-    <% end -%>
-</h1>
+<% if @unit.blank? %>
+	<h1><%= @title unless @title.blank? %></h1>
+<% else %>
+	<h1><%= @unit.name %> Clinical Research Study Overview &nbsp;
+	<% unless defined?(@pdf) and @pdf %>
+	    <% if ! @all_abstracts.nil? && @all_abstracts.length > 9 -%>
+		  <% publications_per_year=abstracts_per_year_as_string(@all_abstracts) -%>
+		  <span class='inlinebarchart' values='<%= publications_per_year -%>' title='publications per year: <%= publications_per_year -%>'>&nbsp;</span>
+	   	  <%= sparkline_barchart_setup({'barWidth'=>2,'barSpacing'=>2}) -%>
+	    <% end -%>
+	<% end -%>
+	</h1>
+<% end %>
+
 <span id='data_title' class='h2'>Number of Clinical Research Studies: <%= number_to_humanized(@studies.length) %></span>
+<% if @faculty.length > 0 %>
+<p>Faculty (<%= @faculty.length -%>) included in chart: <%= link_to_faculty(@faculty) %></p>
+<% end %>
+
 <div style="float:right;padding-right:5px;">
 	<%= link_to( "as Word", org_award_url(params[:id],'doc'))  %>
 	<%= link_to( "as Excel", org_award_url(params[:id],'xls')) %>
@@ -99,7 +111,7 @@
 			<%= cnt+1 %>
 		</td>
 		<td class="list-left">
-			<%= study.pi_study.investigator.name  %>
+			<%= study.pi_study.investigator.name unless study.pi_study.blank? or study.pi_study.investigator.blank? %>
 		</td>
 		<td class="list-left">
 			<%= link_to( study.irb_study_number, study_url(study.id)) %>

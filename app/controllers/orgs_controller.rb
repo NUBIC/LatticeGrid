@@ -459,7 +459,6 @@ class OrgsController < ApplicationController
     @heading = "#{@abstracts.length} publications. Selected publications  "
     @heading = @heading + " from #{@start_date} " if !params[:start_date].blank?
     @heading = @heading + " to #{@end_date}" if !params[:end_date].blank?
-    @heading = @heading + " <br/>Investigators explicitly included: #{@faculty.collect{|pi| pi.name unless pi.blank?}.uniq.join(', ')}" if @faculty.length > 0
     @include_mesh = false
     @include_graph_link = false
     @show_paginator = false
