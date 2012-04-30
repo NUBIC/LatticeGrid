@@ -141,13 +141,13 @@ class StudiesController < ApplicationController
         format.xls  { 
           @pdf = 1
            send_data(render(:template => 'studies/org.html', :layout => "excel"),
-          :filename => "study_listing_for_#{@unit.name}.xls",
+          :filename => "adhoc_study_listing.xls",
           :type => 'application/vnd.ms-excel',
           :disposition => 'attachment') }
         format.doc  { 
           @pdf = 1
           send_data(render(:template => 'studies/org.html', :layout => "excel"),
-          :filename => "study_listing_for_#{@unit.name}.doc",
+          :filename => "adhoc_study_listing.doc",
           :type => 'application/msword',
           :disposition => 'attachment') }
         format.pdf do
