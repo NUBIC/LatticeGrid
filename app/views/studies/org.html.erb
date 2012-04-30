@@ -3,7 +3,6 @@
 <% @include_graph_link=false if @unit.nil? %>
 
 <% unless @studies.blank? %>
-<% if !defined?(@pdf) and ! @pdf %>
 
 <% if @unit.blank? %>
 	<h1><%= @title unless @title.blank? %></h1>
@@ -23,6 +22,8 @@
 <% if @faculty.length > 0 %>
 <p>Faculty (<%= @faculty.length -%>) included in chart: <%= link_to_faculty(@faculty) %></p>
 <% end %>
+
+<% if !defined?(@pdf) and ! @pdf %>
 
 <div style="float:right;padding-right:5px;">
 	<%= link_to( "as Word", org_award_url(params[:id],'doc'))  %>
