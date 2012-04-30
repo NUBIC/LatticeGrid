@@ -36,46 +36,6 @@
 <% end %>
 <% end %>
 
-
-<script>
-  jQuery(document).ready(function() {
-     jQuery("#roles_definitions").dialog({ 
-		autoOpen: false, 
-		width: 1000,
-		buttons: {
-			"Ok": function() { 
-				jQuery(this).dialog("close"); 
-			}, 
-			"Cancel": function() { 
-				jQuery(this).dialog("close"); 
-			} 
-		},
-		hide: 'slide',  
-		modal: true, 
-		show: 'slide' });
-    jQuery(".roles").click(function() {
-	     jQuery("#roles_definitions").dialog("open");
-		return false;
-	   })
-
-  });
-
-</script>
-  
-
-<div id="roles_definitions" title="Roles Definitions">
-	<p><b>Definitions:</b></p>
-	<div id="note">
-	<p>The <b>PI</b> role in eIRB is listed as one of: <b>PI</b>, <b>Principal Investigator</b>, <b>Investigator</b>, or <b>Contact P. I.</b>  </p>
-	<p>The <b>Co-Investigator</b> role in eIRB is listed as one of: <b>Co-Investigator</b>, <b>Co-I</b>, or <b>Co-PD/PI</b>. </p>
-	<p>The <b>Fellow</b> role in eIRB is listed as one of: <b>Fellow</b>, <b>Postdoc</b>, or <b>Post Doctoral</b>. </p>
-	<p>The <b>Faculty</b> role in eIRB is listed as one of: <b>Faculty</b>, <b>Asst. Professor</b>, <b>Collaborator</b>, <b>Mentor</b>, or <b>Co-Mentor</b>. </p>
-	<p>The <b>Biostatistician</b> role in eIRB is listed as one of: <b>Biostatistician</b>, <b>Statistician</b>, <b>Analyst</b>, or <b>Data Mgmt</b>.</p>
-
-	<p>The <b>Other</b> role consists of the remaining roles, including <b>Other</b>, <b>Advisory Board Member</b>, <b>Postdoc</b> </p>
-	</div>
-</div>
-<%= render( :partial => "shared/study_note.html" ) %>
 <div id="listing">
   <table cellpadding="2" cellspacing="0" class="borderless"> 
 	<tr valign="bottom" class="header">
@@ -83,7 +43,7 @@
 			#
 		</td>
 		<td class="list-title-left">
-			<span class="roles">Study PI <%= image_tag("information.png") %></span>
+			<span class="roles">Study PI</span>
 		</td>
 		<td class="list-title-left">
 			IRB number
