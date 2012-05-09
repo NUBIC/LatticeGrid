@@ -1,6 +1,7 @@
 <% @all_abstracts = nil if !defined?(@all_abstracts) %>
 <% @include_graph_link=true if @include_graph_link.nil? %>
 <% @include_graph_link=false if @unit.nil? %>
+<% @faculty=[] if @faculty.nil? %>
 
 <% unless @studies.blank? %>
 
