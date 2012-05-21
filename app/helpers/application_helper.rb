@@ -19,6 +19,12 @@ module ApplicationHelper
     @year
   end
 
+  # Overrides `current_abstracts_url` from the router.
+  def current_abstracts_url
+    year = handle_year()
+    abstracts_by_year_url(:id => year, :page => '1')
+  end
+
   def base_path(remove_trailing_id=false)
     the_path=request.env['REQUEST_URI']
     if remove_trailing_id and the_path =~ /\/[0-9]+$/

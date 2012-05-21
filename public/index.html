@@ -1,11 +1,9 @@
-<script language="JavaScript">
-<!-- begin script
-	window.location.replace("abstracts/current");
-// end script -->
-</SCRIPT>
-<HTML>
-<HEAD>
-        <META HTTP-EQUIV=REFRESH CONTENT="0;URL=abstracts/current">
-</HEAD>
-</HTML>
-
+<html>
+<head>
+	<script language="JavaScript">
+		window.location.replace("abstracts/" + new Date().getFullYear() + "/year_list/1");
+	</script>
+	<!-- If the user doesn't have Javascript, figure out the current year server-side. -->
+	<meta http-equiv=refresh content="0;url=abstracts/current">
+</head>
+</html>
