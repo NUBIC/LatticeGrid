@@ -219,6 +219,35 @@ class ProfilesController < ApplicationController
     end
   end
 
+  def recent
+    @abstracts = Abstract.recently_changed 
+    @include_pubmed_id = true 
+    @include_collab_marker = false
+    @include_investigators = true
+    @show_valid_checkboxes = true 
+    @link_abstract_to_pubmed = true
+    @include_impact_factor = false
+    @include_updated_at = true
+    @simple_links = false
+    @speed_display = false
+    @heading = "Recently changed publication abstracts (#{@abstracts.length})"
+    render :action => 'investigator_listing'
+  end
+    
+  def recent_unvalidated
+    @abstracts = Abstract.recently_changed_unvalidated 
+    @include_pubmed_id = true 
+    @include_collab_marker = false
+    @include_investigators = true
+    @show_valid_checkboxes = true 
+    @link_abstract_to_pubmed = true
+    @include_impact_factor = true
+    @include_updated_at = true
+    @simple_links = true
+    @heading = "Recently changed publication abstracts with missing validations (#{@abstracts.length})"
+    render :action => 'investigator_listing'
+  end
+  
   def edit_pubs
     @username = (is_admin? ? params[:id] : current_user_model.username)
     @pronoun  = (is_admin? ? "" : " Your ")

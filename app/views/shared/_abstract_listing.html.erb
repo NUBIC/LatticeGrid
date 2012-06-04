@@ -10,6 +10,7 @@
 <% link_abstract_to_pubmed = false if link_abstract_to_pubmed.nil? -%>
 <% speed_display=false if speed_display.nil? -%>
 <% include_impact_factor=false if include_impact_factor.nil? -%>
+<% include_updated_at=false if include_updated_at.nil? -%>
 <% simple_links=false if simple_links.nil? %>
 
 <div id="listing"> 
@@ -41,7 +42,7 @@
 	<%= will_paginate(abstracts, :outer_window => 5, :inner_window => 5) -%>
 <% end -%>
 
-<%= render( :partial => "shared/abstract_listing_table.html", :locals => { :abstracts => abstracts, :investigators_in_unit => investigators_in_unit, :include_pubmed_id => include_pubmed_id, :include_collab_marker => include_collab_marker, :include_investigators => include_investigators, :show_valid_checkboxes => show_valid_checkboxes, :show_cancer_related_checkbox => show_cancer_related_checkbox, :bold_members => bold_members, :link_abstract_to_pubmed => link_abstract_to_pubmed, :speed_display=>speed_display, :include_impact_factor => include_impact_factor, :simple_links => simple_links }) -%>
+<%= render( :partial => "shared/abstract_listing_table.html", :locals => { :abstracts => abstracts, :investigators_in_unit => investigators_in_unit, :include_pubmed_id => include_pubmed_id, :include_collab_marker => include_collab_marker, :include_investigators => include_investigators, :show_valid_checkboxes => show_valid_checkboxes, :show_cancer_related_checkbox => show_cancer_related_checkbox, :bold_members => bold_members, :link_abstract_to_pubmed => link_abstract_to_pubmed, :speed_display=>speed_display, :include_impact_factor => include_impact_factor, :simple_links => simple_links, :include_updated_at => include_updated_at }) -%>
 
 <% if do_pagination != "0"  -%>
 	<%= will_paginate(abstracts, :outer_window => 5, :inner_window => 5) -%>
