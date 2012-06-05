@@ -244,7 +244,7 @@ class ProfilesController < ApplicationController
     @include_impact_factor = true
     @include_updated_at = true
     @simple_links = true
-    @heading = "Recently changed publication abstracts with missing validations (#{@abstracts.length})"
+    @heading = "Recently changed publication abstracts without validation (#{@abstracts.length})"
     render :action => 'investigator_listing'
   end
   
