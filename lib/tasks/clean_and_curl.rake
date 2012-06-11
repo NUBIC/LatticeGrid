@@ -85,7 +85,6 @@ namespace :cache do
 
   def abstracts
     year_array = LatticeGridHelper.year_array()
-    run_curl current_abstracts_url
     run_curl tag_cloud_abstracts_url
     year_array.each do |year|
       do_abstracts_for_year(year.to_s)

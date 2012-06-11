@@ -12,17 +12,11 @@ class AbstractsController < ApplicationController
   require 'pubmed_utilities'  #loads including 'pubmed_config'  'bio' (bioruby) and 
 
   def index
-    year = handle_year()
-    redirect_to abstracts_by_year_url(:id => year, :page => '1')
+    redirect_to current_abstracts_url
   end
   
   def current
-    params[:id]=LatticeGridHelper.year_array[0].to_s
-    pre_list(params[:id])
-    @abstracts = Abstract.display_data( params[:id], params[:page] )
-    list_heading(params[:id])
-    @do_pagination = "1"
-    render :action => 'year_list'
+    index
   end
 
   def journal_list
