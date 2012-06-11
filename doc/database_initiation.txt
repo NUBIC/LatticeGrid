@@ -3,7 +3,7 @@
 
 -- connecting to a remote postgres server:
 
-psql -h pstage rhlccc_latticegrid_staging -U rhlccc_latticegrid
+psql -h pstage rhlccc_latticegrid -U rhlccc
 
 --PostgreSQL commands
 
