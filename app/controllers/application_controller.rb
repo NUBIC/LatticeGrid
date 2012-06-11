@@ -69,7 +69,7 @@ class ApplicationController < ActionController::Base
     end
     if params[:start_date].blank? and params[:end_date].blank? then
       @end_date = Date.today
-      @start_date = 1.year.ago
+      @start_date = 1.year.ago.to_date
       params[:start_date]=@start_date
       params[:end_date]=@end_date
     end
