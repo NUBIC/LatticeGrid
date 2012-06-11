@@ -7,9 +7,7 @@
 
 	<p><%= link_to("List all investigators", list_all_investigators_url() ) %></p>
 	
-
 	<p><%= link_to("List all recent valid abstracts", recent_profiles_url() ) %></p>
-
 
 	<p><%= link_to("List all recent unvalidated abstracts", recent_unvalidated_profiles_url() ) %></p>
 	
@@ -112,35 +110,52 @@
 		<% end %> 
 	</div>
 
-	<p>&nbsp;</p>
-	<div id="list_by_ids">
-		<% form_for :lists, :url => {:controller => :investigators, :action => :list_by_ids}, :html => { :method => :post, :class => "p" }  do |form| %> 
-		<p>Use the below form for ad hoc listing of individuals :  Paste in a list of netids, email addresses, or employee ids you want to list:</p>
-		<p><%= text_area('', :investigator_ids, :cols => 40, :rows => 20) %> Paste investigator netids, email addresses, or employee ids</p>
-		<p><%= select_tag(:format, 
-				options_for_select([["HTML","html"], ["XML", "xml"],["PDF", "pdf"],["Excel", "xls"], ["Word", "doc"]], [params[:format]])  
-				) %> select format </p>
-		  <%= submit_tag 'List enumerated investigators' %>
-		<% end %> 
-	</div>
+<h2>Chord diagram options</h2>
+	<p>Chord Diagram showing inter- and intra-programmatic publications for all programs</p>
+	<p><%= link_to("Show chord diagram", chord_cytoscape_url() ) %></p>
+	<div id="chord_by_date_range">
+		<% form_for( :abstract, :url => chord_by_date_cytoscape_path, :html => { :method => :post, :class => "p" })  do |form| %> 
 
-	<p>&nbsp;</p>
-	<div id="list_by_investigators">
-		<% form_for :date_range, :url => {:controller => :orgs, :action => :investigator_abstracts_during_period}, :html => { :method => :post, :class => "p" }  do |form| %> 
-		<p>Use the below form for ad hoc reporting of publications for a group of individuals :  Paste in a list of netids, email addresses, or employee ids you want to include as well as a date range:</p>
-		<p><%= text_area('', :investigator_ids, :cols => 40, :rows => 20) %> Paste investigator netids, email addresses, or employee ids</p>
-		 <p><%= form.text_field(:start_date, :size => 20) %> to
-		  <%= form.text_field(:end_date, :size => 20) %>  select dates </p>
-		<p><%= select_tag(:format, 
-				options_for_select([["HTML","html"], ["XML", "xml"],["PDF", "pdf"],["Excel", "xls"], ["Word", "doc"]], [params[:format]])  
-				) %> select format </p>
-		<p><%= check_box_tag 'exclude_letters', '1' -%> Exclude Reviews, Editorials, Letters, and Biographies</p>
-		  <%= submit_tag 'List Publications by enumerated investigators' %>
+		<p>Select the award start date range to include in the report.</p>
+		<% params[:start_date] = '1/1/2012' if params[:start_date].blank? %>
+		<% params[:end_date] = '1/1/2014' if params[:end_date].blank? %>
+		<p>Publication between: <%= text_field_tag(:start_date, params[:start_date], :size => 20) %> and
+		  <%= text_field_tag(:end_date, params[:end_date], :size => 20) %> </p>
+		  <%= submit_tag 'Generate Chord diagram for publications during this period' %>
 		<% end %> 
 	</div>
+		
 <% end %>
 <!-- end of top_links cache -->
 <% cache("admin_listing_options") do %>
+
+<p>&nbsp;</p>
+<div id="list_by_ids">
+	<h2>Investigator listing options</h2>
+	<% form_for :lists, :url => {:controller => :investigators, :action => :list_by_ids}, :html => { :method => :post, :class => "p" }  do |form| %> 
+	<p>Use the below form for ad hoc listing of individuals :  Paste in a list of netids, email addresses, or employee ids you want to list:</p>
+	<p><%= text_area('', :investigator_ids, :cols => 40, :rows => 20) %> Paste investigator netids, email addresses, or employee ids</p>
+	<p><%= select_tag(:format, 
+			options_for_select([["HTML","html"], ["XML", "xml"],["PDF", "pdf"],["Excel", "xls"], ["Word", "doc"]], [params[:format]])  
+			) %> select format </p>
+	  <%= submit_tag 'List enumerated investigators' %>
+	<% end %> 
+</div>
+
+<p>&nbsp;</p>
+<div id="list_by_investigators">
+	<% form_for :date_range, :url => {:controller => :orgs, :action => :investigator_abstracts_during_period}, :html => { :method => :post, :class => "p" }  do |form| %> 
+	<p>Use the below form for ad hoc reporting of publications for a group of individuals :  Paste in a list of netids, email addresses, or employee ids you want to include as well as a date range:</p>
+	<p><%= text_area('', :investigator_ids, :cols => 40, :rows => 20) %> Paste investigator netids, email addresses, or employee ids</p>
+	 <p><%= form.text_field(:start_date, :size => 20) %> to
+	  <%= form.text_field(:end_date, :size => 20) %>  select dates </p>
+	<p><%= select_tag(:format, 
+			options_for_select([["HTML","html"], ["XML", "xml"],["PDF", "pdf"],["Excel", "xls"], ["Word", "doc"]], [params[:format]])  
+			) %> select format </p>
+	<p><%= check_box_tag 'exclude_letters', '1' -%> Exclude Reviews, Editorials, Letters, and Biographies</p>
+	  <%= submit_tag 'List Publications by enumerated investigators' %>
+	<% end %> 
+</div>
 
 	<p>&nbsp;</p>
 	<div id="investigator_listing">
@@ -155,6 +170,7 @@
 		<% end %> 
 	</div>
 	<p>&nbsp;</p>
+
 
 	<div id="impact_factor">
 		<h2>Impact Factor and Eigenvalues Analysis</h2>
