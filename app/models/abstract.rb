@@ -59,7 +59,7 @@ class Abstract < ActiveRecord::Base
     }
   named_scope :by_investigator_ids, lambda { |*ids|
       { :joins => [:investigator_abstracts],
-        :conditions => ['investigator_abstracts.investigator_id IN (:investigator_ids) ', {:investigator_ids => ids.first}] }
+        :conditions => ['investigator_abstracts.investigator_id IN (:investigator_ids) AND investigator_abstracts.is_valid = true', {:investigator_ids => ids.first}] }
     }
   default_scope :conditions => 'abstracts.is_valid = true'
 
