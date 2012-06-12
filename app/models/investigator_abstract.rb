@@ -20,7 +20,7 @@ class InvestigatorAbstract < ActiveRecord::Base
   named_scope :only_deleted,  :conditions => 'investigator_abstracts.end_date is not null'
   named_scope :by_date_range, lambda { |*args| {:conditions => ['investigator_abstracts.publication_date between :start_date and :end_date', 
                 {:start_date => args.first, :end_date => args.last} ] }}
-  named_scope :for_investigator_ids, lambda { |*ids| {:conditions => ['investigator_abstracts.investigator_id IN (:pi_ids)', 
+  named_scope :for_investigator_ids, lambda { |*ids| {:conditions => ['investigator_abstracts.investigator_id IN (:pi_ids) AND investigator_abstracts.is_valid = true', 
                 {:pi_ids => ids.first} ] }}
 
 
