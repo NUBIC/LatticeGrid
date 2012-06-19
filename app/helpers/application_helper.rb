@@ -250,7 +250,7 @@ module ApplicationHelper
     if !current_page? url_check
       link_to(text, url)
     else
-      text
+      "<span class='current_page'>#{h text}</span>"
     end
 
     # The reasons this works, even though certain routes depend on a page number:
