@@ -1,3 +1,17 @@
+# June 2012 loads, RHLCCC
+bundle exec rake importInvestigators file=db/imports/RHLCCC/new_faculty_June2012.txt
+bundle exec rake importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsJune2012.txt
+bundle exec rake RAILS_ENV=production getAllMembers  
+bundle exec rake RAILS_ENV=production checkForInvestigatorsWithNoPrograms
+bundle exec rake RAILS_ENV=production deleteInvestigatorsWithNoPrograms
+
+bundle exec rake RAILS_ENV=production  awards:importData file=db/imports/Feinberg/private/award_data_20120426.txt
+bundle exec rake RAILS_ENV=production  awards:cleanPIassignments
+
+bundle exec rake RAILS_ENV=production  importStudies file=db/imports/Feinberg/private/studies_20120426.csv
+bundle exec rake RAILS_ENV=production  importStudyInvestigators file=db/imports/Feinberg/private/study_roles_20120426.csv
+bundle exec rake RAILS_ENV=production  findStudiesWithoutInvestigators
+
 # April 2012 loads, RHLCCC
 bundle exec rake RAILS_ENV=production  awards:importData file=db/imports/Feinberg/private/award_data_20120426.txt
 bundle exec rake RAILS_ENV=production  awards:cleanPIassignments
