@@ -62,10 +62,10 @@ The following is a list of the total publications, number of publications with i
 </tr>
 
 <% for unit in @units %>
-	<% if unit.primary_faculty.length > 0 or unit.associated_faculty.length > 0 then %>
+	<% if unit.all_primary_faculty.length > 0 or unit.all_associated_faculty.length > 0 then %>
 	<tr valign="bottom" colspan="3">
 		<td>
-			<%= unit.name %>
+			<%= link_to(unit.name + " ("+unit.abbreviation+")", org_url(unit.id), :target => '_blank') %>
 		</td>
 		<% if multipleUnits %>
 		<td>
@@ -74,17 +74,17 @@ The following is a list of the total publications, number of publications with i
 		<% end -%>
 		<% if hasPrimary %>
 		<td class="list-title-center">
-			<%= unit.primary_faculty.length %>
+			<%= unit.all_primary_faculty.length %>
 		</td>
 		<% end -%>
 		<td class="list-title-center">
-			<%= unit.associated_faculty.length %>
+			<%= link_to(unit.all_associated_faculty.length, show_investigators_org_url(unit.id) ) %>
 		</td>
 		<td class="list-title-center">
 			<%= unit.publications.length %>
 		</td>
 		<td class="list-title-center">
-			<%= ((unit.publications.length*10/(unit.primary_faculty.length+unit.associated_faculty.length)).to_f / 10)  %>
+			<%= ((unit.publications.length*10/(unit.all_primary_faculty.length+unit.all_associated_faculty.length)).to_f / 10)  %>
 		</td>
 		<td class="list-title-center">
 			<%= (unit.pi_intra_abstracts.length) %> (<%= unit.publications.length > 0 ? (100*(unit.pi_intra_abstracts.length)/unit.publications.length) : 0 %>%)<br/>

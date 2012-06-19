@@ -1,6 +1,6 @@
 # June 2012 loads, RHLCCC
-bundle exec rake importInvestigators file=db/imports/RHLCCC/new_faculty_June2012.txt
-bundle exec rake importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsJune2012.txt
+bundle exec rake RAILS_ENV=production importInvestigators file=db/imports/RHLCCC/new_faculty_June2012.txt
+bundle exec rake RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsJune2012.txt
 bundle exec rake RAILS_ENV=production getAllMembers  
 bundle exec rake RAILS_ENV=production checkForInvestigatorsWithNoPrograms
 bundle exec rake RAILS_ENV=production deleteInvestigatorsWithNoPrograms
