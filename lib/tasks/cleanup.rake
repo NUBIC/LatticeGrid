@@ -421,6 +421,12 @@ namespace :cleanup do
     end
   end
 
+  task :countOldMemberships => :environment do
+     block_timing("cleanup:countOldMemberships") {
+        count_program_memberships_not_updated()
+     }
+  end
+
   task :purgeOldMemberships => :environment do
      block_timing("cleanup:purgeOldMemberships") {
         prune_program_memberships_not_updated()

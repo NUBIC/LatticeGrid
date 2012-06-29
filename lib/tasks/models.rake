@@ -121,9 +121,10 @@ task :updateOrganizationAbstractInformation => [:getAllOrganizationsWithInvestig
   # load the test data
   block_timing("updateOrganizationAbstractInformation") {
     row_iterator(@AllInvestigatorAssociations) {  |unit_id|
+      OrganizationAbstract.delete_all(['organizational_unit_id = :org_id', {:org_id => unit_id}])
       investigators = OrganizationalUnit.find(unit_id).primary_faculty+OrganizationalUnit.find(unit_id).associated_faculty
       puts "count of all investigators for organizational unit #{unit_id} is #{investigators.length}" if LatticeGridHelper.verbose?
-      abstracts = Abstract.investigator_publications(investigators.collect(&:id), 10).uniq
+      abstracts = Abstract.all_investigator_publications(investigators.collect(&:id)).uniq
       puts "count of all abstracts for organizational unit #{unit_id} is #{abstracts.length}" if LatticeGridHelper.verbose?
       abstracts.each do |abstract|
         UpdateOrganizationAbstract (unit_id,abstract.id)

@@ -46,6 +46,9 @@ class Abstract < ActiveRecord::Base
   named_scope :ccsg_abstracts, 
       :conditions => ['abstracts.is_cancer = true']
 
+  named_scope :only_valid, 
+      :conditions => ['abstracts.is_valid = true']
+
   named_scope :recently_changed, 
        :conditions => ['abstracts.updated_at >= :recent_date',  {:recent_date => 30.days.ago }],
       :order => "abstracts.updated_at DESC"
@@ -355,10 +358,15 @@ class Abstract < ActiveRecord::Base
     :conditions => ["investigators.id = :investigator_id", {:investigator_id => investigator_id}])
   end
   
+  def self.all_investigator_publications( investigators)
+    all(:joins => [:investigators, :investigator_abstracts],
+  		  :conditions => ['investigator_abstracts.investigator_id IN (:investigators) and investigator_abstracts.is_valid = true and abstracts.is_valid = true ', 
+   		      {:investigators => investigators }]).uniq
+  end
   def self.investigator_publications( investigators, number_years=5)
     cutoff_date=number_years.years.ago
     all(:joins => [:investigators, :investigator_abstracts],
-  		  :conditions => ['abstracts.publication_date >= :start_date and investigator_abstracts.investigator_id IN (:investigators) and investigator_abstracts.is_valid = true', 
+  		  :conditions => ['abstracts.publication_date >= :start_date and investigator_abstracts.investigator_id IN (:investigators) and investigator_abstracts.is_valid = true and abstracts.is_valid = true ', 
    		      {:start_date => cutoff_date, :investigators => investigators }])
   end
   

@@ -40,31 +40,35 @@ The following is a list of the total publications, number of publications with i
 		Primary Investigators<br/>
 	</td>
 	<% end -%>
-	<td class="list-title-center">
-		<% if hasPrimary %>
-		Associated Investigators<br/>
-		<% else %>
-		Members<br/>
-		<% end %>
-	</td>
-	<td class="list-title-center">
-		Total publications<br/>
-	</td>
-	<td class="list-title-center">
-		Per investigator <br/>
-	</td>
-	<td class="list-title-center">
-		Intra-<%=  multipleUnits ? "unit" : unitType.downcase -%><br/>
-	</td>
-	<td class="list-title-center">
-		Inter-<%=  multipleUnits ? "unit" : unitType.downcase -%><br/>
-	</td>
+	<% ["All","Primary", "Secondary", "Member", "Associate Member"].each do |affiliate| %>
+	  <% unless  @units[0][affiliate].blank? %>
+		<td class="list-title-center">
+			<% if affiliate == "All" %>
+			Members<br/>
+			<% else %>
+			<%= affiliate %>
+			<% end %>
+		</td>
+		<td class="list-title-center">
+			Total publications<br/>
+		</td>
+		<td class="list-title-center">
+			Per investigator <br/>
+		</td>
+		<td class="list-title-center">
+			Intra-<%=  multipleUnits ? "unit" : unitType.downcase -%><br/>
+		</td>
+		<td class="list-title-center">
+			Inter-<%=  multipleUnits ? "unit" : unitType.downcase -%><br/>
+		</td>
+	<% end %>
+  <% end %>
 </tr>
 
 <% for unit in @units %>
 	<% if unit.all_primary_faculty.length > 0 or unit.all_associated_faculty.length > 0 then %>
 	<tr valign="bottom" colspan="3">
-		<td>
+		<td class="list-title-left">
 			<%= link_to(unit.name + " ("+unit.abbreviation+")", org_url(unit.id), :target => '_blank') %>
 		</td>
 		<% if multipleUnits %>
@@ -72,26 +76,34 @@ The following is a list of the total publications, number of publications with i
 			<%= unit.type %>
 		</td>
 		<% end -%>
+		<% faculty_total = 0 %>
 		<% if hasPrimary %>
 		<td class="list-title-center">
 			<%= unit.all_primary_faculty.length %>
+			<% faculty_total += unit.all_primary_faculty.length %>
 		</td>
 		<% end -%>
-		<td class="list-title-center">
-			<%= link_to(unit.all_associated_faculty.length, show_investigators_org_url(unit.id) ) %>
-		</td>
-		<td class="list-title-center">
-			<%= unit.publications.length %>
-		</td>
-		<td class="list-title-center">
-			<%= ((unit.publications.length*10/(unit.all_primary_faculty.length+unit.all_associated_faculty.length)).to_f / 10)  %>
-		</td>
-		<td class="list-title-center">
-			<%= (unit.pi_intra_abstracts.length) %> (<%= unit.publications.length > 0 ? (100*(unit.pi_intra_abstracts.length)/unit.publications.length) : 0 %>%)<br/>
-		</td>
-		<td class="list-title-center">
-			<%= unit.pi_inter_abstracts.length %> (<%= unit.publications.length > 0 ? (100*unit.pi_inter_abstracts.length/unit.publications.length) : 0 %>%) <br/>
-		</td>
+		<% ["All","Primary", "Secondary", "Member", "Associate Member"].each do |affiliate| %>
+		  <% unless  unit[affiliate].blank? %>
+			<% this_block = unit[affiliate] %>
+			<td class="list-title-center">
+				<%= link_to(this_block["unit_faculty"].length, show_investigators_org_url(unit.id) ) %>
+				<% faculty_total += this_block["unit_faculty"].length %>
+			</td>
+			<td class="list-title-center">
+				<%= this_block["publications"].length %>
+			</td>
+			<td class="list-title-center">
+				<%= ((this_block["publications"].length*10/this_block["unit_faculty"].length).to_f / 10)  %>
+			</td>
+			<td class="list-title-center">
+				<%= (this_block["pi_intra_abstracts"].length) %> (<%= this_block["publications"].length > 0 ? (100*(this_block["pi_intra_abstracts"].length)/this_block["publications"].length) : 0 %>%)<br/>
+			</td>
+			<td class="list-title-center">
+				<%= this_block["pi_inter_abstracts"].length %> (<%= this_block["publications"].length > 0 ? (100*this_block["pi_inter_abstracts"].length/this_block["publications"].length) : 0 %>%) <br/>
+			</td>
+			<% end %>
+		<% end %>
 	</tr>
 	<% end %>
 <% end %>

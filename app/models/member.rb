@@ -1,2 +1,2 @@
-class Member < InvestigatorAppointment
+class Member < InvestigatorAppointment  
 end

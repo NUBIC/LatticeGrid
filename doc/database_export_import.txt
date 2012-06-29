@@ -234,7 +234,7 @@ scp wakibbe@rails-dev.bioinformatics.northwestern.edu:/home/wakibbe/cinj_pubs/ci
 scp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe/cinjpublications_dev_20110830.dmp  cinjpublications_dev_20110830.dmp
 
 scp cinjpublications_dev_20110830.dmp root@172.16.215.128:/root
-pg_restore -c -O -d cinj_latticegrid_production -U latticegrid cinjpublications_dev_20110830.dmp
+pg_restore -c -O -d cinj_latticegrid -U latticegrid cinjpublications_dev_20110830.dmp
 
 
 

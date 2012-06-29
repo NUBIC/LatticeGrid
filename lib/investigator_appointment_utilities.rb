@@ -145,10 +145,10 @@ def CreateInvestigatorFromHash(data_row)
           :conditions=>['investigator_id=:investigator_id and organizational_unit_id=:program_id and type in (:types)', 
             {:program_id => theProgram.id, :investigator_id => pi.id, :types => [member_type.to_s]}])
       if membership.blank?
-        puts "Membership of #{pi.name} in #{theProgram.name} created" if LatticeGridHelper.verbose?
+        puts "Membership of #{pi.name} in #{theProgram.name} as a #{member_type.to_s} created" if LatticeGridHelper.verbose?
         member_type.create :organizational_unit_id => theProgram.id, :investigator_id => pi.id, :start_date => Time.now
       else
-        puts "Membership of #{pi.name} in #{theProgram.name} updated" if LatticeGridHelper.debug?
+        puts "Membership of #{pi.name} in #{theProgram.name} as a #{member_type.to_s} updated" if LatticeGridHelper.debug?
         membership.end_date = nil
         membership.updated_at = Time.now
         membership.save!  # update the record
@@ -598,6 +598,22 @@ def prune_investigators_without_programs(investigators)
     end
   end
 end
+
+def count_program_memberships_not_updated()
+  memberships = InvestigatorAppointment.all
+  cnt=0
+  memberships.each do |membership|
+    # membership.updated_at < 1.hour.ago means update was more than an hour ago!
+    if (membership.updated_at < 1.day.ago or membership.investigator.nil? or membership.organizational_unit.nil?) and (membership.end_date.nil? or membership.end_date > Date.tomorrow)
+      puts "not updated: membership entry for #{membership.investigator.name} username #{membership.investigator.username} in program #{membership.organizational_unit.name}" if LatticeGridHelper.verbose? and !membership.investigator.nil? and ! membership.organizational_unit.nil?
+      puts "not updated: membership entry for #{membership.investigator_id} with an invalid/deleted user in program #{membership.organizational_unit.name}" if LatticeGridHelper.verbose? and membership.investigator.nil? and ! membership.organizational_unit.nil?
+      puts "not updated: membership entry for #{membership.investigator.name} username #{membership.investigator.username} in deleted program #{membership.organizational_unit_id}" if LatticeGridHelper.verbose? and !membership.investigator.nil? and membership.organizational_unit.nil?
+      cnt+=1
+    end
+  end
+  puts "Total unupdated membership entries: #{cnt}"
+ end
+
 
 def prune_program_memberships_not_updated()
   memberships = InvestigatorAppointment.all

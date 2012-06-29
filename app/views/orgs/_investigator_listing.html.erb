@@ -1,8 +1,6 @@
+<% unless  investigators.nil? or  investigators.length == 0 %>
 <div id="listing"> 
 	<h2><%= heading %> <%= "(#{investigators.length})" if !investigators.nil? %></h2>
-<% if  investigators.nil? or  investigators.length == 0 %>
-<p>None.</p>
-<% else %>
 <%= sparkline_barchart_setup() %>
 <table cellpadding="2" cellspacing="0" class="fullsize"> 
   <tr valign="bottom">

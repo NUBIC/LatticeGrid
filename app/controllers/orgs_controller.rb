@@ -190,8 +190,10 @@ class OrgsController < ApplicationController
   def programs
     @units = Program.all( :order => "sort_order, lower(abbreviation)", :include => [:members,:organization_abstracts, :primary_faculty, :joint_faculty, :secondary_faculty])
     @heading = "Center Programs Listing"
+    associate_members = AssociateMember.count
     @show_primary_faculty=false
     @show_associated_faculty=false
+    @show_associate_members = true if associate_members > 0
     @show_unit_type=false
     respond_to do |format|
       format.html { render :action => :index }
@@ -294,25 +296,9 @@ class OrgsController < ApplicationController
     # get all publications by  members
     # then get the number of intra-unit collaborations and the number of inter-unit collaborations
     handle_start_and_end_date
-    @heading = "Publication Statistics by Org from #{params[:start_date]} to #{params[:end_date]} "
-    @exclude_letters = ! params[:exclude_letters].blank?
-    @units = @head_node.children.sort_by(&:abbreviation)
-    @faculty_affiliation_types = params[:affiliation_types]
-    @units.each do |unit|
-      unit["pi_intra_abstracts"] = Array.new
-      unit["pi_inter_abstracts"] = Array.new
-      unit_faculty = unit.get_faculty_by_types(params[:affiliation_types])
-      unit_pis = unit_faculty.map(&:id)
-      unit["publications"]=Abstract.all_ccsg_publications_by_date( unit_pis, params[:start_date], params[:end_date], @exclude_letters )
-      unit.publications.each do |abstract| 
-        abstract_investigators = abstract.investigators.collect{|x| x.id}
-        intra_collaborators_arr = abstract_investigators & unit_pis  # intersection of the two sets
-        intra_collaborators = intra_collaborators_arr.length
-        inter_collaborators = abstract_investigators.length - intra_collaborators
-        unit.pi_inter_abstracts.push(abstract) if inter_collaborators > 0
-        unit.pi_intra_abstracts.push(abstract) if intra_collaborators > 1
-      end
-    end
+    @heading = "Publication Statistics by Program from #{params[:start_date]} to #{params[:end_date]} "
+    
+    @units = build_stats_array()
     render :layout => 'printable', :action => 'stats'
   end
 
@@ -323,25 +309,9 @@ class OrgsController < ApplicationController
     params[:start_date]=5.years.ago
     params[:end_date]=Date.tomorrow
     handle_start_and_end_date
-    @exclude_letters = ! params[:exclude_letters].blank?
-    @heading = "Publication Statistics by Org for the past five years"
-    @units = @head_node.children.sort_by(&:abbreviation)
-    @faculty_affiliation_types = params[:affiliation_types]
-    @units.each do |unit|
-      unit["pi_intra_abstracts"] = Array.new
-      unit["pi_inter_abstracts"] = Array.new
-      unit_faculty = unit.get_faculty_by_types(params[:affiliation_types])
-      unit_pis = unit_faculty.map(&:id)
-      unit["publications"]=Abstract.all_ccsg_publications_by_date( unit_pis, params[:start_date], params[:end_date], @exclude_letters )
-      unit.publications.each do |abstract| 
-        abstract_investigators = abstract.investigators.collect{|x| x.id}
-        intra_collaborators_arr = abstract_investigators & unit_pis  # intersection of the two sets
-        intra_collaborators = intra_collaborators_arr.length
-        inter_collaborators = abstract_investigators.length - intra_collaborators
-        unit.pi_inter_abstracts.push(abstract) if inter_collaborators > 0
-        unit.pi_intra_abstracts.push(abstract) if intra_collaborators > 1
-      end
-    end
+    @heading = "Publication Statistics by Program for the past five years"
+    @units = build_stats_array()
+
     render :layout => 'printable'
   end
 
@@ -495,4 +465,41 @@ class OrgsController < ApplicationController
       }
     end
   end
+  
+  private 
+  
+  def build_stats_array
+    @exclude_letters = ! params[:exclude_letters].blank?
+    @units = @head_node.children.sort_by(&:abbreviation)
+    @faculty_affiliation_types = params[:affiliation_types]
+    @units.each do |unit|
+      if @faculty_affiliation_types.blank?
+        unit["All"] = build_unit_stats(unit, nil)
+      else 
+        @faculty_affiliation_types.each do |affilliation_type|
+          unit[affilliation_type] = build_unit_stats(unit, affilliation_type)
+        end
+      end
+    end
+    @units
+  end
+  def build_unit_stats(unit, affiliation_type)
+    this_block={}
+    this_block["pi_intra_abstracts"] = Array.new
+    this_block["pi_inter_abstracts"] = Array.new
+    unit_faculty = unit.get_faculty_by_types([affiliation_type])
+    this_block["unit_faculty"] = unit_faculty
+    unit_pi_ids = unit_faculty.map(&:id)
+    this_block["publications"]=Abstract.all_ccsg_publications_by_date( unit_pi_ids, params[:start_date], params[:end_date], @exclude_letters )
+    this_block["publications"].each do |abstract| 
+      abstract_investigator_ids = abstract.investigators.collect{|x| x.id}
+      intra_collaborators_arr = abstract_investigator_ids & unit_pi_ids  # intersection of the two sets
+      intra_collaborators = intra_collaborators_arr.length
+      inter_collaborators = abstract_investigator_ids.length - intra_collaborators
+      this_block["pi_inter_abstracts"].push(abstract) if inter_collaborators > 0
+      this_block["pi_intra_abstracts"].push(abstract) if intra_collaborators > 1
+    end
+    this_block
+  end
+  
 end

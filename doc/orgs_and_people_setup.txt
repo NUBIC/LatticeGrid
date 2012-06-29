@@ -85,6 +85,12 @@ rake importInvestigators file=db/imports/cinj_faculty_20110407.txt
 rake RAILS_ENV=production importInvestigators file=db/imports/cinj_faculty_20110407.txt
 
 # or 
+rake importOrganizations file=db/imports/CINJ/division_lookup_06252012.txt
+rake importInvestigators file=db/imports/CINJ/cinj_faculty_20120625.txt
+rake RAILS_ENV=production importOrganizations file=db/imports/CINJ/division_lookup_06252012.txt
+rake RAILS_ENV=production importInvestigators file=db/imports/CINJ/cinj_faculty_20120625.txt
+
+# or 
 rake importInvestigators file=db/imports/stanford_faculty.txt
 rake RAILS_ENV=production importInvestigators file=db/imports/stanford_faculty.txt
 

@@ -13,6 +13,9 @@ class OrganizationalUnit < ActiveRecord::Base
   has_many :memberships,
       :class_name => "InvestigatorAppointment",
       :conditions => ["investigator_appointments.type IN ('Member', 'PrimaryMember', 'SecondaryMember', 'TertiaryMember') and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
+  has_many :any_memberships,
+      :class_name => "InvestigatorAppointment",
+      :conditions => ["investigator_appointments.type LIKE '%Member' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
   has_many :primary_memberships,
       :class_name => "InvestigatorAppointment",
       :conditions => ["investigator_appointments.type = 'PrimaryMember' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
@@ -53,6 +56,9 @@ class OrganizationalUnit < ActiveRecord::Base
   has_many :members,
     :source => :investigator,
     :through => :memberships
+  has_many :any_members,
+    :source => :investigator,
+    :through => :any_memberships
   has_many :primary_members,
     :source => :investigator,
     :through => :primary_memberships
@@ -111,6 +117,14 @@ class OrganizationalUnit < ActiveRecord::Base
       self.self_and_descendants.collect{|unit| unit.members}.flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
     end
 
+    def all_any_members
+      self.self_and_descendants.collect{|unit| unit.any_members}.flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    end
+
+    def all_associate_members
+      self.self_and_descendants.collect{|unit| unit.associate_members}.flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    end
+
     def faculty
       (self.primary_faculty + self.associated_faculty).sort {|x,y| x.sort_name <=> y.sort_name }.uniq
     end
@@ -145,19 +159,30 @@ class OrganizationalUnit < ActiveRecord::Base
     end
 
     def get_faculty_by_types(affiliation_types=nil, ranks=nil)
+      logger.error("affiliation_types: #{affiliation_types.to_s}")
       #have not implemented rank selectors yet
       if affiliation_types.blank? or affiliation_types.length == 0
-        faculty = (all_primary_faculty + all_associated_faculty).uniq
+        faculty = (all_primary_faculty + all_secondary_faculty + all_members).uniq
         faculty.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
       elsif affiliation_types.length == 1
-        faculty = all_primary_faculty if affiliation_types.grep(/primary/i).length > 0
-        faculty = all_secondary_faculty if affiliation_types.grep(/secondary/i).length > 0
-        faculty = all_members if affiliation_types.grep(/member/i).length > 0
+        if affiliation_types.grep(/primary/i).length > 0
+          faculty = all_primary_faculty 
+        elsif affiliation_types.grep(/secondary/i).length > 0
+          faculty = all_secondary_faculty
+        elsif affiliation_types.grep(/associate/i).length > 0
+          faculty = all_associate_members 
+        elsif affiliation_types.grep(/member/i).length > 0
+          faculty = all_members 
+        else
+          faculty = (all_primary_faculty + all_members).uniq
+          faculty.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+        end
       else
         faculty = []
         faculty = all_primary_faculty if affiliation_types.grep(/primary/i).length > 0
         faculty += all_secondary_faculty if affiliation_types.grep(/secondary/i).length > 0
         faculty += all_members if affiliation_types.grep(/member/i).length > 0
+        faculty += all_associate_members if affiliation_types.grep(/associate/i).length > 0
         faculty.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
       end
       faculty

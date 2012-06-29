@@ -348,8 +348,14 @@ def resolveMisformedTags()
   tags.each do |the_tag|
     if the_tag.name.strip != the_tag.name
       puts "Found tag name with spaces: '#{the_tag.name}' id:#{the_tag.id} with #{the_tag.taggings.count} taggings"
-      the_tag.name = the_tag.name.strip
-      the_tag.save!
+      foundTag = Tag.find_by_name(the_tag.name.strip)
+      if foundTag
+        moveTagsFromTo(the_tag,foundTag)
+        tags_to_delete << the_tag
+      else
+        the_tag.name = the_tag.name.strip
+        the_tag.save!
+      end
     end
     if the_tag.name =~ /\(|\)|\#|\!|\&|\.|\'/
       puts "Found tag name with bad characters: '#{the_tag.name}' id:#{the_tag.id} with #{the_tag.taggings.count} taggings"
@@ -381,9 +387,9 @@ def resolveDuplicateTags()
       if the_tag.name.downcase == inner_tag.name.downcase
         puts "Found duplicate tag: #{the_tag.name}-id:#{the_tag.id} and #{inner_tag.name}-id:#{inner_tag.id}"
         if inner_tag.name.downcase == inner_tag.name
-          tags_to_delete << MoveTagsFromTo(the_tag,inner_tag)
+          tags_to_delete << moveTagsFromTo(the_tag,inner_tag)
         else
-          tags_to_delete << MoveTagsFromTo(inner_tag,the_tag)
+          tags_to_delete << moveTagsFromTo(inner_tag,the_tag)
         end
       end
     end
@@ -413,7 +419,7 @@ def deleteTags(tags_to_delete)
   end
 end
 
-def MoveTagsFromTo(tag1,tag2)
+def moveTagsFromTo(tag1,tag2)
   taggings1 = tag1.taggings.map(&:taggable_id)
   taggings2 = tag2.taggings.map(&:taggable_id)
   tag2.name = tag2.name.downcase

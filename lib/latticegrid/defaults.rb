@@ -179,8 +179,12 @@
  end
 
  def LatticeGridHelper.member_types_map
-   {}
- end
+   {
+     'Member' => Member,
+     'Associate' => AssociateMember,
+     'Full' => Member
+   }
+  end
 
 # LatticeGrid prefs:
 # turn on lots of output

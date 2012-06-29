@@ -1,7 +1,9 @@
 <% show_primary_faculty = true if show_primary_faculty.nil? %>
 <% show_associated_faculty = true if show_associated_faculty.nil? %>
 <% show_members = true if show_members.nil? %>
+<% show_associate_members = false if show_associate_members.nil? %>
 <% show_unit_type = true if show_unit_type.nil? %>
+
 
 <table cellpadding="2" cellspacing="0" width="100%" class="borderless"> 
 <tr valign="bottom" colspan="3">
@@ -27,12 +29,23 @@
 	<td class="list-title-center">
 		Members<br/>
 	</td>
+	<td class="list-title-center">
+		Member Publications<br/>
+	</td>
+	<% end %>
+	<% if show_associate_members %>
+	<td class="list-title-center">
+		Associate Members<br/>
+	</td>
+	<td class="list-title-center">
+		Associate Member Publications<br/>
+	</td>
 	<% end %>
 	<td class="list-title-center">
 		Total publications<br/>
 	</td>
 	<td class="list-title-left">
-		Mesh terms<br/>
+		MeSH terms<br/>
 	</td>
 </tr>
 
@@ -62,6 +75,17 @@
 		<% if show_members %>
 		<td class="list-title-center">
 			<%= link_to( (unit.all_members).collect(&:id).uniq.length, show_investigators_org_url(unit.id), :title=>"List investigators in unit") %>
+		</td>
+		<td class="list-title-center">
+			<%= link_to( Investigator.publication_count_for_investigators(unit.all_members), org_url(unit.id), :title => "List publications by faculty members") %>
+		</td>
+		<% end %>
+		<% if show_associate_members %>
+		<td class="list-title-center">
+			<%= link_to( (unit.all_associate_members).collect(&:id).uniq.length, show_investigators_org_url(unit.id), :title=>"List investigators in unit") %>
+		</td>
+		<td class="list-title-center">
+			<%= link_to( Investigator.publication_count_for_investigators(unit.all_associate_members), org_url(unit.id), :title => "List publications by associate members") %>
 		</td>
 		<% end %>
 		<td class="list-title-center">

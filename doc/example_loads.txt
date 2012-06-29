@@ -1,3 +1,23 @@
+#June 2012 loads, CINJ
+
+rake importOrganizations file=db/imports/CINJ/division_lookup_06252012.txt
+rake importInvestigators file=db/imports/CINJ/cinj_faculty_20120625.txt
+rake importInvestigators file=db/imports/CINJ/cinj_associate_faculty_20120625.txt
+rake getAllMembers
+rake checkForInvestigatorsWithNoPrograms
+rake cleanup:countFacultyUpdates
+rake cleanup:countOldMemberships
+rake cleanup:purgeOldMemberships
+rake cleanup:purgeUnupdatedFaculty
+
+bundle exec rake insertAllAbstracts 
+bundle exec rake nightlyBuild
+bundle exec rake cleanup:find_duplicate_tags
+bundle exec rake cleanup:resolve_duplicate_tags
+bundle exec rake cleanup:resolve_misformed_tags
+bundle exec rake monthlyBuild
+
+
 # June 2012 loads, RHLCCC
 bundle exec rake RAILS_ENV=production importInvestigators file=db/imports/RHLCCC/new_faculty_June2012.txt
 bundle exec rake RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsJune2012.txt

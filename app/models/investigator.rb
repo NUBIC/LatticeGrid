@@ -96,6 +96,7 @@ has_many :investigator_appointments,
   accepts_nested_attributes_for :investigator_appointments
   accepts_nested_attributes_for :member_appointments
 
+
   named_scope :with_any_role, :include=>[:investigator_proposals], :conditions => "investigator_proposals.percent_effort >= 0"
 
   named_scope :full_time, :conditions => "appointment_basis = 'FT'"
@@ -219,6 +220,14 @@ has_many :investigator_appointments,
      [[last_name, first_name].join(', '), middle_name].join(' ')
   end
 
+  def self.all_abstracts_for_investigators(pis)
+    abstract_ids = pis.collect{|x| x.abstracts.only_valid}.flatten.sort{|x,y| x.id <=> y.id}.uniq
+  end
+
+  def self.publication_count_for_investigators(pis)
+    all_abstracts_for_investigators(pis).length
+  end
+    
      # this is annoying to have to spell out every column but * does not work
     # for rails 3.0
         #all.joins("INNER JOIN investigator_proposals ON (investigators.id = investigator_proposals.investigator_id)  INNER JOIN proposals ON (proposals.id = investigator_proposals.proposal_id)  
