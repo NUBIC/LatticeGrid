@@ -14,7 +14,13 @@
 <% simple_links=false if simple_links.nil? %>
 
 <div id="listing"> 
-<h2><%= heading -%></h2>
+<h2><%= heading -%> &nbsp;
+<% if ! @all_abstracts.nil? && @all_abstracts.length > 9 -%>
+	<% publications_per_year=abstracts_per_year_as_string(@all_abstracts) -%>
+	<span class='inlinebarchart' values='<%= publications_per_year -%>' title='publications per year: <%= publications_per_year -%>'>&nbsp;</span>
+<%= sparkline_barchart_setup({'barWidth'=>2,'barSpacing'=>2}) -%>
+<% end -%>
+</h2>
 <% if show_valid_checkboxes -%>
 <p>Publications that LatticeGrid cannot validate as belonging to you are listed at the bottom of this list. Please Check the box under the 'Valid' heading for each publication that does belong to you. If you see publications that are attributed to you that are <b>not</b> yours or any other person listed under the 'faculty credited' heading, and are checked as valid, please uncheck the 'Valid' checkbox to remove that publication from all LatticeGrid counts and views. If the publication does not belong to one or more of the investigators listed on the right, please uncheck each incorrectly listed investigator for that publication.</p>
 <% end -%>

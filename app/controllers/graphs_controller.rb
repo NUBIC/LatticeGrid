@@ -2,12 +2,14 @@ class GraphsController < ApplicationController
   caches_page( :show_org, :show_member, :member_nodes, :org_nodes) if LatticeGridHelper.CachePages()
   
   include ApplicationHelper
-  
+  include OrgsHelper
+
   def index
     redirect_to show_org_graph_url(1)
   end
 
   def show_org
+    @unit = find_unit_by_id_or_name(params[:id])
     @javascripts_add = ['prototype', 'scriptaculous', 'effects']
     if params[:id].blank? then
       redirect_to show_org_graph_url(1)

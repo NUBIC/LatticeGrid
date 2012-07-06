@@ -22,22 +22,9 @@
 <div id="page" class="slice">
 	<div id="investigator_title">
 	<% if ! @org.blank? %>
-	<h1><%= @org.name %> Collaboration Diagram &nbsp;
-		<% div_id = 'barchart_'+@org.id.to_s %>
-		<span class='<%= div_id %>' id='<%= div_id %>'> ... </span>
-		<%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? -%>
-				
-  		<script type='text/javascript' language='javascript'>
-
-		var request = jQuery.ajax({
-		    url: '<%= barchart_org_path( @org.id ) %>',
-		 	type: 'GET',
-			dataType: 'script'
-		});		
-  		</script>
-	</h1>
+	<h1><%= @org.name %> Collaboration Network</h1>
 	<% if @include_graph_link %>
-	<p><%= org_nav_heading() %></p>
+	<%= render :partial => 'shared/org_graph_nav' %>
 	<% end %>
 	<% elsif ! @investigator.blank? %>
 	<% all_abstracts = @all_abstracts || nil -%>

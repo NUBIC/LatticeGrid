@@ -11,17 +11,10 @@
 <% @bold_members = true if @bold_members.nil? %>
 <% @include_impact_factor = false if @include_impact_factor.nil? %>
 
-
-<h1><%= @unit.name %> Overview &nbsp;
-    <% if ! @all_abstracts.nil? && @all_abstracts.length > 9 -%>
-	  <% publications_per_year=abstracts_per_year_as_string(@all_abstracts) -%>
-	  <span class='inlinebarchart' values='<%= publications_per_year -%>' title='publications per year: <%= publications_per_year -%>'>&nbsp;</span>
-   	  <%= sparkline_barchart_setup({'barWidth'=>2,'barSpacing'=>2}) -%>
-    <% end -%>
-</h1>
+<h1><%= @unit.name %></h1>
 
 <% if @include_graph_link %>
-<p><%= org_nav_heading() %></p>
+<%= render :partial => 'shared/org_graph_nav' %>
 <% end %>
 
 <% if @faculty.length > 0 %>

@@ -231,4 +231,45 @@ module ApplicationHelper
     tooltip ||= text 
     link_to( text, ((abstract.url.blank?) ? "http://www.ncbi.nlm.nih.gov/pubmed/"+abstract.pubmed : abstract.url), :target => '_blank', :title=>tooltip) 
   end
+
+  def user_update_date
+    if session[:last_user_load_date]
+      "Last updated investigators on %s. <br />" % session[:last_user_load_date].strftime("%A, %B %d, %Y")
+    else
+      ""
+    end
+  end
+
+  def conditional_link(text, url)
+    url_check = ActionController::Routing::Routes.recognize_path(url.sub(%r!^https?://[^/]+!i, ''))
+    # logger.debug "Matched URL #{url.inspect} to route #{url_check.inspect}"
+    url_check.delete(:page)
+    # logger.debug "Pageless url becomes: #{url_for(url_check).inspect}"
+    # logger.debug "Comparing to #{request.request_uri}"
+
+    if !current_page? url_check
+      link_to(text, url)
+    else
+      "<span class='current_page'>#{h text}</span>"
+    end
+
+    # The reasons this works, even though certain routes depend on a page number:
+    #
+    # - If a route isn't given a page number, it fills it in from the environment.
+    #   Quoth the `url_for` docs: "When generating a new URL, missing values may be filled in from the current request's parameters."
+    #   This allows you to say url_for(:action => "...") and have it retain the current controller.
+    #   So, on page 2 of org 9's publications (/orgs/9/show/2)...
+    #   > Matched URL "http://localhost:3000/orgs/9/show/1" to route {:action=>"show", :controller=>"orgs", :id=>"9", :page=>"1"}
+    #   > Pageless url becomes: "/orgs/9/show/2"
+    #   > Comparing to /orgs/9/show/2
+    #
+    # - If the params don't have a page number, `url_for` intelligently drops down to a route that does.
+    #   > Matched URL "http://localhost:3000/orgs/9/show/1" to route {:action=>"show", :controller=>"orgs", :id=>"9", :page=>"1"}
+    #   > Pageless url becomes: "/orgs/9"
+    #   > Comparing to /graphs/9/show_org
+
+    # If this changes in future versions of Rails, may need to change this method a bit.
+
+  end
+
 end
