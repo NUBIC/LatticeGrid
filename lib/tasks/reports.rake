@@ -35,7 +35,7 @@ namespace :reports do
   end
 
   task :mark_abstracts_approved => :environment do
-    approvals = Log.all(:conditions=>"activity = 'profiles:update' and params like '%publications%'", :order=>"created_at desc")
+    approvals = Log.all(:conditions=>"activity = 'profiles:update' and params like '%%publications%%'", :order=>"created_at desc")
     puts "Number of approvals: #{approvals.length}"
     approvals.each do |approval|
       # created_ip: "99.140.210.25", created_at: "2011-06-12 13:09:03", updated_at: "2011-06-12 13:09:03">, #<Log id: 361, activity: "profiles:update", investigator_id: 118, program_id: nil, controller_name: "profiles", action_name: "update", params: "{\"commit\"=>\"Approve publications list\", \"authentici...", created_ip: "129.105.228.35", created_at: "2011-06-07 23:02:47", updated_at: "2011-06-07 23:02:47">] 

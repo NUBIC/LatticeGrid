@@ -9,6 +9,11 @@ def LatticeGridHelper.allow_profile_edits?
   return false
 end
 
+def edit_profile_link
+  ""
+end
+
+
 def LatticeGridHelper.include_summary_by_member?
   return false
 end
@@ -95,7 +100,11 @@ def LatticeGridHelper.ldap_treebase
 end
 
 def LatticeGridHelper.include_awards?
- false
+  false
+end
+
+def LatticeGridHelper.include_studies?
+  false
 end
 
 # build LatticeGridHelper.institutional_limit_search_string to identify all the publications at your institution 
@@ -142,7 +151,7 @@ end
 
 # limit searches to include the institutional_limit_search_string
 def LatticeGridHelper.global_limit_pubmed_search_to_institution?
-  true
+  false
 end
 
 def LatticeGridHelper.do_ldap?

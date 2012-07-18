@@ -52,7 +52,7 @@
 			<%= investigator.home_department.abbreviation if (! investigator.home_department_id.blank?) and (! investigator.home_department.blank?) %>
 		</td>
 		<td class="list-left">
-			<%= link_to_units(investigator.appointments) %>
+			<%= link_to_units(investigator.investigator_appointments) %>
 		</td>
 		<td class="list-left">
 			<%=  investigator.abstracts.count %>

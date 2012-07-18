@@ -1,0 +1,2 @@
+ABBR	NODE_ID	NODE_NAME	ROOT_NAME
+LLS	600000	Leukemia and Lymphoma Society	LLS

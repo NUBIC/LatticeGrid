@@ -151,13 +151,15 @@ module ApplicationHelper
     return ""
   end
   
-  def link_to_units(appointments, delimiter="<br/>")
-      appointments.collect{ |appointment| link_to_unit(appointment)}.join(delimiter)
+  def link_to_units(investigator_appointments, delimiter="<br/>")
+      investigator_appointments.collect{ |investigator_appointment| link_to_unit(investigator_appointment.organizational_unit, investigator_appointment.type)}.join(delimiter)
   end
   
-  def link_to_unit(unit)
-    link_to( unit.name, show_investigators_org_url(unit.id), 
-          :title => "Show investigators in #{unit.name}")
+  def link_to_unit(unit, the_type=nil)
+    return if unit.blank?
+    link_name =  unit.name
+    link_name += " (#{the_type})" unless the_type.blank?
+    link_to( link_name , show_investigators_org_url(unit.id), :title => "Show investigators in #{unit.name}" )
   end
   
   def handle_tr_format(title, object, re="", replacement="")

@@ -197,6 +197,9 @@ def LatticeGridHelper.smart_filters?
   true
 end
 
+def LatticeGridHelper.mark_full_name_searches_as_valid?
+  false
+end
 
 # print timing and completion information
 def LatticeGridHelper.verbose?

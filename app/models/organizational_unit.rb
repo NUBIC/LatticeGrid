@@ -15,7 +15,7 @@ class OrganizationalUnit < ActiveRecord::Base
       :conditions => ["investigator_appointments.type IN ('Member', 'PrimaryMember', 'SecondaryMember', 'TertiaryMember') and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
   has_many :any_memberships,
       :class_name => "InvestigatorAppointment",
-      :conditions => ["investigator_appointments.type LIKE '%Member' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
+      :conditions => ["investigator_appointments.type LIKE '%%Member' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]
   has_many :primary_memberships,
       :class_name => "InvestigatorAppointment",
       :conditions => ["investigator_appointments.type = 'PrimaryMember' and (investigator_appointments.end_date is null or investigator_appointments.end_date >= :today)", {:today => Date.today }]

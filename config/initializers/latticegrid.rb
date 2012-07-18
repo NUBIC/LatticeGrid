@@ -1,7 +1,7 @@
 module LatticeGrid
   def LatticeGrid.the_instance
     if "#{File.expand_path(RAILS_ROOT)}" =~ /Users/
-      'CINJ'
+      'LLS'
     else
       case "#{File.expand_path(RAILS_ROOT)}"
         when /fsm/i
@@ -12,6 +12,8 @@ module LatticeGrid
           'RHLCCC'
         when /ccne/i
           'CCNE'
+        when /lls/i
+          'LLS'
         when /umich/i
           'UMich'
         when /uwisc/i

@@ -1,3 +1,40 @@
+#July 2012 loads, Leukemia and Lymphoma Society
+
+rake db:vacuum 
+rake log:clear
+rake importRoot file=db/imports/LLS/root_lookup.txt 
+rake importOrganizations file=db/imports/LLS/institution_lookup.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/LLS/LLS_CDP_recipients_1998-2002.txt
+rake cleanup:countFacultyUpdates
+rake cleanup:email
+rake cleanup:cleanInvestigatorsUsername
+
+rake checkForInvestigatorsWithNoPrograms
+rake cleanup:countFacultyUpdates
+rake cleanup:countOldMemberships
+rake cleanup:purgeOldMemberships
+
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalImpact file=db/imports/jcr_recs_2010.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake updateJournalISSNsFromPubmed
+rake cleanJournalISSNentries
+rake findAbstractswithoutJCRentries
+rake findAbstractswithJCRentries
+rake updateJournalISSNsFromPubmed
+rake setPreferredHighImpact
+
+
+
+bundle exec rake insertAllAbstracts 
+bundle exec rake nightlyBuild
+bundle exec rake cleanup:find_duplicate_tags
+bundle exec rake cleanup:resolve_duplicate_tags
+bundle exec rake cleanup:resolve_misformed_tags
+bundle exec rake monthlyBuild
+
 #June 2012 loads, CINJ
 
 rake importOrganizations file=db/imports/CINJ/division_lookup_06252012.txt

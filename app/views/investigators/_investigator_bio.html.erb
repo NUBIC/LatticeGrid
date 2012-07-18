@@ -9,8 +9,8 @@
 	<table>
 		<%= handle_tr_format("Academic&nbsp;Title",investigator.title) %>
 		<%= handle_tr_format(LatticeGridHelper.affilation_name, link_to_primary_department(investigator)) %>
-		<%= handle_tr_format("Other&nbsp;Appointments", link_to_units(investigator.joint_appointments+investigator.secondary_appointments))%>
-		<%= handle_tr_format("Affiliations",link_to_units(investigator.memberships))%>
+		<%= handle_tr_format("Other&nbsp;Appointments", link_to_units(investigator.joints+investigator.secondaries))%>
+		<%= handle_tr_format("Affiliations",link_to_units(investigator.any_members))%>
 		<%= handle_tr_format("Campus",investigator.campus) %>
 		<%= handle_tr_format("Address",investigator.address1, /\$/,"<br>" ) %>
 		<%= handle_tr_format("Telephone",investigator.business_phone) %>

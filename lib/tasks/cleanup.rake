@@ -447,10 +447,10 @@ namespace :cleanup do
 
   task :cleanInvestigatorsUsername => :environment do
      block_timing("cleanup:cleanInvestigatorsUsername") {
-       doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%.%'"))
-       doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%(%'"))
-       doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%)%'"))
-       doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%&%'"))
+       doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%%.%%'"))
+       doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%%(%%'"))
+       doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%%)%%'"))
+       doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%%&%%'"))
      }
   end
 

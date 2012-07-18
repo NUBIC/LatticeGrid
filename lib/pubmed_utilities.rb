@@ -94,6 +94,9 @@ def FindPubMedIDs (all_investigators, options, number_years, debug=false, smart_
         elsif entries.length > (LatticeGridHelper.expected_max_pubs_per_year*number_years) && smart_filters && repeatCnt < 3 && ! limit_pubmed_search_to_institution() then
           keywords = LimitSearchToInstitution(keywords, investigator)
         else
+          if LatticeGridHelper.mark_full_name_searches_as_valid? and repeatCnt == 0
+            investigator["mark_pubs_as_valid"]=true
+          end
           perform_esearch=false
         end
        rescue Timeout::Error => exc
