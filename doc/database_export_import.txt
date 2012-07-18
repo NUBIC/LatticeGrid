@@ -16,6 +16,13 @@ pg_dump -E utf8 -Fc stanford_latticegrid -U latticegrid > stanford_latticegrid_2
 pg_dump -E utf8 -Fc health_locator -U health_locator > health_locator_20120322.dmp
 pg_dump -E utf8 -Fc isb_colleagues -U isb_colleagues > isb_colleagues_20120322.dmp
 pg_dump -E utf8 -Fc nucats_assist -U nucats_assist > nucats_assist_20120322.dmp
+pg_dump -Fc lls_latticegrid -U latticegrid > lls_latticegrid_20120717.dmp
+
+scp lls_latticegrid_20120717.dmp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe/lls_latticegrid_20120717.dmp  
+pg_restore -d lls_latticegrid -U latticegrid -h pstage2 lls_latticegrid_20120717.dmp
+
+# Bcdatabase.load[:pstage, :llslatticegrid]['password']
+# 
 
 
 pg_dump -Fc rhlccc_latticegrid -U latticegrid -h pprod2 > rhlccc_latticegrid_20120604.dmp
