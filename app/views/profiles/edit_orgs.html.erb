@@ -1,0 +1,21 @@
+
+<p>
+	<%= link_to( "Home", profiles_url ) %>
+	<%= link_to( "Edit #{@pronoun} Publications List", (@username.blank? ? profiles_url : edit_pubs_profile_url(@username) ) ) %>
+</p>
+
+<h2>Organizational Unit Edit page</h2>
+<h3>Please review/edit the names, abbreviations and sort order for each unit</h3>
+
+
+<% form_for(@center, 
+	:url => update_orgs_profiles_url(), 
+	:html => { :multipart => true, :method => :put }) do |center_form| %>
+	<!-- f and submission are existing variables passed in -->
+	<table  class="lined">
+	  <%= render(:partial => 'center_form', :locals=>{:center_form=>center_form, :orgs=>@orgs}) %>
+	  <tr><td colspan="3" align="center" class="submit">
+	    <%= center_form.submit( 'Update organizational information' ) %>
+	  </td></tr>
+	</table>
+<% end %>

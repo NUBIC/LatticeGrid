@@ -56,10 +56,10 @@ def latticegrid_menu_script
 		#{build_year_menu}
 	</li>
 	<li><a href='#'>Faculty</a>
-		#{build_menu(@head_node.children.sort_by(&:abbreviation), Program) {|id| show_investigators_org_path(id)} }
+		#{build_menu(@head_node.children.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation}, Program) {|id| show_investigators_org_path(id)} }
 	</li>
 	<li><a href='#'>Graphs</a>
-		#{build_menu(@head_node.children.sort_by(&:abbreviation), Program) {|id| show_org_graph_path(id)} }
+		#{build_menu(@head_node.children.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation}, Program) {|id| show_org_graph_path(id)} }
 	</li>
 	<li>#{link_to( 'High Impact', high_impact_by_month_abstracts_path, :title=>'Recent high-impact publications')} </li>
 	<li>#{link_to( 'MeSH tag cloud', tag_cloud_abstracts_path, :title=>'Display MeSH tag cloud for all publications')} </li>

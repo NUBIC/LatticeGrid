@@ -46,6 +46,41 @@ class ProfilesController < ApplicationController
     end
   end
 
+  def list_orgs
+    if is_admin?
+      @center= Center.find(:first)
+      @orgs = nil
+      @orgs = @center.descendants.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation} unless @center.blank? 
+      render
+    else
+      redirect_to :index
+    end
+  end
+
+  def edit_orgs
+    if is_admin?
+      @center= Center.find(:first)
+      @orgs = nil
+      @orgs = @center.descendants.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation} unless @center.blank?
+      #@orgs = center.programs.ordered unless center.blank?
+      render
+    else
+      redirect_to :index
+    end
+  end
+
+  def update_orgs
+    if is_admin?
+      programs_attributes = params[:center][:programs_attributes]
+      programs_attributes.each do |key, program|
+        # program should be a hash
+        the_program = Program.find(program[:id])
+        the_program.update_attributes(program.except(:id))
+      end
+    end
+    redirect_to list_orgs_profiles_url
+  end
+
   def list_summaries_by_program
     if is_admin?
       @javascripts_add = ['jquery.tablesorter.min']

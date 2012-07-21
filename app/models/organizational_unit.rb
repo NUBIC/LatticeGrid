@@ -85,6 +85,9 @@ class OrganizationalUnit < ActiveRecord::Base
   has_many :abstracts,
     :through => :organization_abstracts
 
+    named_scope :ordered, 
+        :order => "organizational_units.sort_order, organizational_units.abbreviation"
+
     # cache this query in a class instance
     @@all_units = nil
     @@head_node = nil

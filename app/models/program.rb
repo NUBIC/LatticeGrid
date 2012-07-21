@@ -1,2 +1,2 @@
-class Program < OrganizationalUnit
+class Program < Center
 end

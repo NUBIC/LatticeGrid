@@ -470,7 +470,7 @@ class OrgsController < ApplicationController
   
   def build_stats_array
     @exclude_letters = ! params[:exclude_letters].blank?
-    @units = @head_node.children.sort_by(&:abbreviation)
+    @units = @head_node.children.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation}
     @faculty_affiliation_types = params[:affiliation_types]
     @units.each do |unit|
       if @faculty_affiliation_types.blank?

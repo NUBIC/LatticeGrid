@@ -1,0 +1,37 @@
+<h2>Organizational Unit Summary</h2>
+<p>generated at <%= Time.now.to_s(:long) %></p>
+<table id="summaryTable" class="tablesorter { sortList: [[2,0]] }"> 
+  <thead> 
+  <tr>
+	<th>Name</th>
+	<th>Abbreviation</th>
+	<th>Faculty</th>
+	<th>URL</th>
+	<th>Sort order</th>
+    <th>Type</th>
+    <th>Classification</th>
+  </tr>
+ </thead> 
+ <tbody>
+<% @orgs.each do |org| %>
+  <% next if org.blank? or org.name.blank? %>
+  <tr>
+    <td><%= link_to(org.name, org_url(org.id), :title=>"View organizational abstracts")  %></td>
+    <td><%= org.abbreviation %></td>
+    <td><%= link_to(org.all_primary_or_member_faculty.count, show_investigators_org_url(org.id), :title=>"View organizational faculty list") %></td>
+    <td><%= link_to(org.organization_url, org.organization_url) unless org.organization_url.blank? %></td>
+    <td><%= org.sort_order %></td>
+    <td><%= org.type %></td>
+    <td><%= org.organization_classification %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<% javascript_tag do %>
+jQuery(document).ready(function() { 
+    // call the tablesorter plugin 
+    jQuery("#summaryTable").tablesorter(
+        // turn off sorting on the 7th header
+        { headers: { 6: {sorter: false} } }
+    ); });
+<% end %>

@@ -1,5 +1,6 @@
 # export password
-Bcdatabase.load[:pprod, :rhlccc_latticegrid]['password']
+# Bcdatabase.load[:pprod, :rhlccc_latticegrid]['password']
+# Bcdatabase.load[:pstage, :lls_latticegrid]['password']
 
 scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/enotis/tmp/study_roles_2012-03-14.csv study_roles_2012-03-14.csv
 scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/enotis/tmp/studies_2012-03-14.csv studies_2012-03-14.csv
@@ -21,8 +22,6 @@ pg_dump -Fc lls_latticegrid -U latticegrid > lls_latticegrid_20120717.dmp
 scp lls_latticegrid_20120717.dmp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe/lls_latticegrid_20120717.dmp  
 pg_restore -d lls_latticegrid -U latticegrid -h pstage2 lls_latticegrid_20120717.dmp
 
-# Bcdatabase.load[:pstage, :llslatticegrid]['password']
-# 
 
 
 pg_dump -Fc rhlccc_latticegrid -U latticegrid -h pprod2 > rhlccc_latticegrid_20120604.dmp

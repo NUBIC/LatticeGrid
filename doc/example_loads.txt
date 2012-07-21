@@ -1,3 +1,27 @@
+# July 2012 loads, RHLCCC
+
+bundle exec rake RAILS_ENV=development importInvestigators file=db/imports/RHLCCC/new_faculty_July2012.txt
+bundle exec rake RAILS_ENV=development importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsJuly2012.txt
+bundle exec rake RAILS_ENV=development getAllMembers  
+bundle exec rake RAILS_ENV=development checkForInvestigatorsWithNoPrograms
+bundle exec rake RAILS_ENV=development deleteInvestigatorsWithNoPrograms
+
+bundle exec rake RAILS_ENV=production  awards:importData file=db/imports/Feinberg/private/award_data_20120426.txt
+bundle exec rake RAILS_ENV=production  awards:cleanPIassignments
+
+bundle exec rake RAILS_ENV=production  importStudies file=db/imports/Feinberg/private/studies_20120426.csv
+bundle exec rake RAILS_ENV=production  importStudyInvestigators file=db/imports/Feinberg/private/study_roles_20120426.csv
+bundle exec rake RAILS_ENV=production  findStudiesWithoutInvestigators
+
+# April 2012 loads, RHLCCC
+bundle exec rake RAILS_ENV=production  awards:importData file=db/imports/Feinberg/private/award_data_20120426.txt
+bundle exec rake RAILS_ENV=production  awards:cleanPIassignments
+
+bundle exec rake RAILS_ENV=production  importStudies file=db/imports/Feinberg/private/studies_20120426.csv
+bundle exec rake RAILS_ENV=production  importStudyInvestigators file=db/imports/Feinberg/private/study_roles_20120426.csv
+bundle exec rake RAILS_ENV=production  findStudiesWithoutInvestigators
+
+
 #July 2012 loads, Leukemia and Lymphoma Society
 
 rake db:vacuum 
@@ -25,8 +49,6 @@ rake findAbstractswithoutJCRentries
 rake findAbstractswithJCRentries
 rake updateJournalISSNsFromPubmed
 rake setPreferredHighImpact
-
-
 
 bundle exec rake insertAllAbstracts 
 bundle exec rake nightlyBuild
@@ -76,8 +98,6 @@ bundle exec rake RAILS_ENV=production  awards:cleanPIassignments
 bundle exec rake RAILS_ENV=production  importStudies file=db/imports/Feinberg/private/studies_20120426.csv
 bundle exec rake RAILS_ENV=production  importStudyInvestigators file=db/imports/Feinberg/private/study_roles_20120426.csv
 bundle exec rake RAILS_ENV=production  findStudiesWithoutInvestigators
-
-
 
 
 # Feinberg April 2012 loads

@@ -65,3 +65,11 @@ Tag.find_by_name("algorithms").inspect
 Tagging.first(:conditions=>"tag_id = 6304 and taggable_type = 'Abstract'")
 Tagging.first(:joins=>[:tag], :conditions => " taggable_type = 'Abstract' AND tags.name = 'algorithms'").information_content
 
+# cleanup an old organizational_unit
+org = OrganizationalUnit.find_by_abbreviation("PO")
+org.id
+InvestigatorAppointment.all(:conditions=>['organizational_unit_id = :id',{:id=>org.id}]).map{|ap| ap.delete}
+OrganizationAbstract.all(:conditions=>['organizational_unit_id = :id',{:id=>org.id}]).map{|oa| oa.delete}
+org.delete
+org = OrganizationalUnit.find_by_abbreviation("PO")
+

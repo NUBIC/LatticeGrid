@@ -4,7 +4,7 @@
 
 <div id="listing">
   
-  <% for unit in @head_node.children.sort_by(&:abbreviation) %>
+  <% for unit in @head_node.children.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation} %>
 	<table cellpadding="2" cellspacing="0" width="900" class="borderless"> 
 	<tr valign="bottom" colspan="3">
 	<td class="list-title-center">
