@@ -13,15 +13,6 @@ bundle exec rake RAILS_ENV=production  importStudies file=db/imports/Feinberg/pr
 bundle exec rake RAILS_ENV=production  importStudyInvestigators file=db/imports/Feinberg/private/study_roles_20120426.csv
 bundle exec rake RAILS_ENV=production  findStudiesWithoutInvestigators
 
-# April 2012 loads, RHLCCC
-bundle exec rake RAILS_ENV=production  awards:importData file=db/imports/Feinberg/private/award_data_20120426.txt
-bundle exec rake RAILS_ENV=production  awards:cleanPIassignments
-
-bundle exec rake RAILS_ENV=production  importStudies file=db/imports/Feinberg/private/studies_20120426.csv
-bundle exec rake RAILS_ENV=production  importStudyInvestigators file=db/imports/Feinberg/private/study_roles_20120426.csv
-bundle exec rake RAILS_ENV=production  findStudiesWithoutInvestigators
-
-
 #July 2012 loads, Leukemia and Lymphoma Society
 
 rake db:vacuum 
