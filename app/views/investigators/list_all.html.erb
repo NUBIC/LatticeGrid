@@ -1,6 +1,10 @@
 <div id="listing">
 	<div style="width:100%; text-align:right;">
-		<%= link_to( "as pdf",list_all_investigators_path('pdf')) if !defined?(@pdf) and ! @pdf %>
+		<% if !defined?(@pdf) and ! @pdf %>
+		<%= link_to( "as pdf",list_all_investigators_path('pdf')) %>
+		<%= link_to( "as Word", list_all_investigators_path('doc'))  %>
+		<%= link_to( "as Excel", list_all_investigators_path('xls')) %>
+		<% end %>
 	</div>
   <table cellpadding="2" cellspacing="0" class="borderless"> 
 	<% cnt = 0 %>
@@ -10,6 +14,9 @@
 		</td>
 		<td class="list-title-left">
 			Name
+		</td>
+		<td class="list-title-left">
+			Username
 		</td>
 		<td class="list-title-left">
 			Degrees
@@ -49,10 +56,17 @@
 			<%= link_to(investigator.last_name+", "+(investigator.first_name||"")+" "+(investigator.middle_name||""), investigator_url(investigator.username))  %>
 		</td>
 		<td class="list-left">
+			<%= investigator.username %>
+		</td>
+		<td class="list-left">
 			<%= investigator.degrees %>
 		</td>
 		<td class="list-left">
+			<% if !defined?(@pdf) and ! @pdf %>
 			<%= email_link(investigator.email) %>
+			<% else %>
+			<%= investigator.email %>
+			<% end %>
 		</td>
 		<td class="list-left">
 			<%= investigator.title %>

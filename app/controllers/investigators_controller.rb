@@ -30,6 +30,18 @@ class InvestigatorsController < ApplicationController
             :template => "investigators/list_all.html",
             :layout => "pdf")
       end
+      format.xls  { 
+        @pdf = true
+        send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
+        :filename => "Investigator_Listing_#{Date.today.to_s}.xls",
+        :type => 'application/vnd.ms-excel',
+        :disposition => 'attachment') }
+      format.doc  { 
+        @pdf = true
+        send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
+        :filename => "Investigator_Listing_#{Date.today.to_s}.doc",
+        :type => 'application/msword',
+        :disposition => 'attachment') }
     end
   end
   
@@ -48,11 +60,15 @@ class InvestigatorsController < ApplicationController
               :template => "investigators/list_all.html",
               :layout => "pdf")
         end
-        format.xls  { send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
+        format.xls  { 
+          @pdf = true
+          send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
           :filename => "Investigator Listing.xls",
           :type => 'application/vnd.ms-excel',
           :disposition => 'attachment') }
-        format.doc  { send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
+        format.doc  { 
+          @pdf = true
+          send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
           :filename => "Investigator Listing.doc",
           :type => 'application/msword',
           :disposition => 'attachment') }
