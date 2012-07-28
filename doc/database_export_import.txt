@@ -2,7 +2,7 @@
 # Bcdatabase.load[:pprod, :rhlccc_latticegrid]['password']
 # Bcdatabase.load[:pprod, :fsm_latticegrid]['password']
 # Bcdatabase.load[:pstage, :lls_latticegrid]['password']
-adios5,bins
+
 
 scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/enotis/tmp/study_roles_2012-03-14.csv study_roles_2012-03-14.csv
 scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/enotis/tmp/studies_2012-03-14.csv studies_2012-03-14.csv

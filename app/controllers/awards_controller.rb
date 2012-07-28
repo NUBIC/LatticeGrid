@@ -27,6 +27,7 @@ class AwardsController < ApplicationController
     end
   end 
   
+
   def listing
     @javascripts_add = ['jquery.min', 'jquery.tablesorter.min', 'jquery.fixheadertable.min']
     @investigators = Investigator.proposal_totals()
@@ -34,6 +35,18 @@ class AwardsController < ApplicationController
     respond_to do |format|
       format.html { render :layout => 'printable'}
       format.xml  { render :xml => @investigators }
+      format.xls  { 
+        @pdf = 1
+         send_data(render(:template => 'awards/listing.html', :layout => "excel"),
+        :filename => "award_listing_#{Date.today.to_s}.xls",
+        :type => 'application/vnd.ms-excel',
+        :disposition => 'attachment') }
+      format.doc  { 
+        @pdf = 1
+        send_data(render(:template => 'awards/listing.html', :layout => "excel"),
+        :filename => "award_listing_#{Date.today.to_s}.doc",
+        :type => 'application/msword',
+        :disposition => 'attachment') }
       format.pdf do
         @pdf = true
         render( :pdf => "Investigator Awards Listing", 
