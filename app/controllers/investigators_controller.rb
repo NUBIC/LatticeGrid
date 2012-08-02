@@ -30,18 +30,6 @@ class InvestigatorsController < ApplicationController
             :template => "investigators/list_all.html",
             :layout => "pdf")
       end
-      format.xls  { 
-        @pdf = true
-        send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
-        :filename => "Investigator_Listing_#{Date.today.to_s}.xls",
-        :type => 'application/vnd.ms-excel',
-        :disposition => 'attachment') }
-      format.doc  { 
-        @pdf = true
-        send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
-        :filename => "Investigator_Listing_#{Date.today.to_s}.doc",
-        :type => 'application/msword',
-        :disposition => 'attachment') }
     end
   end
   
@@ -60,15 +48,11 @@ class InvestigatorsController < ApplicationController
               :template => "investigators/list_all.html",
               :layout => "pdf")
         end
-        format.xls  { 
-          @pdf = true
-          send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
+        format.xls  { send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
           :filename => "Investigator Listing.xls",
           :type => 'application/vnd.ms-excel',
           :disposition => 'attachment') }
-        format.doc  { 
-          @pdf = true
-          send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
+        format.doc  { send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
           :filename => "Investigator Listing.doc",
           :type => 'application/msword',
           :disposition => 'attachment') }
@@ -168,6 +152,23 @@ class InvestigatorsController < ApplicationController
       format.xml  { render :layout => false, :xml  => {"abstract_count" => abstract_count, "tags" => tags, "investigator_id" => params[:investigator_id]}.to_xml() }
     end
     
+  end
+  
+  def show_colleagues
+    handle_member_name(false)
+    investigator = @investigator
+    coauthors = investigator.co_authors
+    colleagues = []
+    ugh = "" 
+    if !investigator.nil? 
+      ugh = coauthors.collect(&:publication_cnt).join(', ')
+      coauthors.each{|ca| colleagues << ca.colleague}
+      lol = ""
+      lol = colleagues.collect(&:name).join(', ')
+    end
+    respond_to do |format|
+      format.html {render :text => "colleague count = #{investigator.co_authors.length}, who are #{lol} their respective publication counts #{ugh}"}
+    end
   end
   
   def show 

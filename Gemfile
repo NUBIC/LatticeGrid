@@ -5,7 +5,7 @@ gem 'rmagick', :require => nil
 gem 'ruby-graphviz'
 #gem 'sparklines'
 gem 'fastercsv'
-gem 'pg'
+gem 'pg', "0.13.2"
 gem 'haml'
 gem 'will_paginate', "2.3.16"
 gem 'awesome_nested_set', "~> 1.4"

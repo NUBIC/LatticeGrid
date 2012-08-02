@@ -30,6 +30,8 @@ class CytoscapeController < ApplicationController
     render :action => :show
   end
 
+  
+
   def show_all
     handle_data_params
     @title = "Publication/Award/Study Collaborations"
@@ -144,7 +146,6 @@ class CytoscapeController < ApplicationController
   def chord
     @json_callback = "../cytoscape/d3_data.json"
     @title = 'Chord Diagram showing inter- and intra-programmatic publications for all programs'
-    @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}"]
     unless params[:id].blank?
       program = OrganizationalUnit.find_by_id(params[:id])
       unless program.blank?
@@ -158,6 +159,63 @@ class CytoscapeController < ApplicationController
     respond_to do |format|
       format.html { render :layout => 'd3'  }
       format.json{ render :layout=> false, :text => ""  }
+    end
+  end
+
+#!!!!! 
+  def investigator_chord 
+    @title = 'Chord Diagram showing publications between various investigators'
+    unless params[:id].blank? 
+      master_investigator = Investigator.find_by_username(params[:id])
+      @json_callback = "../cytoscape/"+params[:id]+"/d3_investigator_chord_data.json"
+      if master_investigator.blank? 
+        flash[:notice] = "unable to find investigator"
+        params[:id] = nil 
+      else 
+        @title = 'Chord Diagram showing publications for ' + master_investigator.name
+      end
+    end
+    respond_to do |format|
+      format.html{ render :layout => 'd3'}
+      format.json{ render :layout => false, :text => ""}
+    end
+  end
+
+#!!!!!
+  def investigator_edge_bundling 
+    @title = 'Chord Diagram showing publications between various investigators'
+    unless params[:id].blank? 
+      master_investigator = Investigator.find_by_username(params[:id])
+      @json_callback = "../cytoscape/" + params[:id] + "/d3_investigator_edge_data.json"
+      if master_investigator.blank? 
+        flash[:notice] = "unable to find investigator"
+        params[:id] = nil 
+      else 
+        @title = 'Hierarchical Edge Bundling Diagram for investigator publications'
+      end
+    end
+    respond_to do |format|
+      format.html{ render :layout => 'd3bundle'}
+      format.json{ render :layout => false, :text => ""}
+    end
+  end
+
+#!!!!!
+  def investigator_wordle
+    @title = 'Wordle for NO ONE BECAUSE THE ID IS INVALID'
+    unless params[:id].blank?
+      master_investigator = Investigator.find_by_username(params[:id])
+      if master_investigator.blank?
+        flash[:notice] = "unable to find investigator"
+        params[:id] = nil 
+      else
+        @title = 'Wordle synthesizing abstracts of ' + master_investigator.name
+        @words = "../cytoscape/" + params[:id] + "/d3_investigator_wordle_data.json"
+      end
+    end
+    respond_to do |format|
+      format.html { render :layout => 'd3wordle'}
+      format.json { render :layout => false, :text => ""}
     end
   end
   
@@ -175,7 +233,7 @@ class CytoscapeController < ApplicationController
   end
 
   def d3_data
-    @units = @head_node.descendants.sort_by(&:abbreviation)
+    @units = @head_node.descendants.sort_by(&:abbreviation) 
     if (params[:id].blank?)
       # children are one level down - descendents are all levels down
       graph = d3_all_units_graph(@units)
@@ -190,6 +248,55 @@ class CytoscapeController < ApplicationController
     end
   end
 
+
+#!!!!
+  def d3_investigator_chord_data
+      #@investigators = @head_node.descendants.sort_by(&:name)
+      if (params[:id])
+        investigator = Investigator.find_all_by_username(params[:id]).first
+        graph = d3_master_investigator_graph(investigator)
+      end
+      depth = 1 
+      respond_to do |format| 
+        format.json{ render :layout => false, :json => graph.as_json()}
+      end
+    end
+    
+#!!!!!  
+  def d3_investigator_edge_data
+        #@investigators = @head_node.descendants.sort_by(&:name)
+        departments = OrganizationalUnit.all
+        #investigators = []
+        #departments.each {|dep| 
+        #  dep.primary_or_member_faculty.each {|inv|
+        #      investigators << inv
+        #    } 
+        #  } 
+        investigators = Investigator.all
+        investigators.sort!{|a, b| a.unit_list().first <=> b.unit_list().first}
+       
+        graph = d3_all_investigators_bundle(investigators.uniq)
+        depth = 1 
+        respond_to do |format| 
+          format.json{ render :layout => false, :json => graph.as_json()}
+        end
+      end    
+
+#!!! 
+def d3_investigator_wordle_data
+  if (params[:id])
+    investigator = Investigator.find_all_by_username(params[:id]).first
+    words = d3_wordle_data(investigator)
+  end
+words = words[50, 100] + words[words.length/2, words.length/2 + 150] + words[words.length - 100, 100]
+    words.uniq!
+  finalwords = []
+  depth = 1
+  respond_to do |format|
+    format.json{ render :layout => false, :json => words.as_json()}
+  end
+end
+    
   def d3_date_data
     @units = @head_node.descendants.sort_by(&:abbreviation)
     graph = d3_units_by_date_graph(@units, params[:start_date].to_date,  params[:end_date].to_date)

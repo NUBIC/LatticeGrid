@@ -6,7 +6,8 @@ class GraphsController < ApplicationController
   def index
     redirect_to show_org_graph_url(1)
   end
-
+  
+  
   def show_org
     @javascripts_add = ['prototype', 'scriptaculous', 'effects']
     if params[:id].blank? then
