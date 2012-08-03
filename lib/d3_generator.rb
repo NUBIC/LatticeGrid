@@ -38,6 +38,48 @@ def d3_all_units_graph(units)
   end
   return graph_array
 end
+
+
+def d3_master_investigator_graph(investigator)
+  graph_array = []
+  master_investigator = investigator
+  name = master_investigator.last_name
+  coauthors = master_investigator.co_authors
+  coauthor_ids = []
+  if master_investigator.blank? 
+    graph_array = ['']
+    return graph_array
+  end
+  coauthors.each do |ca|
+    coauthor_ids << ca.colleague_id
+  end
+  graph_array << d3_investigator_graph(master_investigator, coauthor_ids, name)
+  master_investigator.colleague_coauthors.each do |colleague|
+    graph_array << d3_investigator_graph(colleague, coauthor_ids, name)
+  end
+  return graph_array 
+end
+
+
+def d3_all_investigators_bundle(investigators)
+  graph_array = []
+  investigators.each do |investigator|
+    org_unit = OrganizationalUnit.find_by_id(investigator.unit_list().first)
+    if org_unit.blank?
+      org_unit = "undefined"
+    else 
+      org_unit = org_unit.abbreviation.to_s
+    end
+    #unless (org_unit == "TIMA" or org_unit == "HM"  or org_unit == "CCB")
+    #  graph_array << d3_investigator_edge(investigator, org_unit)
+    #end
+    edge = d3_investigator_edge(investigator, org_unit)
+    unless (edge[:size] == 0)
+      graph_array << edge
+    end
+  end
+  return graph_array 
+end
   
 def d3_master_unit_graph(units, master_unit)
   graph_array = []
@@ -74,6 +116,29 @@ def d3_unit_graph(unit)
   }
 end
 
+
+
+def d3_investigator_graph(investigator, coauthor_ids, primary_name)
+  {
+    :name => investigator.last_name,
+    :size => investigator.total_publications, 
+    :imports => d3_investigator_imports(investigator, coauthor_ids, primary_name)
+  }
+end 
+
+def d3_investigator_edge(investigator, org_unit)
+  first = investigator.first_name.delete("\'")
+  first = first.delete("(") 
+  first = first.delete(")")
+  first = first.delete(".")
+  {
+    :name => "RHLCCC." +  org_unit + "."  + first  + "-" + investigator.last_name.delete("\'"),
+    #OrganizationalUnit.find_by_id(investigator.unit_list().first.to_s).abbreviation +
+    :size => investigator.total_publications, 
+    :imports => d3_investigator_edge_imports(investigator)
+  }
+end
+
 def d3_simple_unit_investigator_graph(unit, investigator)
   {
     :name => unit.abbreviation + "." + investigator.username,
@@ -102,6 +167,75 @@ def d3_unit_investigator_imports(unit, investigator, faculty_ids)
   end
   return [''] if the_arry.blank?
   return the_arry
+end
+
+
+def d3_investigator_imports(investigator, coauthor_ids, primary_name)
+    the_arry = []
+    return [''] if investigator.colleague_coauthors.length < 1 
+    unless investigator.last_name.eql? primary_name
+      the_arry << primary_name
+    end
+    investigator.colleague_coauthors.each do |colleague|
+      if coauthor_ids.include?(colleague.id)
+        the_arry <<   colleague.last_name
+        #OrganizationalUnit.find_by_id(colleague.unit_list().first.to_s).abbreviation +  
+      end
+    end
+    return the_arry
+end
+
+
+def d3_investigator_edge_imports(investigator)
+    the_arry = []
+    return [] if investigator.colleague_coauthors.length < 1 
+    investigator.colleague_coauthors.each do |colleague|
+        org_unit = OrganizationalUnit.find_by_id(colleague.unit_list().first)
+        if org_unit.blank?
+          break
+        else 
+          org_unit = org_unit.abbreviation.to_s
+        end
+        first = colleague.first_name.delete("\'")
+        first = first.delete("(") 
+        first = first.delete(")")
+        first = first.delete(".")
+        the_arry << "RHLCCC." + org_unit.to_s + "." + first + "-" + colleague.last_name.delete("\'")
+    end
+    if the_arry.blank?
+      return []
+    end
+    return the_arry
+end
+
+
+def d3_wordle_data(investigator)
+  allwordshash = []
+  allwords = "" 
+    abstracts = investigator.abstracts.sort_by{|abstract| -abstract.year.to_i}
+  if abstracts.length < 18
+      abstracts.each { |abstract|
+          allwords += " " + abstract.abstract
+      }
+  else
+      for i in 0..18
+          allwords += " " +  abstracts[i].abstract 
+      end
+  end
+
+  allwords = allwords.delete(".,();:-<=/0-9")
+  allwordsarray = allwords.split(' ')
+  allwordsarray.map! {|word| word = word.downcase}
+  possiblewords = allwordsarray.uniq
+  generics = ["the", "of", "and", "as", "to", "a", "in", "that", "with", "for", "an", "at", "not", "by", "on", "but", "or", "from", "its", "when", "this", "these", "i", "was", "is", "we", "have", "some", "into", "may", "well", "there", 
+    "our", "it", "me", "you", "what", "which", "who", "whom", "those", "are", "were", "be", "however","been", "being", "has", "had", "do", "did", "doing", "will", "can", "isn't", "aren't", "wasn't", "weren't", "to", "very", "would", "also", "after", "other", "whose", "upon", 
+    "their", "could", "all", "none", "no", "us", "here", "eg", "how", "where", "such", "many", "more", "than", "highly", "annotation", "annotations", "along", "each", "both", "then", "any", "same", "only", "significant", "significantly", "without", "versus", "likely", "while", "later", "whether", "might", "particular", "among", "thus", "every", "through", "over", "thereby", "about", "they", "your", "them", "within", "should", "much", "because", "ie", "between", "aka", "either", "under", "fully", "most", "since", "using", "used", "if", "nor", "yet", "easily", "moreover", "despite", "does", "quite", "less", "her"]
+  possiblewords.each do  |word|
+    unless (generics.include?(word) or word.length < 3 or allwordsarray.include?(word + "s") )
+        allwordshash << { :word => word, :frequency => allwordsarray.count(word)}
+    end
+  end
+  return allwordshash.sort_by{|word| word[:frequency]}
 end
 
 def d3_unit_investigator_by_date_graph(unit, investigator, faculty_ids, start_date, end_date)

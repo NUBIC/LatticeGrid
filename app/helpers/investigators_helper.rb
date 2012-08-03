@@ -64,21 +64,25 @@ module InvestigatorsHelper
     end
     out+= " Publication Graphs: " 
     if not (controller.action_name == 'show_member' and controller.controller_name == 'graphs')
-      out+= link_to('Classic Radial', show_member_graph_url(params[:id]) ) 
+      out+= link_to('Flash', show_member_graph_url(params[:id]) ) 
       out+= " &nbsp;  &nbsp; " 
     end
     if not (controller.action_name == 'show_member' and controller.controller_name == 'graphviz')
-      out+= link_to( "Spring", show_member_graphviz_url(params[:id]) )
+      out+= link_to( "Graphviz", show_member_graphviz_url(params[:id]) )
       out+= " &nbsp;  &nbsp; " 
     end
     if not (controller.action_name == 'investigator_wheel' and controller.controller_name == 'graphviz')
       out+= link_to( "Wheel", investigator_wheel_graphviz_url(params[:id]) )
       out+= " &nbsp;  &nbsp; " 
     end
-    if not (controller.action_name == 'show' and controller.controller_name == 'cytoscape')
-      out+= link_to( "Radial", cytoscape_url(params[:id]))
-      out+= " &nbsp;  &nbsp; "  
+    if not (controller.action_name == 'investigator_edge_bundling' and controller.controller_name == 'cytoscape')
+      out+= link_to("All", investigator_edge_bundling_cytoscape_url(params[:id]))
+      out+= " &nbsp;  &nbsp; "
     end
+      if not (controller.action_name == 'investigator_chord' and controller.controller_name == 'cytoscape')
+          out+= link_to("Chord", investigator_chord_cytoscape_url(params[:id]))
+          out+= " &nbsp;  &nbsp; "
+      end
     out+"</span>"
   end
 
@@ -95,9 +99,9 @@ module InvestigatorsHelper
         out+= " &nbsp;  &nbsp; " 
       end
     end
+    out+= " MeSH: " 
     if not (controller.action_name == 'show_member_mesh' and controller.controller_name == 'graphviz')
-      out+= " MeSH: " 
-      out+= link_to( "Similarities graph", show_member_mesh_graphviz_url(params[:id]))
+      out+= link_to( "similarities graph", show_member_mesh_graphviz_url(params[:id]))
       out+= " &nbsp;  &nbsp; "  
     end
     out+"</span>"
@@ -123,6 +127,18 @@ module InvestigatorsHelper
      end
      out+"</span>"
    end
+    
+ def nav_heading4()
+     out="<span id='nav_links4'>"
+     if defined?(LatticeGridHelper.include_studies?) and LatticeGridHelper.include_studies?() then
+         out+= " Word Cloud: &nbsp;"
+         if not (controller.action_name == 'investigator_wordle' and controller.controller_name == 'cytoscape')
+             out+= link_to( "Cloud", investigator_wordle_cytoscape_url(params[:id]))
+             out+= " &nbsp; &nbsp;"
+         end
+    end
+     out+"</span>"
+end
 
   def investigator_bio_heading(investigator, all_abstracts=nil, title=nil)
     out="<table class='borderless' width='100%'><tr><td style='vertical-align: top'>"
@@ -154,6 +170,8 @@ module InvestigatorsHelper
     out+= nav_heading2()
     out+= "<br/>"
     out+= nav_heading3()
+    out+= "<br/>"
+    out+= nav_heading4()
     out+= "</td></tr></table>"
     
     out

@@ -1,20 +1,16 @@
 <% unless @investigators.blank? %>
-
-<h2>Investigator Awards Listing -- <span style="font-size: 12px; font-weight: normal;"><%= @investigators.length %> investigators</span></h2>
-<% unless defined?(@pdf) and @pdf %>
+	
 	<div style="float:right;padding-right:5px;">
-		<%= link_to( "as Word", listing_awards_url('doc'))  %>
-		<%= link_to( "as Excel", listing_awards_url('xls')) %>
-		<%= link_to( "as PDF", listing_awards_url('pdf'))  %>
+		<%= link_to( "as pdf",listing_awards_url('pdf')) if !defined?(@pdf) and ! @pdf %>
 	</div>
-<% end %>
-<%= render( :partial => "shared/award_note.html" ) %>
-<% cnt = 0 %>
+	<h2>Investigator Awards Listing -- <span style="font-size: 12px; font-weight: normal;"><%= @investigators.length %> investigators</span></h2>
+	<%= render( :partial => "shared/award_note.html" ) %>
+	<% cnt = 0 %>
 <div style="font-family: Arial,Geneva,Helvetica,sans-serif; font-size: 12px; margin:0px; padding:0px;overflow:visible;display:block; z-index: 5; ">
 <table id="listingTable" class="listingTable"> 
   <thead> 
 	<tr style="vertical-align:bottom;">
-		<% unless defined?(@pdf) and @pdf %><th>#</th><% end %>
+		<th>#</th>
 		<th>Name</th>
 		<th>All Awards Count</th>
 		<th>All Awards Total</th>
@@ -37,8 +33,9 @@
 <tbody>
   <% for investigator in @investigators %>
 	<tr>
-		<% unless defined?(@pdf) and @pdf %><td style="font-size: 10px;text-align:right; padding-right:5px;"><%= cnt+=1 %></td><% end %>
-		<td><div style="float:left;"><%= investigator.last_name %>, <%= investigator.first_name %>  <%= investigator.middle_name %>, <%= investigator.degrees %></div><% unless defined?(@pdf) and @pdf %><div style="float:right;"><%= link_to("details", investigator_url(investigator.username))  %>&nbsp;</div><% end %>
+		<td style="font-size: 10px;text-align:right; padding-right:5px;"><%= cnt+=1 %></td>
+		<td><div style="float:left;"><%= investigator.last_name %>, <%= investigator.first_name %>  <%= investigator.middle_name %>, <%= investigator.degrees %></div>
+			<div style="float:right;"><%= link_to("details", investigator_url(investigator.username))  %>&nbsp;</div>
 		</td>
 		<td style="text-align:right; padding-right:5px;"><%= link_to(investigator.proposals_count, investigator_award_url(:id=>investigator.username)) unless investigator.proposals_count.to_i < 1 %></td>
 		<td style="text-align:right; padding-right:5px;"><%= "$" + number_with_delimiter(investigator.proposals_total) unless investigator.proposals_count.to_i < 1 %></td>
@@ -62,7 +59,6 @@
 </table>
 </div>
 <br/>
-<% unless defined?(@pdf) and @pdf %>
 
 <% javascript_tag do %>
 jQuery(document).ready(function() {
@@ -97,7 +93,6 @@ jQuery(document).ready(function() {
 	    });
 	});
 });
-<% end %>
 <% end %>
 
 <% else %>

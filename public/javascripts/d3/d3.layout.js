@@ -5,7 +5,7 @@
 // node. Each path is simply an array of nodes.
 d3.layout.bundle = function() {
   return function(links) {
-    var paths = [],
+	var paths = [],
         i = -1,
         n = links.length;
     while (++i < n) paths.push(d3_layout_bundlePath(links[i]));
@@ -29,6 +29,7 @@ function d3_layout_bundlePath(link) {
   }
   return points;
 }
+
 
 function d3_layout_bundleAncestors(node) {
   var ancestors = [],
