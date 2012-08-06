@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>lib/tasks/cleanup.rake</string>
+	<string>Gemfile</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -84,7 +84,7 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>15</integer>
+				<integer>13</integer>
 				<key>line</key>
 				<integer>3</integer>
 			</dict>
@@ -92,36 +92,6 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
-		</dict>
-		<key>doc/example_loads.txt</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>47</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>9</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>46</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>47</integer>
-			</dict>
 		</dict>
 		<key>lib/tasks/clean_and_curl.rake</key>
 		<dict>
@@ -171,7 +141,6 @@
 	<key>openDocuments</key>
 	<array>
 		<string>Gemfile</string>
-		<string>doc/example_loads.txt</string>
 		<string>lib/tasks/clean_and_curl.rake</string>
 		<string>lib/tasks/cleanup.rake</string>
 		<string>config/initializers/latticegrid.rb</string>
@@ -179,6 +148,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{376, 540}, {1040, 878}}</string>
+	<string>{{99, 0}, {1040, 878}}</string>
 </dict>
 </plist>

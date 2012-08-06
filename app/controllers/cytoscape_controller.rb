@@ -146,6 +146,7 @@ class CytoscapeController < ApplicationController
   def chord
     @json_callback = "../cytoscape/d3_data.json"
     @title = 'Chord Diagram showing inter- and intra-programmatic publications for all programs'
+    @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}"]
     unless params[:id].blank?
       program = OrganizationalUnit.find_by_id(params[:id])
       unless program.blank?

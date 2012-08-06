@@ -85,6 +85,8 @@ has_many :investigator_appointments,
     :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
   has_many :associate_member_appointments, :class_name => "AssociateMember",
     :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
+  has_many :any_members, :class_name => 'InvestigatorAppointment',
+        :conditions => "(investigator_appointments.type LIKE '%%Member' )"
   has_many :appointments, :source => :organizational_unit, :through => :investigator_appointments
   has_many :joint_appointments, :source => :organizational_unit, :through => :joints
   has_many :secondary_appointments, :source => :organizational_unit, :through => :secondaries
@@ -101,9 +103,9 @@ has_many :investigator_appointments,
   named_scope :full_time, :conditions => "appointment_basis = 'FT'"
   named_scope :tenure_track, :conditions => "appointment_type = 'Regular'"
   named_scope :research, :conditions => "appointment_type = 'Research'"
-  named_scope :investigator, :conditions => "appointment_track like '%Investigator%'"
+  named_scope :investigator, :conditions => "appointment_track like '%%Investigator%%'"
   named_scope :investigator_only, :conditions => "appointment_track = 'Investigator'"
-  named_scope :clinician, :conditions => "appointment_track like '%Clinician%'"
+  named_scope :clinician, :conditions => "appointment_track like '%%Clinician%%'"
   named_scope :clinician_only, :conditions => "appointment_track = 'Clinician'"
   named_scope :by_name, :order => "lower(last_name), lower(first_name)"
 
@@ -219,6 +221,14 @@ has_many :investigator_appointments,
      [[last_name, first_name].join(', '), middle_name].join(' ')
   end
 
+  def self.all_abstracts_for_investigators(pis)
+    abstract_ids = pis.collect{|x| x.abstracts.only_valid}.flatten.sort{|x,y| x.id <=> y.id}.uniq
+  end
+
+  def self.publication_count_for_investigators(pis)
+    all_abstracts_for_investigators(pis).length
+  end
+    
      # this is annoying to have to spell out every column but * does not work
     # for rails 3.0
         #all.joins("INNER JOIN investigator_proposals ON (investigators.id = investigator_proposals.investigator_id)  INNER JOIN proposals ON (proposals.id = investigator_proposals.proposal_id)  

@@ -23,12 +23,24 @@ class InvestigatorsController < ApplicationController
     respond_to do |format|
       format.html { render :layout => 'printable'}
       format.xml  { render :xml => @units }
-      format.pdf do
+      format.pdf {
         @pdf = true
         render( :pdf => "Investigator Listing", 
             :stylesheets => "pdf", 
             :template => "investigators/list_all.html",
-            :layout => "pdf")
+            :layout => "pdf") }
+      format.xls  { 
+        @pdf = true
+        send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
+        :filename => "Investigator_Listing_#{Date.today.to_s}.xls",
+        :type => 'application/vnd.ms-excel',
+        :disposition => 'attachment') }
+      format.doc  { 
+        @pdf = true
+        send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
+        :filename => "Investigator_Listing_#{Date.today.to_s}.doc",
+        :type => 'application/msword',
+        :disposition => 'attachment') }
       end
     end
   end
@@ -41,22 +53,24 @@ class InvestigatorsController < ApplicationController
       respond_to do |format|
         format.html { render :action => 'list_all', :layout => 'printable'}
         format.xml  { render :xml => @investigators }
-        format.pdf do
+        format.pdf {
           @pdf = true
           render( :pdf => "Investigator Listing", 
               :stylesheets => "pdf", 
               :template => "investigators/list_all.html",
-              :layout => "pdf")
-        end
-        format.xls  { send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
-          :filename => "Investigator Listing.xls",
-          :type => 'application/vnd.ms-excel',
-          :disposition => 'attachment') }
-        format.doc  { send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
-          :filename => "Investigator Listing.doc",
-          :type => 'application/msword',
-          :disposition => 'attachment') }
-        
+              :layout => "pdf") }
+        format.xls  { 
+          @pdf = true
+          send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
+            :filename => "Investigator Listing.xls",
+            :type => 'application/vnd.ms-excel',
+            :disposition => 'attachment') }
+        format.doc  { 
+          @pdf = true
+          send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
+            :filename => "Investigator Listing.doc",
+            :type => 'application/msword',
+            :disposition => 'attachment') }
       end
     end
   end

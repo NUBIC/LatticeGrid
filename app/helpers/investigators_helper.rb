@@ -64,16 +64,20 @@ module InvestigatorsHelper
     end
     out+= " Publication Graphs: " 
     if not (controller.action_name == 'show_member' and controller.controller_name == 'graphs')
-      out+= link_to('Flash', show_member_graph_url(params[:id]) ) 
+      out+= link_to('Classic Radial', show_member_graph_url(params[:id]) ) 
       out+= " &nbsp;  &nbsp; " 
     end
     if not (controller.action_name == 'show_member' and controller.controller_name == 'graphviz')
-      out+= link_to( "Graphviz", show_member_graphviz_url(params[:id]) )
+      out+= link_to( "Spring", show_member_graphviz_url(params[:id]) )
       out+= " &nbsp;  &nbsp; " 
     end
     if not (controller.action_name == 'investigator_wheel' and controller.controller_name == 'graphviz')
       out+= link_to( "Wheel", investigator_wheel_graphviz_url(params[:id]) )
       out+= " &nbsp;  &nbsp; " 
+    end
+    if not (controller.action_name == 'show' and controller.controller_name == 'cytoscape')
+      out+= link_to( "Radial", cytoscape_url(params[:id]))
+      out+= " &nbsp;  &nbsp; "  
     end
     if not (controller.action_name == 'investigator_edge_bundling' and controller.controller_name == 'cytoscape')
       out+= link_to("All", investigator_edge_bundling_cytoscape_url(params[:id]))
@@ -99,8 +103,8 @@ module InvestigatorsHelper
         out+= " &nbsp;  &nbsp; " 
       end
     end
-    out+= " MeSH: " 
     if not (controller.action_name == 'show_member_mesh' and controller.controller_name == 'graphviz')
+      out+= " MeSH: " 
       out+= link_to( "similarities graph", show_member_mesh_graphviz_url(params[:id]))
       out+= " &nbsp;  &nbsp; "  
     end
