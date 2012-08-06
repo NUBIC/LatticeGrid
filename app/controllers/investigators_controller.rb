@@ -41,7 +41,6 @@ class InvestigatorsController < ApplicationController
         :filename => "Investigator_Listing_#{Date.today.to_s}.doc",
         :type => 'application/msword',
         :disposition => 'attachment') }
-      end
     end
   end
   
