@@ -1,0 +1,57 @@
+<h2 style="position:absolute; right:100px; top:10px; text-align:center;"><%= @title %></h2>
+<div id="chart">&nbsp;</div>
+<script type = "text/javascript">
+var fill = d3.scale.category20b();
+
+d3.json('<%= image_path(@words).split('?').first -%>', function(words) {
+var fontSize = d3.scale.log().range([1, 40]);
+
+	d3.layout.cloud().size([700, 450])
+	      .words(words.map(function(d) {
+	        return {text: d["word"], size: d["frequency"] * 3};
+	      }))
+
+         .rotate(function(d) { return ~~(Math.random() * 5) * 30 - 60; })
+	      .fontSize(function(d) { return fontSize(+d.size); })
+	      .on("end", draw)
+	      .start();
+	
+
+	  function draw(words) {
+	    svg = d3.select("body").append("svg")
+	        .attr("width", 1500)
+	        .attr("height", 1000)
+        background = svg.append("g")
+        vis = svg.append("g")
+	        .attr("transform", "translate(350,250)")
+	    text = vis.selectAll("text")
+	        .data(words)
+        text.transition()
+            .duration(1000)
+            .attr("transform", function(d) {
+	          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+	        })
+	    text.enter().append("text")
+            .attr("text-anchor", "middle")
+	        .attr("transform", function(d) { return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")"; })
+            .style("font-size", function(d) { return d.size + "px"; })
+            .style("opacity", 1e-6)
+    .transition()
+      .duration(1000)
+      .style("opacity", 1);
+        text.style("font-family", function(d) { return d.font; })
+            .style("fill", function(d) { return fill(d.text.toLowerCase()); })	        
+	        .text(function(d) { return d.text; });
+        var exitGroup = background.append("g")
+      .attr("transform", vis.attr("transform"));
+   var exitGroup = background.append("g")
+      .attr("transform", vis.attr("transform"));
+  var exitGroupNode = exitGroup.node();
+  text.exit().each(function() {
+    exitGroupNode.appendChild(this);
+  });
+ }
+
+
+});
+</script>
