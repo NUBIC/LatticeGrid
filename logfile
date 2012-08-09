@@ -1,0 +1,8 @@
+LOG:  database system was interrupted; last known up at 2012-08-01 09:19:48 CDT
+LOG:  database system was not properly shut down; automatic recovery in progress
+LOG:  record with zero length at 0/21061458
+LOG:  redo is not required
+LOG:  database system is ready to accept connections
+LOG:  autovacuum launcher started
+FATAL:  database "divya" does not exist
+LOG:  unexpected EOF on client connection
