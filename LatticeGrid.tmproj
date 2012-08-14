@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>Gemfile</string>
+	<string>app/controllers/investigators_controller.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -50,6 +50,34 @@
 				<key>line</key>
 				<integer>19</integer>
 			</dict>
+		</dict>
+		<key>app/controllers/investigators_controller.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>43</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>app/models/abstract.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>128</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>4</integer>
 		</dict>
 		<key>app/views/graphs/org_nodes.rxml</key>
 		<dict>
@@ -141,6 +169,8 @@
 	<key>openDocuments</key>
 	<array>
 		<string>Gemfile</string>
+		<string>app/models/abstract.rb</string>
+		<string>app/controllers/investigators_controller.rb</string>
 		<string>lib/tasks/clean_and_curl.rake</string>
 		<string>lib/tasks/cleanup.rake</string>
 		<string>config/initializers/latticegrid.rb</string>
@@ -148,6 +178,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{99, 0}, {1040, 878}}</string>
+	<string>{{383, 0}, {1040, 878}}</string>
 </dict>
 </plist>
