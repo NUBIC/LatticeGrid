@@ -1,3 +1,9 @@
+<div id="investigator_title">
+<%= investigator_bio_heading(@investigator, nil) %>
+</div>
+<h2><%= @title %></h2>
+<p style="line-height:15px; font-size: 10pt; margin-right: 10px;font-family: Arial,Helvetica,Geneva,Sans-serif;">Mouse over the inner ring to highlight the connections between that investigator and other investigators in the chord diagram. </p>
+<div id="chart">&nbsp;</div>
 <script type="text/javascript">
 
 
@@ -39,9 +45,9 @@ d3.json('<%= image_path(@json_callback).split('?').first -%>', function(imports)
      .matrix(matrix);
 
 
- var width = 900,
-     height = 900,
-     innerRadius = 700/2,
+ var width = 980,
+     height = 980,
+     innerRadius = (width-250)/2,
      outerRadius = innerRadius * 1.05;
 
  var fill = d3.scale.category20c();
@@ -74,10 +80,6 @@ d3.json('<%= image_path(@json_callback).split('?').first -%>', function(imports)
        return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
            + "translate(" + outerRadius + ",0)";
      });
-
-
-
- 
 
  svg.append("g")
      .attr("class", "chord")
@@ -137,7 +139,4 @@ var g = svg.selectAll("g.group")
 
 });
 
-
 </script>
-<h2 style="position:absolute; left:100px; top10px; text-align:center;"><%= @title %></h2>
-<div id="chart">&nbsp;</div>

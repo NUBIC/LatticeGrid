@@ -5,89 +5,46 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %> Diagram</title>
-	<% @javascripts ||= [ 'd3/d3.js', 'd3/d3.layout.js', 'readme.js' ] %>
+	<% @javascripts ||= [ 'd3/d3.js', 'd3/d3.layout.js', 'd3/package.js' ] %>
 	<!-- include JIT Library File -->
 	<%= javascript_include_tag @javascripts %> 
 
 	<link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
 
 	<!-- CSS Files -->
-    <style type="text/css">
-
-
-
-.node {
-  font: 10px sans-serif;
-}
-
-.link {
-  stroke: steelblue;
-  stroke-opacity: .4;
-  fill: none;
-}
-
-path.arc {
-  cursor: move;
-  fill: #fff;
-}
-
-.node {
-  font-size: 11px;
-}
-
-.node:hover {
-  fill: #1f77b4;
-}
-
-.link {
-  fill: none;
-  stroke: #1f77b4;
-  stroke-opacity: .4;
-  pointer-events: none;
-}
-
-.link.source:hover {
-	stroke: #d527d6;
-}
-.link.target:hover{
-	stroke: #d527d6;
-}
-
-.link:hover{
-	fill: #d527d6;
-}
-
-.link.source, .link.target {
-  stroke-opacity: 1;
-  stroke-width: 2px;
-}
-/*name target */
-.node.target {
-  fill: #d62728 !important;
-}
-/* the actual link */
-.link.source {
-  stroke: #d62728;
-} 
-
-/*
-#d62728
-*/
-
-
-.node.source {
-  fill: #d62728;
-}
-
-.link.target {
-  stroke: #d62728;
-}
+	<% @stylesheets ||= [ 'd3/bundle' ] %>
+	<%= stylesheet_link_tag @stylesheets %>
+   <style type="text/css">
+	body {
+	  font: 10px sans-serif;
+	}
+	path.chord {
+	  fill-opacity: .67;
+	}
 
     </style>
 </head>
 <body>
-<div id="main">
-<%= yield  %>
+<div id="main" class="autoclear">
+	<div id="banner"><a href="<%= LatticeGridHelper.home_url %>" ><%= image_tag "#{lattice_grid_instance}/pageheader.jpg", options={:alt=>LatticeGridHelper.header_title} %></a></div>
+	<div id="results" class="notice"><%= flash[:notice] %> 	<%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %> </div>
+	<div id="title"><%= link_to( LatticeGridHelper.header_title, current_abstracts_url) -%></div>
+	<div id="search">
+		<% if LatticeGridHelper.allow_profile_edits? %>
+		<span style="float:right;">
+			<%= link_to("login", profiles_url) %>
+		</span>
+		<% end %>
+		<span style="float:left; margin-left:-105px;">
+			<%= link_to("LatticeGrid Home", abstracts_url) %>
+		</span>
+		&nbsp;<br/>
+	</div>
+		<div id="niceline">
+		</div>
+		<div id="content" >
+		<%= yield  %>
+		</div> <!-- end of content -->
 </div> <!-- end of main -->
 </body>
 </html>

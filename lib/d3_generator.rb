@@ -212,24 +212,14 @@ end
 def d3_wordle_data(investigator)
   allwordshash = []
   allwords = "" 
-    abstracts = investigator.abstracts.sort_by{|abstract| -abstract.year.to_i}
-  if abstracts.length < 18
-      abstracts.each { |abstract|
-          allwords += " " + abstract.abstract
-      }
-  else
-      for i in 0..18
-          allwords += " " +  abstracts[i].abstract 
-      end
-  end
+  abstracts = investigator.abstracts.recent_first
+  allwords = abstracts[0..50].map{|abs| abs.abstract.downcase}.join(" ")
 
-  allwords = allwords.delete(".,();:-<=/0-9")
-  allwordsarray = allwords.split(' ')
-  allwordsarray.map! {|word| word = word.downcase}
+  allwords = allwords.delete("*.,();:-<=/0-9")
+  allwordsarray = allwords.split(' ').map{|word| word.strip}
+  #allwordsarray.map! {|word| word = word.downcase}
   possiblewords = allwordsarray.uniq
-  generics = ["the", "of", "and", "as", "to", "a", "in", "that", "with", "for", "an", "at", "not", "by", "on", "but", "or", "from", "its", "when", "this", "these", "i", "was", "is", "we", "have", "some", "into", "may", "well", "there", 
-    "our", "it", "me", "you", "what", "which", "who", "whom", "those", "are", "were", "be", "however","been", "being", "has", "had", "do", "did", "doing", "will", "can", "isn't", "aren't", "wasn't", "weren't", "to", "very", "would", "also", "after", "other", "whose", "upon", 
-    "their", "could", "all", "none", "no", "us", "here", "eg", "how", "where", "such", "many", "more", "than", "highly", "annotation", "annotations", "along", "each", "both", "then", "any", "same", "only", "significant", "significantly", "without", "versus", "likely", "while", "later", "whether", "might", "particular", "among", "thus", "every", "through", "over", "thereby", "about", "they", "your", "them", "within", "should", "much", "because", "ie", "between", "aka", "either", "under", "fully", "most", "since", "using", "used", "if", "nor", "yet", "easily", "moreover", "despite", "does", "quite", "less", "her"]
+  generics = ["the", "of", "and", "as", "to", "a", "in", "that", "with", "for", "an", "at", "not", "by", "on", "but", "or", "from", "its", "when", "this", "these", "i", "was", "is", "we", "have", "some", "into", "may", "well", "there", "our", "it", "me", "you", "what", "which", "who", "whom", "those", "are", "were", "be", "however","been", "being", "has", "had", "do", "did", "doing", "will", "can", "isn't", "aren't", "wasn't", "weren't", "to", "very", "would", "also", "after", "other", "whose", "upon", "their", "could", "all", "none", "no", "us", "here", "eg", "how", "where", "such", "many", "more", "than", "highly", "annotation", "annotations", "along", "each", "both", "then", "any", "same", "only", "significant", "significantly", "without", "versus", "likely", "while", "later", "whether", "might", "particular", "among", "thus", "every", "through", "over", "thereby", "about", "they", "your", "them", "within", "should", "much", "because", "ie", "between", "aka", "either", "under", "fully", "most", "since", "using", "used", "if", "nor", "yet", "easily", "moreover", "despite", "does", "quite", "less", "her", "found", "via", "type"]
   possiblewords.each do  |word|
     unless (generics.include?(word) or word.length < 3 or allwordsarray.include?(word + "s") )
         allwordshash << { :word => word, :frequency => allwordsarray.count(word)}

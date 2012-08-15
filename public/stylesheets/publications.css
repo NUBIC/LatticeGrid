@@ -501,6 +501,10 @@ div.notice {
  	margin-top: 15px;
 }
 
+.disabled {
+  color: gray ;
+}
+
 .intra_unit {
 	background-color: #AFD8F8;
 	text-decoration: none;

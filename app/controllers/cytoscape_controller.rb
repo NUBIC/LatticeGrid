@@ -1,7 +1,7 @@
 class CytoscapeController < ApplicationController
   before_filter :check_allowed, :only => [:awards, :studies, :show_all]
 
-  caches_page( :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data) if LatticeGridHelper.CachePages()
+  caches_page( :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data, :d3_investigator_edge_data, :d3_investigator_wordle_data, :d3_investigator_chord_data) if LatticeGridHelper.CachePages()
   caches_action( :listing, :investigator, :awards, :studies )  if LatticeGridHelper.CachePages()
   
   require 'cytoscape_config'
@@ -139,21 +139,21 @@ class CytoscapeController < ApplicationController
     respond_to do |format|
       #format.json{ render :partial => "member_protovis_data", :locals => {:nodes_array_hash => protovis_nodes, :edges_array_hash => protovis_edges}  }
       format.json{ render :layout=> false, :json=> {:nodes => protovis_nodes.as_json(), :links => protovis_edges.as_json()}  }
+      format.js{ render :layout=> false, :json=> {:nodes => protovis_nodes.as_json(), :links => protovis_edges.as_json()}  }
     end
   end
 
   #d3 methods
   def chord
-    @json_callback = "../cytoscape/d3_data.json"
-    @title = 'Chord Diagram showing inter- and intra-programmatic publications for all programs'
-    @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}"]
+    @json_callback = "../cytoscape/d3_data.js"
+    @title = 'Chord Diagram showing inter- and intra-programmatic connections through multi-investigator publications'
     unless params[:id].blank?
       program = OrganizationalUnit.find_by_id(params[:id])
       unless program.blank?
         flash[:notice] = "unable to find unit"
         params[:id] = nil
       else
-        @json_callback = "../cytoscape/"+params[:id]+"/d3_data.json"
+        @json_callback = "../cytoscape/"+params[:id]+"/d3_data.js"
         @title = 'Chord Diagram showing inter- and intra-programmatic publications for '+program.name
       end
     end
@@ -167,13 +167,13 @@ class CytoscapeController < ApplicationController
   def investigator_chord 
     @title = 'Chord Diagram showing publications between various investigators'
     unless params[:id].blank? 
-      master_investigator = Investigator.find_by_username(params[:id])
-      @json_callback = "../cytoscape/"+params[:id]+"/d3_investigator_chord_data.json"
-      if master_investigator.blank? 
+      @investigator = Investigator.find_by_username(params[:id])
+      @json_callback = "../cytoscape/"+params[:id]+"/d3_investigator_chord_data.js"
+      if @investigator.blank? 
         flash[:notice] = "unable to find investigator"
         params[:id] = nil 
       else 
-        @title = 'Chord Diagram showing publications for ' + master_investigator.name
+        @title = 'Chord Diagram showing investigator collaborations through publications for ' + @investigator.name
       end
     end
     respond_to do |format|
@@ -184,19 +184,10 @@ class CytoscapeController < ApplicationController
 
 #!!!!!
   def investigator_edge_bundling 
-    @title = 'Chord Diagram showing publications between various investigators'
-    unless params[:id].blank? 
-      master_investigator = Investigator.find_by_username(params[:id])
-      @json_callback = "../cytoscape/" + params[:id] + "/d3_investigator_edge_data.json"
-      if master_investigator.blank? 
-        flash[:notice] = "unable to find investigator"
-        params[:id] = nil 
-      else 
-        @title = 'Hierarchical Edge Bundling Diagram for investigator publications'
-      end
-    end
+    @title = 'Hierarchical Edge Bundle Diagram by program and investigator'
+    @json_callback = "../cytoscape_d3_investigator_edge_data.js"
     respond_to do |format|
-      format.html{ render :layout => 'd3bundle'}
+      format.html{ render :layout => 'd3'}
       format.json{ render :layout => false, :text => ""}
     end
   end
@@ -205,17 +196,17 @@ class CytoscapeController < ApplicationController
   def investigator_wordle
     @title = 'Wordle for NO ONE BECAUSE THE ID IS INVALID'
     unless params[:id].blank?
-      master_investigator = Investigator.find_by_username(params[:id])
-      if master_investigator.blank?
+      @investigator = Investigator.find_by_username(params[:id])
+      if @investigator.blank?
         flash[:notice] = "unable to find investigator"
         params[:id] = nil 
       else
-        @title = 'Wordle synthesizing abstracts of ' + master_investigator.name
-        @words = "../cytoscape/" + params[:id] + "/d3_investigator_wordle_data.json"
+        @title = 'Word cloud (Wordle) display of abstracts from ' + @investigator.name
+        @words = "../cytoscape/" + params[:id] + "/d3_investigator_wordle_data.js"
       end
     end
     respond_to do |format|
-      format.html { render :layout => 'd3wordle'}
+      format.html { render :layout => 'd3'}
       format.json { render :layout => false, :text => ""}
     end
   end
@@ -225,7 +216,7 @@ class CytoscapeController < ApplicationController
     end_date = params[:end_date] || Date.today
     start_date = start_date.to_date
     end_date = end_date.to_date
-    @json_callback = "../cytoscape/"+start_date.to_s(:db_date)+"/" + end_date.to_s(:db_date) + "/d3_date_data.json"
+    @json_callback = "../cytoscape/"+start_date.to_s(:db_date)+"/" + end_date.to_s(:db_date) + "/d3_date_data.js"
     @title = 'Chord Diagram showing inter- and intra-programmatic publications for all programs from ' + start_date.to_s(:justdate) + ' to ' + end_date.to_s(:justdate)
     respond_to do |format|
       format.html { render :layout => 'd3', :action => :chord  }
@@ -246,6 +237,7 @@ class CytoscapeController < ApplicationController
     respond_to do |format|
       #format.json{ render :partial => "member_protovis_data", :locals => {:nodes_array_hash => protovis_nodes, :edges_array_hash => protovis_edges}  }
       format.json{ render :layout=> false, :json => graph.as_json() }
+      format.js{ render :layout=> false, :json => graph.as_json() }
     end
   end
 
@@ -260,6 +252,7 @@ class CytoscapeController < ApplicationController
       depth = 1 
       respond_to do |format| 
         format.json{ render :layout => false, :json => graph.as_json()}
+        format.js{ render :layout => false, :json => graph.as_json()}
       end
     end
     
@@ -280,21 +273,24 @@ class CytoscapeController < ApplicationController
         depth = 1 
         respond_to do |format| 
           format.json{ render :layout => false, :json => graph.as_json()}
+          format.js{ render :layout => false, :json => graph.as_json()}
         end
       end    
 
 #!!! 
 def d3_investigator_wordle_data
+  words = []
   if (params[:id])
     investigator = Investigator.find_all_by_username(params[:id]).first
     words = d3_wordle_data(investigator)
   end
-words = words[50, 100] + words[words.length/2, words.length/2 + 150] + words[words.length - 100, 100]
-    words.uniq!
+  words = words[50, 50] +  words[words.length/2, 100] + words[words.length - 150, 150]
+  words.uniq!
   finalwords = []
   depth = 1
   respond_to do |format|
     format.json{ render :layout => false, :json => words.as_json()}
+    format.js{ render :layout => false, :json => words.as_json()}
   end
 end
     
@@ -305,6 +301,7 @@ end
     respond_to do |format|
       #format.json{ render :partial => "member_protovis_data", :locals => {:nodes_array_hash => protovis_nodes, :edges_array_hash => protovis_edges}  }
       format.json{ render :layout=> false, :json => graph.as_json() }
+      format.js{ render :layout=> false, :json => graph.as_json() }
     end
   end
 

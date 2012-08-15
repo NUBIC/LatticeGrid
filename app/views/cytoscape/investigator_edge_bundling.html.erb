@@ -1,9 +1,12 @@
+<h2 style="text-align:center;"><%= @title %></h2>
+<p style="line-height:15px; font-size: 10pt; margin-right: 10px; margin-left: 5px;font-family: Arial,Helvetica,Geneva,Sans-serif;">Mouse over an investigator to highlight the connections through publications between that investigator and all other investigators. The investigators are grouped according to program membership. </p>
+<div id="chart">&nbsp;</div>
 
 <script type= "text/javascript">
-var w = 1500, //15001280
-    h = 900,  //1000,900
-    rx = w / 2,
-    ry = h / 2,
+var width = 980, //15001280
+    height = 980,  //1000,900
+    rx = width / 2,
+    ry = height / 2,
     m0,
     rotate = 0;
 
@@ -21,17 +24,13 @@ var line = d3.svg.line.radial()
     .radius(function(d) { return d.y; })
     .angle(function(d) { return d.x / 180 * Math.PI; });
 
-var div = d3.select("body").insert("div", "h2")
-    .style("top", "60px")
-    .style("left", "-160px")
-    .style("width", w + "px")
-    .style("height", w + "px")
-    .style("position", "absolute");
 
-var svg = div.append("svg:svg")
-    .attr("width", w)
-    .attr("height", w)
-  .append("svg:g")
+var div = d3.select("#chart");
+
+var svg = div.append("svg")
+    .attr("width", width)
+    .attr("height", width)
+  .append("g")
     .attr("transform", "translate(" + rx + "," + ry + ")");
 
 svg.append("svg:path")
@@ -149,5 +148,3 @@ function dot(a, b) {
 }
 
 </script>
-<h2 style="position:absolute; left:100px; top:10px; text-align:center;"><%= @title %></h2>
-<div id="chart">&nbsp;</div>

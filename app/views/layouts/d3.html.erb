@@ -5,30 +5,59 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %> Diagram</title>
-	<% @javascripts ||= [ 'd3/d3.js', 'd3/d3.layout.js', 'readme.js' ] %>
+	<% @javascripts ||= [ 'prototype', 'ddsmoothmenu', 'jquery.min', 'jquery.sparkline.min', 'd3/d3.js', 'd3/d3.layout.js', 'd3/package.js', 'd3/d3.layout.cloud.js', 'd3/jsonp.js', 'd3/highlight.min.js' ] %>
+	<% @javascripts += @javascripts_add if defined?(@javascripts_add) %>
 	<!-- include JIT Library File -->
 	<%= javascript_include_tag @javascripts %> 
 
+	<%= render :partial => "shared/menu_scripts", :locals => { :menu_nodes => @menu_nodes } %>
 	<link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
 
 	<!-- CSS Files -->
+	<% @stylesheets ||= [ 'publications', "latticegrid/#{lattice_grid_instance}", 'd3/bundle' ] %>
+	<%= stylesheet_link_tag @stylesheets %>
     <style type="text/css">
-
-body {
-  font: 10px sans-serif;
-}
-
-path.chord {
-  fill-opacity: .67;
-}
-
-
+		path.chord {
+		  fill-opacity: .67;
+		}
     </style>
+  <% if @javascripts.join =~ /jquery/i %>
+  <script type="text/javascript" language="JavaScript">
+   jQuery.noConflict();
+ 	var $j = jQuery;
+  // Use jQuery via jQuery(...)
+  </script>
+  <% end %>
+  <%= LatticeGridHelper.google_analytics -%>
 </head>
 <body>
-<div id="main">
-<%= yield  %>
+<div id="main" class="autoclear">
+	<div id="banner"><a href="<%= LatticeGridHelper.home_url %>" ><%= image_tag "#{lattice_grid_instance}/pageheader.jpg", options={:alt=>LatticeGridHelper.header_title} %></a></div>
+	<div id="results" class="notice"><%= flash[:notice] %> 	<%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %> </div>
+	<div id="title"><%= link_to( LatticeGridHelper.header_title, current_abstracts_url) -%></div>
+	<%= render :partial => "shared/search" %>
+	<div id="side">
+		<div id="sideinfo">
+			<%= render :partial => "shared/menus", :locals => { :menu_nodes => @menu_nodes } %>
+		</div> <!-- end of sideinfo -->
+		<div id="lattice_grid">
+			<%= link_to( image_tag( 'latticegrid.png', :size => "65x93" ), "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %> <br/>
+			Powered by <%= link_to( "LatticeGrid", "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %> 
+		</div>
+		<br/>
+		<div id="nubic">
+			<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://informatics.northwestern.edu/") %> 
+		 	<%= link_to( "Built by NUBIC", "http://informatics.northwestern.edu/") %>
+		</div>
+		<p></p>
+	</div> <!-- end of side -->
+	<div id="maincontent">
+		<div id="niceline"></div>
+		<div id="content">
+		<%= yield  %>
+		</div> <!-- end of content -->
+	</div> <!-- end of maincontent -->
 </div> <!-- end of main -->
+	
 </body>
 </html>
-

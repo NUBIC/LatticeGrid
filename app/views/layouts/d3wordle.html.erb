@@ -12,7 +12,15 @@
 	<link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
 
 	<!-- CSS Files -->
+	<% @stylesheets ||= [ 'd3/bundle' ] %>
+	<%= stylesheet_link_tag @stylesheets %>
     <style type="text/css">
+	body {
+	  font: 10px sans-serif;
+	}
+	path.chord {
+	  fill-opacity: .67;
+	}
 
     </style>
 </head>

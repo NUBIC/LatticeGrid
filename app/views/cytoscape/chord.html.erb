@@ -1,7 +1,7 @@
+<h2 style="text-align:center;"><%= @title %></h2>
+<p style="line-height:15px; font-size: 10pt; margin-right: 10px;font-family: Arial,Helvetica,Geneva,Sans-serif;">Mouse over the inner ring to highlight the connections between that program and the other programs. The thickness of the lines connecting two programs (or the bar that "loops back" on itself) is scaled to the number of publications shared between investigators. </p>
+<div id="chart" style="padding-left:20px;" >&nbsp;</div>
 <script type="text/javascript">
-
-
-
 
 d3.json('<%= image_path(@json_callback).split('?').first -%>', function(imports) {
   var indexByName = {},
@@ -56,12 +56,12 @@ d3.json('<%= image_path(@json_callback).split('?').first -%>', function(imports)
 
  var fill = d3.scale.category20c();
 
- var svg = d3.select("body")
+ var svg = d3.select("#chart")
    .append("svg")
-     .attr("width", width)
-     .attr("height", height)
+     .attr("width", width+50)
+     .attr("height", height+10)
    .append("g")
-     .attr("transform", "translate(" + ((width / 2) ) + "," + height / 2 + ")");
+     .attr("transform", "translate(" + ((width / 2)+30 ) + "," + height / 2 + ")");
 
  svg.append("g")
    .selectAll("path")
@@ -161,9 +161,4 @@ var g = svg.selectAll("g.group")
          .style("opacity", opacity);
    };
  }
-
- 
-
 </script>
-<h2 style="position:absolute; left:100px; top:10px; text-align:center;"><%= @title %></h2>
-<div id="chart">&nbsp;</div>

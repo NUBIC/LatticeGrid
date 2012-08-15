@@ -69,7 +69,7 @@ DEPENDENCIES
   haml
   json (= 1.6.6)
   net-ldap
-  pg (= 0.13.2)
+  pg
   princely (~> 1.2.5)
   rails (= 2.3.14)
   rdoc

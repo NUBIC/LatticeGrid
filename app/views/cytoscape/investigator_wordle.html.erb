@@ -1,4 +1,8 @@
-<h2 style="position:absolute; right:100px; top:10px; text-align:center;"><%= @title %></h2>
+<div id="investigator_title">
+<%= investigator_bio_heading(@investigator, nil) %>
+</div>
+<h2><%= @title %></h2>
+<p style="line-height:15px; font-size: 10pt; margin-right: 10px; margin-left: 5px;font-family: Arial,Helvetica,Geneva,Sans-serif;">Word cloud based on the frequency of word occurrence in the most recent 25 publication abstracts. </p>
 <div id="chart">&nbsp;</div>
 <script type = "text/javascript">
 var fill = d3.scale.category20b();
@@ -6,7 +10,7 @@ var fill = d3.scale.category20b();
 d3.json('<%= image_path(@words).split('?').first -%>', function(words) {
 var fontSize = d3.scale.log().range([1, 40]);
 
-	d3.layout.cloud().size([700, 450])
+	d3.layout.cloud().size([980, 640])
 	      .words(words.map(function(d) {
 	        return {text: d["word"], size: d["frequency"] * 3};
 	      }))
@@ -18,12 +22,12 @@ var fontSize = d3.scale.log().range([1, 40]);
 	
 
 	  function draw(words) {
-	    svg = d3.select("body").append("svg")
-	        .attr("width", 1500)
-	        .attr("height", 1000)
+	    svg = d3.select("#chart").append("svg")
+	        .attr("width", 980)
+	        .attr("height", 640)
         background = svg.append("g")
         vis = svg.append("g")
-	        .attr("transform", "translate(350,250)")
+	        .attr("transform", "translate(490,330)")
 	    text = vis.selectAll("text")
 	        .data(words)
         text.transition()

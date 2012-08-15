@@ -25,6 +25,10 @@ class Abstract < ActiveRecord::Base
   
   has_many :organization_abstracts,
         :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
+
+  named_scope :recent_first,
+    :order => "abstracts.year DESC, abstracts.authors ASC"
+    
   named_scope :abstracts_last_five_years, 
         :conditions => ['abstracts.publication_date >= :start_date', 
           {:start_date => 5.years.ago }]
