@@ -1,10 +1,10 @@
 class AwardsController < ApplicationController
   include InvestigatorsHelper
   include AwardsHelper
-  include FormatHelper
   include ApplicationHelper
   include OrgsHelper
-  
+
+  require 'format_helper'
   require 'cytoscape_generator'
 
   before_filter :check_allowed, :except => [:disallowed]

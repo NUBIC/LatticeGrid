@@ -8,7 +8,7 @@ class AbstractsController < ApplicationController
   include ProfilesHelper
   include MeshHelper  #for the do_mesh_search method
   
-  require 'publication_utilities' #all the helper methods
+  require 'publication_utilities' 
   require 'pubmed_utilities'  #loads including 'pubmed_config'  'bio' (bioruby) and 
 
   def index

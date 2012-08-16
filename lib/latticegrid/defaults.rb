@@ -69,10 +69,10 @@
    	my_env = Rails.env
    	my_env = 'home' if public_path =~ /Users/ 
    	case 
-   	  when my_env == 'home': 'localhost:3000'
-   	  when my_env == 'development': 'rails-staging2.nubic.northwestern.edu'
-   	  when my_env == 'staging': 'rails-staging2.nubic.northwestern.edu'
-   	  when my_env == 'production': 'latticegrid.cancer.northwestern.edu'
+   	  when my_env == 'home' then 'localhost:3000'
+   	  when my_env == 'development' then 'rails-staging2.nubic.northwestern.edu'
+   	  when my_env == 'staging' then 'rails-staging2.nubic.northwestern.edu'
+   	  when my_env == 'production' then 'latticegrid.cancer.northwestern.edu'
    	  else 'rails-dev.bioinformatics.northwestern.edu/cancer'
    	end 
    end
@@ -81,10 +81,10 @@
    	my_env = Rails.env
    	my_env = 'home' if public_path =~ /Users/ 
    	case 
-   	  when my_env == 'home': 'http'
-   	  when my_env == 'development': 'https'
-   	  when my_env == 'staging': 'https'
-   	  when my_env == 'production': 'https'
+   	  when my_env == 'home' then 'http'
+   	  when my_env == 'development' then 'https'
+   	  when my_env == 'staging' then 'https'
+   	  when my_env == 'production' then 'https'
    	  else 'http'
    	end 
    end
@@ -164,14 +164,14 @@
    
  def LatticeGridHelper.setInvestigatorClass(citation, investigator, isMember=false)
    if isMember
-     if IsLastAuthor(citation,investigator) : "member_last_author" 
-     elsif IsFirstAuthor(citation,investigator) : "member_first_author"
+     if IsLastAuthor(citation,investigator) then "member_last_author" 
+     elsif IsFirstAuthor(citation,investigator) then "member_first_author"
      else
        "member_author"
      end
    else
-     if IsLastAuthor(citation,investigator) : "last_author" 
-     elsif IsFirstAuthor(citation,investigator) : "first_author"
+     if IsLastAuthor(citation,investigator) then "last_author" 
+     elsif IsFirstAuthor(citation,investigator) then "first_author"
      else
        "author"
      end

@@ -248,19 +248,19 @@ namespace :cache do
       taskname = ENV["taskname"]
       block_timing("cache:populate taskname=#{taskname}") {
       case 
-        when taskname == 'abstracts': abstracts
-        when taskname == 'investigators': investigators
-        when taskname == 'awards': awards
-        when taskname == 'orgs': orgs
-        when taskname == 'mesh': mesh
-        when taskname == 'investigator_graphs': investigator_graphs
-        when taskname == 'investigator_graphviz': investigator_graphviz
-        when taskname == 'investigator_awards': investigator_awards
-        when taskname == 'org_graphs': org_graphs
-        when taskname == 'org_graphviz': org_graphviz
-        when taskname == 'investigator_studies': investigator_studies
-        when taskname == 'studies': studies
-        when taskname == 'investigator_cytoscape': investigator_cytoscape
+        when taskname == 'abstracts' then abstracts
+        when taskname == 'investigators' then investigators
+        when taskname == 'awards' then awards
+        when taskname == 'orgs' then orgs
+        when taskname == 'mesh' then mesh
+        when taskname == 'investigator_graphs' then investigator_graphs
+        when taskname == 'investigator_graphviz' then investigator_graphviz
+        when taskname == 'investigator_awards' then investigator_awards
+        when taskname == 'org_graphs' then org_graphs
+        when taskname == 'org_graphviz' then org_graphviz
+        when taskname == 'investigator_studies' then investigator_studies
+        when taskname == 'studies' then studies
+        when taskname == 'investigator_cytoscape' then investigator_cytoscape
         else puts "sorry - unknown caching task #{taskname}."
       end    
       }

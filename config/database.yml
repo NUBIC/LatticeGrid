@@ -4,7 +4,7 @@
 %>
 
 <% 
-  require 'config/initializers/latticegrid'
+  require 'latticegrid'
   the_database = case LatticeGrid.the_instance
     when 'RHLCCC' then "rhlccc_latticegrid"
     when 'Feinberg' then "fsm_latticegrid"

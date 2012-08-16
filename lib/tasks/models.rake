@@ -127,7 +127,7 @@ task :updateOrganizationAbstractInformation => [:getAllOrganizationsWithInvestig
       abstracts = Abstract.all_investigator_publications(investigators.collect(&:id)).uniq
       puts "count of all abstracts for organizational unit #{unit_id} is #{abstracts.length}" if LatticeGridHelper.verbose?
       abstracts.each do |abstract|
-        UpdateOrganizationAbstract (unit_id,abstract.id)
+        UpdateOrganizationAbstract(unit_id,abstract.id)
       end
     }
   }

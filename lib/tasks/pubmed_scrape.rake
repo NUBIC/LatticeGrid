@@ -128,7 +128,7 @@ task :updateAbstractInvestigators => [:associateAbstractsWithInvestigators] do
       investigator_ids = abstract.investigators.collect(&:id)
       first_author_id = FindFirstAuthorInCitation(abstract.investigators,abstract)
       last_author_id = FindLastAuthorInCitation(abstract.investigators,abstract)
-      UpdateCitationInvestigatorInformation (abstract.id, investigator_ids, first_author_id, last_author_id)
+      UpdateCitationInvestigatorInformation(abstract.id, investigator_ids, first_author_id, last_author_id)
     }
   }
 end

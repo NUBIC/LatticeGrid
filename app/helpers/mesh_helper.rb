@@ -12,10 +12,10 @@ module MeshHelper
     	@tags = Tag.find(:all, :conditions=>["id IN (:ids)", {:ids=>search_terms}])
     else
 		  case search_terms.length
-  		when 1 : @tags = Tag.find(:all, :conditions=>["lower(name) like :name", {:name=>match_suffix+search_terms[0]+match_suffix}])
-  		when 2 : @tags = Tag.find(:all, :conditions=>["lower(name) like ? or lower(name) like ?", match_suffix+search_terms[0]+match_suffix,match_suffix+search_terms[1]+match_suffix ])
-  		when 3 : @tags = Tag.find(:all, :conditions=>["lower(name) like ? or lower(name) like ? or lower(name) like ?", match_suffix+search_terms[0]+match_suffix, match_suffix+search_terms[1]+match_suffix, match_suffix+search_terms[2]+match_suffix ])
-  		when 4 : @tags = Tag.find(:all, :conditions=>["lower(name) like ? or lower(name) like ? or lower(name) like ? or lower(name) like ?", match_suffix+search_terms[0]+match_suffix, match_suffix+search_terms[1]+match_suffix, match_suffix+search_terms[2]+match_suffix, match_suffix+search_terms[3]+match_suffix ])
+  		when 1 then @tags = Tag.find(:all, :conditions=>["lower(name) like :name", {:name=>match_suffix+search_terms[0]+match_suffix}])
+  		when 2 then @tags = Tag.find(:all, :conditions=>["lower(name) like ? or lower(name) like ?", match_suffix+search_terms[0]+match_suffix,match_suffix+search_terms[1]+match_suffix ])
+  		when 3 then @tags = Tag.find(:all, :conditions=>["lower(name) like ? or lower(name) like ? or lower(name) like ?", match_suffix+search_terms[0]+match_suffix, match_suffix+search_terms[1]+match_suffix, match_suffix+search_terms[2]+match_suffix ])
+  		when 4 then @tags = Tag.find(:all, :conditions=>["lower(name) like ? or lower(name) like ? or lower(name) like ? or lower(name) like ?", match_suffix+search_terms[0]+match_suffix, match_suffix+search_terms[1]+match_suffix, match_suffix+search_terms[2]+match_suffix, match_suffix+search_terms[3]+match_suffix ])
   		end
 	  end
 	  @tags

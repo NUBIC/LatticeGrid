@@ -1,4 +1,4 @@
-require 'config/initializers/latticegrid'
+require 'latticegrid'
 
 # Settings specified here will take precedence over those in config/environment.rb
 

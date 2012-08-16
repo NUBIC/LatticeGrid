@@ -1,10 +1,11 @@
 class StudiesController < ApplicationController
   include InvestigatorsHelper
   include StudiesHelper
-  include FormatHelper
   include ApplicationHelper
-  require 'cytoscape_generator'
   include OrgsHelper
+
+  require 'cytoscape_generator'
+  require 'format_helper'
 
   before_filter :check_allowed, :except => [:disallowed]
   caches_action( :listing, :investigator, :show, :org )  if LatticeGridHelper.CachePages()

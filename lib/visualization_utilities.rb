@@ -38,7 +38,7 @@ end
 
 def SaveEdge(unit_id, investigator_id, member_on_abstract, edge_hash, retain_connections=false)
   # will want to put each member in a different cloud dependent on program membership
-  if  InvestigatorBelongsToOrganization (unit_id, member_on_abstract.investigator)
+  if  InvestigatorBelongsToOrganization(unit_id, member_on_abstract.investigator)
     AddToEdge(edge_hash, investigator_id, member_on_abstract.investigator_id)
   elsif retain_connections
       AddToEdge(edge_hash, investigator_id, 'e'+member_on_abstract.investigator_id.to_s)

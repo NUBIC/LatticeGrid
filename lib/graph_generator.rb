@@ -470,7 +470,8 @@ def  trunc_and_join_array(array, count=20, delimiter=", ", break_on=50, break_de
     array[break_on..-1].each_slice(break_on) { |a| new_array << break_delimiter+a[0]; new_array << a[1..-1] }
   end
   if array.length > count.to_i
-    new_array.flatten[0,count.to_i].join(delimiter)+'…'
+    # changed … to &#8230; to resolve odd loading issue with Ruby 1.9.3
+    new_array.flatten[0,count.to_i].join(delimiter)+'&#8230;'
   else
     new_array.flatten.join(delimiter)
   end

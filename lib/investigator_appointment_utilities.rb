@@ -4,9 +4,9 @@ require 'config' # cleanup_campus is in config
 require "#{RAILS_ROOT}/app/helpers/investigators_helper"
 include InvestigatorsHelper
 
-def to_str(element)
+def to_string(element)
   return "" if element.blank?
-  return element.to_s.split(13.chr).join(', ')
+  return element.to_s().split(13.chr).join(', ')
 end
 
 def DoReadNamesAndSplit(data_row)
@@ -72,7 +72,7 @@ def GenerateNetIDReport(data_row)
       department_name = "not found"
       department_abbreviation = "not found"
     end
-    puts existing_investigator.username + "\t" + to_str(existing_investigator.first_name) + "\t" + to_str(existing_investigator.middle_name) + "\t" + to_str(existing_investigator.last_name) + "\t" + to_str(existing_investigator.degrees) + "\t" + to_str(existing_investigator.email) + "\t" + to_str(existing_investigator.employee_id) + "\t" + to_str(existing_investigator.title) + "\t" + position + "\t" + department_name + "\t" + to_str(existing_investigator.business_phone) + "\t" + to_str(existing_investigator.address1)  
+    puts existing_investigator.username + "\t" + to_string(existing_investigator.first_name) + "\t" + to_string(existing_investigator.middle_name) + "\t" + to_string(existing_investigator.last_name) + "\t" + to_string(existing_investigator.degrees) + "\t" + to_string(existing_investigator.email) + "\t" + to_string(existing_investigator.employee_id) + "\t" + to_string(existing_investigator.title) + "\t" + position + "\t" + department_name + "\t" + to_string(existing_investigator.business_phone) + "\t" + to_string(existing_investigator.address1)  
   end
 end
 

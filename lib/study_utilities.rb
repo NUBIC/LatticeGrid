@@ -142,9 +142,9 @@ end
 
 def clean_consent_role(the_role)
   cleaned = case the_role
-    when "None"      :  "None"
-    when "Oversight" :  "Oversight"
-    when "Obtaining" :  "Obtaining"
+    when "None"       then  "None"
+    when "Oversight"  then  "Oversight"
+    when "Obtaining"  then  "Obtaining"
     else                 "None"
   end
   return cleaned

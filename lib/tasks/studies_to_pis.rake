@@ -1,7 +1,6 @@
 require 'file_utilities' #specific methods
 require 'utilities' # was row_iterator and other methods
-require 'app/helpers/format_helper'
-include FormatHelper
+require 'format_helper'
 
 require 'rubygems'
 

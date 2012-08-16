@@ -116,13 +116,13 @@ module GraphvizHelper
      graph = graph_new(program)
 
      graph = case analysis
-           when "member"      :  build_member_graph( graph, program, id, distance, stringency, include_orphans, start_date, end_date)
-           when "member_mesh" :  build_member_mesh_graph( graph, program, id, distance, stringency, include_orphans)
-           when "member_awards" :  build_member_awards_graph( graph, program, id, distance, stringency, include_orphans)
-           when "mesh"        :  build_mesh_graph( graph, program, id, distance, stringency, include_orphans)
-           when "org"         :  build_org_graph( graph, program, id, distance, stringency, include_orphans, start_date, end_date)
-           when "org_org"     :  build_org_org_graph( graph, program, id, distance, stringency, include_orphans)
-           when "org_mesh"    :  build_org_mesh_graph( graph, program, id, distance, stringency, include_orphans)
+           when "member"      then  build_member_graph( graph, program, id, distance, stringency, include_orphans, start_date, end_date)
+           when "member_mesh" then  build_member_mesh_graph( graph, program, id, distance, stringency, include_orphans)
+           when "member_awards" then  build_member_awards_graph( graph, program, id, distance, stringency, include_orphans)
+           when "mesh"        then  build_mesh_graph( graph, program, id, distance, stringency, include_orphans)
+           when "org"         then  build_org_graph( graph, program, id, distance, stringency, include_orphans, start_date, end_date)
+           when "org_org"     then  build_org_org_graph( graph, program, id, distance, stringency, include_orphans)
+           when "org_mesh"    then  build_org_mesh_graph( graph, program, id, distance, stringency, include_orphans)
            else                  graph_no_data(graph, "Option #{analysis} was not found")
      end
      graph
