@@ -64,6 +64,21 @@ def LatticeGridHelper.google_analytics
    </script>"
 end
  
+# profile example summaries
+def profile_example_summaries()
+  out = "<p>Example summaries:"  
+  out << "<ul>"
+  out << "<li>"
+  out << link_to("Cancer Control Example", investigator_url('rbe510'))
+  out << "<li>"
+  out << link_to("Basic Science Example", investigator_url('tvo')) 
+  out << "<li>"
+  out << link_to("Clinical Program Example", investigator_url('lpl530'))
+  out << "</ul>"
+  out << "</p>"
+  out
+end
+
 
 def LatticeGridHelper.home_url
   "http://www.cancer.northwestern.edu"

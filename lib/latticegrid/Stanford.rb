@@ -67,10 +67,6 @@ case
 end 
 end
 
-def profile_example_summaries()
-  ""
-end
-
 def LatticeGridHelper.do_ldap?
  (is_admin? and Rails.env != 'production') ? false : true
  false

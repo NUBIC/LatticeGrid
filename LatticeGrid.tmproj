@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>app/controllers/studies_controller.rb</string>
+	<string>lib/graph_generator.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -121,6 +121,36 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>lib/graph_generator.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>15</integer>
+				<key>line</key>
+				<integer>472</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>433</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>14</integer>
+				<key>line</key>
+				<integer>472</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>15</integer>
+				<key>line</key>
+				<integer>472</integer>
+			</dict>
+		</dict>
 		<key>lib/latticegrid/Stanford.rb</key>
 		<dict>
 			<key>caret</key>
@@ -188,11 +218,12 @@
 		<string>lib/tasks/reports.rake</string>
 		<string>app/controllers/awards_controller.rb</string>
 		<string>app/controllers/studies_controller.rb</string>
+		<string>lib/graph_generator.rb</string>
 		<string>lib/format_helper.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{10, 11}, {1039, 867}}</string>
+	<string>{{38, 551}, {1039, 867}}</string>
 </dict>
 </plist>

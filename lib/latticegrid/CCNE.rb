@@ -63,6 +63,7 @@ def latticegrid_menu_script
 	</li>
 	<li>#{link_to( 'High Impact', high_impact_by_month_abstracts_path, :title=>'Recent high-impact publications')} </li>
 	<li>#{link_to( 'MeSH tag cloud', tag_cloud_abstracts_path, :title=>'Display MeSH tag cloud for all publications')} </li>
+ 	<li>#{link_to( 'Bundle Graph', investigator_edge_bundling_cytoscape_path, :title=>'Display Hierarchical Edge Bundle graph for all investigators')} </li>
 	<li>#{link_to( 'Overview', centers_orgs_path, :title => 'Display an overview')}</li>
 </ul>
 <br style='clear: left' />

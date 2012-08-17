@@ -13,6 +13,12 @@ bundle exec rake RAILS_ENV=production cleanup:resolve_duplicate_tags
 bundle exec rake RAILS_ENV=production cleanup:resolve_misformed_tags
 bundle exec rake RAILS_ENV=production monthlyBuild
 
+bundle exec rake RAILS_ENV=staging nightlyBuild
+bundle exec rake RAILS_ENV=staging cleanup:find_duplicate_tags
+bundle exec rake RAILS_ENV=staging cleanup:resolve_duplicate_tags
+bundle exec rake RAILS_ENV=staging cleanup:resolve_misformed_tags
+bundle exec rake RAILS_ENV=staging monthlyBuild
+
 
 # Feinberg July 2012 loads
 

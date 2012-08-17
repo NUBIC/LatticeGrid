@@ -298,23 +298,13 @@ end
 
 # must be instance methods, not class methods
 
-  # profile example summaries
-  def profile_example_summaries()
-     out = "<p>Example summaries:"  
-    out << "<ul>"
-    out << "<li>"
-    out << link_to("Cancer Control Example", investigator_url('rbe510'))
-    out << "<li>"
-    out << link_to("Basic Science Example", investigator_url('tvo')) 
-    out << "<li>"
-    out << link_to("Clinical Program Example", investigator_url('lpl530'))
-    out << "</ul>"
-    out << "</p>"
-    out
-  end
+# profile example summaries
+def profile_example_summaries()
+  ""
+end
 
-  # citation style
-  def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bold=false, investigators_in_unit=[], speed_display=false, simple_links=false)
+# citation style
+def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bold=false, investigators_in_unit=[], speed_display=false, simple_links=false)
   #  out = publication.authors
     out = (mark_members_bold) ? highlightMemberInvestigator(publication, speed_display, simple_links, investigators_in_unit) : highlightInvestigator(publication, speed_display, simple_links)
     out << " "
