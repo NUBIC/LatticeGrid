@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  frequency: 1
+  word: MyString
+  type: 
+
+two:
+  frequency: 1
+  word: MyString
+  type: 

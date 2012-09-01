@@ -1,0 +1,29 @@
+Merge made by the 'recursive' strategy.
+ Gemfile                                     |   2 +-
+ Gemfile.lock                                |   4 +--
+ app/controllers/cytoscape_controller.rb     | 111 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ app/controllers/graphs_controller.rb        |   3 +-
+ app/controllers/investigators_controller.rb |  37 +++++++++++++------------
+ app/helpers/investigators_helper.rb         |  32 ++++++++++++++++-----
+ app/models/investigator.rb                  |  19 ++-----------
+ app/views/awards/listing.html.erb           |  23 ++++++---------
+ app/views/cytoscape/chord.html.erb          | 121 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------------
+ app/views/layouts/d3.html.erb               |   7 ++---
+ config/routes.rb                            |  10 +++----
+ lib/cytoscape_generator.rb                  |   2 ++
+ lib/d3_generator.rb                         | 134 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ public/javascripts/d3/d3.layout.js          |   3 +-
+ 14 files changed, 398 insertions(+), 110 deletions(-)
+ mode change 100644 => 100755 app/controllers/cytoscape_controller.rb
+ mode change 100644 => 100755 app/controllers/graphs_controller.rb
+ mode change 100644 => 100755 app/controllers/investigators_controller.rb
+ mode change 100644 => 100755 app/helpers/investigators_helper.rb
+ mode change 100644 => 100755 app/models/investigator.rb
+ mode change 100644 => 100755 app/views/awards/listing.html.erb
+ mode change 100644 => 100755 app/views/cytoscape/chord.html.erb
+ mode change 100644 => 100755 app/views/cytoscape/index.html.erb
+ mode change 100644 => 100755 app/views/layouts/cytoscape.html.erb
+ mode change 100644 => 100755 app/views/layouts/d3.html.erb
+ mode change 100644 => 100755 config/routes.rb
+ mode change 100644 => 100755 lib/cytoscape_generator.rb
+ mode change 100644 => 100755 lib/d3_generator.rb
