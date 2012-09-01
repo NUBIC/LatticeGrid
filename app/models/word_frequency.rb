@@ -36,6 +36,7 @@ named_scope :more_than, lambda { |the_freq|
     
   def self.save_investigator_frequency_map
     all_words = get_investigator_words
+    puts "all_words: #{all_words.length}"
     frequency_map = generate_frequency_map(all_words, 'Investigator')
     puts "frequency_map: #{frequency_map.length}"
     save_frequency_map(frequency_map)
@@ -43,6 +44,7 @@ named_scope :more_than, lambda { |the_freq|
   
   def self.save_abstract_frequency_map
     all_words = get_abstract_words
+    puts "all_words: #{all_words.length}"
     frequency_map = generate_frequency_map(all_words, 'Abstract')
     puts "frequency_map: #{frequency_map.length}"
     save_frequency_map(frequency_map)
