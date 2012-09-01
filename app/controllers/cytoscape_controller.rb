@@ -256,43 +256,43 @@ class CytoscapeController < ApplicationController
       end
     end
     
-#!!!!!  
+  #!!!!!  
   def d3_investigator_edge_data
-        #@investigators = @head_node.descendants.sort_by(&:name)
-        departments = OrganizationalUnit.all
-        #investigators = []
-        #departments.each {|dep| 
-        #  dep.primary_or_member_faculty.each {|inv|
-        #      investigators << inv
-        #    } 
-        #  } 
-        investigators = Investigator.all
-        investigators.sort!{|a, b| a.unit_list().first <=> b.unit_list().first}
-       
-        graph = d3_all_investigators_bundle(investigators.uniq)
-        depth = 1 
-        respond_to do |format| 
-          format.json{ render :layout => false, :json => graph.as_json()}
-          format.js{ render :layout => false, :json => graph.as_json()}
-        end
-      end    
+    #@investigators = @head_node.descendants.sort_by(&:name)
+    departments = OrganizationalUnit.all
+    #investigators = []
+    #departments.each {|dep| 
+    #  dep.primary_or_member_faculty.each {|inv|
+    #      investigators << inv
+    #    } 
+    #  } 
+    investigators = Investigator.all
+    investigators.sort!{|a, b| a.unit_list().first <=> b.unit_list().first}
+ 
+    graph = d3_all_investigators_bundle(investigators.uniq)
+    depth = 1 
+    respond_to do |format| 
+      format.json{ render :layout => false, :json => graph.as_json()}
+      format.js{ render :layout => false, :json => graph.as_json()}
+    end
+  end    
 
-#!!! 
-def d3_investigator_wordle_data
-  words = []
-  if (params[:id])
-    investigator = Investigator.find_all_by_username(params[:id]).first
-    words = d3_wordle_data(investigator)
+  #!!! 
+  def d3_investigator_wordle_data
+    words = []
+    if (params[:id])
+      investigator = Investigator.find_all_by_username(params[:id]).first
+      words = d3_wordle_data(investigator)
+    end
+    words = words[50, 50] +  words[words.length/2, 100] + words[words.length - 150, 150]
+    words.uniq!
+    finalwords = []
+    depth = 1
+    respond_to do |format|
+      format.json{ render :layout => false, :json => words.as_json()}
+      format.js{ render :layout => false, :json => words.as_json()}
+    end
   end
-  words = words[50, 50] +  words[words.length/2, 100] + words[words.length - 150, 150]
-  words.uniq!
-  finalwords = []
-  depth = 1
-  respond_to do |format|
-    format.json{ render :layout => false, :json => words.as_json()}
-    format.js{ render :layout => false, :json => words.as_json()}
-  end
-end
     
   def d3_date_data
     @units = @head_node.descendants.sort_by(&:abbreviation)

@@ -210,22 +210,10 @@ end
 
 
 def d3_wordle_data(investigator)
-  allwordshash = []
-  allwords = "" 
-  abstracts = investigator.abstracts.recent_first
-  allwords = abstracts[0..50].map{|abs| abs.abstract.downcase}.join(" ")
-
-  allwords = allwords.delete("*.,();:-<=/0-9")
-  allwordsarray = allwords.split(' ').map{|word| word.strip}
-  #allwordsarray.map! {|word| word = word.downcase}
-  possiblewords = allwordsarray.uniq
-  generics = ["the", "of", "and", "as", "to", "a", "in", "that", "with", "for", "an", "at", "not", "by", "on", "but", "or", "from", "its", "when", "this", "these", "i", "was", "is", "we", "have", "some", "into", "may", "well", "there", "our", "it", "me", "you", "what", "which", "who", "whom", "those", "are", "were", "be", "however","been", "being", "has", "had", "do", "did", "doing", "will", "can", "isn't", "aren't", "wasn't", "weren't", "to", "very", "would", "also", "after", "other", "whose", "upon", "their", "could", "all", "none", "no", "us", "here", "eg", "how", "where", "such", "many", "more", "than", "highly", "annotation", "annotations", "along", "each", "both", "then", "any", "same", "only", "significant", "significantly", "without", "versus", "likely", "while", "later", "whether", "might", "particular", "among", "thus", "every", "through", "over", "thereby", "about", "they", "your", "them", "within", "should", "much", "because", "ie", "between", "aka", "either", "under", "fully", "most", "since", "using", "used", "if", "nor", "yet", "easily", "moreover", "despite", "does", "quite", "less", "her", "found", "via", "type"]
-  possiblewords.each do  |word|
-    unless (generics.include?(word) or word.length < 3 or allwordsarray.include?(word + "s") )
-        allwordshash << { :word => word, :frequency => allwordsarray.count(word)}
-    end
-  end
-  return allwordshash.sort_by{|word| word[:frequency]}
+  cutoff = (Investigator.count/2) - 6
+  high_freq_words = WordFrequency.investigator_words.more_than(cutoff).map(&:word)
+  frequency_map =  WordFrequency.generate_frequency_map(investigator.abstracts.most_recent(25).abstract_words, 'PI', high_freq_words)
+  return frequency_map.sort_by{|word| word[:frequency]}
 end
 
 def d3_unit_investigator_by_date_graph(unit, investigator, faculty_ids, start_date, end_date)

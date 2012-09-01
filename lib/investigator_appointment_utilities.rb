@@ -210,7 +210,6 @@ def SetInvestigatorIdentity(pi, data_row)
   pi.employee_id.to_s.strip! unless pi.employee_id.blank?
   pi.employee_id.to_s.downcase! unless pi.employee_id.blank?
   pi.era_comons_name.upcase.strip! unless pi.era_comons_name.blank?
-  pi.email.downcase.strip! unless pi.email.blank?
  
   if pi.last_name.blank? && !data_row['NAME'].blank?
       pi=HandleName(pi,data_row['NAME'])
@@ -532,7 +531,7 @@ def CreateProgramMembershipsFromHash(data_row, type='Member')
   username.strip! unless username.blank?
   last_name.strip! unless last_name.blank?
   first_name.strip! unless first_name.blank?
-  email.downcase.strip! unless email.blank?
+  email = email.downcase.strip unless email.blank?
   unit_abbreviation.strip! unless unit_abbreviation.blank?
   appt = InvestigatorAppointment.new
   program = OrganizationalUnit.find_by_abbreviation(unit_abbreviation)

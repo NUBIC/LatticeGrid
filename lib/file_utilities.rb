@@ -1,6 +1,10 @@
 # -*- ruby -*-
 
-require 'fastercsv'
+if RUBY_VERSION =~ /1.9/
+  require 'csv'
+else
+  require 'fastercsv'
+end
 require 'utilities'
 require 'journal_utilities'
 require 'award_utilities'
@@ -29,7 +33,11 @@ end
   
 def read_data_handler(model_name, file_name, column_separator="\t")
   errors = ""
-  data = FasterCSV.read(file_name, :col_sep => column_separator, :headers => :first_row)
+  if RUBY_VERSION =~ /1.9/
+    data = CSV.read(file_name, :col_sep => column_separator, :headers => :first_row)
+  else
+    data = FasterCSV.read(file_name, :col_sep => column_separator, :headers => :first_row)
+  end
   puts model_name.find(:all).length unless model_name.blank?
   yield(data)
   puts model_name.find(:all).length unless model_name.blank?

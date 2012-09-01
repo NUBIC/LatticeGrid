@@ -263,6 +263,7 @@ script/generate migration add_investigator_abstract_date
 
 script/generate migration add_investigator_era_commons_name
 
+script/generate model word_frequency frequency:integer word:string type:string
 
 # authenticated access
 

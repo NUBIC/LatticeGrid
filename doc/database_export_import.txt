@@ -103,14 +103,21 @@ pg_restore -d fsmpublications_production -U fsmpublications -h pprod fsmpublicat
 
 pg_dump -Fc fsm_latticegrid_production -U fsm_latticegrid -h pprod > fsmpublications_prod_20110306.dmp
 
-pg_dump -Fc cinjcancerpublications_development -U cinjcancerpublications > cinjpublications_dev_20110410.dmp
 
 pg_dump -Fc cinj_latticegrid_staging -U rhlccc_latticegrid -h pstage > cinjpublications_dev_20110830.dmp
 
 # from my laptop
 
 pg_dump -Fc ccne_latticegrid -U latticegrid > ccne_latticegrid_20120423.dmp
+
+#dump on staging
+pg_dump -Fc ccne_latticegrid -U latticegrid -h pstage2 > ccne_latticegrid_20120824.dmp
+
 scp ccne_latticegrid_20120423.dmp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe/
+
+
+scp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe/ccne_latticegrid_20120824.dmp .
+
 #run console
 script/console staging
 Bcdatabase.load[:pstage, :ccne_latticegrid]['password']
@@ -240,11 +247,19 @@ psql -h pprod2  -f fsmpublications_dev_20120315.sql fsm_latticegrid latticegrid
 #move to laptop from old rails-dev
 scp wakibbe@rails-dev.bioinformatics.northwestern.edu:/home/wakibbe/cinj_pubs/cinjpublications_dev_20110410.dmp  cinjpublications_dev_20110410.dmp
 
-scp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe/cinjpublications_dev_20110830.dmp  cinjpublications_dev_20110830.dmp
+scp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe/cinjpublications_dev_20120101.dmp  cinjpublications_dev_20120101.dmp
 
 scp cinjpublications_dev_20110830.dmp root@172.16.215.128:/root
-pg_restore -c -O -d cinj_latticegrid -U latticegrid cinjpublications_dev_20110830.dmp
 
+pg_restore -c -O -d cinj_latticegrid -U latticegrid cinjpublications_dev_20120101.dmp
+
+
+pg_dump -Fc cinj_latticegrid -U latticegrid -h pstage2 > cinjpublications_dev_20120818.dmp
+
+#dump from laptop, copy to staging, restore on staging
+pg_dump -Fc cinj_latticegrid -U latticegrid > cinjpublications_dev_20120818.dmp
+scp cinjpublications_dev_20120818.dmp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe/cinjpublications_dev_20120818.dmp 
+pg_restore -c -O -d cinj_latticegrid -U latticegrid -h pstage2 cinjpublications_dev_20120818.dmp
 
 
 scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/enotis/tmp/medical_services_2011-06-16_23-04-10.csv  medical_services_2011-06-16_23-04-10.csv
@@ -253,7 +268,7 @@ scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/enotis/tmp/medical_servi
 #move from laptop to new rails staging
 scp cinjpublications_dev_20110410.dmp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe
 
-pg_restore -O -d cinj_latticegrid_staging -U rhlccc_latticegrid -h pstage cinjpublications_dev_20110410.dmp
+pg_restore -O -d cinj_latticegrid -U latticegrid -h pstage2 cinjpublications_dev_20120101.dmp
 
 #now restore
 pg_restore -O -d fsm_latticegrid_production -U fsm_latticegrid -h pprod fsmpublications_dev_20110512.dmp

@@ -133,6 +133,18 @@ has_many :investigator_appointments,
   validates_presence_of :username
   validates_uniqueness_of :username
 
+  def self.abstract_words
+    all.map(&:unique_abstract_words).flatten
+  end
+  
+  def abstract_words
+    self.abstracts.map{|ab| ab.abstract_words}.flatten
+  end
+
+  def unique_abstract_words
+    self.abstract_words.uniq
+  end
+
   def shared_abstracts_with_investigator(id)
     Abstract.all(:joins => ", investigator_abstracts, investigator_abstracts ia2",
         :conditions => ['investigator_abstracts.abstract_id  = abstracts.id and ia2.abstract_id = abstracts.id and investigator_abstracts.is_valid = true and ia2.is_valid = true and ia2.investigator_id = :id and  investigator_abstracts.investigator_id = :pi_id', {:id => id, :pi_id => self.id }],
@@ -466,7 +478,7 @@ has_many :investigator_appointments,
   end
 
   def self.without_programs()
-    all(  :conditions => ["not exists(select 'x' from investigator_appointments where investigator_appointments.investigator_id = investigators.id and investigator_appointments.type = 'Member' and investigator_appointments.end_date is null )"] )
+    all(  :conditions => ["not exists(select 'x' from investigator_appointments where investigator_appointments.investigator_id = investigators.id and investigator_appointments.type in  ('Member', 'AssociateMember') and investigator_appointments.end_date is null )"] )
   end
 
   

@@ -12,7 +12,11 @@ class OrgsController < ApplicationController
   include OrgsHelper
   include SparklinesHelper
 
-  require 'fastercsv' # for department_collaborations
+  if RUBY_VERSION =~ /1.9/
+    require 'csv'
+  else
+    require 'fastercsv'
+  end
 
   # GET /orgs
   # GET /orgs.xml
@@ -37,14 +41,27 @@ class OrgsController < ApplicationController
       format.xml  { render :xml => @units }
       format.csv {
         unit_ids   = @units.collect(&:id)
-        csv_string = FasterCSV.generate do |csv|
-          # header row
-          csv << [ "id", "name", "investigators", "total", "units" ] + @units.collect(&:name)
+        if RUBY_VERSION =~ /1.9/
+          csv_string = CSV.generate do |csv|
+            # header row
+            csv << [ "id", "name", "investigators", "total", "units" ] + @units.collect(&:name)
+
+            # data rows
+            @units.each do |unit|
+              total_units =  unit_ids.collect{|unit_id| (unit_id == unit.id) ? 0 : unit.collaboration_matrix[unit_id].length }.sum
+              csv << [unit.id, unit.name, unit.primary_faculty.length, unit.collaboration_matrix[unit.id].length, total_units ] + unit_ids.collect {|unit_id| (unit_id == unit.id) ? 0 : unit.collaboration_matrix[unit_id].length }
+            end
+          end
+        else
+          csv_string = FasterCSV.generate do |csv|
+            # header row
+            csv << [ "id", "name", "investigators", "total", "units" ] + @units.collect(&:name)
  
-          # data rows
-          @units.each do |unit|
-            total_units =  unit_ids.collect{|unit_id| (unit_id == unit.id) ? 0 : unit.collaboration_matrix[unit_id].length }.sum
-            csv << [unit.id, unit.name, unit.primary_faculty.length, unit.collaboration_matrix[unit.id].length, total_units ] + unit_ids.collect {|unit_id| (unit_id == unit.id) ? 0 : unit.collaboration_matrix[unit_id].length }
+            # data rows
+            @units.each do |unit|
+              total_units =  unit_ids.collect{|unit_id| (unit_id == unit.id) ? 0 : unit.collaboration_matrix[unit_id].length }.sum
+              csv << [unit.id, unit.name, unit.primary_faculty.length, unit.collaboration_matrix[unit.id].length, total_units ] + unit_ids.collect {|unit_id| (unit_id == unit.id) ? 0 : unit.collaboration_matrix[unit_id].length }
+            end
           end
         end
 

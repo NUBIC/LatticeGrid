@@ -26,8 +26,13 @@ class Abstract < ActiveRecord::Base
   has_many :organization_abstracts,
         :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
 
-  named_scope :recent_first,
-    :order => "abstracts.year DESC, abstracts.authors ASC"
+  named_scope :most_recent, lambda { |latest|
+    unless latest.blank?
+      {:limit => latest, :order => "abstracts.year DESC, abstracts.authors ASC"}
+    else
+      {:order => "abstracts.year DESC, abstracts.authors ASC"}
+    end
+    }
     
   named_scope :abstracts_last_five_years, 
         :conditions => ['abstracts.publication_date >= :start_date', 
@@ -70,6 +75,14 @@ class Abstract < ActiveRecord::Base
     }
   default_scope :conditions => 'abstracts.is_valid = true'
 
+  def self.abstract_words
+    all.map(&:abstract_words).join(" ").split(/[ \t\r\n]+/)
+  end
+  
+  def abstract_words
+    [self.abstract, self.title].join(" ").downcase.split(/[ \t\r\n]+/).map{|w| w.gsub(/^([\'\"\*\.,\(\);:\-\+\<\=\\\/0-9]+)$/,'').gsub(/^([\'\"\*\.,\(\);:\-\+\<\=\\\/0-9]+)/,'').gsub(/([\'\"\*\.,\(\);:\-\+\<\=\\\/0-9]+)$/,'')}.uniq
+  end
+  
   def has_full
     return false if self.full_authors.blank? 
     return true if self.full_authors.split(/\n|\r/).first =~ /[^,]{2,}, +[^\. ]{2,}/
