@@ -138,7 +138,7 @@ has_many :investigator_appointments,
   end
   
   def abstract_words
-    self.abstracts.map{|ab| ab.abstract_words}.flatten
+    self.abstracts.abstracts_last_five_years.map{|ab| ab.abstract_words}.flatten
   end
 
   def unique_abstract_words
