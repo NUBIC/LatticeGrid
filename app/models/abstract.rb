@@ -80,7 +80,7 @@ class Abstract < ActiveRecord::Base
   end
   
   def abstract_words
-    [self.abstract, self.title].join(" ").downcase.split(/[ \t\r\n]+/).map{|w| w.gsub(/^([\'\"\*\.,\(\);:\-\+\<\=\\\/0-9]+)$/,'').gsub(/^([\'\"\*\.,\(\);:\-\+\<\=\\\/0-9]+)/,'').gsub(/([\'\"\*\.,\(\);:\-\+\<\=\\\/0-9]+)$/,'')}.uniq
+    [self.abstract, self.title].join(" ").gsub(/([;:\.\,\+\\\/]+)/,' ').downcase.split(/[ \t\r\n]+/).map{|w| w.gsub(/([\?\'\"\*\#\%\[\]\,\(\)\<\>\=]+)/,'').gsub(/^([\-\+\<\=0-9]+)/,'').gsub(/([\-\+\<\=0-9]+)$/,'')}.uniq
   end
   
   def has_full
