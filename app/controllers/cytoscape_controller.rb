@@ -232,18 +232,20 @@ class CytoscapeController < ApplicationController
   def difference_wordle
     @title = 'Wordle for NO ONE BECAUSE THE ID IS INVALID'
     unless params[:id].blank?
-      @investigators = Investigator.all(:conditions=>["investigators.username in (:usernames)",{:usernames=>params[:id].split(",")}])
+      investigator1 = Investigator.find_by_username(params[:id].split(",")[0])
+      investigator2 = Investigator.find_by_username(params[:id].split(",")[1])
+      @investigators=[investigator1,investigator2]
       if @investigators.blank?
         flash[:notice] = "unable to find investigator"
         params[:id] = nil 
       else
         @title = 'Word cloud (Wordle) difference between ' + @investigators.map(&:name).join(" and ")
         @json_callback1 = "../cytoscape/" + params[:id] + "/d3_investigator_difference_wordle_data.js"
-        @json_callback2 = "../cytoscape/" + params[:id].split(",")[1] + "," + params[:id].split(",")[0] + "/d3_investigator_similarity_wordle_data.js"
+        @json_callback2 = "../cytoscape/" + params[:id].split(",")[1] + "," + params[:id].split(",")[0] + "/d3_investigator_difference_wordle_data.js"
       end
     end
     respond_to do |format|
-      format.html { render :layout => 'd3' }
+      format.html { render :layout => 'd3', :action => :investigator_difference_wordle }
       format.json { render :layout => false, :text => ""}
     end
   end
@@ -334,7 +336,7 @@ class CytoscapeController < ApplicationController
     if (params[:id])
       investigators = Investigator.all(:conditions=>["investigators.username in (:usernames)",{:usernames=>params[:id].split(",")}])
       words = WordFrequency.investigators_wordle_data(investigators)
-      words = WordFrequency.wordle_distribution(words)
+      words = WordFrequency.wordle_distribution(words, 200)
     end
     respond_to do |format|
       format.json{ render :layout => false, :json => words.as_json()}
@@ -348,7 +350,7 @@ class CytoscapeController < ApplicationController
       investigator1 = Investigator.find_by_username(params[:id].split(",")[0])
       investigator2 = Investigator.find_by_username(params[:id].split(",")[1])
       words = WordFrequency.investigators_difference_wordle_data([investigator1, investigator2])
-      words = WordFrequency.wordle_distribution(words)
+      words = WordFrequency.wordle_distribution(words, 125)
     end
     respond_to do |format|
       format.json{ render :layout => false, :json => words.as_json()}

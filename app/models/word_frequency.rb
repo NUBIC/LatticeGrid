@@ -113,8 +113,8 @@ FILLER_WORDS = ["the", "of", "and", "as", "to", "a", "in", "that", "with", "for"
     return frequency_map.sort_by{|word| word[:frequency]}
   end
   
-  def self.wordle_distribution(words)
-    words = words[0, 150] + words[words.length - 150, 150]
+  def self.wordle_distribution(words, max_words=300)
+    words = words[0, max_words/2] + words[words.length - max_words/2, max_words/2]
     words.uniq!
     return words
   end
