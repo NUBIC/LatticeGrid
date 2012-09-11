@@ -98,7 +98,13 @@ namespace :cache do
       run_ajax_curl tag_cloud_investigator_url(:id => inv.username)
       run_curl publications_investigator_url(:id => inv.username)
       run_json_curl publications_investigator_url(:id => inv.username, :format => 'json')
-      run_curl show_investigator_url(:id => inv.username, :page => 1)
+
+      abs = Abstract.display_investigator_data(inv.id)
+      puts "Abstract pages for #{inv.username}: #{abs.total_pages}"
+      (1..abs.total_pages).each do |i|
+        run_curl show_investigator_url(:id => inv.username, :page => i)
+      end
+      
       #run_curl url_for :controller => 'investigators', :action => 'show', :id => inv.username, :page => 1
     end
   end
@@ -128,7 +134,14 @@ namespace :cache do
     run_curl stats_orgs_url
     @AllOrganizations.each do |org|
       run_curl show_investigators_org_url(org.id)
-      run_curl url_for :controller => 'orgs', :action => 'show', :id => org.id, :page => 1
+
+      abs = org.abstract_data
+      puts "Total pages for #{org.name}: #{abs.total_pages}."
+      # Only do the first 10 pages.
+      (1..[abs.total_pages, 10].min).each do |i|
+        run_curl url_for :controller => 'orgs', :action => 'show', :id => org.id, :page => i
+      end
+
       run_curl full_show_org_url(:id => org.id)
       run_ajax_curl tag_cloud_org_url(:id => org.id)
       run_ajax_curl short_tag_cloud_org_url(:id => org.id)
@@ -233,6 +246,7 @@ namespace :cache do
       run_curl build_graphviz_restfulpath(params, params[:format]) 
       params[:analysis] = "org_org"
       params[:stringency] = "1"
+      params[:distance] = "0"
       run_curl build_graphviz_restfulpath(params, params[:format]) 
       params[:analysis] = "org_mesh"
       params[:stringency] = "2000"
@@ -245,6 +259,7 @@ namespace :cache do
     if ENV["taskname"].nil?
       puts "sorry. You need to call 'rake cache:populate taskname=task' where task is one of #{tasknames.join(', ')}"
     else
+      puts "curl_host is #{LatticeGridHelper.curl_host}"
       taskname = ENV["taskname"]
       block_timing("cache:populate taskname=#{taskname}") {
       case 
