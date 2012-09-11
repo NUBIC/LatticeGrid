@@ -76,7 +76,7 @@ class Abstract < ActiveRecord::Base
   default_scope :conditions => 'abstracts.is_valid = true'
 
   def self.abstract_words
-    abstracts_last_five_years.map(&:abstract_words).join(" ").split(/[ \t\r\n]+/)
+    all.map(&:abstract_words).join(" ").split(/[ \t\r\n]+/)
   end
   
   def abstract_words

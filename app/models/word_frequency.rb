@@ -3,21 +3,25 @@ class WordFrequency < ActiveRecord::Base
   require 'utilities'
 
   attr_accessible :the_type, :word, :frequency
-FILLER_WORDS = ["the", "of", "and", "as", "to", "a", "in", "that", "with", "for", "an", "at", "not", "by", "on", "but", "or", "from", "its", "when", "this", "these", "i", "was", "is", "we", "have", "some", "into", "may", "well", "there", "our", "it", "me", "you", "what", "which", "who", "whom", "those", "are", "were", "be", "however","been", "being", "has", "had", "do", "did", "doing", "will", "can", "isn't", "aren't", "wasn't", "weren't", "to", "very", "would", "also", "after", "other", "whose", "upon", "their", "could", "all", "none", "no", "us", "here", "eg", "how", "where", "such", "many", "more", "than", "highly", "annotation", "annotations", "along", "each", "both", "then", "any", "same", "only", "significant", "significantly", "without", "versus", "likely", "while", "later", "whether", "might", "particular", "among", "thus", "every", "through", "over", "thereby", "about", "they", "your", "them", "within", "should", "much", "because", "ie", "between", "aka", "either", "under", "fully", "most", "since", "using", "used", "if", "nor", "yet", "easily", "moreover", "despite", "does", "quite", "less", "her", "found", "via", "type", "review", "age", "last", "purpose"]
+FILLER_WORDS = ["the", "of", "and", "as", "to", "a", "in", "that", "with", "for", "an", "at", "not", "by", "on", "but", "or", "from", "its", "when", "this", "these", "i", "was", "is", "we", "have", "some", "into", "may", "well", "there", "our", "it", "me", "you", "what", "which", "who", "whom", "those", "are", "were", "be", "however","been", "being", "has", "had", "do", "did", "doing", "will", "can", "isn't", "aren't", "wasn't", "weren't", "to", "very", "would", "also", "after", "other", "whose", "upon", "their", "could", "all", "none", "no", "us", "here", "eg", "how", "where", "such", "many", "more", "than", "highly", "annotation", "annotations", "along", "each", "both", "then", "any", "same", "only", "significant", "significantly", "without", "versus", "likely", "while", "later", "whether", "might", "particular", "among", "thus", "every", "through", "over", "thereby", "about", "they", "your", "them", "within", "should", "much", "because", "ie", "between", "aka", "either", "under", "fully", "most", "since", "using", "used", "if", "nor", "yet", "easily", "moreover", "despite", "does", "quite", "less", "her", "found", "via", "type", "review", "age", "last", "purpose", "new", "takes", "own", "easily", "problem", ]
 
-named_scope :abstract_words, 
-    :conditions => ["word_frequencies.the_type = 'Abstract'"]
+  named_scope :abstract_words, 
+      :conditions => ["word_frequencies.the_type = 'Abstract'"]
 
-named_scope :investigator_words, 
-    :conditions => ["word_frequencies.the_type = 'Investigator'"]
+  named_scope :investigator_words, 
+      :conditions => ["word_frequencies.the_type = 'Investigator'"]
 
-named_scope :more_than, lambda { |the_freq|
-  {:conditions => ['word_frequencies.frequency >= :the_freq ', {:the_freq => the_freq}] }
-}
+  named_scope :more_than, lambda { |the_freq|
+    {:conditions => ['word_frequencies.frequency >= :the_freq ', {:the_freq => the_freq}] }
+  }
+
+  @@cutoff = (Investigator.count/5) + 10
+  @@high_freq_words = WordFrequency.investigator_words.more_than(@@cutoff).map(&:word)
+
 
 
   def self.get_abstract_words
-    Abstract.abstract_words
+    Abstract.abstracts_last_five_years.abstract_words
   end
 
   def self.get_investigator_words
@@ -43,15 +47,15 @@ named_scope :more_than, lambda { |the_freq|
   def self.save_investigator_frequency_map
     all_words = get_investigator_words
     unique_words = all_words.sort.uniq
-    puts "all_words: #{all_words.length}; unique_words: #{unique_words.length}"
-    row_iterator(unique_words) {|word| create_frequency_word(word,all_words,unique_words,'Investigator')} 
+    puts "save_investigator_frequency_map:all_words: #{all_words.length}; unique_words: #{unique_words.length}"
+    row_iterator(unique_words, 0, 2000) {|word| create_frequency_word(word,all_words,unique_words,'Investigator')} 
   end
   
   def self.save_abstract_frequency_map
     all_words = get_abstract_words
     unique_words = all_words.sort.uniq
-    puts "all_words: #{all_words.length}; unique_words: #{unique_words.length}"
-    row_iterator(unique_words) {|word| create_frequency_word(word,all_words,unique_words,'Abstract')} 
+    puts "save_abstract_frequency_map:all_words: #{all_words.length}; unique_words: #{unique_words.length}"
+    row_iterator(unique_words, 0, 2000) {|word| create_frequency_word(word,all_words,unique_words,'Abstract')} 
   end
 
   def self.create_frequency_word(word, word_array, unique_words, the_type)
@@ -73,6 +77,46 @@ named_scope :more_than, lambda { |the_freq|
     end
     frequency_map
   end
-    
+  
+  def self.cutoff
+    @@cutoff
+  end
+  def self.high_freq_words
+    @@high_freq_words
+  end
+  
+  def self.investigator_wordle_data(investigator)
+    # investigator.abstract_words is limited to last 5 years. you can use investigator.abstracts.most_recent(25).abstract_words to get a different cut of the data
+    frequency_map =  generate_frequency_map(investigator.abstract_words, 'Abstract', high_freq_words)
+    return frequency_map.sort_by{|word| word[:frequency]}
+  end
+  
+  def self.investigators_wordle_data(investigators)
+    shared_words =[]
+    all_words =[]
+    investigators.each do |investigator|
+      all_words = all_words + investigator.abstract_words
+      if shared_words.blank?
+        shared_words = investigator.unique_abstract_words
+      else
+         shared_words = shared_words & investigator.unique_abstract_words
+       end
+    end
+    frequency_map = generate_frequency_map(all_words, 'Abstract', high_freq_words, shared_words)
+    return frequency_map.sort_by{|word| word[:frequency]}
+  end
+  
+  def self.investigators_difference_wordle_data(investigators)
+    all_words = investigators[0].abstract_words
+    uniq_words = all_words.uniq - investigators[1].unique_abstract_words
+    frequency_map = generate_frequency_map(all_words, 'Abstract', high_freq_words, uniq_words)
+    return frequency_map.sort_by{|word| word[:frequency]}
+  end
+  
+  def self.wordle_distribution(words)
+    words = words[0, 150] + words[words.length - 150, 150]
+    words.uniq!
+    return words
+  end
   
 end

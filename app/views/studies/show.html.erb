@@ -28,9 +28,11 @@
 		<table cellpadding="2" cellspacing="0" class='dense'>
 			<tr class="header"><td class="list-title-left">Role</td><td class="list-title-right">Consent Role</td><td class="list-title-left">Investigator</td></tr>
 		<%  for inv_study in @study.investigator_studies.by_role %>
+		  <% unless inv_study.investigator.blank? %>
 			<tr class="<%= cycle('even', 'odd') %>">
-			  <td class="list-left"><%= inv_study.role %></td><td class="list-right"><%= inv_study.consent_role %></td><td class="list-left"><%= link_to_investigator_studies(inv_study.investigator, inv_study.investigator.full_name) %></td>
+			  <td class="list-left"><%= inv_study.role %></td><td class="list-right"><%= inv_study.consent_role %></td><td class="list-left"><%= link_to_investigator_studies(inv_study.investigator, inv_study.investigator.full_name)  %></td>
 			</tr>
+		  <%  end %>
 		<%  end %>
 		</table>
 		<% end %>

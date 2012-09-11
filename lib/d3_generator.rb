@@ -208,14 +208,6 @@ def d3_investigator_edge_imports(investigator)
     return the_arry
 end
 
-
-def d3_wordle_data(investigator)
-  cutoff = (Investigator.count/2) - 6
-  high_freq_words = WordFrequency.investigator_words.more_than(cutoff).map(&:word)
-  frequency_map =  WordFrequency.generate_frequency_map(investigator.abstracts.most_recent(25).abstract_words, 'PI', high_freq_words)
-  return frequency_map.sort_by{|word| word[:frequency]}
-end
-
 def d3_unit_investigator_by_date_graph(unit, investigator, faculty_ids, start_date, end_date)
   {
     :name => unit.abbreviation + "." + investigator.username,

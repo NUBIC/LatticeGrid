@@ -1,7 +1,7 @@
 class CytoscapeController < ApplicationController
   before_filter :check_allowed, :only => [:awards, :studies, :show_all]
 
-  caches_page( :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data, :investigator_edge_bundling, :d3_investigator_edge_data, :investigator_wordle, :d3_investigator_wordle_data, :investigator_chord, :d3_investigator_chord_data) if LatticeGridHelper.CachePages()
+  caches_page( :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data, :investigator_edge_bundling, :d3_investigator_edge_data, :investigator_wordle, :d3_investigator_wordle_data, :simularity_wordle, :d3_investigators_wordle_data, :investigator_chord, :d3_investigator_chord_data) if LatticeGridHelper.CachePages()
   caches_action( :listing, :investigator, :awards, :studies )  if LatticeGridHelper.CachePages()
   
   require 'cytoscape_config'
@@ -202,11 +202,48 @@ class CytoscapeController < ApplicationController
         params[:id] = nil 
       else
         @title = 'Word cloud (Wordle) display of abstracts from ' + @investigator.name
-        @words = "../cytoscape/" + params[:id] + "/d3_investigator_wordle_data.js"
+        @json_callback = "../cytoscape/" + params[:id] + "/d3_investigator_wordle_data.js"
       end
     end
     respond_to do |format|
       format.html { render :layout => 'd3'}
+      format.json { render :layout => false, :text => ""}
+    end
+  end
+
+  def simularity_wordle
+    @title = 'Wordle for NO ONE BECAUSE THE ID IS INVALID'
+    unless params[:id].blank?
+      @investigators = Investigator.all(:conditions=>["investigators.username in (:usernames)",{:usernames=>params[:id].split(",")}])
+      if @investigators.blank?
+        flash[:notice] = "unable to find investigator"
+        params[:id] = nil 
+      else
+        @title = 'Word cloud (Wordle) similarity between ' + @investigators.map(&:name).join(" and ")
+        @json_callback = "../cytoscape/" + params[:id] + "/d3_investigator_similarity_wordle_data.js"
+      end
+    end
+    respond_to do |format|
+      format.html { render :layout => 'd3', :action => :investigator_wordle }
+      format.json { render :layout => false, :text => ""}
+    end
+  end
+  
+  def difference_wordle
+    @title = 'Wordle for NO ONE BECAUSE THE ID IS INVALID'
+    unless params[:id].blank?
+      @investigators = Investigator.all(:conditions=>["investigators.username in (:usernames)",{:usernames=>params[:id].split(",")}])
+      if @investigators.blank?
+        flash[:notice] = "unable to find investigator"
+        params[:id] = nil 
+      else
+        @title = 'Word cloud (Wordle) difference between ' + @investigators.map(&:name).join(" and ")
+        @json_callback1 = "../cytoscape/" + params[:id] + "/d3_investigator_difference_wordle_data.js"
+        @json_callback2 = "../cytoscape/" + params[:id].split(",")[1] + "," + params[:id].split(",")[0] + "/d3_investigator_similarity_wordle_data.js"
+      end
+    end
+    respond_to do |format|
+      format.html { render :layout => 'd3' }
       format.json { render :layout => false, :text => ""}
     end
   end
@@ -281,19 +318,45 @@ class CytoscapeController < ApplicationController
   def d3_investigator_wordle_data
     words = []
     if (params[:id])
-      investigator = Investigator.find_all_by_username(params[:id]).first
-      words = d3_wordle_data(investigator)
+      investigator = Investigator.find_by_username(params[:id])
+      words = WordFrequency.investigator_wordle_data(investigator)
+      words = WordFrequency.wordle_distribution(words)
     end
-    words = words[50, 50] +  words[words.length/2, 100] + words[words.length - 150, 150]
-    words.uniq!
-    finalwords = []
     depth = 1
     respond_to do |format|
       format.json{ render :layout => false, :json => words.as_json()}
       format.js{ render :layout => false, :json => words.as_json()}
     end
   end
-    
+  
+  def d3_investigator_similarity_wordle_data
+    words = []
+    if (params[:id])
+      investigators = Investigator.all(:conditions=>["investigators.username in (:usernames)",{:usernames=>params[:id].split(",")}])
+      words = WordFrequency.investigators_wordle_data(investigators)
+      words = WordFrequency.wordle_distribution(words)
+    end
+    respond_to do |format|
+      format.json{ render :layout => false, :json => words.as_json()}
+      format.js{ render :layout => false, :json => words.as_json()}
+    end
+  end
+  
+  def d3_investigator_difference_wordle_data
+    words = []
+    if (params[:id])
+      investigator1 = Investigator.find_by_username(params[:id].split(",")[0])
+      investigator2 = Investigator.find_by_username(params[:id].split(",")[1])
+      words = WordFrequency.investigators_difference_wordle_data([investigator1, investigator2])
+      words = WordFrequency.wordle_distribution(words)
+    end
+    respond_to do |format|
+      format.json{ render :layout => false, :json => words.as_json()}
+      format.js{ render :layout => false, :json => words.as_json()}
+    end
+  end
+  
+  
   def d3_date_data
     @units = @head_node.descendants.sort_by(&:abbreviation)
     graph = d3_units_by_date_graph(@units, params[:start_date].to_date,  params[:end_date].to_date)
