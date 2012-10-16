@@ -1,7 +1,7 @@
 class CytoscapeController < ApplicationController
   before_filter :check_allowed, :only => [:awards, :studies, :show_all]
 
-  caches_page( :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data, :investigator_edge_bundling, :d3_investigator_edge_data, :investigator_wordle, :d3_investigator_wordle_data, :simularity_wordle, :d3_investigators_wordle_data, :investigator_chord, :d3_investigator_chord_data) if LatticeGridHelper.CachePages()
+  caches_page( :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data, :investigator_edge_bundling, :d3_investigator_edge_data, :investigator_wordle, :d3_investigator_wordle_data, :simularity_wordle, :d3_investigators_wordle_data, :d3_investigator_chord_data) if LatticeGridHelper.CachePages()
   caches_action( :listing, :investigator, :awards, :studies )  if LatticeGridHelper.CachePages()
   
   require 'cytoscape_config'

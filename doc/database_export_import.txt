@@ -121,6 +121,7 @@ scp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe/ccne_latticegrid
 #run console
 script/console staging
 Bcdatabase.load[:pstage, :ccne_latticegrid]['password']
+
 pg_restore -d ccne_latticegrid -U latticegrid -h pstage2 ccne_latticegrid_20120423.dmp
 
 
