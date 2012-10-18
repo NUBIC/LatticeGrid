@@ -105,7 +105,7 @@ class ProfilesController < ApplicationController
         format.pdf {
           @no_email=true
           render( :pdf => "summaries_listing_for_" + @program.name, 
-              :stylesheets => "pdf", 
+              :stylesheets => ["pdf"], 
               :template => "profiles/list_summaries",
               :layout => "pdf") }
       end
@@ -332,7 +332,7 @@ class ProfilesController < ApplicationController
         @abstracts = Abstract.display_all_investigator_data(@investigator.id)
         @show_valid_checkboxes = false
         render( :pdf => "Publication Listing for " + @investigator.name, 
-            :stylesheets => "pdf", 
+            :stylesheets => ["pdf"], 
             :template => "abstracts/investigator_listing.html",
             :layout => "pdf")
       end
@@ -348,7 +348,7 @@ class ProfilesController < ApplicationController
       format.pdf do
         @pdf = true
         render(  :pdf => "Investigator Listing", 
-                 :stylesheets => "pdf", 
+                 :stylesheets => ["pdf"], 
                  :template => "investigators/list_all.html",
                  :layout => "pdf" )
       end
@@ -430,7 +430,7 @@ class ProfilesController < ApplicationController
        @link_abstract_to_pubmed = true
        @show_valid_checkboxes = false
        render( :pdf => "Abstracts listing", 
-           :stylesheets => "pdf", 
+           :stylesheets => ["pdf"], 
            :template => 'profiles/abstracts_listing',
            :layout => "pdf")
       end

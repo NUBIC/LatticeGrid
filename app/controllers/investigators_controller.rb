@@ -26,7 +26,7 @@ class InvestigatorsController < ApplicationController
       format.pdf {
         @pdf = true
         render( :pdf => "Investigator Listing", 
-            :stylesheets => "pdf", 
+            :stylesheets => ["pdf"], 
             :template => "investigators/list_all.html",
             :layout => "pdf") }
       format.xls  { 
@@ -55,7 +55,7 @@ class InvestigatorsController < ApplicationController
         format.pdf {
           @pdf = true
           render( :pdf => "Investigator Listing", 
-              :stylesheets => "pdf", 
+              :stylesheets => ["pdf"], 
               :template => "investigators/list_all.html",
               :layout => "pdf") }
         format.xls  { 
@@ -83,7 +83,7 @@ class InvestigatorsController < ApplicationController
       format.pdf do
         @pdf = true
         render( :pdf => "Investigator Listing", 
-            :stylesheets => "pdf", 
+            :stylesheets => ["pdf"], 
             :template => "investigators/listing.html",
             :layout => "pdf")
       end
@@ -123,7 +123,7 @@ class InvestigatorsController < ApplicationController
         format.pdf do
           @pdf = true
           render( :pdf => "Publications for #{@investigator.full_name}", 
-              :stylesheets => "pdf", 
+              :stylesheets => ["pdf"], 
               :template => "investigators/show.html",
               :layout => "pdf")
         end

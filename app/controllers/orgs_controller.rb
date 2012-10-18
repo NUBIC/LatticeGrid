@@ -247,7 +247,7 @@ class OrgsController < ApplicationController
         format.pdf do
           @pdf = true
            render :pdf => "Show Investigators for " + @unit.name, 
-              :stylesheets => "pdf", 
+              :stylesheets => ["pdf"], 
               :template => "orgs/show_investigators.html.erb",
               :layout => "pdf"
         end
@@ -407,7 +407,7 @@ class OrgsController < ApplicationController
       format.pdf do
         @pdf = true
         render :pdf => "Abstracts for " + @unit.name, 
-          :stylesheets => "pdf", 
+          :stylesheets => ["pdf"], 
           :template => "orgs/show.html.erb",
           :layout => "pdf"
       end
@@ -462,7 +462,7 @@ class OrgsController < ApplicationController
       format.pdf do
         @pdf = true
          render :pdf => "Abstracts for " + @unit.name, 
-            :stylesheets => "pdf", 
+            :stylesheets => ["pdf"], 
             :template => "orgs/show.html.erb",
             :layout => "pdf"
       end

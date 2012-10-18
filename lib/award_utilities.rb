@@ -40,9 +40,14 @@ def clean_date(the_date)
   return nil if the_date.blank?
   begin
     the_date = the_date.to_date if the_date.class.to_s != /date|time/i
-  rescue
-    puts "error converting #{the_date} to a date"
-    the_date = the_date.to_date
+  rescue 
+    begin
+      #assume US 
+      the_date = Date.strptime(the_date, "%m/%d/%Y")
+    rescue Exception => err
+      puts "error converting #{the_date} to a date. Class: #{the_date.class.to_s} Error: #{err.message}"
+      the_date = the_date.to_date
+    end
   end
   return the_date + 2000.years if the_date < '01/01/0070'.to_date
   return the_date + 1900.years if the_date < '01/01/0100'.to_date
@@ -196,7 +201,7 @@ def CreateProposalRecord(data_row)
   # clean out the non-ASCII characters
   j.original_sponsor_name = CleanNonUTFtext(j.original_sponsor_name)
   j.sponsor_name = CleanNonUTFtext(j.sponsor_name)
-  award_title = data_row['Proposal Title'] || data_row['PROPOSAL_TITLE']
+  award_title = data_row['Proposal Title'] || data_row['PROPOSAL_TITLE'] || data_row['proposal_title']
   j.title = truncate_words(award_title, 220) unless award_title.blank?
   j.title = CleanNonUTFtext(j.title)
   

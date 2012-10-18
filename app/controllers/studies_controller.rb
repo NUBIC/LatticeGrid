@@ -57,7 +57,7 @@ class StudiesController < ApplicationController
         format.pdf do
           @pdf = 1
           render( :pdf => "Study listing for " + @investigator.name, 
-              :stylesheets => "pdf", 
+              :stylesheets => ["pdf"], 
               :template => "studies/investigator.html",
               :layout => "pdf")
         end
@@ -96,7 +96,7 @@ class StudiesController < ApplicationController
         format.pdf do
           @pdf = 1
           render( :pdf => "Study listing for " + @unit.name, 
-              :stylesheets => "pdf", 
+              :stylesheets => ["pdf"], 
               :template => "studies/org.html",
               :layout => "pdf")
         end
@@ -114,7 +114,7 @@ class StudiesController < ApplicationController
       format.pdf do
         @pdf = true
         render( :pdf => "Investigator Study Listing", 
-            :stylesheets => "pdf", 
+            :stylesheets => ["pdf"], 
             :template => "studies/listing.html",
             :layout => "pdf")
       end
@@ -154,7 +154,7 @@ class StudiesController < ApplicationController
         format.pdf do
           @pdf = 1
           render( :pdf => "Study listing for " + @unit.name, 
-              :stylesheets => "pdf", 
+              :stylesheets => ["pdf"], 
               :template => "studies/org.html",
               :layout => "pdf")
         end

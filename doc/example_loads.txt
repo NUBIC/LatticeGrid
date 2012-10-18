@@ -1,3 +1,57 @@
+# Feinberg July 2012 loads
+
+rake importDepartments file=db/imports/Feinberg/department_lookup_Oct2012.txt 
+rake importOrganizations file=db/imports/Feinberg/division_lookup_Oct2012.txt #added NICO, IPHAM and other centers
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/Feinberg/private/faculty_Oct2012.txt 
+rake cleanup:countFacultyUpdates
+rake cleanup:purgeUnupdatedFaculty
+rake cleanup:update_titles_and_home_from_ldap
+rake importJointAppointments file=db/imports/Feinberg/joint_appointments_Jul2012.txt
+rake importSecondaryAppointments file=db/imports/Feinberg/secondary_appointments_Oct2012.txt 
+rake importCenterMemberships file=db/imports/Feinberg/center_memberships_Oct2012.txt 
+rake importCenterMemberships file=db/imports/Feinberg/cancer_memberships_Oct2012.txt 
+rake importCenterMemberships file=db/imports/Feinberg/cgm_memberships_Oct2012.txt 
+rake importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_Oct2012.txt 
+
+rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_interests_Oct2012.txt
+rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_descriptions_Oct2012.txt
+rake db:vacuum  #added a custom rake method for this
+rake cleanup:email
+rake cleanup:cleanInvestigatorsUsername
+
+rake importJournalImpact file=db/imports/jcr_recs.txt
+rake importJournalImpact file=db/imports/jcr_recs_2010.txt
+rake importJournalImpact file=db/imports/jcr_recs_2011.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake updateJournalISSNsFromPubmed
+rake cleanJournalISSNentries
+rake findAbstractswithoutJCRentries
+rake findAbstractswithJCRentries
+rake updateJournalISSNsFromPubmed
+rake setPreferredHighImpact
+
+rake awards:importData file=db/imports/Feinberg/private/award_data_20121016.txt
+rake awards:cleanPIassignments
+
+rake importStudies file=db/imports/Feinberg/private/studies_2012-10-17.csv
+rake importStudyInvestigators file=db/imports/Feinberg/private/study_roles_2012-10-17.csv
+rake findStudiesWithoutInvestigators
+
+rake checkValidAbstractsWithoutInvestigators
+rake removeValidAbstractsWithoutInvestigators
+
+rake nightlyBuild
+rake cleanup:findServiceInvestigatorsWithoutActivities
+rake cleanup:purgeServiceInvestigatorsWithoutActivities
+rake cleanup:resolve_duplicate_tags
+rake cleanup:resolve_misformed_tags
+rake monthlyBuild
+
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
 # August 2012 loads, RHLCCC
 
 bundle exec rake RAILS_ENV=production importInvestigators file=db/imports/RHLCCC/new_faculty_Aug2012.txt

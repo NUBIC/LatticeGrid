@@ -84,6 +84,8 @@ def CreateInvestigatorFromHash(data_row)
   pi = SetInvestigatorAddress(pi,data_row)
 
   member_type = HandleMemberType(data_row)
+
+  pi.email = pi.email.downcase.strip unless pi.email.blank?
   
   if pi.username.blank? then
     puts "investigator #{pi.first_name} #{pi.last_name} does not have a username"
@@ -386,6 +388,7 @@ def MergeInvestigatorData(dest_pi, source_pi, overwrite)
   dest_pi.pubmed_search_name  = DoOverwrite(dest_pi.pubmed_search_name, source_pi.pubmed_search_name, overwrite)
   dest_pi.pubmed_limit_to_institution = DoOverwrite(dest_pi.pubmed_limit_to_institution, source_pi.pubmed_limit_to_institution, overwrite)
   dest_pi = LatticeGridHelper.cleanup_campus(dest_pi)
+  dest_pi.email = dest_pi.email.downcase unless dest_pi.email.blank?
   dest_pi
 end
 
@@ -473,13 +476,15 @@ def CreateAppointment(data_row, type)
 	 # employee_id
   division_id = data_row["DIVISION_ID"]
   employee_id = data_row["EMPLOYEE_ID"]
-  if division_id.blank? || employee_id.blank? then
+  username = data_row["USERNAME"]
+  if division_id.blank? || (employee_id.blank? and username.blank?) then
      puts "Division_id or employee_id was blank or missing. datarow="+data_row.inspect
      return
   end  
   appt = InvestigatorAppointment.new
   division = OrganizationalUnit.find_by_division_id(division_id)
-  investigator = Investigator.find_by_employee_id(employee_id)
+  investigator = Investigator.find_by_employee_id(employee_id) unless employee_id.blank?
+  investigator = Investigator.find_by_username(username.downcase) if investigator.blank? and not username.blank?
   if  division.blank? then
      puts "Could not find Organization. datarow="+data_row.inspect
      return

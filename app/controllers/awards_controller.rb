@@ -50,7 +50,7 @@ class AwardsController < ApplicationController
       format.pdf do
         @pdf = true
         render( :pdf => "Investigator Awards Listing", 
-            :stylesheets => "pdf", 
+            :stylesheets => ["pdf"], 
             :template => "awards/listing.html",
             :layout => "pdf")
       end
@@ -86,7 +86,7 @@ class AwardsController < ApplicationController
         format.pdf do
           @pdf = 1
           render( :pdf => "Award listing for " + @investigator.name, 
-              :stylesheets => "pdf", 
+              :stylesheets => ["pdf"], 
               :template => "awards/investigator.html",
               :layout => "pdf")
         end
@@ -133,7 +133,7 @@ class AwardsController < ApplicationController
           format.pdf do
             @pdf = 1
             render( :pdf => "Award listing for " + params[:funding_type], 
-              :stylesheets => "pdf", 
+              :stylesheets => ["pdf"], 
               :template => "awards/org.html",
               :layout => "pdf")
           end
@@ -178,7 +178,7 @@ class AwardsController < ApplicationController
           format.pdf do
             @pdf = 1
             render( :pdf => "Award listing for " + params[:funding_type], 
-              :stylesheets => "pdf", 
+              :stylesheets => ["pdf"], 
               :template => "awards/org.html",
               :layout => "pdf")
           end
@@ -221,7 +221,7 @@ class AwardsController < ApplicationController
       format.pdf do
         @pdf = 1
         render( :pdf => "Award listing for " + @unit.name, 
-           :stylesheets => "pdf", 
+           :stylesheets => ["pdf"], 
            :template => "awards/org.html",
            :layout => "pdf")
       end

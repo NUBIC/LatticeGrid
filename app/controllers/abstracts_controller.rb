@@ -123,11 +123,11 @@ class AbstractsController < ApplicationController
   def impact_factor
     params[:year]||=""
     params[:sortby]||="article_influence_score desc"
-    @journals = Journal.journal_publications([params[:year]], params[:sortby])
-    @missing_journals = Abstract.missing_impact_factors([params[:year]])
+    @journals = Journal.journal_publications(params[:year], params[:sortby])
+    @missing_journals = Abstract.missing_impact_factors(params[:year])
     #@high_impact = Journal.high_impact()
-    @high_impact_pubs = Journal.high_impact_publications([params[:year]])
-    @all_pubs = Abstract.annual_data([params[:year]])
+    @high_impact_pubs = Journal.high_impact_publications(params[:year])
+    @all_pubs = Abstract.annual_data(params[:year])
     
     respond_to do |format|
       format.html {render :layout => 'printable'}
@@ -145,7 +145,7 @@ class AbstractsController < ApplicationController
         :disposition => 'attachment') }
       format.pdf do
          render( :pdf => "High Impact publications for " + params[:year], 
-            :stylesheets => "pdf", 
+            :stylesheets => ["pdf"], 
             :template => "abstracts/impact_factor.html",
             :layout => "pdf")
       end
@@ -160,7 +160,7 @@ class AbstractsController < ApplicationController
       format.pdf do
         @pdf = 1
         render( :pdf => "High Impact journals", 
-            :stylesheets => "pdf", 
+            :stylesheets => ["pdf"], 
             :template => "abstracts/high_impact.html",
             :layout => "pdf")
       end
@@ -175,7 +175,7 @@ class AbstractsController < ApplicationController
       format.html {render :layout => 'high_impact'}
       format.pdf do
         render( :pdf => "Recent high impact by month", 
-            :stylesheets => "high_impact", 
+            :stylesheets => ["high_impact"], 
             :template => "abstracts/high_impact_by_month.html",
             :layout => "high_impact")
       end
