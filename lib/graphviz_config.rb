@@ -3,11 +3,12 @@ require 'graph_generator'
 def date_handler(the_date)
   if the_date =~ /([0-9]+\/[0-9]+\/[0-9]+)/
     the_date = Date.strptime(the_date, "%m/%d/%Y").to_s(:integer_date)
-  elsif gparams[:start_date] =~ /[0-9]+\-[0-9]+\-[0-9]+)/
+  elsif gparams[:start_date] =~ /([0-9]+\-[0-9]+\-[0-9]+)/
     the_date = the_date.to_date.to_s(:integer_date)
   end
   the_date
 end
+
 def build_graphviz_restfulpath(gparams, format='svg')
   # map to restful order
   # 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/start_date/end_date/:program.:format'
