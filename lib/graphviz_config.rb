@@ -1,21 +1,24 @@
 require 'graph_generator'
 
+def date_handler(the_date)
+  if the_date =~ /([0-9]+\/[0-9]+\/[0-9]+)/
+    the_date = Date.strptime(the_date, "%m/%d/%Y").to_s(:integer_date)
+  elsif gparams[:start_date] =~ /[0-9]+\-[0-9]+\-[0-9]+)/
+    the_date = the_date.to_date.to_s(:integer_date)
+  end
+  the_date
+end
 def build_graphviz_restfulpath(gparams, format='svg')
   # map to restful order
   # 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/start_date/end_date/:program.:format'
-  gparams[:start_date] = gparams[:start_date].to_date.to_s(:integer_date) if gparams[:start_date] =~ /([0-9]+\/[0-9]+\/[0-9]+|[0-9]+\-[0-9]+\-[0-9]+)/
-  gparams[:end_date] = gparams[:end_date].to_date.to_s(:integer_date) if gparams[:end_date] =~ /([0-9]+\/[0-9]+\/[0-9]+|[0-9]+\-[0-9]+\-[0-9]+)/
   
-  send_graphviz_image_url(gparams[:id],gparams[:analysis],gparams[:distance],gparams[:stringency],gparams[:include_orphans], gparams[:start_date], gparams[:end_date], gparams[:program], format)
+  send_graphviz_image_url(gparams[:id],gparams[:analysis],gparams[:distance],gparams[:stringency],gparams[:include_orphans], date_handler(gparams[:start_date]), date_handler(gparams[:end_date]), gparams[:program], format)
 end
 
 def build_graphviz_filepath(gparams)
    # map to restful order
    # 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/start_date/end_date/:program.:format',
-   gparams[:start_date] = gparams[:start_date].to_date.to_s(:integer_date) if gparams[:start_date] =~ /([0-9]+\/[0-9]+\/[0-9]+|[0-9]+\-[0-9]+\-[0-9]+)/
-   gparams[:end_date] = gparams[:end_date].to_date.to_s(:integer_date) if gparams[:end_date] =~ /([0-9]+\/[0-9]+\/[0-9]+|[0-9]+\-[0-9]+\-[0-9]+)/
-
-   "graphviz/#{clean_filename(gparams[:id])}/#{gparams[:analysis]}/#{gparams[:distance]}/#{gparams[:stringency]}/#{gparams[:include_orphans]}/#{gparams[:start_date]}/#{gparams[:end_date]}/"
+   "graphviz/#{clean_filename(gparams[:id])}/#{gparams[:analysis]}/#{gparams[:distance]}/#{gparams[:stringency]}/#{gparams[:include_orphans]}/#{date_handler(gparams[:start_date])}/#{date_handler(gparams[:end_date])}/"
  end
 
  # was handle_graphviz_params
