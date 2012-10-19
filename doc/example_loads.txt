@@ -13,6 +13,8 @@ bundle exec rake RAILS_ENV=production getAllMembers
 bundle exec rake RAILS_ENV=production checkForInvestigatorsWithNoPrograms
 bundle exec rake RAILS_ENV=production deleteInvestigatorsWithNoPrograms
 bundle exec rake RAILS_ENV=production importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_Oct2012.txt 
+bundle exec rake RAILS_ENV=production checkValidAbstractsWithoutInvestigators
+bundle exec rake RAILS_ENV=production removeValidAbstractsWithoutInvestigators
 
 #bundle exec rake RAILS_ENV=production insertAllAbstracts 
 bundle exec rake RAILS_ENV=production nightlyBuild
