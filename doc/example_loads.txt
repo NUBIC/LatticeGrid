@@ -1,4 +1,49 @@
-# Feinberg July 2012 loads
+# Oct 2012 loads, RHLCCC
+
+rake importInvestigators file=db/imports/RHLCCC/new_faculty_Oct2012.txt
+rake importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsOct2012.txt
+rake getAllMembers  
+rake checkForInvestigatorsWithNoPrograms
+rake deleteInvestigatorsWithNoPrograms
+
+
+bundle exec rake RAILS_ENV=production importInvestigators file=db/imports/RHLCCC/new_faculty_Oct2012.txt
+bundle exec rake RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsOct2012.txt
+bundle exec rake RAILS_ENV=production getAllMembers  
+bundle exec rake RAILS_ENV=production checkForInvestigatorsWithNoPrograms
+bundle exec rake RAILS_ENV=production deleteInvestigatorsWithNoPrograms
+bundle exec rake RAILS_ENV=production importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_Oct2012.txt 
+
+#bundle exec rake RAILS_ENV=production insertAllAbstracts 
+bundle exec rake RAILS_ENV=production nightlyBuild
+bundle exec rake RAILS_ENV=production cleanup:find_duplicate_tags
+bundle exec rake RAILS_ENV=production cleanup:resolve_duplicate_tags
+bundle exec rake RAILS_ENV=production cleanup:resolve_misformed_tags
+bundle exec rake RAILS_ENV=production monthlyBuild
+
+bundle exec rake RAILS_ENV=production  db:vacuum  #added a custom rake method for this
+bundle exec rake RAILS_ENV=production  cleanup:email
+bundle exec rake RAILS_ENV=production  cleanup:cleanInvestigatorsUsername
+
+bundle exec rake RAILS_ENV=production  importJournalImpact file=db/imports/jcr_recs.txt
+bundle exec rake RAILS_ENV=production  importJournalImpact file=db/imports/jcr_recs_2010.txt
+bundle exec rake RAILS_ENV=production  importJournalImpact file=db/imports/jcr_recs_2011.txt
+bundle exec rake RAILS_ENV=production  importJournalISOnames file=db/imports/jcr_iso_titles.txt
+bundle exec rake RAILS_ENV=production  updateJournalISSNsFromPubmed
+bundle exec rake RAILS_ENV=production  cleanJournalISSNentries
+bundle exec rake RAILS_ENV=production  findAbstractswithoutJCRentries
+bundle exec rake RAILS_ENV=production  findAbstractswithJCRentries
+bundle exec rake RAILS_ENV=production  updateJournalISSNsFromPubmed
+bundle exec rake RAILS_ENV=production  setPreferredHighImpact
+
+bundle exec rake RAILS_ENV=production  awards:importData file=db/imports/Feinberg/private/award_data_20121016.txt
+bundle exec rake RAILS_ENV=production  awards:cleanPIassignments
+
+bundle exec rake RAILS_ENV=production  importStudies file=db/imports/Feinberg/private/studies_2012-10-17.csv
+bundle exec rake RAILS_ENV=production  importStudyInvestigators file=db/imports/Feinberg/private/study_roles_2012-10-17.csv
+bundle exec rake RAILS_ENV=production  findStudiesWithoutInvestigators
+
+# Feinberg Oct 2012 loads
 
 rake importDepartments file=db/imports/Feinberg/department_lookup_Oct2012.txt 
 rake importOrganizations file=db/imports/Feinberg/division_lookup_Oct2012.txt #added NICO, IPHAM and other centers
