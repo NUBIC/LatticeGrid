@@ -57,10 +57,10 @@ end
 
 def TagInvestigatorWithKeywords(investigator)
   if ! investigator.faculty_keywords.blank?
-    AddMeshTermstoObject(investigator,investigator.faculty_keywords.split(",\r\t\n").collect{|kw| kw.strip.downcase })
+    AddMeshTermstoObject(investigator,investigator.faculty_keywords.split(/[,\r\t\n]/).collect{|kw| kw.strip.downcase })
   end
   if ! investigator.faculty_interests.blank?
-    AddMeshTermstoObject(investigator,investigator.faculty_interests.split(",\r\t\n").collect{|kw| kw.strip.downcase })
+    AddMeshTermstoObject(investigator,investigator.faculty_interests.split(/[,\r\t\n]/).collect{|kw| kw.strip.downcase })
   end
 end
 
