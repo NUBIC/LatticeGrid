@@ -232,32 +232,25 @@ class InvestigatorsController < ApplicationController
       format.js  { render  :partial => "shared/tag_cloud", :locals => {:tags => tags, :investigator => investigator, :update_id => 'tag_cloud_side', :include_breaks => true} }
     end
   end 
+  
   def tag_cloud
-    if params[:id] =~ /^\d+$/
-      investigator = Investigator.include_deleted(params[:id])
-    else
-      investigator = Investigator.find_by_username_including_deleted(params[:id])
-    end
+    handle_member_name(false)
     respond_to do |format|
       format.html { 
-        tags = investigator.abstracts.map{|ab| ab.tags.map(&:name) }.flatten
+        tags = @investigator.abstracts.map{|ab| ab.tags.map(&:name) }.flatten
         render :text => tags.join(", ")
       }
       format.js  { 
-        tags = investigator.abstracts.tag_counts( :order => "count desc")
+        tags = @investigator.abstracts.tag_counts( :order => "count desc")
         render  :partial => "shared/tag_cloud", :locals => {:tags => tags}  
       }
     end
   end 
   
   def research_summary
-    if params[:id] =~ /^\d+$/
-      investigator = Investigator.include_deleted(params[:id])
-    else
-      investigator = Investigator.find_by_username_including_deleted(params[:id])
-    end
-    summary = investigator.faculty_research_summary 
-    summary = investigator.investigator_appointments.map(&:research_summary).join("; ") if summary.blank?
+    handle_member_name(false)
+    summary = @investigator.faculty_research_summary 
+    summary = @investigator.investigator_appointments.map(&:research_summary).join("; ") if summary.blank?
     respond_to do |format|
       format.html { render :text => summary }
       format.js  { render :json => summary.to_json  }
@@ -266,12 +259,8 @@ class InvestigatorsController < ApplicationController
   end 
 
   def title
-    if params[:id] =~ /^\d+$/
-      investigator = Investigator.include_deleted(params[:id])
-    else
-      investigator = Investigator.find_by_username_including_deleted(params[:id])
-    end
-    title = investigator.title
+    handle_member_name(false)
+    title = @investigator.title
     respond_to do |format|
       format.html { render :text => title }
       format.js  { render :json => title.to_json  }
@@ -280,12 +269,8 @@ class InvestigatorsController < ApplicationController
   end 
 
   def email
-    if params[:id] =~ /^\d+$/
-      investigator = Investigator.include_deleted(params[:id])
-    else
-      investigator = Investigator.find_by_username_including_deleted(params[:id])
-    end
-    email = investigator.email
+    handle_member_name(false)
+    email = @investigator.email
     respond_to do |format|
       format.html { render :text => email }
       format.js  { render :json => email.to_json  }
@@ -295,7 +280,7 @@ class InvestigatorsController < ApplicationController
 
   def home_department
     handle_member_name
-    home_department_name = investigator.home_department_name
+    home_department_name = @investigator.home_department_name
     respond_to do |format|
       format.html { render :text => home_department_name }
       format.js  { render :json => home_department_name.to_json  }
@@ -304,13 +289,9 @@ class InvestigatorsController < ApplicationController
   end 
 
   def affiliations
-    if params[:id] =~ /^\d+$/
-      investigator = Investigator.include_deleted(params[:id])
-    else
-      investigator = Investigator.find_by_username_including_deleted(params[:id])
-    end
+    handle_member_name(false)
     affiliations = []
-    investigator.appointments.each { |appt| affiliations << [appt.name, appt.division_id, appt.id] }
+    @investigator.appointments.each { |appt| affiliations << [appt.name, appt.division_id, appt.id] }
     respond_to do |format|
       format.html { render :text => affiliations.join("; ") }
       format.js  { render :json => affiliations.to_json  }
@@ -320,6 +301,7 @@ class InvestigatorsController < ApplicationController
 
   def bio
     handle_member_name
+    investigator=@investigator
     unless investigator.blank?
       summary = investigator.faculty_research_summary
       summary = investigator.investigator_appointments.map(&:research_summary).join("; ") if summary.blank?
