@@ -7,7 +7,7 @@ module InvestigatorsHelper
     if !params[:format].blank? and (params[:format] !~ /json|xml|pdf|xls|doc/) then #reassemble the username
       params[:id]=params[:id]+"."+params[:format]
     end
-    if params[:name].blank? then
+    if @investigator.blank? then
       if params[:id] =~ /^[0-9]+$/
         @investigator = Investigator.include_deleted(params[:id])
       else
