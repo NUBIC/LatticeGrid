@@ -319,6 +319,13 @@ class InvestigatorsController < ApplicationController
 
   def bio
     handle_member_name
+    if @investigator.blank?
+      home_department_name = "" 
+    else
+      home_department_name = @investigator.home unless @investigator.home.blank?
+      home_department_name = @investigator.home_department_name if home_department_name.blank? 
+      home_department_name = @investigator.home_department.name if home_department_name.blank? and ! @investigator.home_department.blank? 
+    end
     investigator=@investigator
     unless investigator.blank?
       summary = investigator.faculty_research_summary
@@ -327,8 +334,8 @@ class InvestigatorsController < ApplicationController
       investigator.appointments.each { |appt| affiliations << [appt.name, appt.division_id, appt.id] }
       respond_to do |format|
         format.html { render :text => summary }
-        format.js { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "home_department" => investigator.home_department_name, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
-        format.json { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "home_department" => investigator.home_department_name, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
+        format.js { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "home_department" => home_department_name, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
+        format.json { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "home_department" => home_department_name, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
       end
     else
       render :text => 'investigator not found'

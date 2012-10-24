@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>app/controllers/awards_controller.rb</string>
+	<string>app/controllers/investigators_controller.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -35,6 +35,50 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>app/controllers/investigators_controller.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>102</integer>
+				<key>line</key>
+				<integer>299</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>277</integer>
+		</dict>
+		<key>app/helpers/investigators_helper.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>18</integer>
+				<key>line</key>
+				<integer>4</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>6</integer>
+				<key>line</key>
+				<integer>4</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>24</integer>
+				<key>line</key>
+				<integer>4</integer>
+			</dict>
+		</dict>
 		<key>app/views/graphs/org_nodes.rxml</key>
 		<dict>
 			<key>caret</key>
@@ -62,36 +106,6 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
-		</dict>
-		<key>doc/database_export_import.txt</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>37</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>36</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>37</integer>
-			</dict>
 		</dict>
 		<key>doc/example_loads.txt</key>
 		<dict>
@@ -122,20 +136,6 @@
 				<key>line</key>
 				<integer>24</integer>
 			</dict>
-		</dict>
-		<key>lib/latticegrid.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>13</integer>
-				<key>line</key>
-				<integer>3</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
 		</dict>
 		<key>lib/tasks/pubmed_mesh.rake</key>
 		<dict>
@@ -188,12 +188,12 @@
 		<string>lib/tasks/setup.rake</string>
 		<string>lib/tasks/pubmed_mesh.rake</string>
 		<string>app/controllers/awards_controller.rb</string>
-		<string>doc/database_export_import.txt</string>
-		<string>lib/latticegrid.rb</string>
+		<string>app/controllers/investigators_controller.rb</string>
+		<string>app/helpers/investigators_helper.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{35, 540}, {1000, 878}}</string>
+	<string>{{775, 415}, {1000, 878}}</string>
 </dict>
 </plist>
