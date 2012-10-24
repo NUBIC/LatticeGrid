@@ -1,5 +1,5 @@
 class InvestigatorsController < ApplicationController
-  caches_page( :show, :full_show, :list_all, :listing, :tag_cloud_side, :tag_cloud, :show_all_tags, :publications, :tag_cloud_list, :abstract_count, :preview, :search, :bio, :barchart, :collaborators) if LatticeGridHelper.CachePages()
+  caches_page( :show, :full_show, :list_all, :listing, :tag_cloud_side, :tag_cloud, :show_all_tags, :publications, :tag_cloud_list, :abstract_count, :preview, :search, :bio, :barchart, :collaborators, :home_department) if LatticeGridHelper.CachePages()
   helper :all
   include InvestigatorsHelper
   include ApplicationHelper
@@ -294,11 +294,7 @@ class InvestigatorsController < ApplicationController
   end 
 
   def home_department
-    if params[:id] =~ /^\d+$/
-      investigator = Investigator.include_deleted(params[:id])
-    else
-      investigator = Investigator.find_by_username_including_deleted(params[:id])
-    end
+    handle_member_name
     home_department_name = investigator.home_department_name
     respond_to do |format|
       format.html { render :text => home_department_name }
@@ -323,11 +319,7 @@ class InvestigatorsController < ApplicationController
   end 
 
   def bio
-    if params[:id] =~ /^\d+$/
-      investigator = Investigator.include_deleted(params[:id])
-    else
-      investigator = Investigator.find_by_username_including_deleted(params[:id])
-    end
+    handle_member_name
     unless investigator.blank?
       summary = investigator.faculty_research_summary
       summary = investigator.investigator_appointments.map(&:research_summary).join("; ") if summary.blank?
