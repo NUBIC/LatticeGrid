@@ -295,8 +295,9 @@ class InvestigatorsController < ApplicationController
     if @investigator.blank?
       home_department_name = "" 
     else
-      home_department_name = @investigator.home_department_name
-      home_department_name = @investigator.home_department.name unless @investigator.home_department.blank? 
+      home_department_name = @investigator.home unless @investigator.home.blank?
+      home_department_name = @investigator.home_department_name if home_department_name.blank? 
+      home_department_name = @investigator.home_department.name if home_department_name.blank? and ! @investigator.home_department.blank? 
     end
     respond_to do |format|
       format.html { render :text => home_department_name }
