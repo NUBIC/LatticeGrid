@@ -4,7 +4,7 @@ module InvestigatorsHelper
   
   def handle_member_name(merge_ldap=true)
     return if params[:id].blank?
-    if !params[:format].blank? and (params[:format] !~ /json|xml|pdf|xls|doc/) then #reassemble the username
+    if !params[:format].blank? and (params[:format] !~ /js|json|xml|pdf|xls|doc/) then #reassemble the username
       params[:id]=params[:id]+"."+params[:format]
     end
     if @investigator.blank? then

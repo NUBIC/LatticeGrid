@@ -249,8 +249,12 @@ class InvestigatorsController < ApplicationController
   
   def research_summary
     handle_member_name(false)
-    summary = @investigator.faculty_research_summary 
-    summary = @investigator.investigator_appointments.map(&:research_summary).join("; ") if summary.blank?
+    if @investigator.blank?
+      summary = "" 
+    else
+      summary = @investigator.faculty_research_summary 
+      summary = @investigator.investigator_appointments.map(&:research_summary).join("; ") if summary.blank?
+    end
     respond_to do |format|
       format.html { render :text => summary }
       format.js  { render :json => summary.to_json  }
@@ -260,7 +264,11 @@ class InvestigatorsController < ApplicationController
 
   def title
     handle_member_name(false)
-    title = @investigator.title
+    if @investigator.blank?
+      title = "" 
+    else
+      title = @investigator.title
+    end
     respond_to do |format|
       format.html { render :text => title }
       format.js  { render :json => title.to_json  }
@@ -270,7 +278,11 @@ class InvestigatorsController < ApplicationController
 
   def email
     handle_member_name(false)
-    email = @investigator.email
+    if @investigator.blank?
+      email = "" 
+    else
+      email = @investigator.email
+    end
     respond_to do |format|
       format.html { render :text => email }
       format.js  { render :json => email.to_json  }
@@ -280,7 +292,12 @@ class InvestigatorsController < ApplicationController
 
   def home_department
     handle_member_name
-    home_department_name = @investigator.home_department_name
+    if @investigator.blank?
+      home_department_name = "" 
+    else
+      home_department_name = @investigator.home_department_name
+      home_department_name = @investigator.home_department.name unless @investigator.home_department.blank? 
+    end
     respond_to do |format|
       format.html { render :text => home_department_name }
       format.js  { render :json => home_department_name.to_json  }
