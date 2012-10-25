@@ -292,12 +292,11 @@ class InvestigatorsController < ApplicationController
 
   def home_department
     handle_member_name
-    if @investigator.blank?
-      home_department_name = "" 
-    else
-      home_department_name = @investigator.home unless @investigator.home.blank?
+    home_department_name = "" 
+    unless @investigator.blank?
       home_department_name = @investigator.home_department_name if home_department_name.blank? 
       home_department_name = @investigator.home_department.name if home_department_name.blank? and ! @investigator.home_department.blank? 
+      home_department_name = @investigator.home if home_department_name.blank? and ! @investigator.home.blank?
     end
     respond_to do |format|
       format.html { render :text => home_department_name }
@@ -319,15 +318,12 @@ class InvestigatorsController < ApplicationController
 
   def bio
     handle_member_name
-    if @investigator.blank?
-      home_department_name = "" 
-    else
-      home_department_name = @investigator.home unless @investigator.home.blank?
+    home_department_name = "" 
+    unless @investigator.blank?
       home_department_name = @investigator.home_department_name if home_department_name.blank? 
       home_department_name = @investigator.home_department.name if home_department_name.blank? and ! @investigator.home_department.blank? 
-    end
-    investigator=@investigator
-    unless investigator.blank?
+      home_department_name = @investigator.home if home_department_name.blank? and ! @investigator.home.blank?
+      investigator=@investigator
       summary = investigator.faculty_research_summary
       summary = investigator.investigator_appointments.map(&:research_summary).join("; ") if summary.blank?
       affiliations = []
