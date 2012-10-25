@@ -121,18 +121,18 @@ class AwardsController < ApplicationController
           format.xls  { 
             @pdf = 1
             send_data(render(:template => 'awards/org.html', :layout => "excel"),
-              :filename => "award_listing_for_#{params[:start_date]}_and_#{params[:end_date]}.xls",
+              :filename => "award_listing_between_#{params[:start_date]}_and_#{params[:end_date]}_#{funding_source}.xls",
               :type => 'application/vnd.ms-excel',
               :disposition => 'attachment') }
           format.doc  { 
             @pdf = 1
             send_data(render(:template => 'awards/org.html', :layout => "excel"),
-              :filename => "award_listing_for_#{params[:start_date]}_and_#{params[:end_date]}.doc",
+              :filename => "award_listing_between_#{params[:start_date]}_and_#{params[:end_date]}_#{funding_source}.doc",
               :type => 'application/msword',
               :disposition => 'attachment') }
           format.pdf do
             @pdf = 1
-            render( :pdf => "Award listing for #{params[:start_date]}_and_#{params[:end_date]}", 
+            render( :pdf => "Award listing between #{params[:start_date]} and #{params[:end_date]} #{funding_source}", 
               :stylesheets => ["pdf"], 
               :template => "awards/org.html",
               :layout => "pdf")
