@@ -22,6 +22,7 @@ bundle exec rake RAILS_ENV=production cleanup:find_duplicate_tags
 bundle exec rake RAILS_ENV=production cleanup:resolve_duplicate_tags
 bundle exec rake RAILS_ENV=production cleanup:resolve_misformed_tags
 bundle exec rake RAILS_ENV=production monthlyBuild
+bundle exec rake RAILS_ENV=production setup:wordle
 
 bundle exec rake RAILS_ENV=production  db:vacuum  #added a custom rake method for this
 bundle exec rake RAILS_ENV=production  cleanup:email
@@ -95,6 +96,7 @@ rake cleanup:purgeServiceInvestigatorsWithoutActivities
 rake cleanup:resolve_duplicate_tags
 rake cleanup:resolve_misformed_tags
 rake monthlyBuild
+bundle exec rake setup:wordle
 
 rake db:vacuum  #added a custom rake method for this
 rake log:clear
@@ -242,6 +244,15 @@ bundle exec rake cleanup:find_duplicate_tags
 bundle exec rake cleanup:resolve_duplicate_tags
 bundle exec rake cleanup:resolve_misformed_tags
 bundle exec rake monthlyBuild
+bundle exec rake setup:wordle
+
+rake importJournalImpact file=db/imports/jcr_recs_2011.txt
+rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+rake updateJournalISSNsFromPubmed
+rake cleanJournalISSNentries
+rake findAbstractswithoutJCRentries
+rake findAbstractswithJCRentries
+rake updateJournalISSNsFromPubmed
 
 
 # June 2012 loads, RHLCCC
