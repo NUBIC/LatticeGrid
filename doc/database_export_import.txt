@@ -274,6 +274,11 @@ pg_dump -Fc cinj_latticegrid -U latticegrid > cinjpublications_dev_20120818.dmp
 scp cinjpublications_dev_20120818.dmp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe/cinjpublications_dev_20120818.dmp 
 pg_restore -c -O -d cinj_latticegrid -U latticegrid -h pstage2 cinjpublications_dev_20120818.dmp
 
+# dump from laptop, move to virtualbox image
+pg_dump -Fc cinj_latticegrid -U latticegrid > cinjpublications_dev_20121110.dmp
+scp cinjpublications_dev_20121110.dmp root@10.0.1.109:/root/latticegrid/db/exports/
+pg_restore -c -O -d cinj_latticegrid -U latticegrid cinjpublications_dev_20121110.dmp
+
 
 scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/enotis/tmp/medical_services_2011-06-16_23-04-10.csv  medical_services_2011-06-16_23-04-10.csv
 

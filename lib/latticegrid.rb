@@ -1,6 +1,7 @@
 module LatticeGrid
   def LatticeGrid.the_instance
-    if "#{File.expand_path(RAILS_ROOT)}" =~ /Users/
+    # if "#{File.expand_path(RAILS_ROOT)}" =~ /Users/
+    if Rails.env == 'development'
       'CINJ'
     else
       case "#{File.expand_path(RAILS_ROOT)}"
