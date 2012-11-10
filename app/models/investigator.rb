@@ -412,7 +412,9 @@ has_many :investigator_appointments,
   end
   
   def unit_list()
-     (self.investigator_appointments.collect(&:organizational_unit_id)<<self.home_department_id).uniq
+     home_id = self.home_department_id
+     home_id = 0 if home_id.blank? # handles the case where no assignment has been made
+     (self.investigator_appointments.collect(&:organizational_unit_id)<<home_id).uniq
   end
   
   def self.distinct_primary_appointments()
