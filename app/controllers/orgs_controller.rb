@@ -212,9 +212,13 @@ class OrgsController < ApplicationController
     @show_associated_faculty=false
     @show_associate_members = true if associate_members > 0
     @show_unit_type=false
+    program_array = @units.collect{ |unit| 
+      {"unit_name" => unit.name, "abbreviation" => unit.abbreviation, "id" => unit.id} 
+    }      
     respond_to do |format|
       format.html { render :action => :index }
       format.xml  { render :xml => @units }
+      format.js { render :json => {:programs => program_array }.as_json() }
     end
   end
 
