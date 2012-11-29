@@ -48,6 +48,7 @@
   <div id="cytoscape_options">
 	<input type="checkbox" id="nodeLabelsVisibleCheckbox"> Show Node Labels &nbsp; &nbsp;
     <input type="checkbox" id="edgeLabelsVisibleCheckbox"> Show Edge Labels &nbsp; &nbsp;
+    <input type="button" id="saveNetwork" value="Save" name="SaveNetwork"> &nbsp; &nbsp;
     <span id="layoutradio">
 	<form id="form1" name="form1">
   	  <input type="radio" name="layout" value="ForceDirected"> ForceDirected
@@ -82,6 +83,9 @@
 		vis.edgeLabelsVisible(!vis.edgeLabelsVisible());
 		setItemCheckStatus("#edgeLabelsVisibleCheckbox",vis.edgeLabelsVisible())
 	});
+	jQuery("#saveNetwork").bind('click', function(event){
+		 doExportNetwork();
+	});
 	jQuery("#layoutradio").bind('click', function(event){
 		 jQuery("input[name='layout']").each(
 			function() {
@@ -110,6 +114,10 @@
 			}
 		)
 	}
+	function doExportNetwork() {
+         vis.exportNetwork("pdf", "export");
+         return this;
+     }
 	// from Karthik Singh, July 2011
 
 	function jumpto(x){

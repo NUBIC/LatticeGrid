@@ -22,6 +22,10 @@
   def LatticeGridHelper.allow_profile_edits?
     return false
   end
+  
+  def LatticeGridHelper.test_org_type(org) 
+    (org.type != 'Program')
+  end
 
   def LatticeGridHelper.include_summary_by_member?
     return false

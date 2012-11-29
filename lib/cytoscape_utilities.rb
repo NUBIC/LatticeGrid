@@ -1,7 +1,7 @@
 def generate_cytoscape_schema()
 {
-    :nodes => [{:name => "label", :type => "string"}, {:name => "element_type", :type => "string"}, {:name => "tooltiptext", :type => "string"}, {:name => "weight", :type => "number"}, {:name => "depth", :type => "number"} ],
-    :edges => [{:name => "label", :type => "string"}, {:name => "element_type", :type => "string"}, {:name => "tooltiptext", :type => "string"}, {:name => "weight", :type => "number"}, {:name => "directed", :type => "boolean", :defValue => true} ]
+    :nodes => [{:name => "label", :type => "string"}, {:name => "element_type", :type => "string"}, {:name => "tooltiptext", :type => "string"}, {:name => "weight", :type => "number"}, {:name => "depth", :type => "number"}, {:name => "mass", :type => "long"} ],
+    :edges => [{:name => "label", :type => "string"}, {:name => "element_type", :type => "string"}, {:name => "tooltiptext", :type => "string"}, {:name => "weight", :type => "long"}, {:name => "directed", :type => "boolean", :defValue => true} ]
 }
 end
 
@@ -38,6 +38,7 @@ def cytoscape_investigator_node_hash(investigator, weight=10, depth=1,investigat
    :element_type => "Investigator",
    :label => investigator.name,
    :weight => weight,
+   :mass => weight,
    :depth => depth,
    :tooltiptext => investigator_tooltip(investigator, depth, investigator_awards, investigator_studies)
  }

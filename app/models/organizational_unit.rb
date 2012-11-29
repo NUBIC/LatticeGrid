@@ -108,6 +108,14 @@ class OrganizationalUnit < ActiveRecord::Base
       self.self_and_descendants.collect{|unit| unit.organization_abstracts}.flatten.sort_by(&:abstract_id).uniq
     end
 
+    def abstract_ids
+      self.organization_abstracts.map(&:abstract_id).uniq
+    end
+
+    def abstracts_count
+      self.abstract_ids.length
+    end
+
     def all_abstract_ids
       self.self_and_descendants.collect{|unit| unit.organization_abstracts.map(&:abstract_id)}.flatten.uniq
     end
@@ -196,9 +204,13 @@ class OrganizationalUnit < ActiveRecord::Base
       faculty.collect(&:abstracts).flatten.uniq
     end
 
-    def shared_with_org( org_id )
+    def abstracts_shared_with_org( org_id )
        abs = self.all_abstracts
        OrganizationalUnit.find(org_id).all_abstracts & abs
+    end
+    
+    def abstract_ids_shared_with_org_obj( org )
+       abs = self.all_abstract_ids & org.all_abstract_ids
     end
       
     def abstract_data( page=1 )

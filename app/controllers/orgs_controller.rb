@@ -227,7 +227,7 @@ class OrgsController < ApplicationController
     if @unit.blank?
       render :text=>'could not find unit ' + params[:id]
     else
-      investigators = @unit.associated_faculty.sort_by(&:last_name)
+      investigators = @unit.all_associated_faculty
       investigators_array = investigators.collect{ |inv| 
         {"username" => inv.username, "name" => inv.full_name, "department" => inv.home_department_name, "title" => inv.title} 
       }      

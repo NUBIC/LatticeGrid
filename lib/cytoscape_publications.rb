@@ -44,14 +44,19 @@ def max_org_pubs(org)
   org.all_primary_or_member_faculty.map(&:total_publications).max
 end
 
+def generate_org_node_id(org)
+  return "empty_org" if org.blank?
+  "org_#{org.id}"
+end
+
 def cytoscape_org_node_hash(org, weight=10, depth=1)
  {
-   :id => org.name,
+   :id => generate_org_node_id(org),
    :element_type => "Org",
    :label => org.name,
    :weight => weight,
    :depth => depth,
-   :tooltiptext => org.abbreviation || org.name
+   :tooltiptext => org.abbreviation+"\nPublications: #{weight}\nFaculty: #{org.primary_or_member_faculty.length}"
  }
 end
 

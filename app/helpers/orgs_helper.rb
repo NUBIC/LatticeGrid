@@ -69,4 +69,14 @@ module OrgsHelper
     end
     unit
   end
+  
+  def get_orgs(id)
+    ids=id.split(",")
+    if ids.length > 1
+      OrganizationalUnit.find(:all, :conditions => ["id in (:ids)", {:ids=>ids }])
+    else
+      OrganizationalUnit.find_all_by_id(id)
+    end
+  end
+  
 end

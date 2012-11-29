@@ -1,7 +1,7 @@
 class CytoscapeController < ApplicationController
   before_filter :check_allowed, :only => [:awards, :studies, :show_all]
 
-  caches_page( :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data, :investigator_edge_bundling, :d3_investigator_edge_data, :investigator_wordle, :d3_investigator_wordle_data, :simularity_wordle, :d3_investigators_wordle_data, :d3_investigator_chord_data) if LatticeGridHelper.CachePages()
+  caches_page( :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :org_org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data, :investigator_edge_bundling, :d3_investigator_edge_data, :investigator_wordle, :d3_investigator_wordle_data, :simularity_wordle, :d3_investigators_wordle_data, :d3_investigator_chord_data, :show_all_orgs, :all_org_cytoscape_data) if LatticeGridHelper.CachePages()
   caches_action( :listing, :investigator, :awards, :studies )  if LatticeGridHelper.CachePages()
   
   require 'cytoscape_config'
@@ -30,8 +30,6 @@ class CytoscapeController < ApplicationController
     render :action => :show
   end
 
-  
-
   def show_all
     handle_data_params
     @title = "Publication/Award/Study Collaborations"
@@ -49,6 +47,27 @@ class CytoscapeController < ApplicationController
     show
   end
 
+  def show_org_org
+    params[:include_awards] ||= "0"
+    params[:include_studies] ||= "0"
+    handle_data_params
+    @org = find_unit_by_id_or_name(params[:id])
+    @title = "#{@org.name}: inter-unit ollaborations"
+    @dataurl = org_org_cytoscape_data_url(params[:id], params[:depth], params[:include_publications], params[:include_awards], params[:include_studies])
+    
+    show
+  end
+
+  def show_all_orgs
+    params[:include_awards] ||= "0"
+    params[:include_studies] ||= "0"
+    handle_data_params
+    @title = "All inter-unit collaborations"
+    @dataurl = all_org_cytoscape_data_url(params[:include_publications], params[:include_awards], params[:include_studies], params[:start_date], params[:end_date] )
+    
+    show
+  end
+  
   def awards
     params[:include_publications] ||= "0"
     params[:include_studies] ||= "0"
@@ -129,6 +148,34 @@ class CytoscapeController < ApplicationController
       format.js{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
     end
   end
+
+  def org_org_cytoscape_data
+    orgs = get_orgs(params[:id])
+    handle_data_params
+    data_schema = generate_cytoscape_schema()
+    data = generate_cytoscape_org_org_data(orgs, params[:depth].to_i, params[:include_publications].to_i, params[:include_awards].to_i, params[:include_studies].to_i)
+    respond_to do |format|
+      format.json{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
+      format.js{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
+    end
+  end
+  
+  def all_org_cytoscape_data
+    handle_data_params
+    data_schema = generate_cytoscape_schema()
+    data = generate_cytoscape_all_org_data(params[:include_publications].to_i, params[:include_awards].to_i, params[:include_studies].to_i, params[:start_date], params[:end_date])
+    respond_to do |format|
+      format.json{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
+      format.js{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
+    end
+  end
+
+  def export
+    #all the data should be passed in as a big blob
+    send_data(request.raw_post, :filename => "cytoscape.pdf", :type => "application/pdf")
+  end
+  
+
 
   #protovis methods
   def member_protovis_data
@@ -266,7 +313,7 @@ class CytoscapeController < ApplicationController
   def d3_data
     @units = @head_node.descendants.sort_by(&:abbreviation) 
     if (params[:id].blank?)
-      # children are one level down - descendents are all levels down
+      # children are one level down - descendants are all levels down
       graph = d3_all_units_graph(@units)
     else 
       @master_unit = OrganizationalUnit.find_by_id(params[:id])
@@ -385,6 +432,8 @@ class CytoscapeController < ApplicationController
      params[:include_studies] ||= "1"
      params[:include_publications] ||= "1"
      params[:include_publications] = "1" if params[:include_awards] == "0" and params[:include_studies] == "0"
+     params[:start_date] ||= 5.years.ago.to_date.to_s
+     params[:end_date] ||= Date.today.to_s
    end
  
 end

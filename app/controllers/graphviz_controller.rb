@@ -10,6 +10,7 @@ class GraphvizController < ApplicationController
 
   include ApplicationHelper
   include GraphvizHelper
+  include OrgsHelper
   include MeshHelper # for do_mesh_search
 
   def show_member
@@ -169,15 +170,6 @@ class GraphvizController < ApplicationController
       OrganizationalUnit.find(:all, :conditions => ["id in (:ids)", {:ids=>ids }]).collect(&:name).join(", ")
     else
       OrganizationalUnit.find(id).name
-    end
-  end
-  
-  def get_orgs(id)
-    ids=id.split(",")
-    if ids.length > 1
-      OrganizationalUnit.find(:all, :conditions => ["id in (:ids)", {:ids=>ids }])
-    else
-      OrganizationalUnit.find_all_by_id(id)
     end
   end
   
