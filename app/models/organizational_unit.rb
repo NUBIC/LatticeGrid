@@ -88,10 +88,18 @@ class OrganizationalUnit < ActiveRecord::Base
     named_scope :ordered, 
         :order => "organizational_units.sort_order, organizational_units.abbreviation"
 
+    named_scope :abstracts_by_date, lambda { |*dates|
+        {:joins => [:abstracts],
+          :conditions => 
+            [' abstracts.publication_date between :start_date and :end_date ', 
+              {:start_date => dates.first, :end_date => dates.last } ] }
+    }
+
     # cache this query in a class instance
     @@all_units = nil
     @@head_node = nil
     @@menu_nodes = nil
+    
     def self.all_units
       @@all_units ||= OrganizationalUnit.find( :all, :order => "sort_order, search_name, name" )
     end
@@ -112,8 +120,20 @@ class OrganizationalUnit < ActiveRecord::Base
       self.organization_abstracts.map(&:abstract_id).uniq
     end
 
+    def abstract_ids_by_date(start_date, end_date)
+      self.abstracts.abstracts_by_date(start_date, end_date).map(&:id).uniq
+    end
+
+    def proposal_ids_by_date(start_date, end_date)
+      self.proposals.start_in_range(start_date, end_date).map(&:id).uniq
+    end
+
     def abstracts_count
       self.abstract_ids.length
+    end
+    
+    def proposal_ids
+      (self.primary_faculty + self.members).map{|inv| inv.investigator_proposals.map(&:proposal_id)}.flatten.uniq
     end
 
     def all_abstract_ids
@@ -210,7 +230,19 @@ class OrganizationalUnit < ActiveRecord::Base
     end
     
     def abstract_ids_shared_with_org_obj( org )
-       abs = self.all_abstract_ids & org.all_abstract_ids
+       self.all_abstract_ids & org.all_abstract_ids
+    end
+    
+    def abstract_ids_by_date_shared_with_org_obj( org, start_date, end_date )
+      self.abstract_ids_by_date( start_date, end_date ) & org.abstract_ids_by_date( start_date, end_date )
+    end
+    
+    def proposal_ids_by_date_shared_with_org_obj( org, start_date, end_date)
+      self.proposal_ids_by_date( start_date, end_date ) & org.proposal_ids_by_date( start_date, end_date )
+    end
+       
+    def proposal_ids_shared_with_org_obj(org)
+      self.proposal_ids & org.proposal_ids
     end
       
     def abstract_data( page=1 )

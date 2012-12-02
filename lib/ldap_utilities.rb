@@ -72,6 +72,18 @@ def GetLDAPentryFromName(name)
   return ldap_connection.search( :base => LatticeGridHelper.ldap_treebase(), :filter => cn_filter)
 end
 
+def CleanLDAPou(val)
+  return nil if val.nil?
+  if val.kind_of?(Array) then
+    return nil if val.length == 0
+    (0...val.length).each do |int|
+      cleaned=CleanLDAPvalue(val[int])
+      return cleaned unless cleaned.downcase == 'people'
+    end
+  end
+  return CleanLDAPvalue(val)
+end
+
 def CleanLDAPvalue(val)
   return nil if val.nil?
   if val.kind_of?(Array) then
@@ -85,8 +97,12 @@ end
 
 def CleanLDAPrecord(rec)
   # results are a hash
-  rec.each  do |key,value| 
-     rec[key]=CleanLDAPvalue(rec[key]) 
+  rec.each  do |key,value|
+    if key.to_s.downcase == 'ou'
+      rec[key]=CleanLDAPou(rec[key]) 
+    else
+      rec[key]=CleanLDAPvalue(rec[key]) 
+    end
   end
   return rec
 end
@@ -142,7 +158,7 @@ def MergePIrecords(thePI, pi_data)
     thePI.address1 = thePI.address1.split("$").join(13.chr) unless  thePI.address1.blank?
     thePI.campus = CleanLDAPvalue(pi_data["postalAddress"]).split("$").last || thePI.campus unless pi_data["postalAddress"].blank? or CleanLDAPvalue(pi_data["postalAddress"]).blank?
     # home_department is no longer a string
-    thePI["home"] = CleanLDAPvalue(pi_data.ou)  if pi_data.ou !~ /People/
+    thePI["home"] = CleanLDAPou(pi_data["ou"])
     thePI["ldap_email"] = CleanLDAPvalue(pi_data["mail"])
     #trust the internal system first
     thePI.email ||= CleanLDAPvalue(pi_data["mail"])

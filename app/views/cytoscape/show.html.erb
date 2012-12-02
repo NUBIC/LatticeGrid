@@ -43,12 +43,19 @@
 	<% all_abstracts = @all_abstracts || nil -%>
 	<% title = @title || nil -%>
 	<%= investigator_bio_heading(@investigator, all_abstracts, title) %>
+	<% elsif ! @title.blank? %>
+	  <h1><%= @title %></h1>
 	<% end %>
 	</div>
   <div id="cytoscape_options">
+<p>
 	<input type="checkbox" id="nodeLabelsVisibleCheckbox"> Show Node Labels &nbsp; &nbsp;
     <input type="checkbox" id="edgeLabelsVisibleCheckbox"> Show Edge Labels &nbsp; &nbsp;
-    <input type="button" id="saveNetwork" value="Save" name="SaveNetwork"> &nbsp; &nbsp;
+	<input type="checkbox" id="showAwardEdgeCheckbox" name="showAwardEdgeCheckbox"> Show Award Edges &nbsp; &nbsp;
+	<input type="checkbox" id="showAbstractEdgeCheckbox" name="showAbstractEdgeCheckbox"> Show Abstract Edges &nbsp; &nbsp;
+    <input type="button" id="showAll" value="Show All" name="showAll"> &nbsp; &nbsp;
+    <input type="button" id="saveNetwork" value="Save as PDF" name="SaveNetwork">
+</p>
     <span id="layoutradio">
 	<form id="form1" name="form1">
   	  <input type="radio" name="layout" value="ForceDirected"> ForceDirected
@@ -75,6 +82,10 @@
  </div>
 	<script language="javascript" type="text/javascript" >
 	<!-- hide
+	var g_awards;
+	
+	var g_awards2;
+	
 	jQuery("#nodeLabelsVisibleCheckbox").bind('click', function(event){
 		vis.nodeLabelsVisible(!vis.nodeLabelsVisible());
 		setItemCheckStatus("#nodeLabelsVisibleCheckbox",vis.nodeLabelsVisible())
@@ -82,6 +93,45 @@
 	jQuery("#edgeLabelsVisibleCheckbox").bind('click', function(event){
 		vis.edgeLabelsVisible(!vis.edgeLabelsVisible());
 		setItemCheckStatus("#edgeLabelsVisibleCheckbox",vis.edgeLabelsVisible())
+	});
+	jQuery("#showAwardEdgeCheckbox").bind('click', function(event){
+		var show_award = getItemCheckStatus("#showAwardEdgeCheckbox");
+		var show_abstract = getItemCheckStatus("#showAbstractEdgeCheckbox");
+		if (show_award) {show_award=true;}else{show_award=false}
+		if (show_abstract) {show_abstract=true;}else{show_abstract=false}
+
+		vis.filter("edges", function(obj) {
+			var result=true;
+			if (obj.data.element_type == 'Award') {
+				result = show_award;
+			}
+			if (obj.data.element_type == 'Abstract') {
+				result = show_abstract;
+			}
+			return result;
+		}, true);
+	});
+	jQuery("#showAbstractEdgeCheckbox").bind('click', function(event){
+		var show_award = getItemCheckStatus("#showAwardEdgeCheckbox");
+		var show_abstract = getItemCheckStatus("#showAbstractEdgeCheckbox");
+		if (show_award) {show_award=true;}else{show_award=false}
+		if (show_abstract) {show_abstract=true;}else{show_abstract=false}
+		vis.filter("edges", function(obj) {
+			var result=true;
+			if (obj.data.element_type == 'Award') {
+				result = show_award;
+			}
+			if (obj.data.element_type == 'Abstract') {
+				result = show_abstract;
+			}
+			return result;
+		}, true);
+	});
+	jQuery("#showAll").bind('click', function(event){
+		vis.filter("edges", function(obj) {
+			return true;
+		}, true);
+		vis.removeFilter();
 	});
 	jQuery("#saveNetwork").bind('click', function(event){
 		 doExportNetwork();
@@ -98,11 +148,17 @@
 	jQuery("input[name='layout']").parent().css({border:"1px darkblue solid", padding: "5px"});
 	
 	function changeCytoscapeLayout(layout_name) {
-		vis.layout({name: layout_name, options: LAYOUTS[layout_name]})
+		vis.layout({name: layout_name, options: LAYOUTS[layout_name]});
+		return true;
 	}
 	function setItemCheckStatus(id,status) {
-		jQuery(id).attr('checked',status)
+		jQuery(id).attr('checked',status);
+		return true;
 	}
+	function getItemCheckStatus(id) {
+		return jQuery(id).attr('checked')
+	}
+
 	function setSelectedLayout(title) {
 		jQuery("input[name='layout']").each(
 			function() {
@@ -126,6 +182,9 @@
 	  }
 	}
 
+	setItemCheckStatus("#showAbstractEdgeCheckbox",true);
+	setItemCheckStatus("#showAwardEdgeCheckbox",true);
+
 	// end hide -->
 	</script>
   
@@ -139,6 +198,7 @@
 <!-- end page -->
 <% if params[:depth] == "2" %>
 <script type="text/javascript">
+
 vis.ready(function () {
 	changeCytoscapeLayout("ForceDirected");
  });

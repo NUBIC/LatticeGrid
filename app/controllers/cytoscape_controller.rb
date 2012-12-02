@@ -59,10 +59,10 @@ class CytoscapeController < ApplicationController
   end
 
   def show_all_orgs
-    params[:include_awards] ||= "0"
+    params[:include_awards] ||= "1"
     params[:include_studies] ||= "0"
     handle_data_params
-    @title = "All inter-unit collaborations"
+    @title = "All inter-unit collaborations from #{params[:start_date]} to #{params[:end_date]}"
     @dataurl = all_org_cytoscape_data_url(params[:include_publications], params[:include_awards], params[:include_studies], params[:start_date], params[:end_date] )
     
     show
@@ -405,7 +405,6 @@ class CytoscapeController < ApplicationController
     end
   end
   
-  
   def d3_date_data
     @units = @head_node.descendants.sort_by(&:abbreviation)
     graph = d3_units_by_date_graph(@units, params[:start_date].to_date,  params[:end_date].to_date)
@@ -417,23 +416,23 @@ class CytoscapeController < ApplicationController
     end
   end
 
+  private  
 
+  def check_allowed
+    unless allowed_ip(get_client_ip()) then 
+      redirect_to disallowed_awards_url
+    end
+  end
 
-   private  
-   def check_allowed
-     unless allowed_ip(get_client_ip()) then 
-       redirect_to disallowed_awards_url
-     end
-   end
-   
-   def handle_data_params
-     params[:depth] ||= "1"
-     params[:include_awards] ||= "1"
-     params[:include_studies] ||= "1"
-     params[:include_publications] ||= "1"
-     params[:include_publications] = "1" if params[:include_awards] == "0" and params[:include_studies] == "0"
-     params[:start_date] ||= 5.years.ago.to_date.to_s
-     params[:end_date] ||= Date.today.to_s
-   end
+  def handle_data_params
+    params[:depth] ||= "1"
+    params[:include_awards] ||= "1"
+    params[:include_studies] ||= "1"
+    params[:include_publications] ||= "1"
+    params[:include_publications] = "1" if params[:include_awards] == "0" and params[:include_studies] == "0"
+    params[:start_date] ||= 5.years.ago.to_date.to_s
+    params[:end_date] ||= Date.today.to_s
+    params[:end_date] ||= 10.years.ago.to_date.to_s
+  end
  
 end

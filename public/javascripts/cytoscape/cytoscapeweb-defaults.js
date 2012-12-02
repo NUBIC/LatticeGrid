@@ -60,7 +60,7 @@ $(function(){
 	// layout options:
 	//LAYOUTS["ForceDirected"] = { angleWidth: 180, radius: 80, fitToScreen: false, gravitation: -5000, mass: 3, tension: 0.15, restLength: "auto", drag: 0.4, minDistance: 10, maxDistance: 1000,  weightAttr: "", weightNorm: ["linear","invlinear","log"], iterations: 400, maxTime: 30000, autoStabilize: true };
 	//LAYOUTS["ForceDirected"] = { fitToScreen: false, gravitation: -1000, mass: 40, tension: 2, restLength: 15, drag: 0.4, minDistance: 5, maxDistance: 100,  weightAttr: "weight", weightNorm: "log", iterations: 400, maxTime: 10000, autoStabilize: true, seed: 500 };
-	LAYOUTS["ForceDirected"] = { fitToScreen: false, gravitation: -200, mass: 2, tension: 0.2, restLength: 100, drag: 0.2, minDistance: 1, maxDistance: 400,  weightAttr: "weight", weightNorm: "log", iterations: 200, maxTime: 10000, autoStabilize: true, seed: 500 };
+	LAYOUTS["ForceDirected"] = { fitToScreen: false, gravitation: -2000, mass: 200, tension: 0.2, restLength: 100, drag: 0.4, minDistance: 20, maxDistance: 400,  weightAttr: "weight", weightNorm: "log", iterations: 200, maxTime: 10000, autoStabilize: true, seed: 500 };
     LAYOUTS["Circle"] = { angleWidth: 360, tree: false };
     LAYOUTS["Radial"] = { radius: 300, angleWidth: 360 };
     //LAYOUTS["Tree"] = { orientation: ["topToBottom","bottomToTop","leftToRight","rightToLeft"], depthSpace: 50, breadthSpace: 30, subtreeSpace: 5 };
@@ -71,6 +71,7 @@ $(function(){
 	        attrName: "element_type",
 	        entries: [ { attrValue: "Award", value: "#6D6" },
 	                   { attrValue: "Publication", value: "#67F" },
+	                   { attrValue: "Abstract", value: "#67F" },
 	                   { attrValue: "Org", value: "#AAA" },
 	                   { attrValue: "Investigator", value: "#AA9" },
 	                   { attrValue: "Study", value: "#E88" } ]
@@ -294,7 +295,7 @@ $(function(){
 				opacity: 1,
 				//width: { continuousMapper: { attrName: "weight", minValue: 5, maxValue: 35, minAttrValue: 10, maxAttrValue: 200 } },
 				//height: { continuousMapper: { attrName: "weight", minValue: 5, maxValue: 35, minAttrValue: 10, maxAttrValue: 200 } },
-				size: { continuousMapper: { attrName: "weight", minValue: 5, maxValue: 35, minAttrValue: 10, maxAttrValue: 200 } },
+				size: { continuousMapper: { attrName: "weight", minValue: 10, maxValue: 35 } },
 				color: { continuousMapper: { attrName: "weight", minValue: "#669966", maxValue: "#99ff00" } },
 				borderWidth: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 6, minAttrValue: 10, maxAttrValue: 100 } },
 				borderColor: { continuousMapper: { attrName: "weight", minValue: "#225588", maxValue: "#003366" } },
@@ -337,7 +338,7 @@ $(function(){
 				opacity: { defaultValue: 0.2, continuousMapper: { attrName: "weight", minValue: 0.2, maxValue: 1 } },
 //				color: { continuousMapper: { attrName: "weight", minValue: "#aaaaaa", maxValue: "#333333" } },
 				color: { defaultValue: "#999999", discreteMapper: elementColorMapper },
-				width: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 10 } },
+				width: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 10, minAttrValue: 5, maxAttrValue: 200 } },
 				mergeWidth: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 6 } },
 				tooltipText: "${tooltiptext}",
 				mergeTooltipText: "${tooltiptext}",

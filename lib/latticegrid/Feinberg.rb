@@ -3,7 +3,7 @@ def LatticeGridHelper.menu_head_abbreviation
 end
 
 def LatticeGridHelper.test_org_type(org) 
-  (org.type != 'Department' and org.type != 'Division')
+  (org.type != 'Department' and org.type != 'Division' and org.type != 'School')
 end
 
 def LatticeGridHelper.high_impact_issns

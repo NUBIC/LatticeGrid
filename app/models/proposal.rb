@@ -1,7 +1,16 @@
 class Proposal < ActiveRecord::Base
   has_many :investigator_proposals
   has_many :investigators, :through => :investigator_proposals
-  
+    
+  named_scope :by_ids, lambda { |*ids|
+      {:conditions => ['proposals.id IN (:ids) ', {:ids => ids.first}] }
+    }
+  named_scope :start_in_range, lambda { |*dates|
+      {:conditions => 
+          [' proposals.award_start_date between :start_date and :end_date or proposals.project_start_date between :start_date and :end_date', 
+            {:start_date => dates.first, :end_date => dates.last } ] }
+  }
+
   
   def pi
     pi_award = self.pi_award
@@ -15,6 +24,10 @@ class Proposal < ActiveRecord::Base
       return pis.first
     end
     return nil
+  end
+  
+  def self.total_funding_for_ids(ids)
+    self.by_ids(ids).map(&:total_amount).sum
   end
     
   def self.including_investigator_ids(ids)

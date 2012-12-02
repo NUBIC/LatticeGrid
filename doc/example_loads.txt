@@ -7,6 +7,9 @@ rake checkForInvestigatorsWithNoPrograms
 rake deleteInvestigatorsWithNoPrograms
 
 
+bundle exec rake RAILS_ENV=production  cleanup:update_titles_and_home_from_ldap
+
+
 bundle exec rake RAILS_ENV=production importInvestigators file=db/imports/RHLCCC/new_faculty_Oct2012.txt
 bundle exec rake RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsOct2012.txt
 bundle exec rake RAILS_ENV=production getAllMembers  

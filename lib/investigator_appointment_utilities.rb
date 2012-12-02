@@ -695,6 +695,7 @@ def UpdateHomeDepartmentAndTitle(pi)
   CleanTitle(investigator)
   if investigator.home == 'People'
     investigator.home = nil
+    puts "department was not found for #{pi.name}"
   end
   if pi.home_department_name == 'People'
     pi.home_department_name = nil
