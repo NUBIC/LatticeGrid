@@ -52,7 +52,7 @@ task :tagInvestigatorsWithKeywords => [:getInvestigators] do
   start = Time.now
 
   block_timing("tagInvestigatorsWithKeywords") {
-    row_iterator(@AllInvestigators, 0, 100, start) do |investigator|
+    row_iterator(@AllInvestigators, 0, 200, start) do |investigator|
       TagInvestigatorWithKeywords(investigator)
     end
   }
@@ -78,10 +78,10 @@ task :attachMeshInformationContent => :environment do
   abstract_max_tag_count=Abstract.tag_counts(:limit=>5, :order=>"count desc")[0].count
   
   block_timing("attachMeshInformationContent") {
-    row_iterator(investigator_tag_counts) { |tag_count|
+    row_iterator(investigator_tag_counts, 0, 2000) { |tag_count|
       SetMeshInformationContent( tag_count, investigator_max_tag_count, 'Investigator' )
     }
-    row_iterator(abstract_tag_counts) { |tag_count|
+    row_iterator(abstract_tag_counts, 0, 2000) { |tag_count|
       SetMeshInformationContent(tag_count, abstract_max_tag_count, 'Abstract' )
     }
   }

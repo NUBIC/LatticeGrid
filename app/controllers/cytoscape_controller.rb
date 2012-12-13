@@ -30,6 +30,17 @@ class CytoscapeController < ApplicationController
     render :action => :show
   end
 
+  def showjs
+    params[:include_awards] ||= "0"
+    params[:include_studies] ||= "0"
+    handle_data_params
+    @title ||= "Publications Collaborations"
+    @investigator=Investigator.find_by_username(params[:id])
+    @dataurl ||= member_cytoscape_data_url(params[:id], params[:depth], params[:include_publications], params[:include_awards], params[:include_studies])
+    @base_path_without_depth = base_path(true)
+    render :action => :show, :layout => 'cytoscapejs'
+  end
+
   def show_all
     handle_data_params
     @title = "Publication/Award/Study Collaborations"
@@ -126,7 +137,17 @@ class CytoscapeController < ApplicationController
     #needs the username 
     render :layout => false
   end
+  
+  def member_cytoscapejs_data
+    @investigator=Investigator.find_by_username(params[:id])
+    handle_data_params
+    data = generate_cytoscapejs_data(@investigator, params[:depth].to_i, params[:include_publications].to_i, params[:include_awards].to_i, params[:include_studies].to_i)
+    respond_to do |format|
+       format.js{ render :layout=> false, :json=> {:data => data.as_json()}  }
+    end
+  end
 
+  
   def member_cytoscape_data
     @investigator=Investigator.find_by_username(params[:id])
     handle_data_params
