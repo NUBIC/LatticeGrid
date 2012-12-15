@@ -12,10 +12,34 @@ namespace :awards do
     read_file_handler("awards:importData" ) {|filename| ReadAwardData(filename)}
     if defined?(@not_found_employee_messages)
       puts "Number of employees not found: #{@not_found_employee_messages.length}"
-      puts @not_found_employee_messages.join("\n")
+      # puts @not_found_employee_messages.join("\n")
     end
     @AllAwards = Proposal.all
     puts "count of all proposals is #{@AllAwards.length}" if LatticeGridHelper.verbose?
+  end
+
+  task :clear => :environment do
+    puts "count of all proposals is #{Proposal.count} and InvestigatorProposals is #{InvestigatorProposal.count}" if LatticeGridHelper.verbose?
+    InvestigatorProposal.delete_all
+    Proposal.delete_all
+    puts "all deleted"
+  end
+
+  task :mergeData => :environment do
+    @awards = Proposal.child_awards
+    @parent_awards = Proposal.with_children
+    puts "Merging awards where parent_institution_award_number does not equal institution_award_number" if LatticeGridHelper.verbose?
+    puts "count of child awards is #{@awards.length}" if LatticeGridHelper.verbose?
+    puts "count of awards with children is #{@parent_awards.length}" if LatticeGridHelper.verbose?
+    @parent_awards.each do |award|
+      merge_child_records(award)
+    end
+    unless @unmatched_parent_awards.blank?
+      puts "unable to find #{@unmatched_parent_awards.length} parent awards"
+      @unmatched_parent_awards.each do |award_id|
+        puts "unable to find parent award #{award_id}"
+      end
+    end
   end
 
   task :cleanDates => :getAwards do

@@ -39,7 +39,9 @@ end
 def clean_date(the_date)
   return nil if the_date.blank?
   begin
-    the_date = the_date.to_date if the_date.class.to_s != /date|time/i
+    #seems to come over as a 2 digit year. Freaks
+    #assume US crappy format
+    the_date = Date.strptime(the_date, "%m/%d/%y")
   rescue 
     begin
       #assume US 
@@ -128,6 +130,9 @@ def CreateAwardData(data_row)
       is_main_pi = false
     end
   end
+  if is_main_pi and not role == 'PD/PI'
+    role = 'PD/PI'
+  end
   investigator_effort  = data_row['TOTAL_EFFORT']
   investigator_effort  = 0 if investigator_effort.blank?
   investigator = Investigator.find_by_employee_id(employee_id) if not (last_name =~ /conversion/i)
@@ -138,9 +143,15 @@ def CreateAwardData(data_row)
          {:investigator_id => investigator.id, :proposal_id => proposal.id}])
       if investigator_proposal.blank?  then
         InvestigatorProposal.create(:investigator_id => investigator.id, :proposal_id => proposal.id, :role=>role, :percent_effort => investigator_effort, :is_main_pi => is_main_pi)
-      elsif investigator_proposal.percent_effort != investigator_effort
-        investigator_proposal.percent_effort = investigator_effort
-        investigator_proposal.save!
+      else
+        if investigator_proposal.percent_effort < investigator_effort.to_i
+          investigator_proposal.percent_effort = investigator_effort
+          investigator_proposal.save!
+        end
+        if investigator_proposal.role != role and ! role.blank? and investigator_proposal.role != 'PD/PI'
+          investigator_proposal.role = role
+          investigator_proposal.save!
+        end
       end
     else
       puts "unable to create proposal for row #{data_row.inspect}"
@@ -148,11 +159,61 @@ def CreateAwardData(data_row)
   elsif not @not_found_employees.include?(employee_id)
     @not_found_employees << employee_id
     @not_found_employee_messages << "unable to find investigator #{first_name} #{last_name} with NU employee_id #{employee_id}\t#{employee_id}"
-    # puts "unable to find investigator #{first_name} #{last_name} with NU employee_id #{employee_id}\t#{employee_id}"
   end
 end
 
-def CreateProposalRecord(data_row)
+def merge_child_records(parent)
+  children = parent.children
+  if parent.merged then
+    puts "award #{parent.institution_award_number} has been merged"
+    return
+  end
+  parent_investigator_ids = parent.investigator_proposals.map(&:investigator_id)
+  parent_pi_ids           = parent.investigator_proposals.pis.map(&:investigator_id)
+  children.each do |child|
+    next if child.merged
+    child_investigator_ids  = child.investigator_proposals.map(&:investigator_id)
+    child_pi_ids            = child.investigator_proposals.pis.map(&:investigator_id)
+    child_investigator_ids  = child_investigator_ids - child_pi_ids
+    child_pi_ids.each do |child_pi|
+      unless parent_pi_ids.include?(child_pi)
+        if parent_investigator_ids.include?(child_pi)
+          remove_proposal_investigator(parent, child_pi)
+        end
+      end
+    end
+    child_investigator_ids.each do |child_inv|
+      if parent_investigator_ids.include?(child_inv)
+        remove_proposal_investigator(child, child_inv)
+      end
+    end
+    if (child_pi_ids - parent_pi_ids) !=  child_pi_ids
+      puts "PI of award and subaward. Not merging: #{parent.institution_award_number}: $#{child.total_amount} not added from award #{child.institution_award_number}"
+    else
+      puts "#{parent.institution_award_number}: adding $#{child.total_amount} to $#{parent.total_amount} from award #{child.institution_award_number}"
+      parent.direct_amount   +=  child.direct_amount
+      parent.indirect_amount +=  child.indirect_amount
+      parent.total_amount    +=  child.total_amount
+    end
+    child.merged = true
+    child.save!
+  end
+  parent.save!
+end
+
+def remove_proposal_investigator(the_award, inv_id)
+  inv = Investigator.find_by_id(inv_id)
+  if the_award.institution_award_number ==  the_award.parent_institution_award_number
+    puts "#{the_award.institution_award_number}: removing #{inv.name}"
+  else
+    puts "#{the_award.institution_award_number}: removing #{inv.name} - parent award is #{the_award.parent_institution_award_number} "
+  end
+  the_award.investigator_proposals.each do |ip|
+    ip.destroy if ip.investigator_id == inv_id
+  end
+end
+
+def CreateNewProposalFromData(data_row)
   # about the award
   
   #AWARD_BEGIN_DATE
@@ -182,7 +243,9 @@ def CreateProposalRecord(data_row)
 
   j = Proposal.new
   j.institution_award_number =  data_row['Institution Number'] || data_row['INST_NUM']
-  j.institution_award_number =  j.institution_award_number.gsub(/[ -].*/, "") if !j.institution_award_number.blank?
+  j.institution_award_number =  j.institution_award_number.gsub(/[ -].*/, "") unless j.institution_award_number.blank?
+  j.parent_institution_award_number = data_row['Parent Institution Number'] || data_row['PARENT_INST_NUM']
+  j.parent_institution_award_number =  j.parent_institution_award_number.gsub(/[ -].*/, "") unless j.parent_institution_award_number.blank?
   j.sponsor_award_number =  data_row['Sponsored Award Number'] || data_row['SPONSOR_AWARD_NUMBER']
   j.pi_employee_id =  data_row['PI_EMPLOYEE_ID']
   j.direct_amount =  data_row['DIRECT_AMOUNT']
@@ -225,6 +288,12 @@ def CreateProposalRecord(data_row)
   
   j.award_category = data_row["Program Type"]
   j.award_type = data_row['Instrument Type']
+  return j
+end
+
+def CreateProposalRecord(data_row)
+  @inserted_amounts = [] if @inserted_amounts.blank?
+  j = CreateNewProposalFromData(data_row)
   
   if j.institution_award_number.blank?
     puts "institutional award number was blank for row: #{data_row.inspect}"
@@ -241,36 +310,64 @@ def CreateProposalRecord(data_row)
     existing_award = j
     return existing_award
   end
+  
+  if !j.total_amount.blank? and existing_award.total_amount != j.total_amount and existing_award.total_amount < j.total_amount
+    existing_award.total_amount = j.total_amount
+    dirty=true
+  end
+  if !j.total_amount.blank? and existing_award.total_amount/5 > j.total_amount and not @inserted_amounts.include?(j.total_amount) and j.total_amount > 0
+    if existing_award.project_start_date < j.project_start_date or existing_award.project_end_date < j.project_end_date 
+      puts "#{j.institution_award_number} from #{j.sponsor_name} titled #{j.title}"
+      puts "#{j.institution_award_number}: award amount different: was #{existing_award.total_amount} and is #{j.total_amount}"
+      puts "#{j.institution_award_number}: award project dates: was #{existing_award.project_start_date} - #{existing_award.project_end_date} and is #{j.project_start_date} - #{j.project_end_date}"
+      puts "#{j.institution_award_number}: award  dates: was #{existing_award.award_start_date} - #{existing_award.award_end_date} and is #{j.award_start_date} - #{j.award_end_date}"
+      existing_award.direct_amount += j.direct_amount
+      existing_award.indirect_amount += j.indirect_amount
+      existing_award.total_amount += j.total_amount
+      @inserted_amounts << j.total_amount
+      dirty=true
+    end
+  end
+  
   if existing_award.blank? or existing_award.id.blank?
     puts "existing_award was blank. Shouldn't happen. Data for row: #{data_row.inspect}"
     return nil  
   end
+  original_award = existing_award.inspect
+  dirty=false
   if !j.title.blank? and existing_award.title != j.title 
     existing_award.title = j.title
-    existing_award.save
+    dirty=true
   end
-  if !j.project_start_date.blank? and existing_award.project_start_date != j.project_start_date 
+  if !j.project_start_date.blank? and existing_award.project_start_date > j.project_start_date 
     existing_award.project_start_date = j.project_start_date
-    existing_award.save!
+    dirty=true
   end
-  if !j.project_end_date.blank? and existing_award.project_end_date != j.project_end_date 
+  if !j.project_end_date.blank? and existing_award.project_end_date < j.project_end_date 
     existing_award.project_end_date = j.project_end_date
-    existing_award.save
+    dirty=true
   end
-  if !j.award_start_date.blank? and existing_award.award_start_date != j.award_start_date 
+  if !j.award_start_date.blank? and existing_award.award_start_date > j.award_start_date 
     existing_award.award_start_date = j.award_start_date
-    existing_award.save
+    dirty=true
   end
-  if !j.award_end_date.blank? and existing_award.award_end_date != j.award_end_date 
+  if !j.award_end_date.blank? and existing_award.award_end_date < j.award_end_date 
     existing_award.award_end_date = j.award_end_date
-    existing_award.save
+    dirty=true
   end
   if !j.original_sponsor_name.blank? and  existing_award.original_sponsor_name != j.original_sponsor_name 
     existing_award.original_sponsor_name = j.original_sponsor_name 
-    existing_award.save
+    dirty=true
   end
   if !j.sponsor_name.blank? and existing_award.sponsor_name != j.sponsor_name
     existing_award.sponsor_name = j.sponsor_name 
+    dirty=true
+  end
+  if !j.parent_institution_award_number.blank? and existing_award.parent_institution_award_number != j.parent_institution_award_number
+    existing_award.parent_institution_award_number = j.parent_institution_award_number 
+    dirty=true
+  end
+  if dirty
     existing_award.save
   end
   existing_award

@@ -68,7 +68,7 @@ jQuery(document).ready(function() {
     // call the tablesorter plugin 
   jQuery("#listingTable").tablesorter(
       // turn off sorting on the 1st header
-      { headers: { 0: {sorter: false} }, widgets: ['zebra'] }
+      { sortInitialOrder: "asc", headers: { 0: {sorter: false} }, widgets: ['zebra'], sortList: [[11,1]]  }
   ); 
   jQuery('#listingTable').fixheadertable({
 	caption  : 'Click on a header to sort by that element',

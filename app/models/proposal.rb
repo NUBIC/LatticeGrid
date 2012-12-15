@@ -4,7 +4,12 @@ class Proposal < ActiveRecord::Base
     
   named_scope :by_ids, lambda { |*ids|
       {:conditions => ['proposals.id IN (:ids) ', {:ids => ids.first}] }
-    }
+  }
+  
+  named_scope :child_awards, :conditions => ['proposals.parent_institution_award_number != proposals.institution_award_number']
+
+  named_scope :with_children, :conditions => ["exists (select 'x' from proposals p2 where p2.parent_institution_award_number = proposals.institution_award_number and p2.id != proposals.id ) and proposals.institution_award_number = proposals.parent_institution_award_number"]
+
   named_scope :start_in_range, lambda { |*dates|
       {:conditions => 
           [' proposals.award_start_date between :start_date and :end_date or proposals.project_start_date between :start_date and :end_date', 
@@ -17,6 +22,19 @@ class Proposal < ActiveRecord::Base
     return nil if pi_award.blank?
     return pi_award.investigator
   end
+
+  def pi_award
+    pis = self.investigator_proposals.pis
+    if pis.length > 0
+      return pis.first
+    end
+    return nil
+  end
+
+  def children
+    Proposal.all(:conditions=> ["proposals.parent_institution_award_number = :institution_award_number and proposals.parent_institution_award_number != proposals.institution_award_number ", {:institution_award_number=> self.institution_award_number} ] )
+  end
+
 
   def pi_award
     pis = self.investigator_proposals.pis
