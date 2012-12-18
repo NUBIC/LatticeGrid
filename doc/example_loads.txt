@@ -41,7 +41,7 @@ bundle exec rake RAILS_ENV=production  findAbstractswithJCRentries
 bundle exec rake RAILS_ENV=production  updateJournalISSNsFromPubmed
 bundle exec rake RAILS_ENV=production  setPreferredHighImpact
 
-bundle exec rake RAILS_ENV=production  awards:clearData
+bundle exec rake RAILS_ENV=production  awards:clear
 bundle exec rake RAILS_ENV=production  awards:importData file=db/imports/Feinberg/private/award_data_20121210.txt
 bundle exec rake RAILS_ENV=production  awards:cleanPIassignments
 bundle exec rake RAILS_ENV=production  awards:mergeData

@@ -420,7 +420,7 @@ end
 
   def is_admin?
     begin
-      if [ 'wakibbe', 'admin', 'tvo743', 'jkk366', 'jhl197', 'ddc830', 'mar352' ].include?(current_user.username.to_s)  then
+      if [ 'wakibbe', 'admin', 'tvo743', 'jkk366', 'jhl197', 'ddc830', 'mar352', 'vvs359' ].include?(current_user.username.to_s)  then
     	  return true
       end
     rescue
