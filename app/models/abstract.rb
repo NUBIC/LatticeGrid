@@ -401,16 +401,16 @@ class Abstract < ActiveRecord::Base
    		      {:unit_id => unit_id, :pub_start_date => pub_start_date, :pub_end_date => pub_end_date}])
   end
 
-  def self.display_tsearch(keywords, paginate=1, page=1)
+  def self.display_tsearch(keywords, paginate=1, page=1, limit=nil)
      if paginate != '0' then
-       abstracts = display_tsearch_paginated(keywords.keywords, keywords.search_field, page)
+       abstracts = display_tsearch_paginated(keywords.keywords, keywords.search_field, page, limit)
       else
-       abstracts = display_tsearch_no_pagination(keywords.keywords, keywords.search_field)
+       abstracts = display_tsearch_no_pagination(keywords.keywords, keywords.search_field, limit)
      end
      return abstracts
   end
 
-  def self.display_tsearch_paginated(terms, search_field, page)
+  def self.display_tsearch_paginated(terms, search_field, page, limit=nil)
     if search_field.include?("Abstract") or search_field.include?("Title")
       abstract_ids = Abstract.find_by_tsearch(terms, {:select => 'ID'}, {:vector => "abstract_vector"})
     elsif search_field.include?("Author") or search_field.include?("Investigator")
@@ -435,6 +435,7 @@ class Abstract < ActiveRecord::Base
       abstracts = Abstract.paginate(:page => page,
         :include => [:investigators],
         :per_page => 20, 
+        :limit => limit,
         :order => "year DESC, authors ASC",
         :conditions => ["abstracts.id IN (:abstract_ids) and investigator_abstracts.is_valid = true",
            {:abstract_ids => abstract_ids.collect(&:id)} ])
@@ -442,7 +443,7 @@ class Abstract < ActiveRecord::Base
     abstracts
   end
 
-  def self.display_tsearch_no_pagination(terms, search_field)
+  def self.display_tsearch_no_pagination(terms, search_field, limit=nil)
     if search_field.include?("Abstract") or search_field.include?("Title")
       abstracts = Abstract.find_by_tsearch(terms, nil, {:vector => "abstract_vector"})
     elsif search_field.include?("Author") or search_field.include?("Investigator")
@@ -454,6 +455,7 @@ class Abstract < ActiveRecord::Base
       lc_keywords = "%"+lc_keywords+"%" 
       abstracts = all(
             :joins => [:investigators],
+            :limit => limit,
             :order => "year DESC, authors ASC",
             :conditions => ["lower(investigators.faculty_keywords) like :search_term OR lower(investigators.faculty_research_summary) like :search_term  OR lower(investigators.faculty_interests) like :search_term",
               {:search_term => lc_keywords }])

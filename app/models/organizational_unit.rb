@@ -124,6 +124,10 @@ class OrganizationalUnit < ActiveRecord::Base
       self.abstracts.abstracts_by_date(start_date, end_date).map(&:id).uniq
     end
 
+    def all_abstract_ids_by_date(start_date, end_date)
+      self.self_and_descendants.collect{|unit| unit.abstracts.abstracts_by_date(start_date, end_date).map(&:id)}.flatten.uniq
+    end
+
     def proposal_ids_by_date(start_date, end_date)
       self.proposals.start_in_range(start_date, end_date).map(&:id).uniq
     end
@@ -138,6 +142,10 @@ class OrganizationalUnit < ActiveRecord::Base
 
     def all_abstract_ids
       self.self_and_descendants.collect{|unit| unit.organization_abstracts.map(&:abstract_id)}.flatten.uniq
+    end
+
+    def all_abstracts_count
+      self.all_abstract_ids.length
     end
 
     def all_abstracts
@@ -171,7 +179,7 @@ class OrganizationalUnit < ActiveRecord::Base
     def all_secondary_faculty
       self.self_and_descendants.collect(&:secondary_faculty).flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
     end
-
+    
     # associated_faculty includes joint, secondary and members
     def all_associated_faculty
       self.self_and_descendants.collect(&:associated_faculty).flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
@@ -187,6 +195,10 @@ class OrganizationalUnit < ActiveRecord::Base
 
     def all_faculty
       (all_primary_faculty + all_associated_faculty).sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    end
+    
+    def all_primary_or_member_faculty_count
+      all_primary_or_member_faculty.length
     end
 
     def get_faculty_by_types(affiliation_types=nil, ranks=nil)
@@ -235,6 +247,10 @@ class OrganizationalUnit < ActiveRecord::Base
     
     def abstract_ids_by_date_shared_with_org_obj( org, start_date, end_date )
       self.abstract_ids_by_date( start_date, end_date ) & org.abstract_ids_by_date( start_date, end_date )
+    end
+    
+    def all_abstract_ids_by_date_shared_with_org_obj( org, start_date, end_date )
+      self.all_abstract_ids_by_date( start_date, end_date ) & org.all_abstract_ids_by_date( start_date, end_date )
     end
     
     def proposal_ids_by_date_shared_with_org_obj( org, start_date, end_date)

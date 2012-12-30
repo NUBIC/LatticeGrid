@@ -2,8 +2,8 @@ def LatticeGridHelper.menu_head_abbreviation
   "Feinberg"
 end
 
-def LatticeGridHelper.test_org_type(org) 
-  (org.type != 'Department' and org.type != 'Division' and org.type != 'School')
+def LatticeGridHelper.include_org_type(org) 
+  (org.type == 'Department' or org.type == 'Division' or org.type == 'School')
 end
 
 def LatticeGridHelper.high_impact_issns

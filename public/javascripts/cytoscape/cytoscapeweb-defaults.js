@@ -60,7 +60,7 @@ $(function(){
 	// layout options:
 	//LAYOUTS["ForceDirected"] = { angleWidth: 180, radius: 80, fitToScreen: false, gravitation: -5000, mass: 3, tension: 0.15, restLength: "auto", drag: 0.4, minDistance: 10, maxDistance: 1000,  weightAttr: "", weightNorm: ["linear","invlinear","log"], iterations: 400, maxTime: 30000, autoStabilize: true };
 	//LAYOUTS["ForceDirected"] = { fitToScreen: false, gravitation: -1000, mass: 40, tension: 2, restLength: 15, drag: 0.4, minDistance: 5, maxDistance: 100,  weightAttr: "weight", weightNorm: "log", iterations: 400, maxTime: 10000, autoStabilize: true, seed: 500 };
-	LAYOUTS["ForceDirected"] = { fitToScreen: false, gravitation: -2000, mass: 200, tension: 0.2, restLength: 100, drag: 0.4, minDistance: 20, maxDistance: 400,  weightAttr: "weight", weightNorm: "log", iterations: 200, maxTime: 10000, autoStabilize: true, seed: 500 };
+	LAYOUTS["ForceDirected"] = { fitToScreen: false, gravitation: -2000, mass: 30, tension: 0.30, restLength: 25, drag: 0.4, minDistance: 5, maxDistance: 100,  weightAttr: "weight", weightNorm: "log", iterations: 400, maxTime: 10000, autoStabilize: true, seed: 500 };
     LAYOUTS["Circle"] = { angleWidth: 360, tree: false };
     LAYOUTS["Radial"] = { radius: 300, angleWidth: 360 };
     //LAYOUTS["Tree"] = { orientation: ["topToBottom","bottomToTop","leftToRight","rightToLeft"], depthSpace: 50, breadthSpace: 30, subtreeSpace: 5 };
@@ -69,12 +69,12 @@ $(function(){
 
 	var elementColorMapper = {
 	        attrName: "element_type",
-	        entries: [ { attrValue: "Award", value: "#6D6" },
-	                   { attrValue: "Publication", value: "#67F" },
-	                   { attrValue: "Abstract", value: "#67F" },
+	        entries: [ { attrValue: "Award", value: "#1D1" },
+	                   { attrValue: "Publication", value: "#22F" },
+	                   { attrValue: "Abstract", value: "#22F" },
 	                   { attrValue: "Org", value: "#AAA" },
-	                   { attrValue: "Investigator", value: "#AA9" },
-	                   { attrValue: "Study", value: "#E88" } ]
+	                   { attrValue: "Investigator", value: "#664" },
+	                   { attrValue: "Study", value: "#E22" } ]
 	};
 	
 	/*---- DEFAULT -----------------------------------------------------------------------------------*/
@@ -295,9 +295,9 @@ $(function(){
 				opacity: 1,
 				//width: { continuousMapper: { attrName: "weight", minValue: 5, maxValue: 35, minAttrValue: 10, maxAttrValue: 200 } },
 				//height: { continuousMapper: { attrName: "weight", minValue: 5, maxValue: 35, minAttrValue: 10, maxAttrValue: 200 } },
-				size: { continuousMapper: { attrName: "weight", minValue: 10, maxValue: 35 } },
-				color: { continuousMapper: { attrName: "weight", minValue: "#669966", maxValue: "#99ff00" } },
-				borderWidth: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 6, minAttrValue: 10, maxAttrValue: 100 } },
+				size: { continuousMapper: { attrName: "weight", minValue: 10, maxValue: 35, minAttrValue: 100, maxAttrValue: 3000 } },
+				color: { continuousMapper: { attrName: "weight", minValue: "#669966", maxValue: "#99ff00", minAttrValue: 10, maxAttrValue: 2000 } },
+				borderWidth: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 6, minAttrValue: 10, maxAttrValue: 2000 } },
 				borderColor: { continuousMapper: { attrName: "weight", minValue: "#225588", maxValue: "#003366" } },
 				shape: {
 					defaultValue: "ELLIPSE",
@@ -309,7 +309,7 @@ $(function(){
 					}
 				},
 				labelFontSize: { continuousMapper: { attrName: "weight", minValue: 12, maxValue: 18 } },
-				labelFontColor: { continuousMapper: { attrName: "weight", minValue: "#7080a5", maxValue: "#333355" } },
+				labelFontColor: { continuousMapper: { attrName: "weight", minValue: "#506070", maxValue: "#000", minAttrValue: 100, maxAttrValue: 3000 } },
 				labelVerticalAnchor: "middle",
 				labelFontWeight: "bold",
 				labelHorizontalAnchor: {
@@ -320,6 +320,9 @@ $(function(){
 						           { attrValue: "false", value: "left" } ]
 					}
 				},
+				labelGlowOpacity: 0.6,
+				labelGlowBlur: 6,
+				labelGlowStrength: 200,
 				tooltipText: "<b>${label}</b><br/>${tooltiptext}",
 				tooltipFontColor: {
 					defaultValue: "#191970",
@@ -331,15 +334,20 @@ $(function(){
 				},
 				tooltipFontSize: 12,
 				tooltipBackgroundColor: { defaultValue: "#f0f0f0", discreteMapper: nodeColorMapper },
-				labelGlowOpacity: 0,
 				selectionGlowColor: "#ff0000"
 			},
 			edges: {
-				opacity: { defaultValue: 0.2, continuousMapper: { attrName: "weight", minValue: 0.2, maxValue: 1 } },
+				opacity: { continuousMapper: { attrName: "weight", minValue: 0.3, maxValue: 1 } },
 //				color: { continuousMapper: { attrName: "weight", minValue: "#aaaaaa", maxValue: "#333333" } },
 				color: { defaultValue: "#999999", discreteMapper: elementColorMapper },
-				width: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 10, minAttrValue: 5, maxAttrValue: 200 } },
+				width: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 7, minAttrValue: 5, maxAttrValue: 250 } },
 				mergeWidth: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 6 } },
+				labelFontSize: 14,
+				labelFontColor: "#000000",
+				labelFontName: "Arial",
+				labelGlowOpacity: 0.7,
+				labelGlowBlur: 6,
+				labelGlowStrength: 200,
 				tooltipText: "${tooltiptext}",
 				mergeTooltipText: "${tooltiptext}",
 				tooltipFontColor: "#006",

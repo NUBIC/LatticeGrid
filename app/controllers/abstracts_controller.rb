@@ -182,9 +182,30 @@ class AbstractsController < ApplicationController
     end
   end
 
+  def feed
+    # this will be the name of the feed displayed on the feed reader
+    @title = "LatticeGrid Recent Publications"
+    # this will be our Feed's update timestamp
+    @updated = session[:last_load_date]
+    params[:limit] ||= 30
+    if !@keywords.keywords.blank? then
+
+      # the new publications
+      @abstracts = Abstract.display_tsearch(@keywords, @do_pagination, params[:page], params[:limit])
+
+    else
+      @abstracts = Abstract.all(:order=>'updated_at desc, year desc', :limit=>params[:limit])
+    end
+    respond_to do |format|
+      format.atom { render :layout => false }
+
+      # we want the RSS feed to redirect permanently to the ATOM feed
+      format.rss { redirect_to feed_path(:format => :atom), :status => :moved_permanently }
+    end
+  end
+  
   def search 
     if !@keywords.keywords.blank? then
-  #      @tags = Abstract.tag_counts(:limit => 150, :order => "count desc")
       @do_pagination="1"
       @abstracts = Abstract.display_tsearch(@keywords, @do_pagination, params[:page])
       if @do_pagination != '0'

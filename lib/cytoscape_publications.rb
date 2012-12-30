@@ -56,7 +56,7 @@ def cytoscape_org_node_hash(org, weight=10, depth=1)
    :label => org.name,
    :weight => weight,
    :depth => depth,
-   :tooltiptext => org.abbreviation+"\nPublications: #{weight}\nFaculty: #{org.primary_or_member_faculty.length}"
+   :tooltiptext => org.abbreviation+"\nPublications: #{weight}\nFaculty: #{org.all_primary_or_member_faculty_count}"
  }
 end
 

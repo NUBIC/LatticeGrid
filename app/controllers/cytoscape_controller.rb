@@ -78,6 +78,19 @@ class CytoscapeController < ApplicationController
     
     show
   end
+
+  def show_all_orgs_old
+    params[:include_awards] ||= "1"
+    params[:include_studies] ||= "0"
+    params[:start_date] ||= 10.years.ago.to_date.to_s
+    params[:end_date] ||= 5.years.ago.to_date.to_s
+    handle_data_params
+    @title = "All inter-unit collaborations from #{params[:start_date]} to #{params[:end_date]}"
+    @dataurl = all_org_cytoscape_data_url(params[:include_publications], params[:include_awards], params[:include_studies], params[:start_date], params[:end_date] )
+    
+    show
+  end
+  
   
   def awards
     params[:include_publications] ||= "0"
@@ -452,8 +465,9 @@ class CytoscapeController < ApplicationController
     params[:include_publications] ||= "1"
     params[:include_publications] = "1" if params[:include_awards] == "0" and params[:include_studies] == "0"
     params[:start_date] ||= 5.years.ago.to_date.to_s
+    params[:start_date] ||= 10.years.ago.to_date.to_s
     params[:end_date] ||= Date.today.to_s
-    params[:end_date] ||= 10.years.ago.to_date.to_s
+    params[:end_date] ||= 5.years.ago.to_date.to_s
   end
  
 end

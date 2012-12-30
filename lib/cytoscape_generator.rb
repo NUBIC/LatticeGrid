@@ -68,27 +68,30 @@ end
 def generate_cytoscape_all_org_data(include_publications, include_awards, include_studies, start_date, end_date, node_array=[], edge_array=[])
   head_node = OrganizationalUnit.head_node(LatticeGridHelper.menu_head_abbreviation())
   if LatticeGridHelper.menu_head_abbreviation() == 'Feinberg'
-    all_orgs = Department.all + Division.all + School.all
+    #all_orgs = Department.all + Division.all + School.all
+    all_orgs = Department.all + School.all
     all_orgs = all_orgs - [head_node]
   else
     all_orgs = head_node.leaves
   end
   (0...all_orgs.length).each do |i|
     org = all_orgs[i]
-    next if org.rgt-org.lft > 4
-    next if org.abstracts_count < 20 or LatticeGridHelper.test_org_type(org) 
+    # next if org.rgt-org.lft > 4
+    next if org.all_abstracts_count < 20 or !LatticeGridHelper.include_org_type(org) 
+    next if org.all_primary_or_member_faculty_count < 5
     org_index = generate_org_node_id(org)
-    node_array << cytoscape_org_node_hash(org, org.abstracts_count, 1 )
+    node_array << cytoscape_org_node_hash(org, org.all_abstract_ids.length, 1 )
     (i+1...all_orgs.length).each do |j|
       intersecting_org = all_orgs[j]
-      next if intersecting_org.rgt-intersecting_org.lft > 4
-      next if intersecting_org.abstracts_count < 20 or LatticeGridHelper.test_org_type(intersecting_org) 
+      # next if intersecting_org.rgt-intersecting_org.lft > 4
+      next if intersecting_org.all_abstracts_count < 20 or !LatticeGridHelper.include_org_type(intersecting_org) 
+      next if intersecting_org.all_primary_or_member_faculty_count < 5
       intersecting_org_index = generate_org_node_id(intersecting_org)
-      shared_abstracts_count = org.abstract_ids_by_date_shared_with_org_obj(intersecting_org, start_date, end_date).count
+      shared_abstracts_count = org.all_abstract_ids_by_date_shared_with_org_obj(intersecting_org, start_date, end_date).count
       
       edge_index = "#{org_index}_#{intersecting_org_index}"
       if shared_abstracts_count >= 10 and include_publications
-        edge_array << cytoscape_edge_hash("ab_#{edge_index}", org_index, intersecting_org_index, shared_abstracts_count.to_s, shared_abstracts_count, "#{shared_abstracts_count} shared publications between #{org.name} and #{intersecting_org.name} from #{start_date} to #{end_date}", "Abstract")
+        edge_array << cytoscape_edge_hash("ab_#{edge_index}", org_index, intersecting_org_index, "", shared_abstracts_count, "#{shared_abstracts_count} shared publications between #{org.name} and #{intersecting_org.name} from #{start_date} to #{end_date}", "Abstract")
       end
       shared_proposal_ids = org.proposal_ids_shared_with_org_obj(intersecting_org)
       shared_proposals_count = shared_proposal_ids.length

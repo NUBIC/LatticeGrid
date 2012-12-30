@@ -5,12 +5,11 @@
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
   <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
-
-	<% @javascripts ||= [ 'cytoscape/cytoscapeweb.min', 'cytoscape/jquery-1.3.2.min', 'cytoscape/flash_detect_min', 'cytoscape/jquery.cytoscapeweb', 'cytoscape/json2.min', 'AC_OETags.min', 'cytoscape/cytoscapeweb.min', 'cytoscape/cytoscapeweb-defaults', 'cytoscape/cytoscapeweb-file', 'cytoscape/home', 'jquery.min', 'jquery.sparkline.min' ] %>
+	<% @javascripts ||= [ 'cytoscape/cytoscapeweb.min', 'cytoscape/jquery-1.3.2.min', 'cytoscape/flash_detect_min', 'cytoscape/jquery.cytoscapeweb', 'cytoscape/json2.min', 'AC_OETags.min', 'cytoscape/cytoscapeweb.min', 'cytoscape/cytoscapeweb-defaults', 'cytoscape/cytoscapeweb-file', 'cytoscape/home', 'jquery.min', 'jquery.sparkline.min', 'jquery-ui.min' ] %>
 	<!-- include JIT Library File -->
 	<%= javascript_include_tag @javascripts %> 
 	<!-- CSS Files -->
-	<% @stylesheets ||= [ 'cytoscape/layout','publications', "latticegrid/#{lattice_grid_instance}" ] %>
+	<% @stylesheets ||= [ 'cytoscape/layout','publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ] %>
 	<%= stylesheet_link_tag @stylesheets %>
 	<link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
   <%= LatticeGridHelper.google_analytics -%>
