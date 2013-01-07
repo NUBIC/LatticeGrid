@@ -128,6 +128,10 @@ class OrganizationalUnit < ActiveRecord::Base
       self.self_and_descendants.collect{|unit| unit.abstracts.abstracts_by_date(start_date, end_date).map(&:id)}.flatten.uniq
     end
 
+    def all_abstract_ids_by_date_count(start_date, end_date)
+      self.all_abstract_ids_by_date(start_date, end_date).length
+    end
+
     def proposal_ids_by_date(start_date, end_date)
       self.proposals.start_in_range(start_date, end_date).map(&:id).uniq
     end

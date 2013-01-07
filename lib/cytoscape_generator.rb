@@ -77,14 +77,14 @@ def generate_cytoscape_all_org_data(include_publications, include_awards, includ
   (0...all_orgs.length).each do |i|
     org = all_orgs[i]
     # next if org.rgt-org.lft > 4
-    next if org.all_abstracts_count < 20 or !LatticeGridHelper.include_org_type(org) 
+    next if org.all_abstract_ids_by_date_count(start_date, end_date) < 20 or !LatticeGridHelper.include_org_type(org) 
     next if org.all_primary_or_member_faculty_count < 5
     org_index = generate_org_node_id(org)
-    node_array << cytoscape_org_node_hash(org, org.all_abstract_ids.length, 1 )
+    node_array << cytoscape_org_node_hash(org, org.all_abstract_ids_by_date_count(start_date, end_date), 1 )
     (i+1...all_orgs.length).each do |j|
       intersecting_org = all_orgs[j]
       # next if intersecting_org.rgt-intersecting_org.lft > 4
-      next if intersecting_org.all_abstracts_count < 20 or !LatticeGridHelper.include_org_type(intersecting_org) 
+      next if intersecting_org.all_abstract_ids_by_date_count(start_date, end_date) < 20 or !LatticeGridHelper.include_org_type(intersecting_org) 
       next if intersecting_org.all_primary_or_member_faculty_count < 5
       intersecting_org_index = generate_org_node_id(intersecting_org)
       shared_abstracts_count = org.all_abstract_ids_by_date_shared_with_org_obj(intersecting_org, start_date, end_date).count
