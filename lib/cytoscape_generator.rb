@@ -93,11 +93,14 @@ def generate_cytoscape_all_org_data(include_publications, include_awards, includ
       if shared_abstracts_count >= 10 and include_publications
         edge_array << cytoscape_edge_hash("ab_#{edge_index}", org_index, intersecting_org_index, "", shared_abstracts_count, "#{shared_abstracts_count} shared publications between #{org.name} and #{intersecting_org.name} from #{start_date} to #{end_date}", "Abstract")
       end
-      shared_proposal_ids = org.proposal_ids_shared_with_org_obj(intersecting_org)
+      shared_proposal_ids = org.all_proposal_ids_by_date_shared_with_org_obj(intersecting_org, start_date, end_date)
       shared_proposals_count = shared_proposal_ids.length
       if shared_proposals_count > 1 and include_awards
-        shared_funding_total = Proposal.total_funding_for_ids(shared_proposal_ids).humanize
-        edge_array << cytoscape_edge_hash("aw_#{edge_index}", org_index, intersecting_org_index, shared_proposals_count.to_s, shared_abstracts_count, "#{shared_proposals_count} awards totaling $#{shared_funding_total} of collaborative funding between #{org.name} and #{intersecting_org.name} from #{start_date} to #{end_date}", "Award") 
+        shared_funding_total = Proposal.total_funding_for_ids(shared_proposal_ids)
+        # use 500K as a 'typical' R01 equivalent
+        shared_funding_equivalent_count = (shared_funding_total/50000).to_i
+        shared_funding_total = shared_funding_total.humanize
+        edge_array << cytoscape_edge_hash("aw_#{edge_index}", org_index, intersecting_org_index, "", shared_funding_equivalent_count, "Shared Awards: #{shared_proposals_count}<br/>Total: $#{shared_funding_total} of collaborative funding<br/>Between #{org.name} and #{intersecting_org.name}<br/>From #{start_date} to #{end_date}", "Award") 
       end
     end
   end

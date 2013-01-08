@@ -340,7 +340,7 @@ $(function(){
 				opacity: { continuousMapper: { attrName: "weight", minValue: 0.3, maxValue: 1 } },
 //				color: { continuousMapper: { attrName: "weight", minValue: "#aaaaaa", maxValue: "#333333" } },
 				color: { defaultValue: "#999999", discreteMapper: elementColorMapper },
-				width: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 7, minAttrValue: 5, maxAttrValue: 200 } },
+				width: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 8, minAttrValue: 5, maxAttrValue: 150 } },
 				mergeWidth: { defaultValue: 1, continuousMapper: { attrName: "weight", minValue: 1, maxValue: 6 } },
 				labelFontSize: 14,
 				labelFontColor: "#000000",

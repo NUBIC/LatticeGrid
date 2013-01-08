@@ -133,7 +133,11 @@ class OrganizationalUnit < ActiveRecord::Base
     end
 
     def proposal_ids_by_date(start_date, end_date)
-      self.proposals.start_in_range(start_date, end_date).map(&:id).uniq
+      (self.primary_faculty + self.members).map{|inv| inv.proposals.start_in_range(start_date, end_date).map(&:id)}.flatten.uniq
+    end
+
+    def all_proposal_ids_by_date(start_date, end_date)
+      self.self_and_descendants.collect{|unit| (unit.primary_faculty + unit.members).map{|inv| inv.proposals.start_in_range(start_date, end_date).map(&:id)}}.flatten.uniq
     end
 
     def abstracts_count
@@ -260,7 +264,11 @@ class OrganizationalUnit < ActiveRecord::Base
     def proposal_ids_by_date_shared_with_org_obj( org, start_date, end_date)
       self.proposal_ids_by_date( start_date, end_date ) & org.proposal_ids_by_date( start_date, end_date )
     end
-       
+        
+    def all_proposal_ids_by_date_shared_with_org_obj(org, start_date, end_date)
+      self.all_proposal_ids_by_date( start_date, end_date ) & org.all_proposal_ids_by_date( start_date, end_date )
+    end
+    
     def proposal_ids_shared_with_org_obj(org)
       self.proposal_ids & org.proposal_ids
     end

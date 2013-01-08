@@ -39,7 +39,9 @@ a:hover { color: #fff; background-color:#888; }
 	/* background-color: #709fc7; */
 }
 
-
+#banner {
+	height:98px;
+}
 #title {
   margin: 0px;
   padding: 5px;
