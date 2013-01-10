@@ -1,6 +1,6 @@
 source :gemcutter
 gem 'bundler'
-gem "rails", "2.3.14", :require => nil
+gem "rails", "~> 2.3", :require => nil
 gem 'rmagick', :require => nil
 gem 'ruby-graphviz'
 gem 'json', "1.6.6"
