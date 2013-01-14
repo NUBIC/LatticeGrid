@@ -701,7 +701,7 @@ def UpdateHomeDepartmentAndTitle(pi)
     pi.home_department_name = nil
   end
   # manual check because ldap is returning a different set of array indices for title and department. bah
-  if investigator.username == "ralamb" then  
+  if investigator.username == "ralamb" or investigator.username == "cho741" then  
     investigator.home = "Molecular Biosciences; Judd A. and Marjorie Weinberg College of Arts and Sciences"
   end
   if not investigator.title.blank? and (pi.title.blank? or pi.title.strip != investigator.title.strip )
