@@ -8,7 +8,7 @@ gem 'json', "1.6.6"
 gem 'fastercsv'
 gem 'pg'
 gem 'haml'
-gem 'will_paginate', "2.3.16"
+gem 'will_paginate', "~> 2.3"
 gem 'awesome_nested_set', "~> 1.4"
 #gem "acts_as_taggable_on_steroids", "~> 1.2"
 gem "princely", "~> 1.2.5"

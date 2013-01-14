@@ -52,7 +52,7 @@ namespace :cleanup do
     pis.each do |pi|
       title = pi.title
       home_department_name = pi.home_department_name
-      UpdateHomeDepartmentAndTitle(pi)
+      pi = UpdateHomeDepartmentAndTitle(pi)
       if pi.title != title or pi.home_department_name != home_department_name
         clean_cnt+=1
         pi.save! 

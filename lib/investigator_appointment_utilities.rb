@@ -669,7 +669,7 @@ def CleanTitle(pi)
 end
 
 def UpdateHomeDepartmentAndTitle(pi)
-  return if pi.blank? or pi.username.blank?
+  return pi if pi.blank? or pi.username.blank?
   pi.home_department_name=pi.home_department.name unless pi.home_department.blank?
   if ( LatticeGridHelper.ldap_perform_search?)
     begin
@@ -680,7 +680,7 @@ def UpdateHomeDepartmentAndTitle(pi)
           logger.warn("Entry not found. GetLDAPentry returned null using netid #{pi.username}.")
       else
         ldap_rec=CleanPIfromLDAP(pi_data)
-        investigator = Investigator.new
+        investigator = Investigator.new(:username=>pi.username)
         investigator=MergePIrecords(investigator,ldap_rec)
       end
     rescue Exception => error
@@ -691,7 +691,7 @@ def UpdateHomeDepartmentAndTitle(pi)
       end
     end
   end
-  return if investigator.blank?
+  return pi if investigator.blank?
   CleanTitle(investigator)
   if investigator.home == 'People'
     investigator.home = nil
@@ -699,6 +699,10 @@ def UpdateHomeDepartmentAndTitle(pi)
   end
   if pi.home_department_name == 'People'
     pi.home_department_name = nil
+  end
+  # manual check because ldap is returning a different set of array indices for title and department. bah
+  if investigator.username == "ralamb" then  
+    investigator.home = "Molecular Biosciences; Judd A. and Marjorie Weinberg College of Arts and Sciences"
   end
   if not investigator.title.blank? and (pi.title.blank? or pi.title.strip != investigator.title.strip )
     puts "Title change for pi #{pi.name}. Old: #{pi.title}. New: #{investigator.title}"
@@ -708,6 +712,7 @@ def UpdateHomeDepartmentAndTitle(pi)
     puts "home department change for pi #{pi.name}. Old: #{pi.home_department_name}; New: #{investigator.home};"
     pi.home_department_name = investigator.home
   end
+  return pi
 end
 
 def purgeInvestigators(investigators_to_purge)

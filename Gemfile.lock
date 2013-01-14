@@ -75,4 +75,4 @@ DEPENDENCIES
   rdoc
   rmagick
   ruby-graphviz
-  will_paginate (= 2.3.16)
+  will_paginate (~> 2.3)
