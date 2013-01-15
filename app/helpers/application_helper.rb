@@ -144,7 +144,8 @@ module ApplicationHelper
   def link_to_primary_department(investigator)
     return link_to( investigator.home_department.name, show_investigators_org_url(investigator.home_department_id), :title => "Show investigators in #{investigator.home_department.name}" ) if !investigator.home_department_id.nil?
     begin
-      return investigator.home if ! investigator.home.nil?
+      return investigator.home_department_name unless investigator.home_department_name.blank?
+      return investigator.home unless investigator.home.blank?
     rescue
       ""
     end
@@ -197,7 +198,7 @@ module ApplicationHelper
       else
         ldap_rec=CleanPIfromLDAP(pi_data)
         applicant = BuildPIobject(ldap_rec) if applicant.id.blank?
-        applicant=MergePIrecords(applicant,ldap_rec)
+        applicant = MergePIrecords(applicant,ldap_rec)
       end
      rescue Exception => error
       logger.error("Probable error reaching the LDAP server in GetLDAPentry: #{error.message}")

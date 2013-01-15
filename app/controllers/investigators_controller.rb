@@ -294,7 +294,7 @@ class InvestigatorsController < ApplicationController
     handle_member_name
     home_department_name = "" 
     unless @investigator.blank?
-      home_department_name = @investigator.home_department_name if home_department_name.blank? 
+      home_department_name = @investigator.home_department_name
       home_department_name = @investigator.home_department.name if home_department_name.blank? and ! @investigator.home_department.blank? 
       home_department_name = @investigator.home if home_department_name.blank? and ! @investigator.home.blank?
     end
@@ -320,7 +320,7 @@ class InvestigatorsController < ApplicationController
     handle_member_name
     home_department_name = "" 
     unless @investigator.blank?
-      home_department_name = @investigator.home_department_name if home_department_name.blank? 
+      home_department_name = @investigator.home_department_name
       home_department_name = @investigator.home_department.name if home_department_name.blank? and ! @investigator.home_department.blank? 
       home_department_name = @investigator.home if home_department_name.blank? and ! @investigator.home.blank?
       investigator=@investigator
