@@ -189,12 +189,10 @@ class AbstractsController < ApplicationController
     @updated = session[:last_load_date]
     params[:limit] ||= 30
     if !@keywords.keywords.blank? then
-
       # the new publications
-      @abstracts = Abstract.display_tsearch(@keywords, @do_pagination, params[:page], params[:limit])
-
+      @abstracts = Abstract.display_tsearch_no_pagination(@keywords.keywords, @keywords.search_field, params[:limit])
     else
-      @abstracts = Abstract.all(:order=>'updated_at desc, year desc', :limit=>params[:limit])
+      @abstracts = Abstract.all(:order=>'year desc, publication_date desc, authors ASC', :limit=>params[:limit])
     end
     respond_to do |format|
       format.atom { render :layout => false }
@@ -206,22 +204,31 @@ class AbstractsController < ApplicationController
   
   def search 
     if !@keywords.keywords.blank? then
-      @do_pagination="1"
-      @abstracts = Abstract.display_tsearch(@keywords, @do_pagination, params[:page])
-      if @do_pagination != '0'
-        total_entries=@abstracts.total_entries
-      else
-        total_entries=@abstracts.length
+      respond_to do |format|
+        format.js { 
+          params[:limit] ||= 30
+           @abstracts = Abstract.display_tsearch_no_pagination(@keywords.keywords, @keywords.search_field, params[:limit])
+           render :layout=> false, :json=> {:data => @abstracts.as_json()}  
+        }
+        format.html {
+          @do_pagination="1"
+          @abstracts = Abstract.display_tsearch(@keywords, @do_pagination, params[:page])
+          if @do_pagination != '0'
+            total_entries=@abstracts.total_entries
+          else
+            total_entries=@abstracts.length
+          end
+          @heading = "There were #{total_entries} matches to search term <i>"+ @keywords.keywords.downcase + "</i>"
+          @include_mesh=false
+          @speed_display=true
+          render :action => 'year_list'
+        }
       end
-      @heading = "There were #{total_entries} matches to search term <i>"+ @keywords.keywords.downcase + "</i>"
-      @include_mesh=false
-      @speed_display=true
-      render :action => 'year_list'
     else 
       logger.error "search did not have a defined keyword"
       year_list  # includes a render
     end 
-   end
+  end
 
   def show
     if params[:id].include?("search") then

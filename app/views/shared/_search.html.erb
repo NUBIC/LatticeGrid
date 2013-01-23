@@ -1,4 +1,8 @@
 <div id="search">
+	
+	<span style="float:right;">
+		<%= link_to("atom/rss", formatted_feed_abstracts_url(:atom)) %>
+	</span>
 	<% if LatticeGridHelper.allow_profile_edits? %>
 		<span style="float:right;">
 			<%= link_to("login", profiles_url) %>

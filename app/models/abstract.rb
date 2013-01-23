@@ -445,24 +445,25 @@ class Abstract < ActiveRecord::Base
 
   def self.display_tsearch_no_pagination(terms, search_field, limit=nil)
     if search_field.include?("Abstract") or search_field.include?("Title")
-      abstracts = Abstract.find_by_tsearch(terms, nil, {:vector => "abstract_vector"})
+      abstracts = Abstract.find_by_tsearch(terms, {:select=>"id, endnote_citation, abstract, authors, full_authors, is_first_author_investigator, is_last_author_investigator, title, journal_abbreviation, journal, volume, issue, pages, year, publication_date, publication_type, electronic_publication_date, deposited_date, status, publication_status, pubmed, issn, isbn, citation_cnt, citation_last_get_at, citation_url, url, mesh, is_cancer, pubmedcentral, is_valid, pubmed_creation_date", :limit=>limit, :order=>'year desc, publication_date desc, authors ASC'}, {:vector => "abstract_vector"})
     elsif search_field.include?("Author") or search_field.include?("Investigator")
-      abstracts = Abstract.find_by_tsearch(terms, nil, {:vector => "author_vector"})
+      abstracts = Abstract.find_by_tsearch(terms, {:select=>"id, endnote_citation, abstract, authors, full_authors, is_first_author_investigator, is_last_author_investigator, title, journal_abbreviation, journal, volume, issue, pages, year, publication_date, publication_type, electronic_publication_date, deposited_date, status, publication_status, pubmed, issn, isbn, citation_cnt, citation_last_get_at, citation_url, url, mesh, is_cancer, pubmedcentral, is_valid, pubmed_creation_date", :limit=>limit, :order=>'year desc, publication_date desc, authors ASC'}, {:vector => "author_vector"})
     elsif search_field.include?("Journal")
-      abstracts = Abstract.find_by_tsearch(terms, nil, {:vector => "journal_vector"})
+      abstracts = Abstract.find_by_tsearch(terms, {:select=>"id, endnote_citation, abstract, authors, full_authors, is_first_author_investigator, is_last_author_investigator, title, journal_abbreviation, journal, volume, issue, pages, year, publication_date, publication_type, electronic_publication_date, deposited_date, status, publication_status, pubmed, issn, isbn, citation_cnt, citation_last_get_at, citation_url, url, mesh, is_cancer, pubmedcentral, is_valid, pubmed_creation_date", :limit=>limit, :order=>'year desc, publication_date desc, authors ASC'}, {:vector => "journal_vector"})
     elsif search_field.include?("Summary")
       lc_keywords = terms.sub(/\*/, '%')
       lc_keywords = "%"+lc_keywords+"%" 
       abstracts = all(
+            :select=>"id, endnote_citation, abstract, authors, full_authors, is_first_author_investigator, is_last_author_investigator, title, journal_abbreviation, journal, volume, issue, pages, year, publication_date, publication_type, electronic_publication_date, deposited_date, status, publication_status, pubmed, issn, isbn, citation_cnt, citation_last_get_at, citation_url, url, mesh, is_cancer, pubmedcentral, is_valid, pubmed_creation_date", 
             :joins => [:investigators],
             :limit => limit,
-            :order => "year DESC, authors ASC",
+            :order => "year DESC, publication_date desc, authors ASC",
             :conditions => ["lower(investigators.faculty_keywords) like :search_term OR lower(investigators.faculty_research_summary) like :search_term  OR lower(investigators.faculty_interests) like :search_term",
               {:search_term => lc_keywords }])
     elsif search_field.include?("Keywords") or search_field.include?("MeSH")
-      abstracts = Abstract.find_by_tsearch(terms, nil, {:vector => "mesh_vector"})
+      abstracts = Abstract.find_by_tsearch(terms, {:select=>"id, endnote_citation, abstract, authors, full_authors, is_first_author_investigator, is_last_author_investigator, title, journal_abbreviation, journal, volume, issue, pages, year, publication_date, publication_type, electronic_publication_date, deposited_date, status, publication_status, pubmed, issn, isbn, citation_cnt, citation_last_get_at, citation_url, url, mesh, is_cancer, pubmedcentral, is_valid, pubmed_creation_date",:limit=>limit, :order=>'year desc, publication_date desc, authors ASC'}, {:vector => "mesh_vector"})
     else
-      abstracts = Abstract.find_by_tsearch(terms)
+      abstracts = Abstract.find_by_tsearch(terms, {:select=>"id, endnote_citation, abstract, authors, full_authors, is_first_author_investigator, is_last_author_investigator, title, journal_abbreviation, journal, volume, issue, pages, year, publication_date, publication_type, electronic_publication_date, deposited_date, status, publication_status, pubmed, issn, isbn, citation_cnt, citation_last_get_at, citation_url, url, mesh, is_cancer, pubmedcentral, is_valid, pubmed_creation_date", :limit=>limit, :order=>'year desc, publication_date desc, authors ASC'})
     end
     abstracts
   end
