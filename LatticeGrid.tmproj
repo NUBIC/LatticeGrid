@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>app/views/abstracts/feed.atom.builder</string>
+	<string>app/controllers/abstracts_controller.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -21,35 +21,19 @@
 	<integer>384</integer>
 	<key>metaData</key>
 	<dict>
-		<key>app/views/abstracts/feed.atom.builder</key>
+		<key>app/controllers/abstracts_controller.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>29</integer>
+				<integer>26</integer>
 				<key>line</key>
-				<integer>10</integer>
+				<integer>189</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>26</integer>
-				<key>line</key>
-				<integer>10</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>33</integer>
-				<key>line</key>
-				<integer>10</integer>
-			</dict>
+			<integer>160</integer>
 		</dict>
 		<key>app/views/graphs/org_nodes.rxml</key>
 		<dict>
@@ -79,19 +63,47 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>app/views/layouts/application.html.erb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>14</integer>
+				<key>line</key>
+				<integer>34</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>22</integer>
+		</dict>
 		<key>config/routes.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>596</integer>
+				<integer>86</integer>
 				<key>line</key>
-				<integer>20</integer>
+				<integer>51</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
-			<integer>225</integer>
+			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>24</integer>
+			<integer>34</integer>
+		</dict>
+		<key>db/schema.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>38</integer>
+				<key>line</key>
+				<integer>61</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>lib/latticegrid.rb</key>
 		<dict>
@@ -111,12 +123,14 @@
 	<key>openDocuments</key>
 	<array>
 		<string>lib/latticegrid.rb</string>
-		<string>app/views/abstracts/feed.atom.builder</string>
+		<string>app/controllers/abstracts_controller.rb</string>
+		<string>app/views/layouts/application.html.erb</string>
+		<string>db/schema.rb</string>
 		<string>config/routes.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{18, 0}, {1047, 878}}</string>
+	<string>{{10, 0}, {1000, 878}}</string>
 </dict>
 </plist>

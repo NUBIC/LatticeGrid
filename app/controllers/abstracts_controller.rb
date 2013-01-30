@@ -187,7 +187,7 @@ class AbstractsController < ApplicationController
     @title = "LatticeGrid Recent Publications"
     # this will be our Feed's update timestamp
     @updated = session[:last_load_date]
-    params[:limit] ||= 30
+    params[:limit] ||= 100
     if !@keywords.keywords.blank? then
       # the new publications
       @abstracts = Abstract.display_tsearch_no_pagination(@keywords.keywords, @keywords.search_field, params[:limit])
