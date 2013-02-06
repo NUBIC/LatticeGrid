@@ -1,0 +1,40 @@
+%h2
+  .float_right
+    =link_to "Create New Investigator", new_admin_url
+  List of all investigators in the system:
+  = @investigators.length
+
+%p
+  Number of currently active investigators: 
+  = @valid_investigators
+
+
+%table 
+  %tr.header
+    %td
+      Num
+    %td
+      Edit
+    %td
+      Name
+    %td
+      email
+    %td
+      Programs
+    %td
+      username
+    %td
+      eRA Commons Name
+    %td
+      created on
+    %td
+      last changed
+    %td
+      marked inactive on
+
+  - @investigators.each_with_index do |investigator,cnt|
+    = render :partial=> 'investigators/investigator', :locals=>{:investigator=>investigator, :cnt=>cnt}
+
+%br
+=link_to "Create New Investigator", new_admin_url
+%br

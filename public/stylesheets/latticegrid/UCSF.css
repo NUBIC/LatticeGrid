@@ -41,7 +41,7 @@ a:hover {
 }
 
 
-#investigator_title #full_name, #investigator_title #page_title {
+#investigator_title_block #full_name, #investigator_title_block #page_title {
     color: #244;
 }
 

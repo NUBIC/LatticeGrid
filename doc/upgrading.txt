@@ -1,25 +1,60 @@
-# from rails2prod
-pg_dump -Fc rhlccc_latticegrid_production -U rhlccc_latticegrid -h pprod > cancer_latticegrid_prod_20110807.dmp
+# export database, just to be sure
+# run this when ssh-ed into the LatticeGrid VM
 
-#move to laptop from rails-prod2
+# examples - database well be exported into the current directory
+# find the current directory - "pwd"
+
+pg_dump -Fc rhlccc_latticegrid -U latticegrid  > latticegrid_prod_20130131.dmp
+pg_dump -Fc cinj_latticegrid -U latticegrid  > latticegrid_prod_20130131.dmp
+
+
+#move from vm to local computer
+
 scp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/cancer_latticegrid_prod_20110807.dmp  cancer_latticegrid_prod_20110807.dmp
+
 #install on laptop
 pg_restore -c -O -d cancerpublications_development -U cancerpublications cancer_latticegrid_prod_20110807.dmp
 #install back on rails-prod2
 pg_restore -c -O -d rhlccc_latticegrid_production -U rhlccc_latticegrid -h pprod cancer_latticegrid_prod_20110807.dmp
 
-rake RAILS_ENV=production db:migrate
+# now update LatticeGrid
 
+# below is assuming you are running in production mode. development does not need to be specified. 
+# development, staging and production are the three modes LatticeGrid supports
+
+git pull  # you may need to delete files if you get a message about needing to 'stash' something
+
+bundle install # updates any gems that have changed
+
+# now perform some cleanup tasks
+
+rake RAILS_ENV=production cache:clear  #clear your internal cache
+
+rake RAILS_ENV=production db:migrate #apply any database changes, if there are any
+
+touch tmp/restart.txt  #restart the web server
+
+# now you should be able to reload LatticeGrid in the browser and get the latest data using the latest release of LatticeGrid
+
+# adding new programs
 rake RAILS_ENV=production importOrganizations file=db/imports/RHLCCC/division_lookup_0811.txt
 rake RAILS_ENV=production cleanUpOrganizations
 rake RAILS_ENV=production getAllOrganizationsNotUpdated
+
+# adding new investigators
 rake RAILS_ENV=production importInvestigators file=db/imports/RHLCCC/new_faculty_Aug2011.txt
 rake RAILS_ENV=production importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsAug2011.txt
 rake RAILS_ENV=production cleanup:cleanInvestigatorsUsername
 rake RAILS_ENV=production getAllInvestigatorsWithoutMembership
 rake RAILS_ENV=production checkValidAbstracts
 rake RAILS_ENV=production checkDeletedAbstractsWithActiveInvestigators
-rake RAILS_ENV=production reports:mark_abstracts_approved
-rake RAILS_ENV=production reports:investigator_abstracts_reviewed
+
+# pull in publications for the past 10 years
 rake RAILS_ENV=production insertAllAbstracts
-rake RAILS_ENV=production importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_June2011.txt
+
+# run the nightly build task (you should make this a cron task)
+rake RAILS_ENV=production nightlyBuild
+
+# run the monthly build task (updates collaborations and MeSH terms)
+rake RAILS_ENV=production monthlyBuild
+

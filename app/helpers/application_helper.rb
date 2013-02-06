@@ -19,6 +19,17 @@ module ApplicationHelper
     @year
   end
 
+  def before_create(model)
+    model.created_ip ||= request.remote_ip if defined?(request) and ! request.nil?
+    model.created_id ||= session[:user_id] if defined?(session) and ! session.nil? and ! session[:user_id].blank?
+    before_update(model)
+  end 
+
+  def before_update(model)
+    model.updated_ip = request.remote_ip if defined?(request) and ! request.nil?
+    model.updated_id = session[:user_id] if defined?(session) and ! session.nil? and ! session[:user_id].blank?
+  end 
+
   # Overrides `current_abstracts_url` from the router.
   def current_abstracts_url
     year = handle_year()
@@ -33,8 +44,14 @@ module ApplicationHelper
     the_path += "/" unless the_path =~ /\/$/
     the_path
   end
-      
-    
+
+  def require_admin
+     if is_admin?
+       return true
+     end
+     return false  #disallowed
+  end
+
   def allowed_ip(this_ip)
      ips = LatticeGridHelper.allowed_ips() # from config.rb in project lib directory
      ips.each do |ip|

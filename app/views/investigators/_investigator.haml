@@ -1,0 +1,22 @@
+%tr{ :class => ((!investigator.deleted_at.blank?) ? 'deleted' : cycle('odd', 'even') ) }
+  %td
+    = (cnt+1).to_s
+  %td
+    = link_to 'edit', edit_admin_url(investigator.username)
+  %td
+    = link_to investigator.sort_name, investigator_url(investigator.username) 
+  %td
+    = mail_to investigator.email, investigator.email
+  %td
+    = investigator.any_members.map{|ia| ia.organizational_unit.name + " ("+ ia.type.to_s + ")" }.join(", ")
+  %td
+    = link_to investigator.username, investigator_url(investigator.username) 
+  %td
+    = investigator.era_comons_name
+  %td
+    = formatted_date investigator.created_at
+  %td
+    = formatted_date investigator.updated_at
+  %td
+    = formatted_date investigator.deleted_at
+

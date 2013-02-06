@@ -84,7 +84,7 @@ The following is a list of the total publications, number of publications with i
 		</td>
 		<% end -%>
 		<% ["All","Primary", "Secondary", "Member", "Associate Member"].each do |affiliate| %>
-		  <% unless  unit[affiliate].blank? %>
+		  <% unless  unit[affiliate].blank?  %>
 			<% this_block = unit[affiliate] %>
 			<td class="list-title-center">
 				<%= link_to(this_block["unit_faculty"].length, show_investigators_org_url(unit.id) ) %>
@@ -94,7 +94,11 @@ The following is a list of the total publications, number of publications with i
 				<%= this_block["publications"].length %>
 			</td>
 			<td class="list-title-center">
+				<% if unit[affiliate]["unit_faculty"].length == 0 -%> 
+				0
+				<% else %>
 				<%= ((this_block["publications"].length*10/this_block["unit_faculty"].length).to_f / 10)  %>
+				<% end %>
 			</td>
 			<td class="list-title-center">
 				<%= (this_block["pi_intra_abstracts"].length) %> (<%= this_block["publications"].length > 0 ? (100*(this_block["pi_intra_abstracts"].length)/this_block["publications"].length) : 0 %>%)<br/>

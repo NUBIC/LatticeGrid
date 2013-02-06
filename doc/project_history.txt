@@ -224,6 +224,9 @@ test:
 	script/generate controller graph
 	script/generate model graph
 
+# for administrator functions
+	script/generate controller admin
+
 # add some columns to investigators
 	script/generate migration add_total_pubs_columns
 

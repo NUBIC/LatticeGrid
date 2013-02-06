@@ -21,7 +21,7 @@ a:visited { color: #666; }
 	line-height: 14px;
 }
 
-#investigator_title #full_name, #investigator_title #page_title {
+#investigator_title_block #full_name, #investigator_title_block #page_title {
     font-family: Arial, Helvetica, Geneva, Sans-serif;
     font-size: 15px;
     font-weight: bold;

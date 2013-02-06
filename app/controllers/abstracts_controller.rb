@@ -1,7 +1,7 @@
 class AbstractsController < ApplicationController
 #removed :full_tagged_abstracts and :tagged_abstracts - too many cached pages
 
-  caches_page( :year_list, :full_year_list, :current, :tag_cloud, :endnote, :tagged_abstracts, :full_tagged_abstracts, :tag_cloud_by_year, :endnote, :show, :high_impact, :high_impact_by_month)  if LatticeGridHelper.CachePages()
+  caches_page( :show, :high_impact, :high_impact_by_month, :year_list, :full_year_list, :current, :tag_cloud, :endnote, :tagged_abstracts, :full_tagged_abstracts, :tag_cloud_by_year)  if LatticeGridHelper.CachePages()
   
   include AbstractsHelper
   include ApplicationHelper

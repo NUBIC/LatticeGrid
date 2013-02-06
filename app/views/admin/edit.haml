@@ -1,0 +1,18 @@
+- investigator = @investigator
+- form_for(:investigator, 
+			:url =>admin_path(@investigator), 
+			:html => { :method => :put }) do |f|
+
+  = f.hidden_field :id 
+  - unless f.error_messages.blank?
+    = f.error_messages
+    = investigator.inspect
+    
+  = render(:partial => 'investigator_form', :locals=>{:f=>f, :investigator=>@investigator, :programs=>@programs})
+  = submit_tag "Update"
+
+%p
+
+=link_to "List all Investigators", admin_index_url
+
+=link_to "Create New Investigator", new_admin_url

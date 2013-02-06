@@ -1,0 +1,15 @@
+- investigator = @investigator
+- form_for(:investigator, 
+			:url => admin_index_path(), 
+			:html => { :method => :post }) do |f|
+
+  - unless f.error_messages.blank?
+    = f.error_messages
+    = investigator.inspect
+    
+  = render(:partial => 'investigator_form', :locals=>{:f=>f, :investigator=>@investigator, :programs=>@programs})
+  = submit_tag "Save new"
+
+%p
+
+=link_to "List all Investigators", admin_index_url

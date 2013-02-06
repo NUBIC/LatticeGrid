@@ -9,18 +9,13 @@ def LatticeGridHelper.allow_profile_edits?
   return false
 end
 
+# allowed membership types
+def LatticeGridHelper.allowed_membership_types
+  return ['Member', 'AssociateMember']
+end
+
 def edit_profile_link
   ""
-end
-
-
-def LatticeGridHelper.include_summary_by_member?
-  return false
-end
-
-# show research description
-def LatticeGridHelper.show_research_description?
-  return false
 end
 
 # for cancer centers to 'deselect' publications from inclusion in the CCSG report

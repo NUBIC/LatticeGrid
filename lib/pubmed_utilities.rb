@@ -18,7 +18,25 @@ def limit_to_institution(pi)
 end
 
 def build_pi_search_string(pi, full_first_name=true)
+  return "" if pi.blank? or pi.last_name.blank?
   return pi.pubmed_search_name if !pi.pubmed_search_name.blank?
+  result = pi.last_name
+  if full_first_name then
+    result = result + ", " + pi.first_name
+    if !pi.middle_name.blank?  then
+      result = result + " " + pi.middle_name[0,1]
+    end
+  else
+    result = result + " " + pi.first_name[0,1]
+    if !pi.middle_name.blank?  then
+      result = result + pi.middle_name[0,1]
+    end
+  end
+  result
+end
+
+def build_auto_pi_search_string(pi, full_first_name=true)
+  return "" if pi.blank? or pi.last_name.blank?
   result = pi.last_name
   if full_first_name then
     result = result + ", " + pi.first_name

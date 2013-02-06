@@ -26,6 +26,42 @@ module InvestigatorsHelper
     end
   end
   
+  def handle_investigator_delete(investigator, do_delete=false)
+    if do_delete == "1" or do_delete == true
+      deleted_on = investigator.deleted_at || investigator.end_date || Time.now
+      investigator.end_date = deleted_on if investigator.end_date.blank?
+      investigator.deleted_at = deleted_on if investigator.deleted_at.blank?
+      investigator.deleted_ip ||= request.remote_ip if defined?(request) and ! request.nil?
+      investigator.deleted_id ||= session[:user_id] if defined?(session) and ! session.nil? and ! session[:user_id].blank?
+    else
+      investigator.end_date = nil
+      investigator.deleted_at = nil
+      investigator.deleted_ip = nil
+      investigator.deleted_id = nil
+    end
+  end
+  
+  def handle_investigator_investigator_apppointments_update(nparams, appointment_type='Member')
+    logger.error "in handle_investigator_investigator_apppointments_update"
+    return if nparams[:investigator].blank?
+    logger.error 'params did not have an investigator_appointment! ' if nparams[:investigator]['investigator_appointments'].blank?
+    ias = nparams[:investigator][:investigator_appointments]
+    ids = nparams[:investigator][:investigator_appointments][:organizational_unit_id]
+    logger.error "investigator_appointments_org_unit_ids = #{ids.inspect}, ias = #{ias.inspect}"
+    nparams[:investigator].delete(:investigator_appointments)
+    nparams[:investigator][:investigator_appointments] = []
+    ids.each do |id|
+      nparams[:investigator][:investigator_appointments] << {:organizational_unit_id => id, :type => appointment_type, :investigator_id =>nparams[:investigator_id] }
+    end
+    return params
+  end
+  
+  def get_member_type(investigator)
+    return 'Member' if investigator.only_member_appointments.length > 0
+    return 'AssociateMember' if investigator.associate_member_appointments.length > 0
+    return 'Member' 
+  end
+  
   def merge_investigator_db_and_ldap(investigator)
     return investigator if investigator.blank? or investigator.username.blank?
     begin

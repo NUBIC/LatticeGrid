@@ -9,10 +9,6 @@ def LatticeGridHelper.allow_profile_edits?
   return false
 end
 
-def LatticeGridHelper.include_summary_by_member?
-  return false
-end
-
 # show research description
 def LatticeGridHelper.show_research_description?
   return false

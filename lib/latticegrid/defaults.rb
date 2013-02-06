@@ -22,13 +22,18 @@
   def LatticeGridHelper.allow_profile_edits?
     return false
   end
+
+  # allowed membership types
+  def LatticeGridHelper.allowed_membership_types
+    return ['Member']
+  end
   
   def LatticeGridHelper.include_org_type(org) 
     (org.type == 'Program')
   end
 
   def LatticeGridHelper.include_summary_by_member?
-    return false
+    return true
   end
   
   def LatticeGridHelper.include_research_summary_by_organization?
@@ -420,6 +425,7 @@ end
 
   def is_admin?
     begin
+      return true unless LatticeGridHelper.require_authentication?
       if [ 'wakibbe', 'admin', 'tvo743', 'jkk366', 'jhl197', 'ddc830', 'mar352', 'vvs359' ].include?(current_user.username.to_s)  then
     	  return true
       end

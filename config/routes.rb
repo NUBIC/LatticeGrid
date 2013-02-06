@@ -1,6 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
   # need to add .js to any rjs files we cache
 
+  map.resources :admin
+
   map.show_investigator 'investigators/:id/show/:page', {:controller => "investigators",:action => "show", :conditions => { :method => :get }  }
   map.show_org 'orgs/:id/show/:page', {:controller => "orgs",:action => "show", :conditions => { :method => :get }  }
   map.abstracts_by_year 'abstracts/:id/year_list/:page', {:controller => "abstracts",:action => "year_list", :conditions => { :method => :get } }

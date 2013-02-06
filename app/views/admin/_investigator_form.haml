@@ -1,0 +1,120 @@
+.section
+  .section_heading
+    .width_80
+      =f.label :last_name
+    =f.text_field :last_name
+  .section_heading
+    .width_80
+      =f.label :first_name
+    =f.text_field :first_name
+  .section_heading
+    .width_80
+      =f.label :middle_name
+    =f.text_field :middle_name
+  .section_heading
+    .width_80
+      =f.label :email
+    =f.text_field :email
+  .section_heading
+    .width_80
+      =f.label :username
+    =f.text_field :username
+  .section_heading
+    .width_80
+      =f.label :era_comons_name, 'eRA Commons Name'
+    =f.text_field :era_comons_name
+  .section_heading
+    .width_80
+      =f.label :employee_id, 'Employee ID'
+    =f.text_field :employee_id
+  .section_heading
+    .width_80
+      =label_tag :title, 'Faculty rank'
+    =f.text_field :title, {:size => 80}
+    Professor, etc
+  .section_heading
+    .width_80
+      =f.label :pubmed_search_name
+    =f.text_field :pubmed_search_name
+    = " Default: "
+    %b
+      = build_auto_pi_search_string(investigator, false) + "[auth] or " + build_auto_pi_search_string(investigator, true) + "[auth] "
+  .section_heading
+    .width_80
+      =f.label :pubmed_limit_to_institution, 'limit pubmed search to institution?'
+    =f.check_box :pubmed_limit_to_institution
+    =label_tag :mode, "Yes. Limit search to always use institution"
+  .section_heading
+    .width_80
+      =f.label :faculty_keywords
+    =f.text_field :faculty_keywords
+  .section_heading
+    .width_80
+      =f.label :faculty_research_summary
+    =f.text_area :faculty_research_summary, {:rows => 7, :cols => 80, :wrap=>"virtual"}
+  .section_heading
+    .width_80
+      =f.label :faculty_interests
+    =f.text_field :faculty_interests
+  .section_heading
+    .width_80
+      Program name(s)
+    -f.fields_for :investigator_appointments_form do |f2| 
+      = f2.collection_select 'organizational_unit_ids', programs, :id, :name, {:selected => investigator.any_members.map(&:organizational_unit_id)}, {:size=>"8", :multiple=>true}
+      control-click to select multiple programs
+  .section_heading
+    .width_80
+      Program type
+    -f.fields_for :investigator_appointments_form do |f2| 
+      = f2.select :type, LatticeGridHelper.allowed_membership_types, :selected => get_member_type(investigator)
+  .section_heading
+    .width_80
+      =f.label :degrees
+    =f.text_field :degrees
+  .section_heading
+    .width_80
+      =f.label :home_department_name
+    =f.text_field :home_department_name
+  .section_heading
+    .width_80
+      =f.label :campus
+    =f.text_field :campus, {:size => 80}
+  .section_heading
+    .width_80
+      =f.label :mailcode
+    =f.text_field :mailcode
+  .section_heading
+    .width_80
+      =f.label :address1, 'Address'
+    =f.text_field :address1
+  .section_heading
+    .width_80
+      =f.label :business_phone, 'Office phone'
+    =f.text_field :business_phone
+  .section_heading
+    .width_80
+      =f.label :fax
+    =f.text_field :fax
+  .section_heading
+    .width_80
+      =f.label :appointment_type
+    =f.text_field :appointment_type
+    =label_tag :mode, "Regular, Research, Adjunct, Emeritus"
+  .section_heading
+    .width_80
+      =f.label :appointment_track
+    =f.text_field :appointment_track
+    =label_tag :mode, "Investigator, Clinical, Clinical-Investigator"
+  .section_heading
+    .width_80
+      =f.label :appointment_basis
+    =f.text_field :appointment_basis
+    =label_tag :mode, "FT (full time), PT (part time), C (courtesy)"
+  .section_heading
+    .width_80
+      =label_tag "Mark as deleted?"
+    =check_box_tag 'delete', "1", !@investigator.deleted_at.blank?
+    =label_tag :mode, "Yes. Mark this investigator as deleted."
+  %br
+#pane_menu
+  #pane_actions

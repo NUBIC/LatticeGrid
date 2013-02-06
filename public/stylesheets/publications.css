@@ -175,11 +175,11 @@ table.dense tr td,th {
 	line-height: 14px;
 }
 
-#investigator_title {
+#investigator_title_block {
 	display: block;
 }
 
-#investigator_title #full_name, #investigator_title #page_title {
+#investigator_title_block #full_name, #investigator_title_block #page_title {
     font-family: Arial, Helvetica, Geneva, Sans-serif;
     font-size: 15px;
     font-weight: bold;
@@ -359,6 +359,22 @@ div.notice {
 	background-color: #709fc7;
 }
 
+.float_right {
+	float:right;
+}
+.section_heading {
+  float:left;
+  width:100%;    
+  display:inline; /* So IE plays nice */
+}
+
+.width_80 {
+	float:left;
+	width:300px;
+	text-align: right;
+	padding-right: 8px;
+}
+
 #sideinfo {
 	margin-top: 2px;
 	font-size: 13px;
@@ -534,6 +550,11 @@ div.notice {
 	background-color: peachpuff;
 	text-decoration: none;
 }
+tr.deleted td{
+	color: red;
+	background-color: khaki;
+}
+
 .underlined {
 	color: #353;
 	text-decoration: underline;

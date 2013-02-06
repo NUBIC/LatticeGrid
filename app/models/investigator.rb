@@ -81,21 +81,25 @@ has_many :investigator_appointments,
     :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
   has_many :secondaries, :class_name => "Secondary",
     :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
+    # by default Member includes children classes
+  has_many :only_member_appointments, :class_name => "InvestigatorAppointment",
+    :conditions => ["(investigator_appointments.end_date is null or investigator_appointments.end_date >= :now) AND investigator_appointments.type = 'Member'", {:now => Date.today }]
   has_many :member_appointments, :class_name => "Member",
-    :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
+    :conditions => ["investigator_appointments.end_date is null or investigator_appointments.end_date >= :now", {:now => Date.today }]
   has_many :associate_member_appointments, :class_name => "AssociateMember",
     :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
   has_many :any_members, :class_name => 'InvestigatorAppointment',
-        :conditions => "(investigator_appointments.type LIKE '%%Member' )"
+        :conditions => ["investigator_appointments.type LIKE '%%Member'AND (investigator_appointments.end_date is null or investigator_appointments.end_date >= :now )", {:now => Date.today }]
   has_many :appointments, :source => :organizational_unit, :through => :investigator_appointments
   has_many :joint_appointments, :source => :organizational_unit, :through => :joints
   has_many :secondary_appointments, :source => :organizational_unit, :through => :secondaries
   has_many :memberships, :source => :organizational_unit, :through => :member_appointments
+  has_many :any_memberships, :source => :organizational_unit, :through => :any_members
   has_many :associate_memberships, :source => :organizational_unit, :through => :associate_member_appointments
   # foreign_key is a fix for an issue in rails 2.3.5 and earlier
   belongs_to :home_department, :class_name => 'OrganizationalUnit', :foreign_key => 'home_department_id'
 
-  accepts_nested_attributes_for :investigator_appointments
+  # accepts_nested_attributes_for :investigator_appointments, :allow_destroy => true, :reject_if => :all_blank
   accepts_nested_attributes_for :member_appointments
 
   named_scope :with_any_role, :include=>[:investigator_proposals], :conditions => "investigator_proposals.percent_effort >= 0"
@@ -126,6 +130,7 @@ has_many :investigator_appointments,
     }
   }
 
+
   default_scope :conditions => '(investigators.deleted_at is null and investigators.end_date is null)'
 #  default_scope :include => :abstracts
   #default_scope :order => 'lower(investigators.last_name),lower(investigators.first_name)'
@@ -136,6 +141,36 @@ has_many :investigator_appointments,
   def self.abstract_words
     all.map(&:unique_abstract_words).flatten
   end
+  
+  def investigator_appointments_form=(form)
+    unit_ids = form[:organizational_unit_ids]
+    type = form[:type]
+    return if unit_ids.blank? or type.blank? or self.id.blank?
+    ia_unit_ids = self.all_investigator_appointments.map(&:organizational_unit_id)
+    # convert text ids to integer ids
+    unit_ids = unit_ids.map{|i| i.to_i}
+    self.all_investigator_appointments.each do |ia|
+      if unit_ids.include?(ia.organizational_unit_id)
+        # verify type and end_date is null
+        if ia.type != type
+          ia.type = type
+        end
+        unless ia.end_date.blank?
+          ia.end_date = nil
+        end
+      else
+        ia.end_date = Time.now - 1.day
+      end
+      ia.save! if ia.changed?
+    end
+    unit_ids.each do |id|
+      unless ia_unit_ids.include?(id)
+        ia = self.investigator_appointments.new(:organizational_unit_id=>id, :start_date => Date.today)
+        ia.type = type
+        ia.save!
+      end
+    end
+  end 
   
   def abstract_words
     self.abstracts.abstracts_last_five_years.map{|ab| ab.abstract_words}.flatten
@@ -155,7 +190,7 @@ has_many :investigator_appointments,
   def self.include_deleted( id=nil )
     with_exclusive_scope do
       if id.blank?
-        find(:all)
+        find(:all, :order => "lower(last_name), lower(first_name)")
       else
         find_by_id(id)
       end
