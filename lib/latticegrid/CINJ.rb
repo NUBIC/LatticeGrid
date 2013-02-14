@@ -105,7 +105,7 @@ end
 # build LatticeGridHelper.institutional_limit_search_string to identify all the publications at your institution 
 
 def LatticeGridHelper.institutional_limit_search_string 
-  '("The Cancer Institute of New Jersey "[affil] or "UMDNJ"[affil] or ("University"[affil] AND "New Jersey"[affil]) or "Robert Wood Johnson"[affil] or "Rutgers"[affil])'
+  '("The Cancer Institute of New Jersey "[affil] or "UMDNJ"[affil] or ("University"[affil] AND "New Jersey"[affil]) or "Robert Wood Johnson"[affil] or "Rutgers"[affil] or "Princeton University"[affil])'
 end
 
 def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bold=false, investigators_in_unit=[], speed_display=false, simple_links=false)
