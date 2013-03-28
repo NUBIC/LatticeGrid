@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>app/views/abstracts/_high_impact_by_month_table.html.erb</string>
+	<string>lib/text_utilities.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -35,50 +35,6 @@
 			<key>firstVisibleLine</key>
 			<integer>49</integer>
 		</dict>
-		<key>app/models/investigator.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>37</integer>
-				<key>line</key>
-				<integer>149</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>129</integer>
-		</dict>
-		<key>app/views/abstracts/_high_impact_by_month_table.html.erb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>73</integer>
-				<key>line</key>
-				<integer>20</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>33</integer>
-				<key>line</key>
-				<integer>20</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>73</integer>
-				<key>line</key>
-				<integer>20</integer>
-			</dict>
-		</dict>
 		<key>app/views/graphs/org_nodes.rxml</key>
 		<dict>
 			<key>caret</key>
@@ -107,19 +63,91 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>config/routes.rb</key>
+		<key>doc/console_commands.txt</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>doc/example_loads.txt</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>1</integer>
+				<key>line</key>
+				<integer>6</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>45</integer>
+				<key>line</key>
+				<integer>6</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>1</integer>
+				<key>line</key>
+				<integer>6</integer>
+			</dict>
+		</dict>
+		<key>lib/graph_generator.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>22</integer>
 				<key>line</key>
-				<integer>3</integer>
+				<integer>267</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
+			<integer>247</integer>
+		</dict>
+		<key>lib/investigator_abstract_utilities.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>34</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
 			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>53</integer>
+		</dict>
+		<key>lib/investigator_appointment_utilities.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>71</integer>
+				<key>line</key>
+				<integer>241</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>702</integer>
 		</dict>
 		<key>lib/latticegrid.rb</key>
 		<dict>
@@ -151,18 +179,112 @@
 				<integer>4</integer>
 			</dict>
 		</dict>
+		<key>lib/tasks/abstracts.rake</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>23</integer>
+				<key>line</key>
+				<integer>41</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>145</integer>
+		</dict>
+		<key>lib/tasks/awards.rake</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>21</integer>
+				<key>line</key>
+				<integer>24</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>66</integer>
+		</dict>
+		<key>lib/tasks/cleanup.rake</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>21</integer>
+				<key>line</key>
+				<integer>429</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>415</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>8</integer>
+				<key>line</key>
+				<integer>429</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>27</integer>
+				<key>line</key>
+				<integer>429</integer>
+			</dict>
+		</dict>
+		<key>lib/text_utilities.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>13</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>40</integer>
+			</dict>
+		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
 		<string>lib/latticegrid.rb</string>
 		<string>app/controllers/admin_controller.rb</string>
-		<string>app/models/investigator.rb</string>
-		<string>config/routes.rb</string>
-		<string>app/views/abstracts/_high_impact_by_month_table.html.erb</string>
+		<string>doc/console_commands.txt</string>
+		<string>doc/example_loads.txt</string>
+		<string>lib/text_utilities.rb</string>
+		<string>lib/graph_generator.rb</string>
+		<string>lib/investigator_abstract_utilities.rb</string>
+		<string>lib/investigator_appointment_utilities.rb</string>
+		<string>lib/tasks/abstracts.rake</string>
+		<string>lib/tasks/awards.rake</string>
+		<string>lib/tasks/cleanup.rake</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{10, 0}, {1000, 789}}</string>
+	<string>{{9, 132}, {1000, 746}}</string>
 </dict>
 </plist>

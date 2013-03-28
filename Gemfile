@@ -1,4 +1,3 @@
-source :gemcutter
 gem 'bundler'
 gem "rails", "~> 2.3", :require => nil
 gem 'rmagick', :require => nil

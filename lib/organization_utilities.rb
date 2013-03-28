@@ -12,9 +12,11 @@ def CreateSchoolDepartmentFromHash(data_row)
   node_label = data_row['LABEL_NAME'] || node_name
   node_id = data_row['APPT_ENTITY_ID'] || data_row['ENTITY_ID'] || data_row['ID'] || data_row['NODE_ID'] || data_row['dept_id'] || data_row['department_id'] || data_row['DEPT_ID'] || data_row['DEPARTMENT_ID']
   root_name = data_row['APPT_ENTITY_SCHOOL'] || data_row['ROOT'] || data_row['ROOT_NAME']
-
   if root_name == node_abbrev || node_name =~ /school/i || node_name =~ /college/i
     org = School.new  # this is the root
+  elsif node_name =~ /center/i || node_name =~ /institute/i
+    org = Center.new
+    school_org = HandleSchool(root_name )
   else
     org = Department.new
     school_org = HandleSchool(root_name )
@@ -34,14 +36,25 @@ def CreateSchoolDepartmentFromHash(data_row)
   else
     existing_org = OrganizationalUnit.find_by_name(org.name) || OrganizationalUnit.find_by_abbreviation(org.abbreviation)
     if existing_org.blank? then
+      if org.type == 'School' then
+        existing_org = School.find_by_department_id(org.department_id)
+      end
+      if org.type == 'Department' then
+        existing_org = Department.find_by_department_id(org.department_id)
+      end
+      if org.type == 'Center' then
+        existing_org = Center.find_by_department_id(org.department_id)
+      end
+    end
+    if existing_org.blank? then
       org.save!
       org.move_to_child_of school_org unless school_org.blank?
       org.save
     else
       existing_org.move_to_child_of school_org if existing_org.parent_id.blank? && ! school_org.nil?
       existing_org.department_id = org.department_id if existing_org.department_id.blank?
-      existing_org.name = org.name if existing_org.name.blank?
-      existing_org.abbreviation = org.abbreviation if existing_org.abbreviation.blank?
+      existing_org.name = org.name unless org.name.blank? or existing_org.name == org.name
+      existing_org.abbreviation = org.abbreviation unless org.abbreviation.blank? or existing_org.abbreviation == org.abbreviation
       existing_org.save!
       org = existing_org
 	  end
@@ -190,13 +203,9 @@ def CreateOrganizationFromHash(data_row)
         existing_org.department_id = org.department_id if (existing_org.department_id.blank? || existing_org.department_id == 0) && org.department_id > 0
         existing_org.division_id = org.division_id if org.division_id > 0
         existing_org.type = org.type if org.type != existing_org.type
-        existing_org.name = org.name if existing_org.name.blank? or existing_org.name != org.name
-        existing_org.abbreviation = org.abbreviation if ! org.abbreviation.blank?
-        existing_org.organization_url = org.organization_url if existing_org.organization_url.blank?
-        org_url = existing_org.organization_url
-        existing_org.organization_url = "http://test.com/"
-        existing_org.save!
-        existing_org.organization_url = org_url
+        existing_org.name = org.name unless org.name.blank? or existing_org.name == org.name
+        existing_org.abbreviation = org.abbreviation unless org.abbreviation.blank? or existing_org.abbreviation == org.abbreviation
+        existing_org.organization_url = org.organization_url unless org.organization_url.blank? or existing_org.organization_url == org.organization_url
         existing_org.save!
         org = existing_org
   	  end

@@ -41,7 +41,11 @@ def clean_date(the_date)
   begin
     #seems to come over as a 2 digit year. Freaks
     #assume US crappy format
-    the_date = Date.strptime(the_date, "%m/%d/%y")
+    if the_date =~ /((0?[1-9])|(1[02]))\/\d{2}\/\d{4}/
+      the_date = Date.strptime(the_date, "%m/%d/%Y")
+    elsif the_date =~ /((0?[1-9])|(1[02]))\/\d{2}\/\d{2}/
+      the_date = Date.strptime(the_date, "%m/%d/%y")
+    end
   rescue 
     begin
       #assume US 

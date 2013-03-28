@@ -1,8 +1,70 @@
+# Feinberg Mar 2013 loads
+
+bundle exec rake db:migrate
+bundle exec rake importDepartments file=db/imports/Feinberg/department_lookup_Mar2013.txt 
+bundle exec rake importOrganizations file=db/imports/Feinberg/division_lookup_Mar2013.txt #added NICO, IPHAM and other centers
+bundle exec rake cleanUpOrganizations
+bundle exec rake log:clear
+bundle exec rake importInvestigators file=db/imports/Feinberg/private/faculty_Mar2013.txt 
+bundle exec rake importInvestigators file=db/imports/Feinberg/private/faculty_evanston_Dec2012.txt 
+bundle exec rake cleanup:countFacultyUpdates
+bundle exec rake cleanup:purgeUnupdatedFaculty
+#rake cleanup:update_titles_and_home_from_ldap
+bundle exec rake importJointAppointments file=db/imports/Feinberg/joint_appointments_Dec2012.txt
+bundle exec rake importSecondaryAppointments file=db/imports/Feinberg/secondary_appointmentsMar2013.txt 
+bundle exec rake importCenterMemberships file=db/imports/Feinberg/center_memberships_Mar2013.txt 
+bundle exec rake importCenterMemberships file=db/imports/Feinberg/cancer_memberships_Oct2012.txt 
+bundle exec rake importCenterMemberships file=db/imports/Feinberg/cgm_memberships_Oct2012.txt 
+bundle exec rake importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_Mar2013.txt 
+
+bundle exec rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_interests_Mar2013.txt
+bundle exec rake importInvestigatorDescriptions file=db/imports/Feinberg/faculty_descriptions_Mar2013.txt
+bundle exec rake db:vacuum  #added a custom rake method for this
+bundle exec rake cleanup:email
+bundle exec rake cleanup:cleanInvestigatorsUsername
+
+bundle exec rake importJournalImpact file=db/imports/jcr_recs.txt
+bundle exec rake importJournalImpact file=db/imports/jcr_recs_2010.txt
+bundle exec rake importJournalImpact file=db/imports/jcr_recs_2011.txt
+bundle exec rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+bundle exec rake updateJournalISSNsFromPubmed
+bundle exec rake cleanJournalISSNentries
+bundle exec rake findAbstractswithoutJCRentries
+bundle exec rake findAbstractswithJCRentries
+bundle exec rake updateJournalISSNsFromPubmed
+bundle exec rake setPreferredHighImpact
+
+bundle exec rake awards:importData file=db/imports/Feinberg/private/award_data_20130319.txt
+bundle exec rake awards:cleanPIassignments
+
+bundle exec rake importStudies file=db/imports/Feinberg/private/studies_2012-10-17.csv
+bundle exec rake importStudyInvestigators file=db/imports/Feinberg/private/study_roles_2012-10-17.csv
+bundle exec rake findStudiesWithoutInvestigators
+
+bundle exec rake checkValidAbstractsWithoutInvestigators
+bundle exec rake removeValidAbstractsWithoutInvestigators
+
+bundle exec rake nightlyBuild
+bundle exec rake cleanup:findServiceInvestigatorsWithoutActivities
+bundle exec rake cleanup:purgeServiceInvestigatorsWithoutActivities
+bundle exec rake cleanup:resolve_duplicate_tags
+bundle exec rake cleanup:resolve_misformed_tags
+bundle exec rake monthlyBuild
+bundle exec rake cleanup:resolve_duplicate_tags
+bundle exec rake cleanup:resolve_misformed_tags
+bundle exec rake setup:wordle
+
+bundle exec rake db:vacuum  #added a custom rake method for this
+bundle exec rake log:clear
+
 # Jan 2013 loads, CINJ
 
 bundle exec rake importInvestigators file=db/imports/CINJ/cinj_faculty_2013_01_30.txt
 bundle exec rake cleanup:countFacultyUpdates
 bundle exec rake cleanup:purgeUnupdatedFaculty
+bundle exec rake cleanup:countOldMemberships
+#bundle exec rake cleanup:purgeOldMemberships
+
 
 bundle exec rake RAILS_ENV=production nightlyBuild
 bundle exec rake RAILS_ENV=production cleanup:find_duplicate_tags

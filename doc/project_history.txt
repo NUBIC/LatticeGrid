@@ -271,6 +271,9 @@ script/generate model word_frequency frequency:integer word:string type:string
 # add a migration to add parent_institution_award_number
 script/generate migration parent_institution_award_number
 
+# create a migration to add doi to abstracts
+./script/generate migration add_doi_to_abstract
+
 # authenticated access
 
 script/generate controller profiles/investigator index show edit update abstract abstract_update

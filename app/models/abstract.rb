@@ -21,7 +21,17 @@ class Abstract < ActiveRecord::Base
   has_many :organization_abstracts,
         :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
   has_many :organizational_units, :through => :organization_abstracts
-  validates_uniqueness_of :pubmed
+  validates_uniqueness_of :pubmed, :allow_nil=> true
+  validates_uniqueness_of :doi, :allow_nil=> true
+  
+  # if pubmed if blank, force uniqueness (non-blankness!) for doi, and vice versus. Both cannot be blank!
+  # test only needs to be one sided.
+  # rails 3.x syntax
+  # validates :pubmed, :uniqueness => true, :if => "doi.blank?"
+  # validates :doi, :uniqueness => true, :if => "pubmed.blank?"
+  
+  validates_uniqueness_of :doi, :allow_nil=> false, :message=> "and pubmed can't both be nil", :if => :check_pubmed_doi_blank?
+  
   
   has_many :organization_abstracts,
         :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
@@ -74,6 +84,10 @@ class Abstract < ActiveRecord::Base
         :conditions => ['investigator_abstracts.investigator_id IN (:investigator_ids) AND investigator_abstracts.is_valid = true', {:investigator_ids => ids.first}] }
     }
   default_scope :conditions => 'abstracts.is_valid = true'
+
+  def check_pubmed_doi_blank?
+    doi.blank? and pubmed.blank?
+  end
 
   def self.abstract_words
     all.map(&:abstract_words).join(" ").split(/[ \t\r\n]+/)
