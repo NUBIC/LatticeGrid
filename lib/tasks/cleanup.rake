@@ -513,6 +513,16 @@ namespace :cleanup do
        PurgeParttimeInvestigatorsWithoutActivities()
       }
   end
+  
+  task :updateAbstractsWithPMCIDs => :getAbstracts do
+    # this will update all abstracts with Pubmed Central IDs, if they are available
+    block_timing("updateAbstractsWithPMCIDs") {
+      publications=FetchPublicationData(@AllAbstracts.collect(&:pubmed))
+      row_iterator(publications) {  |pubmed_record|
+        updateAbstractWithPMCID(pubmed_record)
+      }
+    }
+  end
 
 end
 

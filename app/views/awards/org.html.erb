@@ -108,7 +108,11 @@
 			<%= formatted_date(award.project_start_date) + " to " + formatted_date(award.project_end_date) %>
 		</td>
 		<td class="list-left">
+			<% if defined?(@pdf) and @pdf %>
+			<%= award.total_amount %>
+			<% else %>
 			<%= number_to_humanized(award.total_amount) %>
+			<% end %>
 		</td>
 		<td class="list-left">
 			<%=  (award.investigator_proposals.count-1) %>

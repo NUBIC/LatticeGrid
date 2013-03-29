@@ -245,10 +245,19 @@ module ApplicationHelper
       "Yes"
     end
   end
-  
-  
+
   def link_to_pubmed(text, abstract, tooltip=nil)
     tooltip ||= text 
     link_to( text, ((abstract.url.blank?) ? "http://www.ncbi.nlm.nih.gov/pubmed/"+abstract.pubmed : abstract.url), :target => '_blank', :title=>tooltip) 
+  end
+  
+  def link_to_pubmedcentral(text, abstract, tooltip=nil)
+    tooltip ||= text 
+    link_to( text, "http://www.ncbi.nlm.nih.gov/pmc/articles/"+abstract.pubmedcentral, :target => '_blank', :title=>tooltip) 
+  end
+  
+  def link_to_doi(text, abstract, tooltip=nil)
+    tooltip ||= text 
+    link_to( text, "http://dx.doi.org/"+abstract.doi, :target => '_blank', :title=>tooltip) 
   end
 end

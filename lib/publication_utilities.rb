@@ -168,6 +168,7 @@ def InsertPublication(publication, update_if_pmc_exists=false)
         :abstract => reference.abstract,
         :authors => reference.authors.join("\n"),
         :full_authors => medline.full_authors,
+        :author_affiliations => medline.affiliations.is_a?(String) ? medline.affiliations : medline.affiliations.join(";\n"),
         :publication_date => publication_date,
         :electronic_publication_date => medline.electronic_publication_date,
         :deposited_date => medline.deposited_date,
@@ -178,6 +179,7 @@ def InsertPublication(publication, update_if_pmc_exists=false)
         :journal => medline.full_journal[0..253],
         :journal_abbreviation => medline.ta, #journal Title Abbreviation
         :issn => medline.issn,
+        :doi => medline.doi,
         :volume  => reference.volume,
         :issue   => reference.issue,
         :pages   => reference.pages,
@@ -188,14 +190,15 @@ def InsertPublication(publication, update_if_pmc_exists=false)
         :mesh    => reference.mesh.is_a?(String) ? reference.mesh : reference.mesh.join(";\n")
       )
     else
-      if thePub.publication_date != publication_date || thePub.status != medline.status || thePub.publication_status != medline.publication_status || (thePub.pubmedcentral != pubmed_central_id) || thePub.issn != medline.issn then
+      if thePub.publication_date != publication_date || thePub.status != medline.status || thePub.publication_status != medline.publication_status || (thePub.pubmedcentral != pubmed_central_id) || thePub.issn != medline.issn || thePub.doi != medline.doi || thePub.year != reference.year then
           thePub.endnote_citation = reference.endnote
           thePub.publication_date = publication_date if ! publication_date.blank?
           thePub.electronic_publication_date = medline.electronic_publication_date if ! medline.electronic_publication_date.blank?
           thePub.deposited_date = medline.deposited_date
           thePub.publication_status = medline.publication_status
           thePub.status  = medline.status
-          thePub.issn    = medline.issn if ! medline.issn.blank?
+          thePub.issn    = medline.issn unless medline.issn.blank?
+          thePub.doi     = medline.doi  unless medline.doi.blank?
           thePub.volume  = reference.volume
           thePub.issue   = reference.issue
           thePub.pages   = reference.pages
@@ -203,6 +206,7 @@ def InsertPublication(publication, update_if_pmc_exists=false)
           thePub.pubmed  = reference.pubmed
           thePub.pubmedcentral  = pubmed_central_id
           thePub.url     = reference.url
+          thePub.author_affiliations = medline.affiliations.is_a?(String) ? medline.affiliations : medline.affiliations.join(";\n"),
           thePub.mesh    = reference.mesh.is_a?(String) ? reference.mesh : reference.mesh.join(";\n")
           thePub.save!
         end

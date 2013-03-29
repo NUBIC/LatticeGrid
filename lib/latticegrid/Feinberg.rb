@@ -1,3 +1,4 @@
+
 def LatticeGridHelper.menu_head_abbreviation
   "Feinberg"
 end
@@ -59,7 +60,7 @@ end
 def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bold=false, investigators_in_unit=[], speed_display=false, simple_links=false)
   #  out = publication.authors
     out = (mark_members_bold) ? highlightMemberInvestigator(publication, speed_display, simple_links, investigators_in_unit) : highlightInvestigator(publication, speed_display, simple_links)
-    out << ". "
+    out << ". " unless out.blank?
     if link_abstract_to_pubmed
   	out << link_to( publication.title, "http://www.ncbi.nlm.nih.gov/pubmed/"+publication.pubmed, :target => '_blank', :title=>'PubMed ID')
     else
@@ -73,7 +74,7 @@ def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bol
   else
   	out << "<i>In process</i>"
   end
-  out << ", #{publication.year}."
+  out << ", #{publication.year}. " + [quicklink_to_pubmed(publication.pubmed), quicklink_to_pubmedcentral(publication.pubmedcentral), quicklink_to_doi(publication.doi)].compact.join("; ")
 end
 
 def highlightInvestigator(citation, speed_display=false, simple_links=false, authors=nil,memberArray=nil)

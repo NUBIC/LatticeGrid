@@ -84,16 +84,6 @@ task :insertAbstracts => :getPIAbstracts do
   end
 end
 
-task :updateAbstractsWithPMCIDs => :getAbstracts do
-  # this will update all abstracts with Pubmed Central IDs, if they are available
-  block_timing("updateAbstractsWithPMCIDs") {
-    publications=FetchPublicationData(@AllAbstracts.collect(&:pubmed))
-    row_iterator(publications) {  |pubmed_record|
-      updateAbstractWithPMCID(pubmed_record)
-    }
-  }
-end
-
 task :insertAllAbstracts => [:setAllYears, :insertAbstracts] do
   # dependencies do all the work
 end

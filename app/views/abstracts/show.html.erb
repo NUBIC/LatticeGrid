@@ -41,9 +41,26 @@
 		<b>PubMed Central ID</b><br/>
 		<%= @publication.pubmedcentral.blank? ? "N/A" : @publication.pubmedcentral %>
 	</div>
+	<div id="doi">
+		<b>Digital Object Identifier (DOI)</b><br/>
+		<%= @publication.doi.blank? ? "N/A" : @publication.doi %>
+	</div>
+	<% unless @publication.pubmed.blank? %>
 	<div id="linkout">
 		<%= link_to_pubmed('Go to PubMed entry', @publication) %>
 	</div>
+	<% end %>
+	<% unless @publication.pubmedcentral.blank? %>
+	<div id="linkout">
+		<%= link_to_pubmedcentral('Go to PubMedCentral entry', @publication) %>
+	</div>
+	<% end %>
+	<% unless @publication.doi.blank? %>
+	<div id="linkout">
+		<%= link_to_doi('Go to DOI', @publication) %>
+	</div>
+	<% end %>
+	
 	<div id="linkout">
 		<%= link_to('View citation formatted for EndNote', endnote_abstract_url(@publication) ) %>
 	</div>

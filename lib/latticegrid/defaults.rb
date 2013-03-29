@@ -1,4 +1,5 @@
-  require 'publication_utilities' #all the helper methods
+  require 'publication_utilities' 
+  require 'link_helper'
   
   # class methods
   def LatticeGridHelper.page_title
@@ -325,10 +326,11 @@ def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bol
     out << "<i>#{publication.journal_abbreviation}</i> "
     out << " (#{publication.year}) "
     if publication.pages.length > 0
-  	out << h(publication.volume) +":"+ h(publication.pages)+"."
+  	out << h(publication.volume) +":"+ h(publication.pages)+". "
     else
-  	out << "<i>In process.</i>"
+  	out << "<i>In process.</i> "
     end
+    out << [quicklink_to_pubmed(publication.pubmed), quicklink_to_pubmedcentral(publication.pubmedcentral), quicklink_to_doi(publication.doi)].compact.join("; ")
   end
 
 def link_to_investigator(citation, investigator, name=nil, isMember=false, speed_display=false, simple_links=false, class_name=nil) 
