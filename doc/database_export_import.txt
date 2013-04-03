@@ -40,7 +40,7 @@ pg_dump -Fc fsm_latticegrid -U latticegrid > fsm_latticegrid_20130328.dmp
 scp fsm_latticegrid_20130328.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/fsm_latticegrid_20130328.dmp  
 pg_restore -d fsm_latticegrid -U latticegrid -h pprod2 fsm_latticegrid_20130328.dmp
 
-scp award_data_20121210.txt wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/apps/cancerpublications/db/imports/Feinberg/private/.
+scp award_data_20130319.txt wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/apps/cancerpublications/db/imports/Feinberg/private/.
 
 
 scp stanford_latticegrid_20121212.dmp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe/stanford_latticegrid_20121212.dmp  
@@ -53,6 +53,7 @@ pg_restore -d lls_latticegrid -U latticegrid -h pstage2 lls_latticegrid_20120717
 
 scp award_data_20121016.txt wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe/apps/ccne-latticegrid/db/imports/Feinberg/private/award_data_20121016.txt 
 
+pg_dump -Fc rhlccc_latticegrid -U latticegrid -h pprod2 > rhlccc_latticegrid_20130329.dmp
 
 pg_dump -Fc rhlccc_latticegrid -U latticegrid -h pprod2 > rhlccc_latticegrid_20120604.dmp
 scp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/rhlccc_latticegrid_20120604.dmp   rhlccc_latticegrid_20120604.dmp 
