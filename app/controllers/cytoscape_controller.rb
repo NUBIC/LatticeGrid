@@ -265,6 +265,17 @@ class CytoscapeController < ApplicationController
     end
   end
 
+#!!!!! 
+  def all_investigator_chord 
+    @title = 'Chord Diagram showing publications between investigators'
+    @json_callback = "../cytoscape/d3_all_investigator_chord_data.js"
+    respond_to do |format|
+      format.html{ render 'chord', :layout => 'd3'}
+      format.json{ render :layout => false, :text => ""}
+    end
+  end
+
+
 #!!!!!
   def investigator_edge_bundling 
     @title = 'Hierarchical Edge Bundle Diagram by program and investigator'
@@ -363,6 +374,18 @@ class CytoscapeController < ApplicationController
     end
   end
 
+
+#!!!!
+  def d3_all_investigator_chord_data
+      #@investigators = @head_node.descendants.sort_by(&:name)
+      graph = d3_all_investigators_graph()
+      depth = 1 
+      respond_to do |format| 
+        format.json{ render :layout => false, :json => graph.as_json()}
+        format.js{ render :layout => false, :json => graph.as_json()}
+      end
+    end
+    
 
 #!!!!
   def d3_investigator_chord_data

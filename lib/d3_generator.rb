@@ -39,27 +39,40 @@ def d3_all_units_graph(units)
   return graph_array
 end
 
-
-def d3_master_investigator_graph(investigator)
+def d3_all_investigators_graph(program=nil)
+  if program.blank?
+    investigators = Investigator.by_name
+  else
+    investigators = program.investigators
+  end
+  if investigators.blank? 
+    return ['']
+  end
   graph_array = []
-  master_investigator = investigator
-  name = master_investigator.last_name
-  coauthors = master_investigator.co_authors
-  coauthor_ids = []
-  if master_investigator.blank? 
-    graph_array = ['']
-    return graph_array
-  end
-  coauthors.each do |ca|
-    coauthor_ids << ca.colleague_id
-  end
-  graph_array << d3_investigator_graph(master_investigator, coauthor_ids, name)
-  master_investigator.colleague_coauthors.each do |colleague|
-    graph_array << d3_investigator_graph(colleague, coauthor_ids, name)
+  coauthor_ids = investigators.map(&:id)
+  investigators.each do |master_investigator|
+    graph_array << d3_investigator_graph(master_investigator, coauthor_ids, master_investigator.last_name)
   end
   return graph_array 
 end
 
+
+def d3_master_investigator_graph(investigator)
+  if investigator.blank? 
+    return ['']
+  end
+  coauthor_ids = investigator.co_authors.map(&:colleague_id)
+  return add_investigator_to_graph(investigator,coauthor_ids, []) 
+end
+
+def add_investigator_to_graph(investigator,coauthor_ids, graph)
+  name = investigator.last_name
+  graph << d3_investigator_graph(investigator, coauthor_ids, name)
+  investigator.colleague_coauthors.each do |colleague|
+    graph << d3_investigator_graph(colleague, coauthor_ids, name)
+  end
+  return graph
+end
 
 def d3_all_investigators_bundle(investigators)
   graph_array = []
