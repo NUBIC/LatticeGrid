@@ -6,7 +6,7 @@ gem 'json', "1.6.6"
 #gem 'sparklines'
 gem 'fastercsv'
 gem 'pg'
-gem 'haml'
+gem 'haml', '3.1.7'
 gem 'will_paginate', "~> 2.3"
 gem 'awesome_nested_set', "~> 1.4"
 #gem "acts_as_taggable_on_steroids", "~> 1.2"
@@ -15,6 +15,6 @@ gem 'net-ldap'
 gem 'bio'
 gem 'aker-rails'
 gem 'aker'
-gem 'rdoc' # necessary for rails 2.3.12
+gem 'rdoc', '3.12' # necessary for rails 2.3.12
 gem 'bcdatabase', '~> 1.0.6'
 #gem 'wordcram'
