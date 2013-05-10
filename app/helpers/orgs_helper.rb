@@ -18,11 +18,19 @@ module OrgsHelper
       out+= " &nbsp;  &nbsp; " 
     end
     if not (controller.action_name == 'show_org_mesh' and controller.controller_name == 'graphviz')
-      out+= link_to( "MeSH similarities network", show_org_mesh_graphviz_url(params[:id]))
+      out+= link_to( "Similarity network", show_org_mesh_graphviz_url(params[:id]))
       out+= " &nbsp;  &nbsp; "  
     end
     if not (controller.action_name == 'show_org_org' and controller.controller_name == 'graphviz')
-      out+= link_to( "Unit-to-Unit co-authorship network", show_org_org_graphviz_url(params[:id]))
+      out+= link_to( "Unit-to-Unit network", show_org_org_graphviz_url(params[:id]))
+      out+= " &nbsp;  &nbsp; "  
+    end
+    if not (controller.action_name == 'program_chord' and controller.controller_name == 'cytoscape')
+      out+= link_to( "Chord diagram", program_chord_cytoscape_url(params[:id]))
+      out+= " &nbsp;  &nbsp; "  
+    end
+    if not (controller.action_name == 'chord' and controller.controller_name == 'cytoscape')
+      out+= link_to( "Unit-to-Unit Chord", chord_cytoscape_url(params[:id]))
       out+= " &nbsp;  &nbsp; "  
     end
     out+="<br/>Radial Graphs: "

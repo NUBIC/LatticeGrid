@@ -1,7 +1,7 @@
 class CytoscapeController < ApplicationController
   before_filter :check_allowed, :only => [:awards, :studies, :show_all]
 
-  caches_page( :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :org_org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data, :investigator_edge_bundling, :d3_investigator_edge_data, :investigator_wordle, :d3_investigator_wordle_data, :simularity_wordle, :d3_investigators_wordle_data, :d3_investigator_chord_data, :show_all_orgs, :all_org_cytoscape_data) if LatticeGridHelper.CachePages()
+  caches_page( :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :org_org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data, :investigator_edge_bundling, :d3_investigator_edge_data, :investigator_wordle, :d3_investigator_wordle_data, :simularity_wordle, :d3_investigators_wordle_data, :d3_investigator_chord_data, :show_all_orgs, :all_org_cytoscape_data, :d3_program_investigators_chord_data, :d3_all_investigators_chord_data) if LatticeGridHelper.CachePages()
   caches_action( :listing, :investigator, :awards, :studies )  if LatticeGridHelper.CachePages()
   
   require 'cytoscape_config'
@@ -232,7 +232,7 @@ class CytoscapeController < ApplicationController
     @title = 'Chord Diagram showing inter- and intra-programmatic connections through multi-investigator publications'
     unless params[:id].blank?
       program = OrganizationalUnit.find_by_id(params[:id])
-      unless program.blank?
+      if program.blank?
         flash[:notice] = "unable to find unit"
         params[:id] = nil
       else
@@ -242,6 +242,26 @@ class CytoscapeController < ApplicationController
     end
     respond_to do |format|
       format.html { render :layout => 'd3'  }
+      format.json{ render :layout=> false, :text => ""  }
+    end
+  end
+
+  #d3 methods
+  def program_chord
+    @json_callback = "../cytoscape/d3_data.js"
+    @title = 'Chord Diagram showing programmatic connections'
+    unless params[:id].blank?
+      program = OrganizationalUnit.find_by_id(params[:id])
+      if program.blank?
+        flash[:notice] = "unable to find unit #{params[:id]}"
+        params[:id] = nil
+      else
+        @json_callback = "../cytoscape/"+params[:id]+"/d3_program_investigators_chord_data.js"
+        @title = 'Chord Diagram showing inter- and intra-programmatic publications for '+program.name
+      end
+    end
+    respond_to do |format|
+      format.html { render 'chord', :layout => 'd3'  }
       format.json{ render :layout=> false, :text => ""  }
     end
   end
@@ -268,7 +288,7 @@ class CytoscapeController < ApplicationController
 #!!!!! 
   def all_investigator_chord 
     @title = 'Chord Diagram showing publications between investigators'
-    @json_callback = "../cytoscape/d3_all_investigator_chord_data.js"
+    @json_callback = "../cytoscape/d3_all_investigators_chord_data.js"
     respond_to do |format|
       format.html{ render 'chord', :layout => 'd3'}
       format.json{ render :layout => false, :text => ""}
@@ -374,17 +394,31 @@ class CytoscapeController < ApplicationController
     end
   end
 
+#!!!!
+  def d3_program_investigators_chord_data
+    #@investigators = @head_node.descendants.sort_by(&:name)
+    if (params[:id])
+      program = Program.find_by_id(params[:id])
+      graph = d3_all_investigators_graph(program)
+    end
+    depth = 1 
+    respond_to do |format| 
+      format.json{ render :layout => false, :json => graph.as_json()}
+      format.js{ render :layout => false, :json => graph.as_json()}
+    end
+  end
+    
 
 #!!!!
-  def d3_all_investigator_chord_data
-      #@investigators = @head_node.descendants.sort_by(&:name)
-      graph = d3_all_investigators_graph()
-      depth = 1 
-      respond_to do |format| 
-        format.json{ render :layout => false, :json => graph.as_json()}
-        format.js{ render :layout => false, :json => graph.as_json()}
-      end
+  def d3_all_investigators_chord_data
+    #@investigators = @head_node.descendants.sort_by(&:name)
+    graph = d3_all_investigators_graph()
+    depth = 1 
+    respond_to do |format| 
+      format.json{ render :layout => false, :json => graph.as_json()}
+      format.js{ render :layout => false, :json => graph.as_json()}
     end
+  end
     
 
 #!!!!

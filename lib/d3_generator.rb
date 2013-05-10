@@ -43,7 +43,7 @@ def d3_all_investigators_graph(program=nil)
   if program.blank?
     investigators = Investigator.by_name
   else
-    investigators = program.investigators
+    investigators = program.all_primary_or_member_faculty.sort_by(&:last_name)
   end
   if investigators.blank? 
     return ['']
