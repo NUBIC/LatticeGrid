@@ -227,19 +227,11 @@ class CytoscapeController < ApplicationController
   end
 
   #d3 methods
+  # this one is a collection - doesn't have an :id parameter
+  
   def chord
     @json_callback = "../cytoscape/d3_data.js"
     @title = 'Chord Diagram showing inter- and intra-programmatic connections through multi-investigator publications'
-    unless params[:id].blank?
-      program = OrganizationalUnit.find_by_id(params[:id])
-      if program.blank?
-        flash[:notice] = "unable to find unit"
-        params[:id] = nil
-      else
-        @json_callback = "../cytoscape/"+params[:id]+"/d3_data.js"
-        @title = 'Chord Diagram showing inter- and intra-programmatic publications for '+program.name
-      end
-    end
     respond_to do |format|
       format.html { render :layout => 'd3'  }
       format.json{ render :layout=> false, :text => ""  }
