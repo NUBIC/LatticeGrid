@@ -30,7 +30,7 @@ module OrgsHelper
       out+= " &nbsp;  &nbsp; "  
     end
     if not (controller.action_name == 'chord' and controller.controller_name == 'cytoscape')
-      out+= link_to( "Unit-to-Unit Chord", chord_cytoscape_url(params[:id]))
+      out+= link_to( "Unit-to-Unit Chord", chord_cytoscape_url )
       out+= " &nbsp;  &nbsp; "  
     end
     out+="<br/>Radial Graphs: "
