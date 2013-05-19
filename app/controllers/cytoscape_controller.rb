@@ -390,7 +390,7 @@ class CytoscapeController < ApplicationController
   def d3_program_investigators_chord_data
     #@investigators = @head_node.descendants.sort_by(&:name)
     if (params[:id])
-      program = Program.find_by_id(params[:id])
+      program = OrganizationalUnit.find_by_id(params[:id])
       graph = d3_all_investigators_graph(program)
     end
     depth = 1 
