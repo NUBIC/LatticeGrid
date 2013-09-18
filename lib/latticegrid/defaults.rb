@@ -428,7 +428,7 @@ end
   def is_admin?
     begin
       return true unless LatticeGridHelper.require_authentication?
-      if [ 'wakibbe', 'admin', 'tvo743', 'jkk366', 'jhl197', 'ddc830', 'mar352', 'vvs359' ].include?(current_user.username.to_s)  then
+      if [ 'wakibbe', 'admin', 'tvo743', 'jkk366', 'jhl197', 'ddc830', 'mar352', 'vvs359', 'pfr957' ].include?(current_user.username.to_s)  then
     	  return true
       end
     rescue
