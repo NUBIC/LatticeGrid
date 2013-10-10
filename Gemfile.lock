@@ -1,5 +1,6 @@
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
+  remote: http://download.bioinformatics.northwestern.edu/gems/
   specs:
     actionmailer (2.3.16)
       actionpack (= 2.3.16)
@@ -21,6 +22,8 @@ GEM
     aker-rails (2.0.3)
       aker (~> 3.0)
       rails (~> 2.3.11)
+    annotate (2.5.0)
+      rake
     awesome_nested_set (1.4.4)
       activerecord (>= 1.1)
     bcdatabase (1.0.6)
@@ -79,6 +82,7 @@ PLATFORMS
 DEPENDENCIES
   aker
   aker-rails
+  annotate (~> 2.5.0)
   awesome_nested_set (~> 1.4)
   bcdatabase (~> 1.0.6)
   bio

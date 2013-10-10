@@ -1,3 +1,20 @@
+# == Schema Information
+# Schema version: 20130327155943
+#
+# Table name: logs
+#
+#  action_name     :string(255)
+#  activity        :string(255)
+#  controller_name :string(255)
+#  created_at      :timestamp
+#  created_ip      :string(255)
+#  id              :integer          default(0), not null, primary key
+#  investigator_id :integer
+#  params          :text
+#  program_id      :integer
+#  updated_at      :timestamp
+#
+
 class Log < ActiveRecord::Base
   belongs_to :organizational_unit, :foreign_key => 'program_id'
   belongs_to :investigator
