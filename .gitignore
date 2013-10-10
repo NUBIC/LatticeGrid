@@ -3,6 +3,7 @@ node_modules
 .DS_Store
 .bundle
 .rvmrc
+.powrc
 
 doc/private/
 doc/notes/
@@ -13,3 +14,4 @@ public/cytoscape/
 public/cytoscape*.js
 public/investigators/
 public/orgs/
+
