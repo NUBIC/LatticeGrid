@@ -20,3 +20,6 @@ gem 'aker'
 gem 'rdoc', '3.12' # necessary for rails 2.3.12 and higher
 gem 'bcdatabase', '~> 1.0.6'
 #gem 'wordcram'
+gem 'capistrano'
+gem 'capistrano-bundler'
+gem 'capistrano-rails'
