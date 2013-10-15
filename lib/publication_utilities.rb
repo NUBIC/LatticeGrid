@@ -161,6 +161,9 @@ def InsertPublication(publication, update_if_pmc_exists=false)
   end
   publication_date = check_date(medline.publication_date, medline.electronic_publication_date,  medline.deposited_date, reference.pubmed)
   thePub = Abstract.find_by_pubmed_include_deleted(reference.pubmed)
+  if thePub.nil? || thePub.id < 1 then
+    thePub = Abstract.find_by_doi_include_deleted(medline.doi)
+  end
   begin 
     if thePub.nil? || thePub.id < 1 then
       thePub = Abstract.create!(
@@ -274,7 +277,7 @@ def check_date(pub_date, edate, created_date, pubmed_id)
       month = 'Jan'
       year = edate.to_date.year unless edate.blank?
        year = created_date.to_date.year if year.blank? and ! created_date.blank?
-       year = today.year if year.blank?x
+       year = today.year if year.blank?
       puts "check_date ERROR handling: INVALID DATE FORMAT: date for #{pubmed_id} was #{pub_date} and is #{day}-#{month}-#{year}"
     end
     pub_date = "#{day}-#{month}-#{year}"

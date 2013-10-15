@@ -1,4 +1,4 @@
-source :gemcutter
+#source :gemcutter
 
 gem 'bundler'
 gem "rails", "~> 2.3", :require => nil
