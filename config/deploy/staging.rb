@@ -2,7 +2,10 @@ set :stage, :staging
 
 require 'bcdatabase'
 
-bcconf = Bcdatabase.load["#{ENV['LATTICEGRID_INSTANCE']}_deploy", :latticegrid] # Using the bcdatabase gem for server config
+# Using the bcdatabase gem for server config
+bcconf = Bcdatabase.load["#{ENV['LATTICEGRID_INSTANCE']}_latticegrid_deploy", :latticegrid]
+
+set :rails_env, 'staging'
 
 # Simple Role Syntax
 # ==================
