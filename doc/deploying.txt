@@ -1,0 +1,17 @@
+To deploy using capistrano (http://www.capistranorb.com) you first need to configure
+the deployment. The latticegrid deployment uses bcdatabase (https://github.com/NUBIC/bcdatabase)
+for configuration to allow a user to deploy more than one instance of the application
+on the same server. So a deployer would use the following command:
+
+$ LATTICEGRID_INSTANCE=rhlccc bundle exec cap staging deploy
+
+A file named LATTICEGRID_INSTANCE_latticegrid_deploy.yml should be placed in the
+deployer's bcdatabase directory (/etc/nubic/db by default) with these items:
+
+latticegrid:
+  application: 'APP_NAME'
+  repo: 'https://github.com/NUBIC/LatticeGrid.git'
+  deploy_to: '/var/www/apps/APP_NAME'
+  staging_app_server: 'staging.application.server'
+  production_app_server: 'production.application.server'
+  server_user: 'DEPLOYER'

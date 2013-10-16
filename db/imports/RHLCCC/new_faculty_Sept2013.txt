@@ -1,0 +1,3 @@
+BASIS	CAMPUS	CATEGORY	DEGREE	DV_ABBR	EMAIL	EMPLOYEE_ID	ERA_COMMONS_ID	FIRST_NAME	LAST_NAME	MIDDLE_NAME	NETID	RANK	TENURE
+FT	Evanston	Regular	PhD	CMIDD	matt.clutter@northwestern.edu			Matthew	Clutter	Ryan	mrc263	Research Associate Senior	Non-tenure eligible
+FT	Evanston	Regular	PhD	CMIDD	gary-schiltz@northwestern.edu	1073439	Gary	Schiltz	E	ges480	Research Associate Senior	Non-tenure eligible
