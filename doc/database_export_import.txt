@@ -14,6 +14,14 @@ scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/enotis/tmp/studies_2012-
 
 scp wakibbe@enotis.nubic.northwestern.edu:/tmp/accrual_2012-12-04.csv .
 
+scp award_data_20131010.txt wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/apps/cancerpublications/db/imports/Feinberg/private/award_data_20131010.txt
+
+scp award_data_20131010.txt wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/apps/fsmpublications/db/imports/Feinberg/private/award_data_20131010.txt
+
+scp faculty_Oct2013.txt wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/apps/fsmpublications/db/imports/Feinberg/private/faculty_Oct2013.txt
+
+scp faculty_evanston_Dec2012.txt wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/apps/fsmpublications/db/imports/Feinberg/private/faculty_evanston_Dec2012.txt
+
 scp study_roles_20120426.csv wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/apps/cancerpublications/db/imports/Feinberg/private/study_roles_20120426.csv
 scp studies_20120426.csv wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/apps/cancerpublications/db/imports/Feinberg/private/studies_20120426.csv 
 
@@ -212,6 +220,9 @@ scp fsmpublications_dev_20120315.dmp wakibbe@rails-prod2.nubic.northwestern.edu:
 scp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/nucats_assist_prod_20120131.dmp nucats_assist_prod_20120131.dmp  
 
 scp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/cancer_latticegrid_prod_20120131.dmp cancer_latticegrid_prod_20120131.dmp  
+
+scp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/rhlccc_latticegrid_20131015.dmp rhlccc_latticegrid_prod_20131015.dmp  
+
 
 pg_restore -c -O -d fsm_latticegrid_production -U fsm_latticegrid -h pprod fsmpublications_dev_20110930.dmp
 
