@@ -119,7 +119,7 @@ def CreateInvestigatorFromHash(data_row)
       end
       if existing_pi.first_name != pi.first_name
         puts "Existing first name and new first name different: existing: #{existing_pi.name}, username: #{existing_pi.username}, email: #{existing_pi.email}; new record: #{pi.name}, username #{pi.username}, email: #{pi.email}"
-        overwrite=false
+        #allow overwrite overwrite=false
       end
       if existing_pi.email.blank? and !pi.email.blank?
         puts "Adding email (#{pi.email}) to #{existing_pi.name} (#{existing_pi.username})"
@@ -375,6 +375,7 @@ def DoOverwrite(dest, source, overwrite)
 end
 
 def MergeInvestigatorData(dest_pi, source_pi, overwrite)
+  dest_pi.first_name               = DoOverwrite(dest_pi.first_name, source_pi.first_name, overwrite)
   dest_pi.title               = DoOverwrite(dest_pi.title, source_pi.title, overwrite)
   dest_pi.campus              = DoOverwrite(dest_pi.campus, source_pi.campus, overwrite)
   dest_pi.degrees             = DoOverwrite(dest_pi.degrees, source_pi.degrees, overwrite)

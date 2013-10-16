@@ -38,26 +38,34 @@ end
 
 def clean_date(the_date)
   return nil if the_date.blank?
+  original_date = the_date
   begin
     #seems to come over as a 2 digit year. Freaks
     #assume US crappy format
-    if the_date =~ /((0?[1-9])|(1[02]))\/\d{2}\/\d{4}/
+    if the_date =~ /((0?[1-9])|(1[0-2]))\/\d{1,2}\/\d{4}/
       the_date = Date.strptime(the_date, "%m/%d/%Y")
-    elsif the_date =~ /((0?[1-9])|(1[02]))\/\d{2}\/\d{2}/
+    elsif the_date =~ /((0?[1-9])|(1[0-2]))\/\d{1,2}\/\d{2}/
       the_date = Date.strptime(the_date, "%m/%d/%y")
+    else
+      the_date = the_date.to_date
     end
   rescue 
     begin
       #assume US 
       the_date = Date.strptime(the_date, "%m/%d/%Y")
     rescue Exception => err
-      puts "error converting #{the_date} to a date. Class: #{the_date.class.to_s} Error: #{err.message}"
+      puts "error converting #{the_date} to a date. Class: #{the_date.class.to_s} Error: #{err.message}. original_date was #{original_date}"
       the_date = the_date.to_date
     end
   end
-  return the_date + 2000.years if the_date < '01/01/0070'.to_date
-  return the_date + 1900.years if the_date < '01/01/0100'.to_date
-  return the_date
+  begin
+    return the_date + 2000.years if the_date < '01/01/0070'.to_date
+    return the_date + 1900.years if the_date < '01/01/0100'.to_date
+    return the_date
+  rescue Exception => err
+    puts "error converting #{the_date} to a date. Class: #{the_date.class.to_s} Error: #{err.message}. original_date was #{original_date}"
+  end
+  return nil
 end
 
 
@@ -343,19 +351,20 @@ def CreateProposalRecord(data_row)
     existing_award.title = j.title
     dirty=true
   end
-  if !j.project_start_date.blank? and existing_award.project_start_date > j.project_start_date 
+
+  if !j.project_start_date.blank? and (existing_award.project_start_date.nil? or existing_award.project_start_date > j.project_start_date)
     existing_award.project_start_date = j.project_start_date
     dirty=true
   end
-  if !j.project_end_date.blank? and existing_award.project_end_date < j.project_end_date 
+  if !j.project_end_date.blank? and (existing_award.project_end_date.nil? or existing_award.project_end_date < j.project_end_date )
     existing_award.project_end_date = j.project_end_date
     dirty=true
   end
-  if !j.award_start_date.blank? and existing_award.award_start_date > j.award_start_date 
+  if !j.award_start_date.blank? and (existing_award.award_start_date.nil? or existing_award.award_start_date > j.award_start_date )
     existing_award.award_start_date = j.award_start_date
     dirty=true
   end
-  if !j.award_end_date.blank? and existing_award.award_end_date < j.award_end_date 
+  if !j.award_end_date.blank? and (existing_award.award_end_date.nil? or existing_award.award_end_date < j.award_end_date )
     existing_award.award_end_date = j.award_end_date
     dirty=true
   end

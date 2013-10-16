@@ -288,6 +288,12 @@ class Abstract < ActiveRecord::Base
     end
   end
 
+  def self.find_by_doi_include_deleted( val )
+    with_exclusive_scope do
+        find_by_doi(val.to_s)
+    end
+  end
+
   def self.find_all_by_pubmed_include_deleted( val )
     with_exclusive_scope do
         find_all_by_pubmed(val)

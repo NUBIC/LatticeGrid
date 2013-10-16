@@ -1,4 +1,3 @@
-GEM
   remote: https://rubygems.org/
   remote: http://download.bioinformatics.northwestern.edu/gems/
   specs:

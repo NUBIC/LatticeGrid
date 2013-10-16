@@ -503,7 +503,7 @@ namespace :cleanup do
   end
 
   task :findServiceInvestigatorsWithoutActivities => :environment do
-     block_timing("cleanup:purgeServiceInvestigatorsWithoutActivities") {
+     block_timing("cleanup:findServiceInvestigatorsWithoutActivities") {
        FindParttimeInvestigatorsWithoutActivities()
       }
   end

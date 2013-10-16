@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>app/models/word_frequency.rb</string>
+	<string>doc/example_loads.txt</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -167,6 +167,66 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>doc/database_export_import.txt</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>72</integer>
+				<key>line</key>
+				<integer>8</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>56</integer>
+				<key>line</key>
+				<integer>8</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>72</integer>
+				<key>line</key>
+				<integer>8</integer>
+			</dict>
+		</dict>
+		<key>doc/example_loads.txt</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>113</integer>
+				<key>line</key>
+				<integer>188</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>174</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>97</integer>
+				<key>line</key>
+				<integer>188</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>113</integer>
+				<key>line</key>
+				<integer>188</integer>
+			</dict>
+		</dict>
 		<key>lib/latticegrid.rb</key>
 		<dict>
 			<key>caret</key>
@@ -181,35 +241,33 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>lib/latticegrid/Feinberg.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 		<key>lib/latticegrid/defaults.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>34</integer>
+				<integer>98</integer>
 				<key>line</key>
-				<integer>391</integer>
+				<integer>430</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>370</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>48</integer>
-				<key>line</key>
-				<integer>391</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>34</integer>
-				<key>line</key>
-				<integer>391</integer>
-			</dict>
+			<integer>410</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
@@ -218,13 +276,16 @@
 		<string>app/views/layouts/cytoscape.html.erb</string>
 		<string>app/controllers/cytoscape_controller.rb</string>
 		<string>app/models/word_frequency.rb</string>
+		<string>lib/latticegrid/Feinberg.rb</string>
 		<string>lib/latticegrid/defaults.rb</string>
+		<string>doc/database_export_import.txt</string>
+		<string>doc/example_loads.txt</string>
 		<string>config/routes.rb</string>
 		<string>lib/latticegrid.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{108, 0}, {1173, 878}}</string>
+	<string>{{529, 132}, {843, 746}}</string>
 </dict>
 </plist>

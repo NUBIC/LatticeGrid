@@ -1,3 +1,7 @@
+# at the command line:
+# get unique publications in the current FSM database
+more db/imports/Feinberg/pubmed_ids_Oct2013.txt | awk -F \\t '{print $2}' |  sort -u | wc
+
 # for console
 Log.logins.collect{|login| puts login.created_at.to_s + " " + ( if (! login.investigator.blank?) then  login.investigator.name else "" end)  }
 
