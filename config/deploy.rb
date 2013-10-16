@@ -7,8 +7,8 @@ bcconf = Bcdatabase.load["#{ENV['LATTICEGRID_INSTANCE']}_latticegrid_deploy", :l
 set :application, bcconf['application']
 set :repo_url, bcconf['repo']
 
-# ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
-set :branch, 'master'
+ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
+# set :branch, fetch(:branch, 'master')
 
 set :deploy_to, bcconf['deploy_to']
 set :deploy_via, :copy
