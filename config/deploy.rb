@@ -19,9 +19,19 @@ set :scm, :git
 
 # set :linked_files, %w{config/database.yml}
 # set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets}
 
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 set :keep_releases, 5
+
+# capistrano bundler properties
+set :bundle_gemfile, -> { release_path.join('Gemfile') }
+set :bundle_dir, -> { shared_path.join('bundle') }
+set :bundle_flags, '--deployment --quiet'
+set :bundle_without, %w{development test}.join(' ')
+set :bundle_binstubs, -> { shared_path.join('bin') }
+set :bundle_roles, :all
+
 
 namespace :deploy do
 
