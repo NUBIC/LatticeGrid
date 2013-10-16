@@ -1,7 +1,7 @@
 # require 'bundler/capistrano'
 require 'bcdatabase'
 
-bcconf = Bcdatabase.load["#{ENV['LATTICEGRID_INSTANCE']}_deploy", :latticegrid] # Using the bcdatabase gem for server config
+bcconf = Bcdatabase.load["#{ENV['LATTICEGRID_INSTANCE']}_latticegrid_deploy", :latticegrid] # Using the bcdatabase gem for server config
 
 set :application, bcconf['application']
 set :repo_url, bcconf['repo']
