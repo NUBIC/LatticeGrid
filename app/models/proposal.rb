@@ -1,3 +1,48 @@
+# == Schema Information
+# Schema version: 20130327155943
+#
+# Table name: proposals
+#
+#  abstract                        :text
+#  agency                          :string(255)
+#  award_category                  :string(255)
+#  award_end_date                  :date
+#  award_mechanism                 :string(255)
+#  award_start_date                :date
+#  award_type                      :string(255)
+#  created_at                      :timestamp
+#  created_id                      :integer
+#  created_ip                      :string(255)
+#  deleted_at                      :timestamp
+#  deleted_id                      :integer
+#  deleted_ip                      :string(255)
+#  direct_amount                   :integer
+#  id                              :integer          default(0), not null, primary key
+#  indirect_amount                 :integer
+#  institution_award_number        :string(255)
+#  is_awarded                      :boolean          default(TRUE)
+#  keywords                        :text
+#  merged                          :boolean          default(FALSE)
+#  original_sponsor_code           :string(255)
+#  original_sponsor_name           :string(255)
+#  parent_institution_award_number :string(255)
+#  pi_employee_id                  :string(255)
+#  project_end_date                :date
+#  project_start_date              :date
+#  sponsor_award_number            :string(255)
+#  sponsor_code                    :string(255)
+#  sponsor_name                    :string(255)
+#  sponsor_type_code               :string(255)
+#  sponsor_type_name               :string(255)
+#  submission_date                 :date
+#  title                           :string(255)
+#  total_amount                    :integer
+#  updated_at                      :timestamp
+#  updated_id                      :integer
+#  updated_ip                      :string(255)
+#  url                             :string(255)
+#
+
 class Proposal < ActiveRecord::Base
   has_many :investigator_proposals
   has_many :investigators, :through => :investigator_proposals

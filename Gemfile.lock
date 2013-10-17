@@ -1,4 +1,5 @@
-GEM
+  remote: https://rubygems.org/
+  remote: http://download.bioinformatics.northwestern.edu/gems/
   specs:
     actionmailer (2.3.16)
       actionpack (= 2.3.16)
@@ -20,6 +21,8 @@ GEM
     aker-rails (2.0.3)
       aker (~> 3.0)
       rails (~> 2.3.11)
+    annotate (2.5.0)
+      rake
     awesome_nested_set (1.4.4)
       activerecord (>= 1.1)
     bcdatabase (1.0.6)
@@ -27,6 +30,14 @@ GEM
       highline (~> 1.5)
       i18n
     bio (1.4.3)
+    capistrano (3.0.0)
+      i18n
+      rake (>= 10.0.0)
+      sshkit (>= 0.0.23)
+    capistrano-bundler (1.0.0)
+      capistrano (>= 3.0.0.pre)
+    capistrano-rails (1.0.0)
+      capistrano
     castanet (1.0.1)
     fastercsv (1.5.5)
     haml (3.1.7)
@@ -34,6 +45,9 @@ GEM
     i18n (0.6.1)
     json (1.6.6)
     net-ldap (0.1.1)
+    net-scp (1.1.2)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.7.0)
     pg (0.14.1)
     princely (1.2.5)
     rack (1.1.5)
@@ -50,6 +64,13 @@ GEM
     rmagick (2.13.1)
     ruby-graphviz (1.0.8)
     rubytree (0.7.0)
+    sshkit (0.0.34)
+      net-scp
+      net-ssh
+      term-ansicolor
+    term-ansicolor (1.2.2)
+      tins (~> 0.8)
+    tins (0.11.0)
     warden (1.2.1)
       rack (>= 1.0)
     will_paginate (2.3.16)
@@ -60,10 +81,14 @@ PLATFORMS
 DEPENDENCIES
   aker
   aker-rails
+  annotate (~> 2.5.0)
   awesome_nested_set (~> 1.4)
   bcdatabase (~> 1.0.6)
   bio
   bundler
+  capistrano
+  capistrano-bundler
+  capistrano-rails
   fastercsv
   haml (= 3.1.7)
   json (= 1.6.6)
