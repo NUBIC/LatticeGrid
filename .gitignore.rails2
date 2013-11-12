@@ -1,0 +1,17 @@
+_site
+node_modules
+.DS_Store
+.bundle
+.rvmrc
+.powrc
+
+doc/private/
+doc/notes/
+db/*.out
+
+public/abstracts/
+public/cytoscape/
+public/cytoscape*.js
+public/investigators/
+public/orgs/
+
