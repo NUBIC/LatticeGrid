@@ -1,7 +1,7 @@
 require 'organization_utilities'
 require 'text_utilities'
 require 'config' # cleanup_campus is in config
-require "#{RAILS_ROOT}/app/helpers/investigators_helper"
+require "#{Rails.root}/app/helpers/investigators_helper"
 include InvestigatorsHelper
 
 def to_string(element)

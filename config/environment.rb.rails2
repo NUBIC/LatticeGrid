@@ -20,14 +20,14 @@ Rails::Initializer.run do |config|
 
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
-  
+
   # Specify gems that this application depends on and have them installed with rake gems:install
   # config.gem "bj"
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
   # config.gem "ruby-graphviz"
-  
+
   #config.gem "pg"  # remove if ruby 1.8.5 or earlier is used
 
   # Only load the plugins named here, in the order given (default is alphabetical).
@@ -44,8 +44,11 @@ Rails::Initializer.run do |config|
 
   # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
   # Run "rake -D time" for a list of tasks for finding time zone names.
+
+
   config.time_zone = 'UTC'
   config.action_mailer.delivery_method = :smtp
+
 
   # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
@@ -54,14 +57,14 @@ Rails::Initializer.run do |config|
     :key => '_cancer_latticegrid_session',
     :secret      => 'd191041bea4ebc0533e3f68b1bb41c5a1233162b24232a0e15e'
   }
-  
+
   # change the cache root
   #config.action_controller.page_cache_directory = File.join(RAILS_ROOT, 'public', 'cache')
-  
+
 end
 
 
-  # Add new inflection rules using the following format 
+  # Add new inflection rules using the following format
   # (all these examples are active by default):
 ActiveSupport::Inflector.inflections do |inflect|
   #   inflect.plural /^(ox)$/i, '\1en'
@@ -85,5 +88,5 @@ begin
   require 'RMagick'
 rescue NameError, LoadError
   puts "RMagick didn't load properly"
-  # RMagick didn't load 
+  # RMagick didn't load
 end

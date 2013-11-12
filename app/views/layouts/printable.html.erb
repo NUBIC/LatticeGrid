@@ -9,7 +9,7 @@
   <!-- javascript files -->
   <% @javascripts ||= [ 'prototype' ] %>
   <% @javascripts += @javascripts_add if defined?(@javascripts_add) %>
-  <%= javascript_include_tag @javascripts %> 
+  <%= javascript_include_tag @javascripts %>
   <link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
   <% if @javascripts.join =~ /jquery/i %>
   <script type="text/javascript" language="JavaScript">
@@ -19,10 +19,10 @@
   </script>
   <% end %>
   <style type="text/css">
-  <%= File.read("#{RAILS_ROOT}/public/stylesheets/publications.css") %>
-  <%= File.read("#{RAILS_ROOT}/public/stylesheets/latticegrid/#{lattice_grid_instance}.css") %>
-  <%= File.read("#{RAILS_ROOT}/public/stylesheets/redmond/jquery-ui-1.8.4.custom.css") %>
-  <%= File.read("#{RAILS_ROOT}/public/stylesheets/printable.css") %>
+  <%= File.read("#{Rails.root}/public/stylesheets/publications.css") %>
+  <%= File.read("#{Rails.root}/public/stylesheets/latticegrid/#{lattice_grid_instance}.css") %>
+  <%= File.read("#{Rails.root}/public/stylesheets/redmond/jquery-ui-1.8.4.custom.css") %>
+  <%= File.read("#{Rails.root}/public/stylesheets/printable.css") %>
   <%= @css if defined?(@css) %>
   </style>
 

@@ -7,10 +7,10 @@
   <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
   <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
   <style type="text/css">
-  <%= File.read("#{RAILS_ROOT}/public/stylesheets/publications.css") %>
-  <%= File.read("#{RAILS_ROOT}/public/stylesheets/latticegrid/#{lattice_grid_instance}.css") %>
+  <%= File.read("#{Rails.root}/public/stylesheets/publications.css") %>
+  <%= File.read("#{Rails.root}/public/stylesheets/latticegrid/#{lattice_grid_instance}.css") %>
   </style>
-  <%= javascript_include_tag :defaults %> 
+  <%= javascript_include_tag :defaults %>
 
   <%= LatticeGridHelper.google_analytics -%>
 </head>

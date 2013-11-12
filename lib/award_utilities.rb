@@ -1,5 +1,5 @@
 # to enable truncate
-require "#{RAILS_ROOT}/app/helpers/application_helper"
+require "#{Rails.root}/app/helpers/application_helper"
 include ApplicationHelper
 require 'text_utilities'
 
@@ -14,7 +14,7 @@ end
 # Biostatistician => [ "Statistician", "statistician", "Statistician", "Statician", "Biostatician", "Biostatisation", "Data Mgmt.", "Analyst"]
 # Faculty => [ "Faculty", "Asst. Professor", "Co-Mentor", "Mentor", "collabor", "Collaborateor", "Collaborator", "collaborator" ]
 # Other => [ "Other", "O.S.P", "Advisory Board Member", "Co-Sponsor", "Program Administrator","Pharmacologist", "Other Professional", "RAP"]
-# Other => [nil, , , "R.D.", "Technician", "medical monitor"] 
+# Other => [nil, , , "R.D.", "Technician", "medical monitor"]
 
 def compressRoles(role)
   return 'Other' if role.blank?
@@ -49,9 +49,9 @@ def clean_date(the_date)
     else
       the_date = the_date.to_date
     end
-  rescue 
+  rescue
     begin
-      #assume US 
+      #assume US
       the_date = Date.strptime(the_date, "%m/%d/%Y")
     rescue Exception => err
       puts "error converting #{the_date} to a date. Class: #{the_date.class.to_s} Error: #{err.message}. original_date was #{original_date}"
@@ -125,10 +125,10 @@ def CreateAwardData(data_row)
   # Program Type
   # Proposal Type
   # Instrument Type
-	
+
   @not_found_employees = [] if @not_found_employees.blank?
   @not_found_employee_messages = [] if @not_found_employee_messages.blank?
-  
+
   employee_id = data_row['Employee ID'] || data_row['NU_EMPLOYEE_ID']
   role = data_row['Investigator Role'] || data_row['INVESTIGATOR_ROLE']
   role = compressRoles(role)
@@ -137,7 +137,7 @@ def CreateAwardData(data_row)
   is_main_pi  = data_row['IS_MAIN_PI'] || false
   if is_main_pi != true and is_main_pi != false
     if is_main_pi.to_i > 0
-      is_main_pi  = true 
+      is_main_pi  = true
     else
       is_main_pi = false
     end
@@ -227,7 +227,7 @@ end
 
 def CreateNewProposalFromData(data_row)
   # about the award
-  
+
   #AWARD_BEGIN_DATE
   #AWARD_END_DATE
   #PROJECT_BEGIN_DATE
@@ -270,7 +270,7 @@ def CreateNewProposalFromData(data_row)
   j.original_sponsor_code = data_row['ORIG_SPONSOR_CODE_L3']
   j.original_sponsor_name = data_row['ORIG_SPONSOR_NAME_L3']
   if j.sponsor_name != j.original_sponsor_name
-    j.sponsor_type_code = '' 
+    j.sponsor_type_code = ''
     j.sponsor_type_name = ''
   end
   # clean out the non-ASCII characters
@@ -279,25 +279,25 @@ def CreateNewProposalFromData(data_row)
   award_title = data_row['Proposal Title'] || data_row['PROPOSAL_TITLE'] || data_row['proposal_title']
   j.title = truncate_words(award_title, 220) unless award_title.blank?
   j.title = CleanNonUTFtext(j.title)
-  
+
   project_start_date = data_row['Project Award Start Date'] || data_row['PROJECT_BEGIN_DATE']
   project_end_date = data_row['Project Award End Date'] || data_row['PROJECT_END_DATE']
   award_start_date = data_row['Project Award Start Date'] || data_row['AWARD_BEGIN_DATE']
   award_end_date = data_row['Project Award End Date'] || data_row['AWARD_END_DATE']
 
-  
+
   j.project_start_date = clean_date(project_start_date)
   j.project_end_date = clean_date(project_end_date)
   j.award_start_date = clean_date(award_start_date)
   j.award_end_date = clean_date(award_end_date)
-  
+
   unless project_start_date.blank?
     puts "project_start_date was not converted: #{project_start_date}" if j.project_start_date.blank?
   end
   if j.project_start_date.blank?
     puts "project_start_date was not set for row: #{data_row.inspect}"
   end
-  
+
   j.award_category = data_row["Program Type"]
   j.award_type = data_row['Instrument Type']
   return j
@@ -306,7 +306,7 @@ end
 def CreateProposalRecord(data_row)
   @inserted_amounts = [] if @inserted_amounts.blank?
   j = CreateNewProposalFromData(data_row)
-  
+
   if j.institution_award_number.blank?
     puts "institutional award number was blank for row: #{data_row.inspect}"
     return nil
@@ -322,13 +322,13 @@ def CreateProposalRecord(data_row)
     existing_award = j
     return existing_award
   end
-  
+
   if !j.total_amount.blank? and existing_award.total_amount != j.total_amount and existing_award.total_amount < j.total_amount
     existing_award.total_amount = j.total_amount
     dirty=true
   end
   if !j.total_amount.blank? and existing_award.total_amount/5 > j.total_amount and not @inserted_amounts.include?(j.total_amount) and j.total_amount > 0
-    if existing_award.project_start_date < j.project_start_date or existing_award.project_end_date < j.project_end_date 
+    if existing_award.project_start_date < j.project_start_date or existing_award.project_end_date < j.project_end_date
       puts "#{j.institution_award_number} from #{j.sponsor_name} titled #{j.title}"
       puts "#{j.institution_award_number}: award amount different: was #{existing_award.total_amount} and is #{j.total_amount}"
       puts "#{j.institution_award_number}: award project dates: was #{existing_award.project_start_date} - #{existing_award.project_end_date} and is #{j.project_start_date} - #{j.project_end_date}"
@@ -340,14 +340,14 @@ def CreateProposalRecord(data_row)
       dirty=true
     end
   end
-  
+
   if existing_award.blank? or existing_award.id.blank?
     puts "existing_award was blank. Shouldn't happen. Data for row: #{data_row.inspect}"
-    return nil  
+    return nil
   end
   original_award = existing_award.inspect
   dirty=false
-  if !j.title.blank? and existing_award.title != j.title 
+  if !j.title.blank? and existing_award.title != j.title
     existing_award.title = j.title
     dirty=true
   end
@@ -368,16 +368,16 @@ def CreateProposalRecord(data_row)
     existing_award.award_end_date = j.award_end_date
     dirty=true
   end
-  if !j.original_sponsor_name.blank? and  existing_award.original_sponsor_name != j.original_sponsor_name 
-    existing_award.original_sponsor_name = j.original_sponsor_name 
+  if !j.original_sponsor_name.blank? and  existing_award.original_sponsor_name != j.original_sponsor_name
+    existing_award.original_sponsor_name = j.original_sponsor_name
     dirty=true
   end
   if !j.sponsor_name.blank? and existing_award.sponsor_name != j.sponsor_name
-    existing_award.sponsor_name = j.sponsor_name 
+    existing_award.sponsor_name = j.sponsor_name
     dirty=true
   end
   if !j.parent_institution_award_number.blank? and existing_award.parent_institution_award_number != j.parent_institution_award_number
-    existing_award.parent_institution_award_number = j.parent_institution_award_number 
+    existing_award.parent_institution_award_number = j.parent_institution_award_number
     dirty=true
   end
   if dirty
