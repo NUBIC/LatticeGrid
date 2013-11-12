@@ -1,3 +1,61 @@
+# == Schema Information
+# Schema version: 20130327155943
+#
+# Table name: abstracts
+#
+#  abstract                     :text
+#  abstract_vector              :text
+#  author_affiliations          :text
+#  author_vector                :text
+#  authors                      :text
+#  citation_cnt                 :integer          default(0)
+#  citation_last_get_at         :timestamp
+#  citation_url                 :string(255)
+#  created_at                   :timestamp
+#  created_id                   :integer
+#  created_ip                   :string(255)
+#  deposited_date               :date
+#  doi                          :string(255)
+#  electronic_publication_date  :date
+#  endnote_citation             :text
+#  full_authors                 :text
+#  id                           :integer          default(0), not null, primary key
+#  is_cancer                    :boolean          default(TRUE)
+#  is_first_author_investigator :boolean          default(FALSE)
+#  is_last_author_investigator  :boolean          default(FALSE)
+#  is_valid                     :boolean          default(TRUE), not null
+#  isbn                         :string(255)
+#  issn                         :string(255)
+#  issue                        :string(255)
+#  journal                      :string(255)
+#  journal_abbreviation         :string(255)
+#  journal_vector               :text
+#  last_reviewed_at             :timestamp
+#  last_reviewed_id             :integer
+#  last_reviewed_ip             :string(255)
+#  mesh                         :text
+#  mesh_vector                  :text
+#  pages                        :string(255)
+#  publication_date             :date
+#  publication_status           :string(255)
+#  publication_type             :string(255)
+#  pubmed                       :string(255)
+#  pubmed_creation_date         :date
+#  pubmedcentral                :string(255)
+#  reviewed_at                  :timestamp
+#  reviewed_id                  :integer
+#  reviewed_ip                  :string(255)
+#  status                       :string(255)
+#  title                        :text
+#  updated_at                   :timestamp
+#  updated_id                   :integer
+#  updated_ip                   :string(255)
+#  url                          :string(255)
+#  vectors                      :text
+#  volume                       :string(255)
+#  year                         :string(255)
+#
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class AbstractTest < ActiveSupport::TestCase

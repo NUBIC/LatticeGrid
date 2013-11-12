@@ -15,12 +15,12 @@ require 'organization_utilities'
 
 def read_file_handler(taskname="taskname")
   if ENV["file"].nil?
-    puts "couldn't find a file in the calling parameters. Please call as 'rake #{taskname} file=filewithpath'" 
+    puts "couldn't find a file in the calling parameters. Please call as 'rake #{taskname} file=filewithpath'"
   else
     block_timing(taskname) {
       puts "file: "+ENV["file"]
       ENV["file"].split(',').each do | filename |
-        p1 = Pathname.new(filename) 
+        p1 = Pathname.new(filename)
         if p1.file? then
           yield filename
         else
@@ -30,7 +30,7 @@ def read_file_handler(taskname="taskname")
     }
   end
 end
-  
+
 def read_data_handler(model_name, file_name, column_separator="\t")
   errors = ""
   if RUBY_VERSION =~ /1.9/
@@ -92,21 +92,21 @@ end
 
 def ReadInvestigatorPubmedData(file_name)
   novel_pubmed_ids = []
-  read_data_handler(Abstract,file_name) { |data| 
-    novel_pubmed_ids += CreateAbstractsFromArrayHash(data) 
+  read_data_handler(Abstract,file_name) { |data|
+    novel_pubmed_ids += CreateAbstractsFromArrayHash(data)
   }
   # set novel_pubmed_ids to [] if you want to process every connection to look for new authors added to existing pubs
   #novel_pubmed_ids = []
   existing_pubmed_ids = Abstract.include_deleted.map(&:pubmed).compact.uniq
   existing_employee_ids = Investigator.all.map(&:employee_id).compact.uniq
   existing_investigator_abstracts = InvestigatorAbstract.all
-   
+
   puts "Total number of novel pubmed ids: #{novel_pubmed_ids.length}" if LatticeGridHelper.verbose?
   puts "Total number of existing pubmed ids: #{existing_pubmed_ids.length}" if LatticeGridHelper.verbose?
   puts "Total number of existing employee ids: #{existing_employee_ids.length}" if LatticeGridHelper.verbose?
   puts "Total number of existing investigator_abstracts: #{existing_investigator_abstracts.length}" if LatticeGridHelper.verbose?
   cnt = 0
-  read_data_handler(InvestigatorAbstract,file_name) { |data|  
+  read_data_handler(InvestigatorAbstract,file_name) { |data|
     row_iterator(data) {|data| if CreateInvestigatorAbstractsFromHash(data, novel_pubmed_ids, existing_pubmed_ids, existing_employee_ids) != nil then cnt+=1 end } }
   final_investigator_abstracts = InvestigatorAbstract.all
   puts "Total number of investigator abstracts saved: #{cnt}" if LatticeGridHelper.verbose?
