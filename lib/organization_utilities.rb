@@ -202,7 +202,7 @@ def CreateOrganizationFromHash(data_row)
         end
         existing_org.department_id = org.department_id if (existing_org.department_id.blank? || existing_org.department_id == 0) && org.department_id > 0
         existing_org.division_id = org.division_id if org.division_id > 0
-        existing_org.type = org.type if org.type != existing_org.type
+        existing_org.type = org.type if org.type != existing_org.type and existing_org.type != 'School'
         existing_org.name = org.name unless org.name.blank? or existing_org.name == org.name
         existing_org.abbreviation = org.abbreviation unless org.abbreviation.blank? or existing_org.abbreviation == org.abbreviation
         existing_org.organization_url = org.organization_url unless org.organization_url.blank? or existing_org.organization_url == org.organization_url
@@ -224,7 +224,6 @@ def GetParentOrg(org)
 end
 
  def HasDepartment(datarow)
-  puts "HasDepartment #{datarow.inspect}"
   return true if ! datarow["department"].blank?
   return true if (! datarow["division_id"].blank? ) || (!datarow["DIVISION_ID"].blank?)
   return true if (! datarow["dept_id"].blank?) || (! datarow["department_id"].blank?) || (! datarow["DEPT_ID"].blank?) || (! datarow["DEPARTMENT_ID"].blank?)
@@ -237,6 +236,9 @@ end
 def SetDepartment(pi, datarow)
   # dept_id || department_id
   # division_id
+  if datarow["department"].blank? 
+    datarow["department"] = datarow["institution"] unless datarow["institution"].blank?
+  end
   return HandleDepartment(pi,datarow) if ! datarow["department"].blank?
   division_id = datarow["division_id"] || datarow["DIVISION_ID"]
   department_id=datarow["dept_id"] || datarow["department_id"] || datarow["DEPT_ID"] || datarow["DEPARTMENT_ID"]

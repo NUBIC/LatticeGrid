@@ -1,3 +1,35 @@
+# RAS Initiative November 2013
+
+rake db:vacuum 
+rake log:clear
+rake importRoot file=db/imports/RAS/root_lookup.txt 
+rake importOrganizations file=db/imports/RAS/institution_lookup.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/RAS/ras_faculty.txt 
+rake cleanup:countFacultyUpdates
+rake cleanup:email
+rake cleanup:cleanInvestigatorsUsername
+
+bundle exec rake importJournalImpact file=db/imports/jcr_recs_2011.txt
+bundle exec rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+bundle exec rake updateJournalISSNsFromPubmed
+bundle exec rake cleanJournalISSNentries
+bundle exec rake findAbstractswithoutJCRentries
+bundle exec rake findAbstractswithJCRentries
+bundle exec rake updateJournalISSNsFromPubmed
+bundle exec rake setPreferredHighImpact
+
+rake insertAllAbstracts 
+rake nightlyBuild # repeat a few times a week
+rake cleanup:find_duplicate_tags
+rake cleanup:resolve_duplicate_tags
+rake cleanup:resolve_misformed_tags
+rake monthlyBuild # repeat weekly or monthly - updates the mesh stats
+rake setup:wordle
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
 # Oct 2013 loads, RHLCCC
 
 # on production run this:
@@ -48,8 +80,6 @@ bundle exec rake awards:cleanPIassignments
 bundle exec rake awards:mergeData
 
 bundle exec rake db:vacuum  #added a custom rake method for this
-
-
 
 
 # Feinberg Oct 2013 loads

@@ -3,7 +3,7 @@ module ApplicationHelper
   begin
   include TagsHelper
   rescue
-    puts "unable to load TagsHelper. Tagging plugin installed?"
+    puts "unable to load TagsHelper. Tagging plugin installed? rake tasks give this warning"
   end
   require 'config'
 

@@ -85,9 +85,10 @@ def BuildAffiliationLimitString(str)
   str_arr = str.split(" ")
   out_arr = []
   str_arr.each do |txt|
-    next if txt.length < 3
+    next if txt.length < 4
     out_arr << txt+"[affil]"
   end
+  out_arr << str+"[affil]" if out_arr.blank?
   out_arr.join(" AND ")
 end
 
