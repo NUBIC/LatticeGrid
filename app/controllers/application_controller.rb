@@ -8,16 +8,15 @@ class ApplicationController < ActionController::Base
 
   require 'config'
 
-
   before_filter  :find_last_load_date, :except => [:set_investigator_abstract_end_date]
   before_filter  :handle_year, :except => [:set_investigator_abstract_end_date]
   before_filter  :get_organizations, :except => [:set_investigator_abstract_end_date]
   before_filter  :handle_pagination, :except => [:set_investigator_abstract_end_date]
   before_filter  :define_keywords, :except => [:set_investigator_abstract_end_date]
 
-  def  total_length(query) 
+  def  total_length(query)
     return if query.nil?
-    begin 
+    begin
       query.total_entries
     rescue Exception => error
       query.length
@@ -25,7 +24,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_client_ip
-    request.remote_ip 
+    request.remote_ip
   end
 
   class DateRange
@@ -33,7 +32,7 @@ class ApplicationController < ActionController::Base
      @start_date = start_date.to_formatted_s(:justdate)
      @end_date = end_date.to_formatted_s(:justdate)
     end
-    def start_date 
+    def start_date
      @start_date
     end
     def end_date
@@ -51,7 +50,7 @@ class ApplicationController < ActionController::Base
         session[:last_load_date] = latest_record.updated_at
       end
       session[:last_refresh] = Time.now
-      logger.info("Updated a session last_load_date for ip #{get_client_ip} at #{Time.now}") 
+      logger.info("Updated a session last_load_date for ip #{get_client_ip} at #{Time.now}")
     end
   end
 
@@ -103,7 +102,7 @@ class ApplicationController < ActionController::Base
       @search_field = search_field
       @search_exact = search_exact
     end
-    def keywords 
+    def keywords
       @keywords
     end
     def search_field
@@ -118,17 +117,17 @@ class ApplicationController < ActionController::Base
      if params[:keywords].blank? then
        the_keywords = cookies[:the_keywords] if !cookies[:the_keywords].blank?
      else
-       the_keywords = params[:keywords]  
+       the_keywords = params[:keywords]
        cookies[:the_keywords] = the_keywords
      end
      if !params[:search_field].blank? then
-       search_field = params[:search_field] 
+       search_field = params[:search_field]
        cookies[:search_field] = search_field
      else
        search_field = cookies[:search_field] if !cookies[:search_field].blank?
      end
      if !params[:search_exact].blank? then
-       search_exact = params[:search_exact] 
+       search_exact = params[:search_exact]
        cookies[:search_exact] = search_exact
      else
        search_exact = cookies[:search_exact] if !cookies[:search_exact].blank?

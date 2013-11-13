@@ -16,11 +16,7 @@
 class InvestigatorProposal < ActiveRecord::Base
   belongs_to :investigator
   belongs_to :proposal
-  named_scope :by_role, 
-    :order => "investigator_proposals.role DESC, proposals.project_end_date DESC", :joins => :proposal
-  named_scope :distinct_roles, 
-    :order => "role", :select => 'investigator_proposals.role, count(*) as count', :group => 'investigator_proposals.role'
-  named_scope :pis, 
-    :conditions=>"investigator_proposals.role = 'PD/PI'"
-  
+  scope :by_role, joins(:proposal), order('investigator_proposals.role DESC, proposals.project_end_date DESC')
+  scope :distinct_roles, select('investigator_proposals.role, count(*) as count'), order('role'), group('investigator_proposals.role')
+  scope :pis, where("investigator_proposals.role = 'PD/PI'")
 end

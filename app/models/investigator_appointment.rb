@@ -19,17 +19,14 @@ class InvestigatorAppointment < ActiveRecord::Base
   belongs_to :organizational_unit
   belongs_to :center, :foreign_key => :organizational_unit_id
   #belongs_to :organizational_unit
-  has_many :investigator_abstracts, :through => :investigator 
+  has_many :investigator_abstracts, :through => :investigator
   validates_uniqueness_of :investigator_id, :scope => [:organizational_unit_id, :type]
 
-  named_scope :remove_deleted,  :conditions => 'investigator_appointments.end_date is null'
-  named_scope :only_members,  :conditions => "investigator_appointments.type = 'Member'"
+  scope :remove_deleted, where('investigator_appointments.end_date is null')
+  scope :only_members, where("investigator_appointments.type = 'Member'")
 
-  def self.has_appointment(unit_id ) 
-    appointments = self.find :all, 
-         :conditions => ['investigator_appointments.organizational_unit_id = :unit_id  and investigator_appointments.end_date is null ',
-         {:unit_id => unit_id }] 
-    return appointments.length > 0
-  end 
-
+  def self.has_appointment(unit_id )
+    where('investigator_appointments.organizational_unit_id = :unit_id and
+           investigator_appointments.end_date is null', { :unit_id => unit_id }).count > 0
+  end
 end
