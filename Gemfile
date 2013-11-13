@@ -23,6 +23,7 @@ gem 'aker-rails'
 gem 'aker'
 gem 'rdoc'
 gem 'bcdatabase'
+gem 'prototype-rails'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2'

@@ -299,6 +299,10 @@ class OrganizationalUnit < ActiveRecord::Base
     self.proposal_ids & org.proposal_ids
   end
 
+  ##
+  # In order to paginate an Array it is necessary to require 'will_paginate/array'
+  # cf. https://github.com/mislav/will_paginate/wiki/Backwards-incompatibility
+  require 'will_paginate/array'
   def abstract_data( page=1 )
      self.all_abstracts.paginate(:page => page,
       :per_page => 20,

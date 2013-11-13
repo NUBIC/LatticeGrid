@@ -1,0 +1,66 @@
+.node {
+  font: 10px sans-serif;
+}
+
+.link {
+  stroke: steelblue;
+  stroke-opacity: .4;
+  fill: none;
+}
+
+path.arc {
+  cursor: move;
+  fill: #fff;
+}
+
+.node {
+  font-size: 11px;
+}
+
+.node:hover {
+  fill: #1f77b4;
+}
+
+.link {
+  fill: none;
+  stroke: #1f77b4;
+  stroke-opacity: .4;
+  pointer-events: none;
+}
+
+.link.source:hover {
+	stroke: #d527d6;
+}
+.link.target:hover{
+	stroke: #d527d6;
+}
+
+.link:hover{
+	fill: #d527d6;
+}
+
+.link.source, .link.target {
+  stroke-opacity: 1;
+  stroke-width: 2px;
+}
+/*name target */
+.node.target {
+  fill: #d62728 !important;
+}
+/* the actual link */
+.link.source {
+  stroke: #d62728;
+} 
+
+/*
+#d62728
+*/
+
+
+.node.source {
+  fill: #d62728;
+}
+
+.link.target {
+  stroke: #d62728;
+}

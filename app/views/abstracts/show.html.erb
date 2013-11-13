@@ -2,16 +2,16 @@
 <div id="publication">
 	<div id="authors">
 	<% if @publication.has_full %>
-		<%= highlightInvestigator(@publication, false, false, @publication.full_authors) %>
+		<%= highlightInvestigator(@publication, false, false, @publication.full_authors).html_safe %>
 	<% else %>
-		<%= highlightInvestigator(@publication) %>
+		<%= highlightInvestigator(@publication).html_safe %>
 	<% end %>
 	</div>
 	<div id="title">
 		<%= @publication.title %>
 	</div>
 	<div id="journal">
-	<i><%= @publication.journal %></i> 	
+	<i><%= @publication.journal %></i>
 	(<%= @publication.year %>)
 	<% if @publication.pages.length > 0 %>
 		<%= h(@publication.volume) %>:<%= h(@publication.pages) %>.
@@ -60,13 +60,13 @@
 		<%= link_to_doi('Go to DOI', @publication) %>
 	</div>
 	<% end %>
-	
+
 	<div id="linkout">
 		<%= link_to('View citation formatted for EndNote', endnote_abstract_url(@publication) ) %>
 	</div>
 </div>
 
 
-<%= link_to 'Back', abstracts_by_year_url(:id => @year, :page=> 1) %> 
+<%= link_to 'Back', abstracts_by_year_url(:id => @year, :page=> 1) %>
 
 </div>

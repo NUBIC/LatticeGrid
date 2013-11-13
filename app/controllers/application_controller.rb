@@ -8,13 +8,13 @@ class ApplicationController < ActionController::Base
 
   require 'config'
 
-  before_filter  :find_last_load_date, :except => [:set_investigator_abstract_end_date]
-  before_filter  :handle_year, :except => [:set_investigator_abstract_end_date]
-  before_filter  :get_organizations, :except => [:set_investigator_abstract_end_date]
-  before_filter  :handle_pagination, :except => [:set_investigator_abstract_end_date]
-  before_filter  :define_keywords, :except => [:set_investigator_abstract_end_date]
+  before_filter :find_last_load_date, :except => [:set_investigator_abstract_end_date]
+  before_filter :handle_year, :except => [:set_investigator_abstract_end_date]
+  before_filter :get_organizations, :except => [:set_investigator_abstract_end_date]
+  before_filter :handle_pagination, :except => [:set_investigator_abstract_end_date]
+  before_filter :define_keywords, :except => [:set_investigator_abstract_end_date]
 
-  def  total_length(query)
+  def total_length(query)
     return if query.nil?
     begin
       query.total_entries

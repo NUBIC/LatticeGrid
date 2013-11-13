@@ -1,0 +1,20 @@
+
+iframe { display: block; }
+
+/* page */
+#page { background-color: #ffffff; border: 1px #bfbfbf solid; margin: 0 auto 0 auto; padding: 10px; width: 96%; height: auto; -moz-box-shadow: 0 0 26px #bbbbbb; -webkit-box-shadow: 0 0 26px #bbbbbb; box-shadow: 0 0 26px #bbbbbb; }
+#page_navigation { background-color: #abcfd6; float: left; width: 100%; }
+#page_navigation ul { margin: 0; list-style: none; display: block; }
+#page_navigation li { margin: 0; display: block; list-style: none; float: left; border-right: #bfdae0 solid 1px; padding: 4px 8px 4px 8px; }
+#page_navigation a { text-decoration: none; color: #086d82; }
+#page_navigation .selected { background-color: #0b94b1; }
+#page_navigation .selected a { color: #ffffff; background-image: url("../../images/cytoscape/arrow.png"); background-position: bottom center; background-repeat: no-repeat; padding-bottom: 15px; }
+#page_navigation a:hover { text-decoration: underline; }
+
+/* page layouts */
+#content.half_and_half { clear: both; float: left; width: 100%; height: 740px; padding: 0px; padding-top:15px; }
+	
+	/* half and half layout */
+	#content.half_and_half .left, #content.half_and_half .right { padding: 10px; width: 400px; }
+	#content.half_and_half .left { float: left; border-right: 1px solid #cfcfcf; width: 390px; }
+	#content.half_and_half .right { float: right; }

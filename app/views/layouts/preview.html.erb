@@ -7,16 +7,16 @@
 	<title>LatticeGrid: <%= controller.action_name %></title>
   <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
 	<style type="text/css">
-	
+
 	/* Global styles */
 
-	body { 
+	body {
 		font-family : Arial, Helvetica, Geneva, Sans-serif;
 		font-size : 9pt;
 		color : black;
-		background-color: white; 
+		background-color: white;
 		line-height: 12px;
-		background: white; 
+		background: white;
 		margin: 5px 5px 5px 5px;
 	}
 
@@ -95,8 +95,8 @@
 		font-weight:  bold;
 	}
 </style>
-	
-<%= LatticeGridHelper.google_analytics -%>
+
+<%= LatticeGridHelper.google_analytics.html_safe -%>
 </head>
 <body>
 	<div id="main" class="autoclear">

@@ -2,21 +2,21 @@ class AbstractsController < ApplicationController
 #removed :full_tagged_abstracts and :tagged_abstracts - too many cached pages
 
   caches_page( :show, :high_impact, :high_impact_by_month, :year_list, :full_year_list, :current, :tag_cloud, :endnote, :tagged_abstracts, :full_tagged_abstracts, :tag_cloud_by_year)  if LatticeGridHelper.CachePages()
-  
+
   include AbstractsHelper
   include ApplicationHelper
   include ProfilesHelper
   include MeshHelper  #for the do_mesh_search method
-  
-  require 'publication_utilities' 
-  require 'pubmed_utilities'  #loads including 'pubmed_config'  'bio' (bioruby) and 
+
+  require 'publication_utilities'
+  require 'pubmed_utilities'  #loads including 'pubmed_config'  'bio' (bioruby) and
 
   def index
     year = handle_year()
     redirect_to abstracts_by_year_url(:id => year, :page => '1')
     #redirect_to current_abstracts_url
   end
-  
+
   def current
     index
   end
@@ -33,8 +33,8 @@ class AbstractsController < ApplicationController
       @include_mesh = false
       @include_graph_link = false
       @show_paginator = false
-      @include_investigators=true 
-      @include_pubmed_id = true 
+      @include_investigators=true
+      @include_pubmed_id = true
     end
   end
 
@@ -68,7 +68,7 @@ class AbstractsController < ApplicationController
 
   def tag_cloud_by_year
     year = handle_year(params[:id])
-    @tags = Abstract.tag_counts(:limit => 150, :order => "count desc", 
+    @tags = Abstract.tag_counts(:limit => 150, :order => "count desc",
                   :conditions => ["abstracts.year in (:year)", {:year=>year }])
     respond_to do |format|
       format.html { render :template => "shared/tag_cloud", :locals => {:tags => @tags}}
@@ -81,7 +81,7 @@ class AbstractsController < ApplicationController
     @heading = "MeSH Top #{tag_limit} Terms Tag Cloud Incidence for All Abstracts"
      @tags = Abstract.tag_counts(:limit => tag_limit, :order => "count desc")
   end
-  
+
   def tagged_abstracts #abstracts tagged with this tag
     redirect=false
     if params[:page].nil? then
@@ -99,7 +99,7 @@ class AbstractsController < ApplicationController
       mesh_terms = MeshHelper.do_mesh_search(params[:id])
       mesh_names = mesh_terms.collect(&:name)
       #colleagues=Investigator.for_tag_ids(mesh_ids)
-      
+
       @abstracts = Abstract._paginate_tagged_with(mesh_names,
                                         :order => 'year DESC, authors ASC',
                                         :page => params[:page],
@@ -119,7 +119,7 @@ class AbstractsController < ApplicationController
     render :action => 'tag'
   end
 
-  
+
   def impact_factor
     params[:year]||=""
     params[:sortby]||="article_influence_score desc"
@@ -128,24 +128,24 @@ class AbstractsController < ApplicationController
     #@high_impact = Journal.high_impact()
     @high_impact_pubs = Journal.high_impact_publications(params[:year])
     @all_pubs = Abstract.annual_data(params[:year])
-    
+
     respond_to do |format|
       format.html {render :layout => 'printable'}
-      format.xml  { 
+      format.xml  {
          render :xml => @all_pubs }
-      format.xls  { 
+      format.xls  {
         send_data(render(:template => 'abstracts/impact_factor.html', :layout => "excel"),
         :filename => "impact_factor_for_year_#{params[:year]}.xls",
         :type => 'application/vnd.ms-excel',
         :disposition => 'attachment') }
-      format.doc  { 
+      format.doc  {
          send_data(render(:template => 'abstracts/impact_factor.html', :layout => "excel"),
         :filename => "impact_factor_for_year_#{params[:year]}.doc",
         :type => 'application/msword',
         :disposition => 'attachment') }
       format.pdf do
-         render( :pdf => "High Impact publications for " + params[:year], 
-            :stylesheets => ["pdf"], 
+         render( :pdf => "High Impact publications for " + params[:year],
+            :stylesheets => ["pdf"],
             :template => "abstracts/impact_factor.html",
             :layout => "pdf")
       end
@@ -159,8 +159,8 @@ class AbstractsController < ApplicationController
       format.html {render :layout => 'printable'}
       format.pdf do
         @pdf = 1
-        render( :pdf => "High Impact journals", 
-            :stylesheets => ["pdf"], 
+        render( :pdf => "High Impact journals",
+            :stylesheets => ["pdf"],
             :template => "abstracts/high_impact.html",
             :layout => "pdf")
       end
@@ -174,8 +174,8 @@ class AbstractsController < ApplicationController
     respond_to do |format|
       format.html {render :layout => 'high_impact'}
       format.pdf do
-        render( :pdf => "Recent high impact by month", 
-            :stylesheets => ["high_impact"], 
+        render( :pdf => "Recent high impact by month",
+            :stylesheets => ["high_impact"],
             :template => "abstracts/high_impact_by_month.html",
             :layout => "high_impact")
       end
@@ -201,14 +201,14 @@ class AbstractsController < ApplicationController
       format.rss { redirect_to feed_path(:format => :atom), :status => :moved_permanently }
     end
   end
-  
-  def search 
+
+  def search
     if !@keywords.keywords.blank? then
       respond_to do |format|
-        format.js { 
+        format.js {
           params[:limit] ||= 30
            @abstracts = Abstract.display_tsearch_no_pagination(@keywords.keywords, @keywords.search_field, params[:limit])
-           render :layout=> false, :json=> {:data => @abstracts.as_json()}  
+           render :layout=> false, :json=> {:data => @abstracts.as_json()}
         }
         format.html {
           @do_pagination="1"
@@ -224,10 +224,10 @@ class AbstractsController < ApplicationController
           render :action => 'year_list'
         }
       end
-    else 
+    else
       logger.error "search did not have a defined keyword"
       year_list  # includes a render
-    end 
+    end
   end
 
   def show
@@ -279,19 +279,19 @@ class AbstractsController < ApplicationController
   def endnote
     show
   end
-  
+
   def add_abstracts
   end
-  
+
   def add_pubmed_ids
     #should be an ajax call
     @pubmed_ids = params[:pubmed_ids]
     @pubmed_ids = @pubmed_ids.gsub(/\, ?/,' ').split unless @pubmed_ids.blank?
     @abstracts=Abstract.find(:all, :conditions => ["pubmed in (:pubmed_ids)", {:pubmed_ids=>@pubmed_ids}])
   end
-  
+
   #called as xhr
-  
+
   def update_pubmed_id
     is_new=false
     if ! params[:pubmed_id].blank?
@@ -329,10 +329,10 @@ class AbstractsController < ApplicationController
       redirect_to :action=>:add_abstracts
     end
   end
-  
-  
+
+
   private
-  
+
   def pre_list(id)
     @redirect=false
     if params[:page].nil? then
@@ -344,21 +344,21 @@ class AbstractsController < ApplicationController
       @redirect=true
     end
   end
-  
+
   def journal_heading(journal_name)
-    total_entries = total_length(@abstracts) 
+    total_entries = total_length(@abstracts)
     @heading = "Publication Listing for <i>#{journal_name}</i>  (#{total_entries} publications)"
   end
 
   def list_heading(tag)
-    total_entries = total_length(@abstracts) 
+    total_entries = total_length(@abstracts)
     @heading = "Publication Listing for #{tag} (#{total_entries} publications)"
   end
-  
+
   def tag_heading(tag_name, abstracts)
-    @tags = Abstract.tag_counts(:limit => 150, :order => "count desc", 
+    @tags = Abstract.tag_counts(:limit => 150, :order => "count desc",
                   :conditions => ["abstracts.id in (:abstract_ids)", {:abstract_ids=>@abstracts.collect{|x| x.id}}])
-    total_entries = total_length(abstracts) 
+    total_entries = total_length(abstracts)
     @heading = "Publication Listing for the MeSH term <i>#{tag_name}</i>. Found #{total_entries} abstracts"
   end
 end

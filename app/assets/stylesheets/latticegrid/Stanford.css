@@ -1,0 +1,79 @@
+/* same as publications.css for now */
+
+body { 
+	font-size : 8pt;
+}
+
+h1, h2, .h2, h3, .h3 {
+	color: #520;
+}
+
+
+a:visited { color: #666; }
+a:hover { color: #fff; background-color:#888; }
+
+#investigator_title_block #full_name, #investigator_title_block #page_title {
+    color: #520;
+}
+
+td.list-title-left {
+	color:        #520;
+}
+
+#listing .list-heading {
+	color:        #520;
+}
+
+#listing .list-title {
+	color:        #520;
+}
+
+#listing .list-title-center {
+	color:        #520;
+}
+
+#listing .list-title-right {
+	color:        #520;
+}
+
+#side {
+	background-color: #A99D9D;
+}
+
+#banner {
+	height:275px;
+}
+
+#title {
+  color: #520;
+}
+
+#title a {
+  color: #520;
+}
+
+#search {
+  background-color: #660000;
+}
+#search a:hover { background-color: #A99D9D; }
+
+
+#niceline {
+  background-color: #A99D9D;
+}
+
+.ddsmoothmenu-v ul li a:link, .ddsmoothmenu-v ul li a:visited, .ddsmoothmenu-v ul li a:active{
+background: #660000; /*background of menu items (default state)*/
+color: white;
+}
+
+
+.ddsmoothmenu-v ul li a.selected{ /*CSS class that's dynamically added to the currently active menu items' LI A element*/
+background: black; 
+color: white;
+}
+
+.ddsmoothmenu-v ul li a:hover{
+background: black; /*background of menu items during onmouseover (hover state)*/
+color: white;
+}

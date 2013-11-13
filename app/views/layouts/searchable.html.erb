@@ -11,7 +11,7 @@
 	<% @stylesheets ||= [ "publications", "latticegrid/#{lattice_grid_instance}" ] %>
 	<%= stylesheet_link_tag @stylesheets %>
 	<link rel="shortcut icon" href='<%= image_path("favicon.ico") -%>' />
-  <%= LatticeGridHelper.google_analytics -%>
+  <%= LatticeGridHelper.google_analytics.html_safe -%>
 </head>
 <body>
 
@@ -26,10 +26,10 @@
 		</div> <!-- end of sideinfo -->
 		<div id="lattice_grid">
 			<%= link_to( image_tag( 'latticegrid.png', :size => "65x93" ), "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %> <br/>
-			Powered by <%= link_to( "LatticeGrid", "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %> 
+			Powered by <%= link_to( "LatticeGrid", "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %>
 		</div>
 		<div id="nubic">
-			<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://informatics.northwestern.edu/") %> 
+			<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://informatics.northwestern.edu/") %>
 		 	<%= link_to( "Built by NUBIC", "http://informatics.northwestern.edu/") %>
 		</div>
 		<p></p>

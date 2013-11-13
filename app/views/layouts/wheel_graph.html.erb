@@ -8,7 +8,7 @@
 	<!-- javascript files -->
 	<% @javascripts ||= [ 'excanvas-r48','canvastext','mootools-1.2.5-core-nc','mootools-1.2-more','moowheel' ] %>
 	<% @javascripts += @javascripts_add if defined?(@javascripts_add) %>
-	<%= javascript_include_tag @javascripts %> 
+	<%= javascript_include_tag @javascripts %>
 	<!-- CSS Files -->
 	<% @stylesheets ||= [ "publications", "latticegrid/#{lattice_grid_instance}" ] %>
 	<%= stylesheet_link_tag @stylesheets %>
@@ -20,7 +20,7 @@
   // Use jQuery via jQuery(...)
   </script>
   <% end %>
-  <%= LatticeGridHelper.google_analytics -%>
+  <%= LatticeGridHelper.google_analytics.html_safe -%>
 </head>
 <body>
 <div id="main" class="autoclear">

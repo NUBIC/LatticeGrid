@@ -8,7 +8,7 @@
 	<% @javascripts ||= [ 'prototype', 'ddsmoothmenu', 'jquery.min', 'jquery.sparkline.min', 'd3/d3.js', 'd3/d3.layout.js', 'd3/package.js', 'd3/d3.layout.cloud.js', 'd3/jsonp.js', 'd3/highlight.min.js' ] %>
 	<% @javascripts += @javascripts_add if defined?(@javascripts_add) %>
 	<!-- include JIT Library File -->
-	<%= javascript_include_tag @javascripts %> 
+	<%= javascript_include_tag @javascripts %>
 
 	<%= render :partial => "shared/menu_scripts", :locals => { :menu_nodes => @menu_nodes } %>
 	<link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
@@ -28,7 +28,7 @@
   // Use jQuery via jQuery(...)
   </script>
   <% end %>
-  <%= LatticeGridHelper.google_analytics -%>
+  <%= LatticeGridHelper.google_analytics.html_safe -%>
 </head>
 <body>
 <div id="main" class="autoclear">
@@ -42,11 +42,11 @@
 		</div> <!-- end of sideinfo -->
 		<div id="lattice_grid">
 			<%= link_to( image_tag( 'latticegrid.png', :size => "65x93" ), "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %> <br/>
-			Powered by <%= link_to( "LatticeGrid", "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %> 
+			Powered by <%= link_to( "LatticeGrid", "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %>
 		</div>
 		<br/>
 		<div id="nubic">
-			<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://informatics.northwestern.edu/") %> 
+			<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://informatics.northwestern.edu/") %>
 		 	<%= link_to( "Built by NUBIC", "http://informatics.northwestern.edu/") %>
 		</div>
 		<p></p>
@@ -70,6 +70,6 @@ d3.select("body").append("div")
         .append("img")
         .attr("src", "data:image/svg+xml;base64,"+ btoa(html));
 </script>
-	
+
 </body>
 </html>
