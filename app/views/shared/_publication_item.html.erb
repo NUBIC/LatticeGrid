@@ -1,4 +1,4 @@
 <% require 'config' %>
-<td class="list-left"> 
-	<%= format_citation(publication, link_abstract_to_pubmed, bold_members, investigators_in_unit, speed_display, simple_links) %>
-</td> 
+<td class="list-left">
+	<%= format_citation(publication, link_abstract_to_pubmed, bold_members, investigators_in_unit, speed_display, simple_links).html_safe %>
+</td>

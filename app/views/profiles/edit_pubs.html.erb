@@ -1,8 +1,7 @@
 <p>
 	<%= link_to( "Home", profiles_url ) %>
-	<%= link_to( "Edit #{@pronoun} Research Profile", (@username.blank? ? profiles_url : edit_profile_url(@username) ) ) %> 
+	<%= link_to( "Edit #{@pronoun} Research Profile", (@username.blank? ? profiles_url : edit_profile_url(@username) ) ) %>
 </p>
-
 
 <% @include_pubmed_id = false if @include_pubmed_id.nil? %>
 <% @include_collab_marker = false if @include_collab_marker.nil? %>
@@ -15,13 +14,12 @@
 
 <p>Paste in one or more pubmed_ids to add to LatticeGrid.</p>
 <div id="pubmed_addition">
-<% form_remote_tag( :url => {:controller => :abstracts, :action => :add_pubmed_ids}, 
-	:html => {:action => {:controller => :abstracts, :action => :add_pubmed_ids}}, 
-	:before => "Element.show('spinner')", 
-	:complete => "Element.hide('spinner')" ) do %> 
-	<%= text_area_tag(:pubmed_ids, nil, :rows => 5, :cols => 15) %>
-	<%= submit_tag 'Add Pubmed_ids' %>
-<% end %> 
+	<%= form_tag( '/abstracts/add_pubmed_ids',
+		:id => 'pubmed_addition_form',
+		:remote => true ) do %>
+		<%= text_area_tag(:pubmed_ids, nil, :rows => 5, :cols => 15) %>
+		<%= submit_tag 'Add Pubmed_ids' %>
+	<% end %>
 </div>
 <ul id="added_pubmed_ids">
 </ul>
@@ -29,6 +27,15 @@
 <script type="text/javascript" language="JavaScript">
 
 $j(function () { // this line makes sure this code runs on page load
+
+	$j("pubmed_addition_form").observe('ajax:before', function(evt, status, data, xhr) {
+		Element.show('spinner');
+	});
+
+	$j("pubmed_addition_form").observe('ajax:complete', function(evt, status, data, xhr) {
+		Element.hide('spinner');
+	});
+
 	$j('.checkall').live('click',function () {
 		var is_checked = this.checked;
 		if (is_checked) {
@@ -36,7 +43,7 @@ $j(function () { // this line makes sure this code runs on page load
 		} else {
 			$j('input:checkbox:checked.valid').trigger('click');
 		}
-	});	
+	});
 	$j('.checkallcancer').live('click',function () {
 		var is_checked = this.checked;
 		if (is_checked) {
@@ -44,7 +51,7 @@ $j(function () { // this line makes sure this code runs on page load
 		} else {
 			$j('input:checkbox:checked.cancer_related').trigger('click');
 		}
-	});	
+	});
 	$j('.checkallfaculty').live('click',function () {
 		var is_checked = this.checked;
 		if (is_checked) {
@@ -52,7 +59,7 @@ $j(function () { // this line makes sure this code runs on page load
 		} else {
 			$j('input:checkbox:checked.valid_faculty').trigger('click');
 		}
-	});	
+	});
 });
 </script>
 
@@ -60,12 +67,23 @@ $j(function () { // this line makes sure this code runs on page load
 <input type="checkbox" class="checkallcancer" value="Yes"> mark all cancer<br/>
 <input type="checkbox" class="checkallfaculty" value="Yes"> mark all faculty<br/>
 
-<%= render :partial => "shared/abstract_listing.html", 
-	:locals => { :abstracts => @abstracts, :investigators_in_unit => @investigators_in_unit, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker, :include_investigators => @include_investigators, :show_valid_checkboxes => @show_valid_checkboxes, :show_paginator => @show_paginator, :heading => @heading, :link_abstract_to_pubmed => @link_abstract_to_pubmed, :include_impact_factor => @include_impact_factor } %>
-
+<%= render :partial => "shared/abstract_listing.html",
+	:locals => {
+		:abstracts => @abstracts,
+		:investigators_in_unit => @investigators_in_unit,
+		:include_pubmed_id => @include_pubmed_id,
+		:include_collab_marker => @include_collab_marker,
+		:include_investigators => @include_investigators,
+		:show_valid_checkboxes => @show_valid_checkboxes,
+		:show_paginator => @show_paginator,
+		:heading => @heading,
+		:link_abstract_to_pubmed => @link_abstract_to_pubmed,
+		:include_impact_factor => @include_impact_factor
+	}
+%>
 
 <div id="accept">
-	<% form_tag(profile_url(@investigator.id), :method => :put) do %>
+	<%= form_tag(profile_url(@investigator.id), :method => :put) do %>
 	  <%= submit_tag 'Approve publications list' %>
-	<% end %> 
+	<% end %>
 </div>

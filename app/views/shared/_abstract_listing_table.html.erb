@@ -13,37 +13,99 @@
 <% simple_links=false if simple_links.nil? -%>
 
 <form onsubmit="return false">
-<fieldset>
-<table class="borderless"> 
-  <thead>
-  <tr valign="bottom">
-	  <%= '<th bgcolor="white" align="left"  class="list-left"></th>' if include_collab_marker %>
-	  <%= '<th bgcolor="white" align="left"  class="list-left">Updated</th>' if include_updated_at %>
-	  <%= '<th bgcolor="white" align="left"  class="list-left">'+link_to('PubMed&nbsp;ID', '#', :title=>"Click on the PubMed ID for a publication to go to PubMed" )+'</th><th bgcolor="white" align="left"  class="list-left">'+link_to('PMC&nbsp;ID', '#', :title=>"Click on the PubMed Central ID for a publication to go to PubMed Central for that article" )+'</th>' if include_pubmed_id %>
-	  <%= '<th bgcolor="white" align="left"  class="list-left">'+link_to('Impact', '#', :title=>"The ISI impact factor for each journal" )+'</th>' if include_impact_factor %>
-	  <%= '<th bgcolor="white" align="left" class="list-left">'+link_to('Valid', '#', :title=>"Unselect a publication to remove it from the list of publications" )+'</th>' if show_valid_checkboxes %>
-	  <%= '<th bgcolor="white" align="left" class="list-left">'+link_to('Cancer<br/>Related', '#', :title=>"Unselect a publication to indicate that it is not cancer relevant. Relevance is defined as appropriate for inclusion in the CCSG (Cancer Center Support Grant) submission as a cancer-related publication." )+'</th>' if show_valid_checkboxes and show_cancer_related_checkbox %>
- 	  <th bgcolor="white" align="left"  class="list-left">Publications</th>
-	  <%= '<th bgcolor="white" align="left" class="list-left">'+link_to('Faculty&nbsp;credited', '#', :title=>"Unselect an investigator to remove them from the publication. Useful for removing authors with the same name and initial as another faculty member. Publications with a single investigator cannot be modified." )+'&nbsp;&nbsp;</th>' if include_investigators %>
-  </tr>
-  </thead>
-  <tbody>
-<% for publication in abstracts %>
-  <tr valign="middle" class="<%= cycle('list-line-odd', 'list-line-even') %>"> 
-	<%= render( :partial => "shared/publication_collab_marker.html", :locals => { :publication => publication, :investigators_in_unit => investigators_in_unit }) if include_collab_marker %>
-	  <%= '<td align="left">'+publication.updated_at.to_s(:justdate)+'</td>' if include_updated_at %>
-	<%= render( :partial => "shared/pubmed_id_item.html", :locals => { :publication => publication }) if include_pubmed_id %>
-	<% if include_impact_factor -%>
-	<td class="list-left"> 
-		<%= publication.journals[0].impact_factor if !publication.journals.blank? %>
-	</td> 
-	<% end %>
-	<%= render( :partial => "shared/show_valid_checkboxes.html", :locals => { :publication => publication, :show_cancer_related_checkbox => show_cancer_related_checkbox }) if show_valid_checkboxes %>
-	<%= render :partial => "shared/publication_item.html", :locals => { :publication => publication, :bold_members => bold_members, :speed_display=>speed_display, :investigators_in_unit => investigators_in_unit, :link_abstract_to_pubmed => link_abstract_to_pubmed, :simple_links => simple_links } %>
-	<%= render :partial => "shared/publication_investigators_item.html", :locals => { :show_valid_checkboxes => show_valid_checkboxes, :publication => publication, :simple_links => true }  if include_investigators %>
-  </tr>
-<% end -%>
-</tbody>
-</table>
-</fieldset>
+  <fieldset>
+    <table class="borderless">
+      <thead>
+        <tr valign="bottom">
+          <% if include_collab_marker %>
+            <th bgcolor="white" align="left" class="list-left"></th>
+          <% end %>
+          <% if include_updated_at %>
+            <th bgcolor="white" align="left" class="list-left">Updated</th>
+          <% end %>
+          <% if include_pubmed_id %>
+            <th bgcolor="white" align="left" class="list-left">
+              <%= link_to('PubMed&nbsp;ID'.html_safe, '#', :title=>"Click on the PubMed ID for a publication to go to PubMed") %>
+            </th>
+            <th bgcolor="white" align="left" class="list-left">
+              <%= link_to('PMC&nbsp;ID'.html_safe, '#', :title=>"Click on the PubMed Central ID for a publication to go to PubMed Central for that article") %>
+            </th>
+          <% end %>
+          <% if include_impact_factor %>
+            <th bgcolor="white" align="left"  class="list-left">
+              <%= link_to('Impact', '#', :title=>"The ISI impact factor for each journal") %>
+            </th>
+          <% end %>
+          <% if show_valid_checkboxes %>
+            <th bgcolor="white" align="left" class="list-left">
+              <%= link_to('Valid', '#', :title => "Unselect a publication to remove it from the list of publications") %>
+            </th>
+          <% end %>
+          <% if show_valid_checkboxes and show_cancer_related_checkbox %>
+            <th bgcolor="white" align="left" class="list-left">
+              <%= link_to('Cancer<br/>Related'.html_safe, '#', :title=>"Unselect a publication to indicate that it is not cancer relevant. Relevance is defined as appropriate for inclusion in the CCSG (Cancer Center Support Grant) submission as a cancer-related publication.") %>
+            </th>
+          <% end %>
+   	      <th bgcolor="white" align="left"  class="list-left">Publications</th>
+          <% if include_investigators %>
+            <th bgcolor="white" align="left" class="list-left">
+              <%= link_to('Faculty&nbsp;credited'.html_safe, '#', :title=>"Unselect an investigator to remove them from the publication. Useful for removing authors with the same name and initial as another faculty member. Publications with a single investigator cannot be modified.") %>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% for publication in abstracts %>
+          <tr valign="middle" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+            <% if include_collab_marker %>
+  	          <%= render :partial => "shared/publication_collab_marker.html",
+                    :locals => {
+                      :publication => publication,
+                      :investigators_in_unit => investigators_in_unit
+                    }
+              %>
+            <% end -%>
+            <% if include_updated_at %>
+              <td align="left">
+                <%= publication.updated_at.to_s(:justdate) %>
+              </td>
+            <% end -%>
+  	        <%= render( :partial => "shared/pubmed_id_item.html", :locals => { :publication => publication }) if include_pubmed_id %>
+  	        <% if include_impact_factor -%>
+          	  <td class="list-left">
+          		  <%= publication.journals[0].impact_factor if !publication.journals.blank? %>
+          	  </td>
+  	        <% end -%>
+            <% if show_valid_checkboxes %>
+  	          <%= render :partial => "shared/show_valid_checkboxes.html",
+                    :locals => {
+                      :publication => publication,
+                      :show_cancer_related_checkbox => show_cancer_related_checkbox
+                    }
+              -%>
+            <% end -%>
+	          <%= render :partial => "shared/publication_item.html",
+                  :locals => {
+                    :publication => publication,
+                    :bold_members => bold_members,
+                    :speed_display=>speed_display,
+                    :investigators_in_unit => investigators_in_unit,
+                    :link_abstract_to_pubmed => link_abstract_to_pubmed,
+                    :simple_links => simple_links
+                  }
+            -%>
+            <% if show_valid_checkboxes %>
+  	          <%= render :partial => "shared/publication_investigators_item.html",
+                    :locals => {
+                      :show_valid_checkboxes => show_valid_checkboxes,
+                      :publication => publication,
+                      :simple_links => true
+                    }
+              -%>
+            <% end -%>
+          </tr>
+        <% end -%>
+      </tbody>
+    </table>
+  </fieldset>
 </form>

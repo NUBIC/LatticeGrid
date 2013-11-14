@@ -13,47 +13,50 @@
 <% include_updated_at=false if include_updated_at.nil? -%>
 <% simple_links=false if simple_links.nil? %>
 
-<div id="listing"> 
-<h2><%= heading -%></h2>
+<div id="listing">
+<h2>
+	<%= heading -%>
+</h2>
 <% if show_valid_checkboxes -%>
-<p>Publications that LatticeGrid cannot validate as belonging to you are listed at the bottom of this list. Please Check the box under the 'Valid' heading for each publication that does belong to you. If you see publications that are attributed to you that are <b>not</b> yours or any other person listed under the 'faculty credited' heading, and are checked as valid, please uncheck the 'Valid' checkbox to remove that publication from all LatticeGrid counts and views. If the publication does not belong to one or more of the investigators listed on the right, please uncheck each incorrectly listed investigator for that publication.</p>
+	<p>
+		Publications that LatticeGrid cannot validate as belonging to you are listed at the bottom of this list. Please Check the box under the 'Valid' heading for each publication that does belong to you. If you see publications that are attributed to you that are <b>not</b> yours or any other person listed under the 'faculty credited' heading, and are checked as valid, please uncheck the 'Valid' checkbox to remove that publication from all LatticeGrid counts and views. If the publication does not belong to one or more of the investigators listed on the right, please uncheck each incorrectly listed investigator for that publication.
+	</p>
 <% end -%>
 <% if abstracts.length > 0 -%>
 
-<% params.delete(:do_pagination) if !params[:do_pagination].nil? -%> 
-<% params.delete(:the_year) if !params[:the_year].nil? -%> 
-<% params.delete(:name) if !params[:name].nil? -%> 
-<% params.delete(:investigator_id) if !params[:investigator_id].nil? -%> 
-<% if do_pagination == "0"  -%>
-	<% original_action = params[:action] -%>
-	<% params[:action] = params[:action].gsub(/full_(.*)/,'\1') -%>
-	<%= link_to( 'paginate', params ) if show_paginator  -%>
-	<% params[:action] = original_action -%>
-<% else -%>
-	<% if abstracts.total_pages > 1 && !["search","list"].include?(params[:action]) -%>
+	<% params.delete(:do_pagination) if !params[:do_pagination].nil? -%>
+	<% params.delete(:the_year) if !params[:the_year].nil? -%>
+	<% params.delete(:name) if !params[:name].nil? -%>
+	<% params.delete(:investigator_id) if !params[:investigator_id].nil? -%>
+	<% if do_pagination == "0"  -%>
 		<% original_action = params[:action] -%>
-		<% original_page = params[:page] -%>
-		<% params.delete(:page) -%>
-		<% params[:action] = "full_"+params[:action] -%>
-		<%= link_to 'no pagination', params  -%>
+		<% params[:action] = params[:action].gsub(/full_(.*)/,'\1') -%>
+		<%= link_to( 'paginate', params ) if show_paginator  -%>
 		<% params[:action] = original_action -%>
-		<% params[:page] = original_page -%>
+	<% else -%>
+		<% if abstracts.total_pages > 1 && !["search","list"].include?(params[:action]) -%>
+			<% original_action = params[:action] -%>
+			<% original_page = params[:page] -%>
+			<% params.delete(:page) -%>
+			<% params[:action] = "full_"+params[:action] -%>
+			<%= link_to 'no pagination', params  -%>
+			<% params[:action] = original_action -%>
+			<% params[:page] = original_page -%>
+		<% end -%>
+		<%= will_paginate(abstracts, :outer_window => 5, :inner_window => 5) -%>
 	<% end -%>
-	<%= will_paginate(abstracts, :outer_window => 5, :inner_window => 5) -%>
-<% end -%>
 
-<%= render( :partial => "shared/abstract_listing_table.html", :locals => { :abstracts => abstracts, :investigators_in_unit => investigators_in_unit, :include_pubmed_id => include_pubmed_id, :include_collab_marker => include_collab_marker, :include_investigators => include_investigators, :show_valid_checkboxes => show_valid_checkboxes, :show_cancer_related_checkbox => show_cancer_related_checkbox, :bold_members => bold_members, :link_abstract_to_pubmed => link_abstract_to_pubmed, :speed_display=>speed_display, :include_impact_factor => include_impact_factor, :simple_links => simple_links, :include_updated_at => include_updated_at }) -%>
+	<%= render( :partial => "shared/abstract_listing_table.html", :locals => { :abstracts => abstracts, :investigators_in_unit => investigators_in_unit, :include_pubmed_id => include_pubmed_id, :include_collab_marker => include_collab_marker, :include_investigators => include_investigators, :show_valid_checkboxes => show_valid_checkboxes, :show_cancer_related_checkbox => show_cancer_related_checkbox, :bold_members => bold_members, :link_abstract_to_pubmed => link_abstract_to_pubmed, :speed_display=>speed_display, :include_impact_factor => include_impact_factor, :simple_links => simple_links, :include_updated_at => include_updated_at }) -%>
 
-<% if do_pagination != "0"  -%>
-	<%= will_paginate(abstracts, :outer_window => 5, :inner_window => 5) -%>
-<% end -%>
-<p>
-The above publications are sorted by year, faculty last name, and first author. Click on any highlighted author listed to find all publications attributed to that individual. Click on the publication title to see the abstract. <span class="first_author">First authors</span> who are faculty are <span class="first_author">highlighted like this</span>. <span class="last_author">Last authors</span> who are faculty are <span class="last_author">highlighted like this</span>. <span class="author">Other authors</span> who are faculty are <span class="author">highlighted like this</span>. <%= "Publications designated with an asterisk (*) represent intra-departmental interactions; those with a bullet (&bull;) inter-departmental interactions. " if include_collab_marker -%> <%= "Authors highlighted in <b>bold</b> are in the same unit/program" if bold_members -%>
-</p>
+	<% if do_pagination != "0"  -%>
+		<%= will_paginate(abstracts, :outer_window => 5, :inner_window => 5) -%>
+	<% end -%>
+	<p>
+		The above publications are sorted by year, faculty last name, and first author. Click on any highlighted author listed to find all publications attributed to that individual. Click on the publication title to see the abstract. <span class="first_author">First authors</span> who are faculty are <span class="first_author">highlighted like this</span>. <span class="last_author">Last authors</span> who are faculty are <span class="last_author">highlighted like this</span>. <span class="author">Other authors</span> who are faculty are <span class="author">highlighted like this</span>.
+		<%= "Publications designated with an asterisk (*) represent intra-departmental interactions; those with a bullet (&bull;) inter-departmental interactions. " if include_collab_marker -%>
+		<%= "Authors highlighted in <b>bold</b> are in the same unit/program" if bold_members -%>
+	</p>
 <% else -%>
 	<h2>Sorry, no publications are available!</h2>
 <% end -%>
-
-<br />
-
 </div>

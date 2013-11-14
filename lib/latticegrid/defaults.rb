@@ -316,22 +316,22 @@ end
 # citation style
 def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bold=false, investigators_in_unit=[], speed_display=false, simple_links=false)
   #  out = publication.authors
-    out = (mark_members_bold) ? highlightMemberInvestigator(publication, speed_display, simple_links, investigators_in_unit) : highlightInvestigator(publication, speed_display, simple_links)
-    out << " "
-    if link_abstract_to_pubmed
-  	out << link_to( publication.title, "http://www.ncbi.nlm.nih.gov/pubmed/"+publication.pubmed, :target => '_blank', :title=>'PubMed ID')
-    else
-  	out << link_to( publication.title, abstract_url(publication))
-    end
-    out << "<i>#{publication.journal_abbreviation}</i> "
-    out << " (#{publication.year}) "
-    if publication.pages.length > 0
-  	out << h(publication.volume) +":"+ h(publication.pages)+". "
-    else
-  	out << "<i>In process.</i> "
-    end
-    out << [quicklink_to_pubmed(publication.pubmed), quicklink_to_pubmedcentral(publication.pubmedcentral), quicklink_to_doi(publication.doi)].compact.join("; ")
+  out = (mark_members_bold) ? highlightMemberInvestigator(publication, speed_display, simple_links, investigators_in_unit) : highlightInvestigator(publication, speed_display, simple_links)
+  out << " "
+  if link_abstract_to_pubmed
+	  out << link_to( publication.title, "http://www.ncbi.nlm.nih.gov/pubmed/"+publication.pubmed, :target => '_blank', :title=>'PubMed ID')
+  else
+	  out << link_to( publication.title, abstract_url(publication))
   end
+  out << "<i>#{publication.journal_abbreviation}</i> "
+  out << " (#{publication.year}) "
+  if publication.pages.length > 0
+	  out << h(publication.volume) +":"+ h(publication.pages)+". "
+  else
+	  out << "<i>In process.</i> "
+  end
+  out << [quicklink_to_pubmed(publication.pubmed), quicklink_to_pubmedcentral(publication.pubmedcentral), quicklink_to_doi(publication.doi)].compact.join("; ")
+end
 
 def link_to_investigator(citation, investigator, name=nil, isMember=false, speed_display=false, simple_links=false, class_name=nil)
    name=investigator.last_name if name.blank?
