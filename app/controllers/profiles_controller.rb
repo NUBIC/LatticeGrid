@@ -14,21 +14,21 @@ class ProfilesController < ApplicationController
   include ApplicationHelper
   include AbstractsHelper
   include OrgsHelper
-  
+
   include MeshHelper  #for the do_mesh_search method
 
   require 'publication_utilities' #all the helper methods
-  require 'pubmed_utilities'  #loads including 'pubmed_config'  'bio' (bioruby) and 
+  require 'pubmed_utilities'  #loads including 'pubmed_config'  'bio' (bioruby) and
   #  require 'pubmed_config' #look here to change the default time spans
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   # verify :method => :post, :only => [ :search ], :redirect_to => :current_abstracts_url
-  
+
   def index
     @username = (is_admin? ? params[:id] : current_user_model.username)
     @pronoun  = (is_admin? ? "" : " Your ")
     @username = current_user_model.username if @username.blank?
     if is_admin?
-      @investigators = Investigator.by_name
+      @investigators = Investigator.by_name.all
       render :action => 'admin_index'
     else
       render
@@ -50,7 +50,7 @@ class ProfilesController < ApplicationController
     if is_admin?
       @center= Center.find(:first)
       @orgs = nil
-      @orgs = @center.descendants.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation} unless @center.blank? 
+      @orgs = @center.descendants.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation} unless @center.blank?
       render
     else
       redirect_to :index
@@ -90,13 +90,13 @@ class ProfilesController < ApplicationController
       respond_to do |format|
         format.html { render :action => 'list_summaries' }
         format.xml  { render :xml => @investigators }
-        format.xls  { 
+        format.xls  {
           @no_email=true
           send_data(render(:template => 'profiles/list_summaries', :layout => "excel"),
           :filename => "summaries_listing_for_#{@program.name}.xls",
           :type => 'application/vnd.ms-excel',
           :disposition => 'attachment') }
-        format.doc  { 
+        format.doc  {
           @no_email=true
           send_data(render(:template => 'profiles/list_summaries', :layout => "excel"),
           :filename => "summaries_listing_for_#{@program.name}.doc",
@@ -104,8 +104,8 @@ class ProfilesController < ApplicationController
           :disposition => 'attachment') }
         format.pdf {
           @no_email=true
-          render( :pdf => "summaries_listing_for_" + @program.name, 
-              :stylesheets => ["pdf"], 
+          render( :pdf => "summaries_listing_for_" + @program.name,
+              :stylesheets => ["pdf"],
               :template => "profiles/list_summaries",
               :layout => "pdf") }
       end
@@ -114,9 +114,8 @@ class ProfilesController < ApplicationController
     end
   end
 
-
   def unreviewed_valid_abstracts
-    if is_admin? 
+    if is_admin?
       render_abstract_listing(Abstract.valid_unreviewed)
     else
       redirect_to( current_abstracts_url)
@@ -124,7 +123,7 @@ class ProfilesController < ApplicationController
   end
 
   def reviewed_valid_abstracts
-    if is_admin? 
+    if is_admin?
       render_abstract_listing(Abstract.valid_reviewed)
     else
       redirect_to( current_abstracts_url)
@@ -132,7 +131,7 @@ class ProfilesController < ApplicationController
   end
 
   def reviewed_invalid_abstracts
-    if is_admin? 
+    if is_admin?
       render_abstract_listing(Abstract.invalid_reviewed)
     else
       redirect_to( current_abstracts_url)
@@ -140,15 +139,15 @@ class ProfilesController < ApplicationController
   end
 
   def reviewed_invalid_abstracts_with_investigators
-    if is_admin? 
+    if is_admin?
       render_abstract_listing(Abstract.invalid_with_investigators_reviewed)
     else
       redirect_to( current_abstracts_url)
     end
   end
-  
+
   def invalid_abstracts_with_investigators
-    if is_admin? 
+    if is_admin?
       render_abstract_listing(Abstract.invalid_with_investigators)
     else
       redirect_to( current_abstracts_url)
@@ -156,7 +155,7 @@ class ProfilesController < ApplicationController
   end
 
   def unreviewed_invalid_abstracts
-    if is_admin? 
+    if is_admin?
       render_abstract_listing(Abstract.invalid_unreviewed)
     else
       redirect_to( current_abstracts_url)
@@ -164,7 +163,7 @@ class ProfilesController < ApplicationController
   end
 
   def unreviewed_invalid_abstracts_with_investigators
-    if is_admin? 
+    if is_admin?
       render_abstract_listing(Abstract.invalid_with_investigators_unreviewed)
     else
       redirect_to( current_abstracts_url)
@@ -255,11 +254,11 @@ class ProfilesController < ApplicationController
   end
 
   def recent
-    @abstracts = Abstract.recently_changed 
-    @include_pubmed_id = true 
+    @abstracts = Abstract.recently_changed
+    @include_pubmed_id = true
     @include_collab_marker = false
     @include_investigators = true
-    @show_valid_checkboxes = true 
+    @show_valid_checkboxes = true
     @link_abstract_to_pubmed = true
     @include_impact_factor = false
     @include_updated_at = true
@@ -268,13 +267,13 @@ class ProfilesController < ApplicationController
     @heading = "Recently changed publication abstracts (#{@abstracts.length})"
     render :action => 'investigator_listing'
   end
-    
+
   def recent_unvalidated
-    @abstracts = Abstract.recently_changed_unvalidated 
-    @include_pubmed_id = true 
+    @abstracts = Abstract.recently_changed_unvalidated
+    @include_pubmed_id = true
     @include_collab_marker = false
     @include_investigators = true
-    @show_valid_checkboxes = true 
+    @show_valid_checkboxes = true
     @link_abstract_to_pubmed = true
     @include_impact_factor = true
     @include_updated_at = true
@@ -282,7 +281,7 @@ class ProfilesController < ApplicationController
     @heading = "Recently changed publication abstracts without validation (#{@abstracts.length})"
     render :action => 'investigator_listing'
   end
-  
+
   def edit_pubs
     @username = (is_admin? ? params[:id] : current_user_model.username)
     @pronoun  = (is_admin? ? "" : " Your ")
@@ -294,11 +293,19 @@ class ProfilesController < ApplicationController
     investigator_id = 0
     investigator_id = @investigator.id if ! @investigator.blank?
     respond_to do |format|
-      format.html { 
+      format.html {
         @javascripts = [ "prototype", "jquery.min"]
         @abstracts = Abstract.display_all_investigator_data_include_deleted(investigator_id)
-        render  
+        render
       }
+    end
+  end
+
+  def admin_edit
+    if params[:publications]
+      redirect_to edit_pubs_profile_path(params[:investigator_id])
+    else
+      redirect_to edit_profile_path(params[:investigator_id])
     end
   end
 
@@ -306,21 +313,21 @@ class ProfilesController < ApplicationController
     prepare_edit_investigator_listing
     @include_impact_factor = true
     respond_to do |format|
-      format.html { 
-      	@abstracts = Abstract.display_all_investigator_data_include_deleted(@investigator.id) 
+      format.html {
+      	@abstracts = Abstract.display_all_investigator_data_include_deleted(@investigator.id)
       	render
       }
-      format.xml  { 
+      format.xml  {
         @abstracts = Abstract.display_all_investigator_data(@investigator.id)
         render :xml => @abstracts }
-      format.xls  { 
+      format.xls  {
         @link_abstract_to_pubmed = true
         @abstracts = Abstract.display_all_investigator_data(@investigator.id)
         send_data(render(:template => 'abstracts/investigator_listing', :layout => "excel"),
         :filename => "investigator_listing_for_#{@investigator.first_name}_#{@investigator.last_name}.xls",
         :type => 'application/vnd.ms-excel',
         :disposition => 'attachment') }
-      format.doc  { 
+      format.doc  {
         @link_abstract_to_pubmed = true
         @abstracts = Abstract.display_all_investigator_data(@investigator.id)
         send_data(render(:template => 'abstracts/investigator_listing.xls', :layout => "excel"),
@@ -331,8 +338,8 @@ class ProfilesController < ApplicationController
         @link_abstract_to_pubmed = true
         @abstracts = Abstract.display_all_investigator_data(@investigator.id)
         @show_valid_checkboxes = false
-        render( :pdf => "Publication Listing for " + @investigator.name, 
-            :stylesheets => ["pdf"], 
+        render( :pdf => "Publication Listing for " + @investigator.name,
+            :stylesheets => ["pdf"],
             :template => "abstracts/investigator_listing.html",
             :layout => "pdf")
       end
@@ -341,14 +348,14 @@ class ProfilesController < ApplicationController
 
 
   def list_investigators
-    @investigators = Investigator.find(:all, :include=>[:home_department,:appointments], :order => "last_name, first_name")   
+    @investigators = Investigator.find(:all, :include=>[:home_department,:appointments], :order => "last_name, first_name")
     respond_to do |format|
       format.html { render :template => "investigators/list_all.html" }
       format.xml  { render :xml => @units }
       format.pdf do
         @pdf = true
-        render(  :pdf => "Investigator Listing", 
-                 :stylesheets => ["pdf"], 
+        render(  :pdf => "Investigator Listing",
+                 :stylesheets => ["pdf"],
                  :template => "investigators/list_all.html",
                  :layout => "pdf" )
       end
@@ -357,7 +364,7 @@ class ProfilesController < ApplicationController
 
   def edit_investigators
     @javascripts_add = ['prototype', 'scriptaculous', 'effects', 'jquery.min']
-    @investigators = Investigator.find(:all, :include=>[:home_department,:appointments], :order => "last_name, first_name")   
+    @investigators = Investigator.find(:all, :include=>[:home_department,:appointments], :order => "last_name, first_name")
     respond_to do |format|
       format.html { render }
     end
@@ -376,9 +383,9 @@ class ProfilesController < ApplicationController
             #@investigator.email
             Notifier.deliver_reminder_message(@investigator.last_name, @investigator.email, "mruchin@northwestern.edu",
                 'Please approve your Lurie Cancer Center LatticeGrid profile', show_investigator_url(:id=>@investigator.username, :page=>1),
-                profiles_url(), profile_url(@investigator.username), edit_pubs_profile_url(@investigator.username), 
+                profiles_url(), profile_url(@investigator.username), edit_pubs_profile_url(@investigator.username),
                 @investigator.investigator_abstracts.count, @investigator.abstracts.count, @investigator.faculty_research_summary )
-  		
+
           rescue Exception => err
             logger.error "Error occured. Unable to send notification email to #{@investigator.name} at #{@investigator.email}. Error: #{err.message}"
             pass = false
@@ -409,18 +416,18 @@ class ProfilesController < ApplicationController
   def render_abstract_listing(abstracts)
     @abstracts = abstracts
     respond_to do |format|
-      format.html { 
+      format.html {
        render :template => 'profiles/abstracts_listing'
       }
-      format.xml  { 
+      format.xml  {
        render :xml => @abstracts }
-      format.xls  { 
+      format.xls  {
        @link_abstract_to_pubmed = true
        send_data(render(:template => 'profiles/abstracts_listing', :layout => "excel"),
        :filename => "abstracts_listing.xls",
        :type => 'application/vnd.ms-excel',
        :disposition => 'attachment') }
-      format.doc  { 
+      format.doc  {
        @link_abstract_to_pubmed = true
        send_data(render(:template => 'profiles/abstracts_listing', :layout => "excel"),
        :filename => "abstracts_listing.doc",
@@ -429,8 +436,8 @@ class ProfilesController < ApplicationController
       format.pdf do
        @link_abstract_to_pubmed = true
        @show_valid_checkboxes = false
-       render( :pdf => "Abstracts listing", 
-           :stylesheets => ["pdf"], 
+       render( :pdf => "Abstracts listing",
+           :stylesheets => ["pdf"],
            :template => 'profiles/abstracts_listing',
            :layout => "pdf")
       end

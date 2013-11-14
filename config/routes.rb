@@ -280,8 +280,9 @@ LatticeGrid::Application.routes.draw do
   match 'high_impact.:format' => 'abstracts#high_impact', :as => :high_impact, :via => :get
   match 'org_nodes/:id' => 'graphs#org_nodes', :as => :org_nodes
   match 'member_nodes/:id' => 'graphs#member_nodes', :as => :member_nodes
-  match 'profiles_edit/:id' => 'profiles#edit', :as => :profile_edit
-  match 'publications_edit/:id' => 'profiles#edit_pubs', :as => :publications_edit
+  # match 'profiles_edit/:id' => 'profiles#edit', :as => :profile_edit, :via => [:get, :post]
+  # match 'publications_edit/:id' => 'profiles#edit_pubs', :as => :publications_edit, :via => [:get, :post]
+  match '/profiles/admin_edit', :to => 'profiles#admin_edit', :via => :post # added psf for Rails upgrade - to replace two lines above
   match 'member_protovis_data/:id' => 'cytoscape#member_protovis_data', :as => :member_protovis_data
   match 'member_cytoscape_data/:id/:depth/:include_publications/:include_awards/:include_studies' => 'cytoscape#member_cytoscape_data', :as => :member_cytoscape_data
   match 'org_cytoscape_data/:id/:depth/:include_publications/:include_awards/:include_studies' => 'cytoscape#org_cytoscape_data', :as => :org_cytoscape_data

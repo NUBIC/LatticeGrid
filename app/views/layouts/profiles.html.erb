@@ -1,67 +1,80 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
-  <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
+    <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
 
-	<!-- javascript files -->
-	<% @javascripts ||= [ 'prototype', 'jquery.min', 'jquery.sparkline.min' ] %>
-	<% @javascripts += @javascripts_add if defined?(@javascripts_add) %>
-	<%= javascript_include_tag @javascripts %>
-	<!-- CSS Files -->
-	<% @stylesheets ||= [ 'publications', "latticegrid/#{lattice_grid_instance}"] %>
-	<%= stylesheet_link_tag @stylesheets %>
-
-	<link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
-  <% if @javascripts.join =~ /jquery/i %>
-  <script type="text/javascript" language="JavaScript">
-   jQuery.noConflict();
- 	var $j = jQuery;
-  // Use jQuery via jQuery(...)
-  </script>
-  <% end %>
-  <%= LatticeGridHelper.google_analytics.html_safe -%>
-</head>
-<body>
-<% if Rails.env == 'development' %>
-    <div id="debug" style="margin: 5px 5px 5px 5px;">
-        <a href="#" onclick="$j('#debug').toggle(); return false" style="text-decoration: none; color: #999;">Show Debug Info &#10162;</a>
+  	<!-- javascript files -->
+  	<% @javascripts ||= [ 'prototype', 'jquery.min', 'jquery.sparkline.min' ] %>
+  	<% @javascripts += @javascripts_add if defined?(@javascripts_add) %>
+    <% @javascripts.each do |js| %>
+      <%= javascript_include_tag js %>
+    <% end %>
+  	<!-- CSS Files -->
+  	<% @stylesheets ||= [ 'publications', "latticegrid/#{lattice_grid_instance}"] %>
+    <% @stylesheets.each do |ss| %>
+      <%= stylesheet_link_tag ss %>
+    <% end %>
+  	<link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
+    <% if @javascripts.join =~ /jquery/i %>
+      <script type="text/javascript" language="JavaScript">
+        jQuery.noConflict();
+     	  var $j = jQuery;
+        // Use jQuery via jQuery(...)
+      </script>
+    <% end %>
+    <%= LatticeGridHelper.google_analytics.html_safe -%>
+  </head>
+  <body>
+    <% if Rails.env == 'development' %>
+      <div id="debug" style="margin: 5px 5px 5px 5px;">
+        <a href="#" onclick="$j('#debug').toggle(); return false" style="text-decoration: none; color: #999;">
+          Show Debug Info &#10162;
+        </a>
         <div id="debug_info" style="display : none;">
-            <%= debug session %>
-            <%= debug params %>
+          <%= debug session %>
+          <%= debug params %>
         </div>
-    </div>
-<% end %>
-<div id="main" class="autoclear"> <!-- start of main -->
-	<div id="banner"><a href="<%= LatticeGridHelper.home_url %>" ><%= image_tag "#{lattice_grid_instance}/pageheader.jpg", options={:alt=>LatticeGridHelper.header_title} %></a></div>
-	<div id="results" class="notice"><%= flash[:notice] %> 	<%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %> </div>
-	<div id="title"><%= LatticeGridHelper.header_title -%></div>
-	<div id="search">
-		<span style="float:right; z-index:3; ">
-			<% if is_admin? %>
-			<%= link_to("Admin: Edit", profiles_url()) %>
-			<%= link_to("Splash", splash_profiles_url()) %>
-			<%= link_to("List All", list_investigators_profiles_url()) %>
-			<%= link_to("Summaries", list_summaries_profiles_url()) %>
-			<%= link_to("Edit", edit_investigators_profiles_url()) %>
-			<% else %>
-			<%= link_to("Edit your research profile", current_user.blank? ? profiles_url : edit_profile_url(current_user.username)) %>
-			<%= link_to("Edit your publications", current_user.blank? ? profiles_url : edit_pubs_profile_url(current_user.username)) %>
-			<% end %>
-			<%= link_to("#{current_user.username} &nbsp; Logout", logout_url) if !current_user.blank? %>
-		</span>
-		<span style="float:left; margin-left:-105px;">
-			<%= link_to("LatticeGrid Home", abstracts_url) %>
-		</span>
-		&nbsp;<br/>
-	</div>
-	<div id="niceline">
-	</div>
-	<div id="content">
-	<%= yield  %>
-	</div>
-</div> <!-- end of main -->
-</body>
+      </div>
+    <% end %>
+    <div id="main" class="autoclear"> <!-- start of main -->
+    	<div id="banner">
+        <a href="<%= LatticeGridHelper.home_url %>" >
+          <%= image_tag "#{lattice_grid_instance}/pageheader.jpg", options={:alt=>LatticeGridHelper.header_title} %>
+        </a>
+      </div>
+    	<div id="results" class="notice">
+        <%= flash[:notice] %> 	<%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %>
+      </div>
+    	<div id="title">
+        <%= LatticeGridHelper.header_title -%>
+      </div>
+    	<div id="search">
+    		<span style="float:right; z-index:3; ">
+    			<% if is_admin? %>
+      			<%= link_to("Admin: Edit", profiles_url()) %>
+      			<%= link_to("Splash", splash_profiles_url()) %>
+      			<%= link_to("List All", list_investigators_profiles_url()) %>
+      			<%= link_to("Summaries", list_summaries_profiles_url()) %>
+      			<%= link_to("Edit", edit_investigators_profiles_url()) %>
+    			<% else %>
+      			<%= link_to("Edit your research profile", current_user.blank? ? profiles_url : edit_profile_url(current_user.username)) %>
+      			<%= link_to("Edit your publications", current_user.blank? ? profiles_url : edit_pubs_profile_url(current_user.username)) %>
+    			<% end %>
+    			<%= link_to("#{current_user.username} &nbsp; Logout".html_safe, logout_url) if !current_user.blank? %>
+    		</span>
+    		<span style="float:left; margin-left:-105px;">
+    			<%= link_to("LatticeGrid Home", abstracts_url) %>
+    		</span>
+    		&nbsp;<br/>
+    	</div>
+    	<div id="niceline">
+    	</div>
+    	<div id="content">
+    	  <%= yield  %>
+    	</div>
+    </div> <!-- end of main -->
+  </body>
 </html>

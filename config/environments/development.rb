@@ -27,4 +27,20 @@ LatticeGrid::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  config.aker do
+    # The authentication protocol to use for interactive access.
+    # `:form` is the default.
+    # ui_mode :cas
+
+    # The authentication protocol(s) to use for non-interactive
+    # access.  There is no default.
+    # api_mode :http_basic
+
+    # The portal to which this application belongs.  Optional.
+    # portal :LatticeGrid
+    puts "loading local static aker file"
+    login_config = File.join(Rails.root, %w(config logins development.yml))
+    authority Aker::Authorities::Static.from_file(login_config)
+  end
 end
