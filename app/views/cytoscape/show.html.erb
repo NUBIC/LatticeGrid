@@ -36,7 +36,7 @@
  	</script>
 </h1>
 	<% if @include_graph_link %>
-	<p><%= org_nav_heading() %></p>
+	<p><%= org_nav_heading.html_safe %></p>
 	<% end %>
 	<% elsif ! @investigator.blank? %>
 	<% all_abstracts = @all_abstracts || nil -%>
