@@ -3,7 +3,7 @@
 <% if !@pi_studies.blank? %>
 <% if !defined?(@pdf) and ! @pdf %>
 <div id="investigator_title_block">
-<%= investigator_bio_heading(@investigator, @all_abstracts) %>
+<%= investigator_bio_heading(@investigator, @all_abstracts).html_safe %>
 </div>
 <span id='data_title' class='h2'>Study data</span>
 <div style="float:right;padding-right:5px;">
@@ -15,19 +15,19 @@
 <% end %>
 <script>
   jQuery(document).ready(function() {
-     jQuery("#roles_definitions").dialog({ 
-		autoOpen: false, 
+     jQuery("#roles_definitions").dialog({
+		autoOpen: false,
 		width: 1000,
 		buttons: {
-			"Ok": function() { 
-				jQuery(this).dialog("close"); 
-			}, 
-			"Cancel": function() { 
-				jQuery(this).dialog("close"); 
-			} 
+			"Ok": function() {
+				jQuery(this).dialog("close");
+			},
+			"Cancel": function() {
+				jQuery(this).dialog("close");
+			}
 		},
-		hide: 'slide',  
-		modal: true, 
+		hide: 'slide',
+		modal: true,
 		show: 'slide' });
     jQuery(".roles").click(function() {
 	     jQuery("#roles_definitions").dialog("open");
@@ -37,7 +37,7 @@
   });
 
 </script>
-  
+
 
 <div id="roles_definitions" title="Roles Definitions">
 	<p><b>Definitions:</b></p>
@@ -53,7 +53,7 @@
 </div>
 <%= render( :partial => "shared/study_note.html" ) %>
 <div id="listing">
-  <table cellpadding="2" cellspacing="0" class="borderless"> 
+  <table cellpadding="2" cellspacing="0" class="borderless">
 	<tr valign="bottom" class="header">
 		<td class="list-title-left">
 			#

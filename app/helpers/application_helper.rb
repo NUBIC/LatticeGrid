@@ -104,9 +104,19 @@ module ApplicationHelper
   end
 
   def link_to_coauthors(co_authors, delimiter=", ")
-    co_authors.collect{|co_author| link_to( coauthor_span_class(co_author.colleague.name, co_author.publication_cnt),
-     show_investigator_url(:id=>co_author.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
-      :title => "#{co_author.publication_cnt} shared pubs; #{co_author.colleague.total_publications} pubs; "+(co_author.colleague.num_intraunit_collaborators+co_author.colleague.num_extraunit_collaborators).to_s+" collaborators") if co_author.colleague.deleted_at.blank? }.compact.join(delimiter)
+    co_authors.collect{ |co_author|
+      if co_author.colleague.deleted_at.blank?
+        link_to( coauthor_span_class(co_author.colleague.name, co_author.publication_cnt).html_safe,
+                 show_investigator_url(:id=>co_author.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
+                 :title => co_author_link_title(co_author))
+      end
+    }.compact.join(delimiter)
+  end
+
+  def co_author_link_title(co_author)
+    "#{co_author.publication_cnt} shared pubs; #{co_author.colleague.total_publications} pubs; " +
+    (co_author.colleague.num_intraunit_collaborators+co_author.colleague.num_extraunit_collaborators).to_s +
+    " collaborators"
   end
 
   def link_to_collaborators(collaborators, delimiter=", ")
@@ -117,9 +127,18 @@ module ApplicationHelper
 
   def link_to_similar_investigators(relationships, delimiter=", ")
     relationships.collect{|relationship|
-      link_to( similarity_span_class(relationship.colleague.name, relationship.mesh_tags_ic.round),
-      show_investigator_url(:id=>relationship.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
-        :title => "Similarity score of #{relationship.mesh_tags_ic.round}; #{relationship.colleague.total_publications} total pubs; "+(relationship.colleague.num_intraunit_collaborators+relationship.colleague.num_extraunit_collaborators).to_s+" collaborators; shared tags: #{relationship.tag_list}") if relationship.colleague.deleted_at.blank?}.compact.join(delimiter)
+      if relationship.colleague && relationship.colleague.deleted_at.blank?
+        link_to( similarity_span_class(relationship.colleague.name, relationship.mesh_tags_ic.round).html_safe,
+                 show_investigator_url(:id=>relationship.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
+                 :title => similarity_link_title(relationship))
+      end
+    }.compact.join(delimiter)
+  end
+
+  def similarity_link_title(relationship)
+    "Similarity score of #{relationship.mesh_tags_ic.round}; #{relationship.colleague.total_publications} total pubs; " +
+    (relationship.colleague.num_intraunit_collaborators + relationship.colleague.num_extraunit_collaborators).to_s +
+    " collaborators; shared tags: #{relationship.tag_list}"
   end
 
   def coauthor_span_class(link_out, score)

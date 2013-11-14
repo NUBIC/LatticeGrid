@@ -3,7 +3,7 @@
 <% if !@pi_awards.blank? %>
 <% if !defined?(@pdf) and ! @pdf %>
 <div id="investigator_title_block">
-<%= investigator_bio_heading(@investigator, @all_abstracts) %>
+<%= investigator_bio_heading(@investigator, @all_abstracts).html_safe %>
 </div>
 <span id='data_title' class='h2'>Award data</span>
 <div style="float:right;padding-right:5px;">
@@ -33,48 +33,48 @@
 		<span id='current_split_award_total'>$<%= current_award_info(@pi_awards,'pd/pi,co-investigator,faculty', true) %></span>
 	</td></tr>
 	<tr><td class='h3' align='right'>
-		All awards: 
+		All awards:
 	</td><td  class='h3'>
 		<span id='all_award_total' class='h3'>$<%= award_info(@pi_awards) %></span>
 	</td><td class='h3' align='right'>
-		Current awards: 
+		Current awards:
 	</td><td  class='h3'>
 		<span id='current_all_award_total'>$<%= current_award_info(@pi_awards) %></span>
 	</td></tr>
-</table>			
+</table>
 <% end %>
 <script>
   jQuery(document).ready(function() {
-    jQuery("#split_allocations_definition").dialog({ 
-		autoOpen: false, 
+    jQuery("#split_allocations_definition").dialog({
+		autoOpen: false,
 		buttons: {
-			"Ok": function() { 
-				jQuery(this).dialog("close"); 
-			}, 
-			"Cancel": function() { 
-				jQuery(this).dialog("close"); 
-			} 
+			"Ok": function() {
+				jQuery(this).dialog("close");
+			},
+			"Cancel": function() {
+				jQuery(this).dialog("close");
+			}
 		},
-		hide: 'slide',  
-		modal: true, 
+		hide: 'slide',
+		modal: true,
 		show: 'slide' });
     jQuery(".split_allocations").click(function() {
 	     jQuery("#split_allocations_definition").dialog("open");
 		return false;
 	   })
-    jQuery("#roles_definitions").dialog({ 
-		autoOpen: false, 
+    jQuery("#roles_definitions").dialog({
+		autoOpen: false,
 		width: 1000,
 		buttons: {
-			"Ok": function() { 
-				jQuery(this).dialog("close"); 
-			}, 
-			"Cancel": function() { 
-				jQuery(this).dialog("close"); 
-			} 
+			"Ok": function() {
+				jQuery(this).dialog("close");
+			},
+			"Cancel": function() {
+				jQuery(this).dialog("close");
+			}
 		},
-		hide: 'slide',  
-		modal: true, 
+		hide: 'slide',
+		modal: true,
 		show: 'slide' });
     jQuery(".roles").click(function() {
 	     jQuery("#roles_definitions").dialog("open");
@@ -84,7 +84,7 @@
   });
 
 </script>
-  
+
 <div id="split_allocations_definition" title="Split Allocations Definition">
 	<p><b>Split allocations calculation:</b> The PD/PI, Co-Investigator, Faculty, Fellows, PIs are given equal stake in the award. For instance, for an award with one PI, four investigators, and 2 faculty, each of those listed investigators would get credit for one/seventh of the total award. All awards simply sums the total value of all proposals the faculty member is listed on, regardless of how many other faculty/investigators are on the award.</p>
 </div>
@@ -103,7 +103,7 @@
 </div>
 <%= render( :partial => "shared/award_note.html" ) %>
 <div id="listing">
-  <table cellpadding="2" cellspacing="0" class="borderless"> 
+  <table cellpadding="2" cellspacing="0" class="borderless">
 	<tr valign="bottom" class="header">
 		<td class="list-title-left">
 			#

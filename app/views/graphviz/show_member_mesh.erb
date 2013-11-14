@@ -2,7 +2,7 @@
 
 <div id="investigator_title_block">
 	<% all_abstracts = @all_abstracts || nil -%>
-	<%= investigator_bio_heading(@investigator, all_abstracts) %>
+	<%= investigator_bio_heading(@investigator, all_abstracts).html_safe %>
 </div>
 
 <%= render( :partial => "graphviz_template" ) %>

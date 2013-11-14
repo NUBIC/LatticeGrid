@@ -1,8 +1,13 @@
 <% investigator ||= @investigator%>
-<h3>MeSH cloud from publications for <i><%= investigator.name %></i></h3>
+<h3>
+  MeSH cloud from publications for <i><%= investigator.name %></i>
+</h3>
 <div id="tag_cloud"></div>
 <script type="text/javascript" language="javascript">
-<%= remote_function(:url => tag_cloud_investigator_path(investigator.username), :method => :get, :before => "Element.show('spinner')", 
-:complete => "Element.hide('spinner')" ) %> 
+  <%= remote_function(:url => tag_cloud_investigator_path(investigator.username),
+                      :method => :get,
+                      :before => "Element.show('spinner')",
+                      :complete => "Element.hide('spinner')" )
+  %>
 </script>
 <br/>
