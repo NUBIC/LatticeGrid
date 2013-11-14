@@ -83,27 +83,25 @@ class AbstractsController < ApplicationController
   end
 
   def tagged_abstracts #abstracts tagged with this tag
-    redirect=false
+    page = nil
     if params[:page].nil? then
-      params[:page] = "1"
-      redirect=true
+      page = '1'
     end
     if params[:id].nil? then
       year = handle_year()
       redirect_to abstracts_by_year_url(:id => year, :page => '1')
-    elsif redirect then
-      redirect_to params
+    elsif page then
+      redirect_to "/abstracts/#{params[:id]}/tagged_abstracts/?page=#{page}"
     else
       @do_pagination = "1"
       params[:id] = URI.unescape(params[:id])
       mesh_terms = MeshHelper.do_mesh_search(params[:id])
       mesh_names = mesh_terms.collect(&:name)
-      #colleagues=Investigator.for_tag_ids(mesh_ids)
 
       @abstracts = Abstract._paginate_tagged_with(mesh_names,
-                                        :order => 'year DESC, authors ASC',
-                                        :page => params[:page],
-                                        :per_page => 20)
+                                                  :order => 'year DESC, authors ASC',
+                                                  :page => params[:page],
+                                                  :per_page => 20)
      tag_heading(params[:id],@abstracts)
      render :action => 'tag'
     end

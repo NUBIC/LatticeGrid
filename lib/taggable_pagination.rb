@@ -10,7 +10,8 @@ module ActiveRecord
         end
 
         def _paginate_tagged_with(tags, options = {})
-          page, per_page = wp_parse_options(options)
+          page = options[:page]
+          per_page = options[:per_page]
           offset = (page.to_i - 1) * per_page
           options.delete(:per_page)
           options.delete(:page)

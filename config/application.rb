@@ -85,3 +85,7 @@ module LatticeGrid
     end
   end
 end
+
+require 'will_paginate'
+require 'taggable_pagination'
+require 'taggable_information'
