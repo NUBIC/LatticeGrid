@@ -30,5 +30,6 @@ doc/notes/
 public/abstracts/
 public/cytoscape/
 public/cytoscape*.js
+public/graphviz/
 public/investigators/
 public/orgs/
