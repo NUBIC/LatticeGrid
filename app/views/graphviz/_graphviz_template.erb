@@ -33,28 +33,28 @@
 <form onsubmit="return false">
 	<%=  hidden_field_tag :username,  params[:id] %>
 	<%=  hidden_field_tag :analysis,  params[:analysis] %>
-	<%= select_tag(:program, 
+	<%= select_tag(:program,
 			options_for_select([["neato", "neato"], ["dot", "dot"], ["twopi","twopi"], ["circo","circo"], ["fdp","fdp"]], [params[:program]])) %>
-	<%= select_tag(:format, 
+	<%= select_tag(:format,
 			options_for_select([["pdf", "pdf"], ["png", "png"], ["svg", "svg"]], [params[:format]])) %>
 	<% if params[:analysis].include?("org") or params[:analysis] == "mesh" %>
-	Distance: <%= select_tag(:distance, 
+	Distance: <%= select_tag(:distance,
 			options_for_select([["Zero","0"],["One","1"], ["Two","2"]], [params[:distance]])) %>
 	<% else %>
-	Distance: <%= select_tag(:distance, 
+	Distance: <%= select_tag(:distance,
 			options_for_select([["One","1"], ["Two","2"]], [params[:distance]])) %>
 	<% end %>
-	
+
 	<% if params[:analysis].include?("mesh") and not params[:analysis] == "mesh" %>
-		MeSH Stringency: <%= select_tag(:stringency, 
+		MeSH Stringency: <%= select_tag(:stringency,
 			options_for_select([[">500","500"], [">1,000","1000"],  [">1,500","1500"], [">2,000","2000"],  [">2,500","2500"], [">3,000","3000"], [">4,000","4000"], [">5,000","5000"], [">6,000","6000"]],
 				 [params[:stringency]])) %>
 	<% elsif params[:analysis].include?("org_org") %>
-	Stringency: <%= select_tag(:stringency, 
+	Stringency: <%= select_tag(:stringency,
 			options_for_select([["One","1"], ["Two","2"], ["Three","3"], ["Five","5"], ["Seven","7"], ["Ten","2"], ["Twenty","20"], ["Fifty","50"]],
 				[params[:stringency]])) %>
 	<% else %>
-	Stringency: <%= select_tag(:stringency, 
+	Stringency: <%= select_tag(:stringency,
 			options_for_select([["One","1"], ["Two","2"], ["Three","3"], ["Four","4"], ["Five","5"], ["Six","6"], ["Seven","7"], ["Eight","8"], ["Nine","9"], ["Ten","10"], ["Twelve","12"], ["Fifteen","15"]],
 				[params[:stringency]])) %>
 	<% end %>
@@ -62,16 +62,18 @@
 	<input type="button" name="redraw" value="redraw" onclick="<%= graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans', 'start_date', 'end_date') %>" />
 	<br/>
 
-	Include orphaned nodes:<%=  check_box_tag( :include_orphans,  1, params[:include_orphans] != "0", 
-		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans', 'start_date', 'end_date')} ) %> &nbsp; 
-	
-</form>
- &nbsp; 
-<%= link_to( 'Download the SVG graph',
-      send_graphviz_image_path(params[:id],params[:analysis],params[:distance],params[:stringency],params[:include_orphans],params[:start_date],params[:end_date],params[:program],params[:format] ),
-      :id => 'download_graph', :target=>'_blank') %>
+	Include orphaned nodes:<%=  check_box_tag( :include_orphans,  1, params[:include_orphans] != "0",
+		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans', 'start_date', 'end_date')} ) %> &nbsp;
 
-<div id="member"> 
+</form>
+ &nbsp;
+<%= link_to('Download the SVG graph',
+            send_graphviz_image_path(params[:id],params[:analysis],params[:distance],
+            	                       params[:stringency],params[:include_orphans],
+            	                       params[:start_date],params[:end_date],params[:program],params[:format] ),
+            :id => 'download_graph', :target=>'_blank') %>
+
+<div id="member">
 	<div id="graph"></div>
 </div>
 
@@ -92,7 +94,7 @@
 		}
 		return new_date;
 	}
-	
+
 	<%= graphviz_remote_function('graph', 'program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans', 'start_date', 'end_date') %>
 	$('download_graph').observe('click', function(event){
 		var thelink=document.getElementById('download_graph');

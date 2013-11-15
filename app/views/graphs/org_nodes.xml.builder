@@ -1,5 +1,5 @@
 member_nodes = assignPositions(@investigators)
-xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showFormBtn=>'0', :xAxisMinValue=>'0', :xAxisMaxValue=>'100', 
+xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showFormBtn=>'0', :xAxisMinValue=>'0', :xAxisMaxValue=>'100',
   :yAxisMinValue=>'0', :yAxisMaxValue=>'100', :is3D=>'1', :animation=>'1', :palette=>'2', :formAction=>'/graphs/list', :formMethod=>'POST',  :enableLink=>'1'  ) do
     # clickURL works: :clickURL => url_for(:controller=>'orgs',:action=>'show', :id => params[:unit_id])
   xml.dataSet(:seriesName => "Investigator") do
@@ -7,14 +7,14 @@ xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showForm
     member_nodes.internal.each do |investigator|
       x,y = calculateInternalPosition(member_nodes.internal.length,cnt)
       cnt+=1
-      xml.set(:x=>x, :y=>y, :width=>'80', :height=>'30', :name=>investigator.first_name+' '+investigator.last_name, 
+      xml.set(:x=>x, :y=>y, :width=>'80', :height=>'30', :name=>investigator.first_name+' '+investigator.last_name,
         :id=>investigator.id,
         :link => show_member_graph_url(investigator.username),
         :color => '99CCFF',
         :tooltext => 'Publications  '+investigator.total_publications.to_s+';
- first author pubs:'+investigator.num_first_pubs.to_s+'; 
- last author pubs:'+investigator.num_last_pubs.to_s+'; 
- intra-unit collaborations:'+investigator.num_intraunit_collaborators.to_s+'; 
+ first author pubs:'+investigator.num_first_pubs.to_s+';
+ last author pubs:'+investigator.num_last_pubs.to_s+';
+ intra-unit collaborations:'+investigator.num_intraunit_collaborators.to_s+';
  inter-unit collaborations:'+investigator.num_extraunit_collaborators.to_s)
     end
   end
@@ -23,18 +23,18 @@ xml.chart(:caption => @heading, :lineThickness=>'1', :showValues=>'1', :showForm
     member_nodes.external.each do |investigator|
       x,y = calculateExternalPosition(member_nodes.external.length,cnt)
       cnt+=1
-      xml.set(:x=>x, :y=>y, :width=>'80', :height=>'30', :name=>investigator.first_name+' '+investigator.last_name, 
+      xml.set(:x=>x, :y=>y, :width=>'80', :height=>'30', :name=>investigator.first_name+' '+investigator.last_name,
         :id=>investigator.id,
         :link => show_member_graph_url(investigator.username),
         :color => 'FF99FF',
         :tooltext => 'Publications  '+investigator.total_publications.to_s+';
-  first author pubs:'+investigator.num_first_pubs.to_s+'; 
-  last author pubs:'+investigator.num_last_pubs.to_s+'; 
-  intra-unit collaborations:'+investigator.num_intraunit_collaborators.to_s+'; 
+  first author pubs:'+investigator.num_first_pubs.to_s+';
+  last author pubs:'+investigator.num_last_pubs.to_s+';
+  intra-unit collaborations:'+investigator.num_intraunit_collaborators.to_s+';
   inter-unit collaborations:'+investigator.num_extraunit_collaborators.to_s)
     end
   end
-  
+
   xml.connectors(:stdThickness => "5", :color=>'FFCC66', :arrowAtStart=>'0', :arrowAtEnd=>'0' ) do
      member_nodes.internal.each do |investigator|
       investigator.internal_collaborators.keys.each do |collaborator|

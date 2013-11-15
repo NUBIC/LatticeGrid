@@ -18,7 +18,7 @@
 class InvestigatorStudy < ActiveRecord::Base
   belongs_to :investigator
   belongs_to :study
-  scope :by_role, joins(:study), order('investigator_studies.role DESC')
-  scope :distinct_roles, order('role'), select('role, count(*) as count'), group('role')
-  scope :pis, joins(:investigator), where("role = 'PI'")
+  scope :by_role, joins(:study).order('investigator_studies.role DESC')
+  scope :distinct_roles, order('role').select('role, count(*) as count').group('role')
+  scope :pis, joins(:investigator).where("role = 'PI'")
 end

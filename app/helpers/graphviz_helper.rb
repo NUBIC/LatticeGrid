@@ -29,11 +29,11 @@ module GraphvizHelper
     request.env["HTTP_USER_AGENT"] &&
     request.env["HTTP_USER_AGENT" ][/(MSIE)/]
   end
-  
+
   def get_graph_dir(file_path)
     image_path("../#{file_path}")
   end
-  
+
   def get_pdf_method(file_name, content_type)
     if mozilla_user_agent? then
       get_iframe_method(file_name, content_type)
@@ -41,7 +41,7 @@ module GraphvizHelper
       get_object_method(file_name, content_type)
     end
   end
-  def get_svg_method(file_name, content_type) 
+  def get_svg_method(file_name, content_type)
     if (mozilla_user_agent?)
       get_object_method(file_name, content_type)
     elsif internetexplorer_user_agent?
@@ -92,8 +92,8 @@ module GraphvizHelper
      output_format = 'svg' if output_format == 'xml'
      output_format
    end
-   
-   def handle_graphviz_request        
+
+   def handle_graphviz_request
      @output_format = build_graphviz_output_format()
      @graph_path = build_graphviz_filepath(params)
      mime_type = Mime::Type.lookup_by_extension(@output_format)
@@ -108,7 +108,7 @@ module GraphvizHelper
        graph_output( graph, graph_dir, params[:program], @output_format )
      end
    end
-   
+
    def build_graph(analysis, program, id, distance, stringency, include_orphans, start_date, end_date)
      # logger.warn "analysis=#{analysis}, program=#{program}, username=#{id}, distance=#{distance}, stringency=#{stringency}, include_orphans=#{include_orphans}, start_date=#{start_date}, end_date=#{end_date}"
      @graph_edges=[]
@@ -205,7 +205,7 @@ module GraphvizHelper
            co_authors = co_authors.collect{|ic| filtered_colleagues.include?(ic.colleague) ? ic : nil }.compact
          end
          if include_orphans == "1" or co_authors.length > 0
-           graph_secondaryroot(graph, colleague) 
+           graph_secondaryroot(graph, colleague)
            graph = graph_add_nodes(program, graph, co_authors) if co_authors.length > 0
          end
        end
@@ -217,7 +217,7 @@ module GraphvizHelper
              co_authors = co_authors.collect{|ic| filtered_colleagues.include?(ic.colleague) ? ic : nil }.compact
            end
            if include_orphans == "1" or co_authors.length > 0
-             graph_secondaryroot(graph, colleague) 
+             graph_secondaryroot(graph, colleague)
              graph = graph_add_nodes(program, graph, co_authors) if co_authors.length > 0
              opts = {}
              opts[:fillcolor] = LatticeGridHelper.second_degree_other_fill_color # super pale green
@@ -250,10 +250,10 @@ module GraphvizHelper
            co_authors = co_authors.collect{|ic| (ic.shared_publication_count >= stringency.to_i) ? ic : nil }.compact
          end
          if include_orphans == "1" or ! co_authors.blank?
-           graph_secondaryroot(graph, investigator) 
+           graph_secondaryroot(graph, investigator)
            unless co_authors.blank?
              # these take an Investigator instead of a InvestigatorColleague
-             graph = graph_add_investigator_nodes(program, graph, investigator, co_authors, stringency) 
+             graph = graph_add_investigator_nodes(program, graph, investigator, co_authors, stringency)
            end
          end
        end
@@ -267,7 +267,7 @@ module GraphvizHelper
               co_authors = co_authors.collect{|ic| (ic.shared_publication_count >= stringency.to_i) ? ic : nil }.compact
             end
            unless co_authors.blank?
-             graph_secondaryroot(graph, investigator) 
+             graph_secondaryroot(graph, investigator)
              graph = graph_add_investigator_nodes(program, graph, investigator, co_authors, stringency) unless co_authors.blank?
              opts = {}
              opts[:fillcolor] = LatticeGridHelper.second_degree_other_fill_color # super pale green
@@ -293,7 +293,7 @@ module GraphvizHelper
          all_orgs.each do |intersecting_org|
            shared_pubs = org.abstracts_shared_with_org(intersecting_org)
            if shared_pubs.length >= stringency.to_i
-             graph_secondaryroot(graph, org, {:URL=>show_org_graphviz_url(org.id), :tooltip=>"Total publications: #{org.organization_abstracts.length}; Faculty: #{org.all_faculty.length}, Members: #{org.all_members.length}" }) 
+             graph_secondaryroot(graph, org, {:URL=>show_org_graphviz_url(org.id), :tooltip=>"Total publications: #{org.organization_abstracts.length}; Faculty: #{org.all_faculty.length}, Members: #{org.all_members.length}" })
              graph = graph_add_org_node(program, graph, org, intersecting_org, shared_pubs, false, {:URL=>show_org_org_graphviz_url(intersecting_org.id), :tooltip=>"Total publications: #{intersecting_org.organization_abstracts.length}; Faculty: #{intersecting_org.all_faculty.length}, Members: #{intersecting_org.all_members.length}"}) if shared_pubs.length > 0
            end
          end
@@ -342,5 +342,5 @@ module GraphvizHelper
      end
      graph
    end
-   
+
 end

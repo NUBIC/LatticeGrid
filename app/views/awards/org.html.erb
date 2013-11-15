@@ -87,7 +87,7 @@
 			<%= cnt %>
 		</td>
 		<td class="list-left">
-			<%=  link_to_investigator_awards(award.pi,  award.pi.name, "investigator_awards")  unless award.pi.blank?  %>
+			<%= link_to_investigator_awards(award.pi,  award.pi.name, "investigator_awards").html_safe unless award.pi.blank?  %>
 		</td>
 		<td class="list-left">
 			<%= award.sponsor_type_code %>
@@ -118,7 +118,7 @@
 			<%=  (award.investigator_proposals.count-1) %>
 		</td>
 		<td class="list-left">
-			<%=  award.investigators.collect{|pi| link_to_investigator_awards(pi, pi.name, ((@investigator_ids.include?(pi.id)) ? "member_author" : "investigator_awards") ) if award.pi.blank? or pi.id != award.pi.id }.compact.join(", ") %>
+			<%= award.investigators.collect { |pi| link_to_investigator_awards(pi, pi.name, ((@investigator_ids.include?(pi.id)) ? "member_author" : "investigator_awards") ) if award.pi.blank? or pi.id != award.pi.id }.compact.join(", ").html_safe %>
 		</td>
 	</tr>
   <% end %>

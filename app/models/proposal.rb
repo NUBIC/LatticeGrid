@@ -48,16 +48,18 @@ class Proposal < ActiveRecord::Base
   has_many :investigators, :through => :investigator_proposals
 
   scope :by_ids, lambda { |*ids|
-      { where('proposals.id IN (:ids) ', { :ids => ids.first }) }
+    where('proposals.id IN (:ids) ', { :ids => ids.first })
   }
 
   scope :child_awards, where('proposals.parent_institution_award_number != proposals.institution_award_number')
 
-  scope :with_children, where("exists (select 'x' from proposals p2 where p2.parent_institution_award_number = proposals.institution_award_number and p2.id != proposals.id ) and proposals.institution_award_number = proposals.parent_institution_award_number")
+  scope :with_children, where("exists (select 'x' from proposals p2
+                               where p2.parent_institution_award_number = proposals.institution_award_number and p2.id != proposals.id )
+                               and proposals.institution_award_number = proposals.parent_institution_award_number")
 
   scope :start_in_range, lambda { |*dates|
-      { where('proposals.award_start_date between :start_date and :end_date or proposals.project_start_date between :start_date and :end_date',
-          { :start_date => dates.first, :end_date => dates.last }) }
+    where('proposals.award_start_date between :start_date and :end_date or proposals.project_start_date between :start_date and :end_date',
+      { :start_date => dates.first, :end_date => dates.last })
   }
 
   def pi

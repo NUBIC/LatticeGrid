@@ -86,6 +86,9 @@ class Investigator < ActiveRecord::Base
   acts_as_taggable  # for MeSH terms
   acts_as_tsearch :vectors => {:fields => ["first_name","last_name", "username", "title"]}
 
+  attr_accessor :external_collaborators
+  attr_accessor :internal_collaborators
+
   has_many :logs
   has_many :investigator_studies
   has_many :studies,
@@ -700,9 +703,9 @@ has_many :investigator_appointments,
 
   # for graphing co-publications
   def self.add_collaboration_hash_to_investigator(investigator )
-   if investigator["internal_collaborators"].nil?
-     investigator["internal_collaborators"]=Hash.new()
-     investigator["external_collaborators"]=Hash.new()
+   if investigator.internal_collaborators.nil?
+     investigator.internal_collaborators = {}
+     investigator.external_collaborators = {}
    end
   end
 

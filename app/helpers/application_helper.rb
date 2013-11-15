@@ -43,7 +43,8 @@ module ApplicationHelper
 
 
   def base_path(remove_trailing_id=false)
-    the_path=request.env['REQUEST_URI']
+    # the_path=request.env['REQUEST_URI']
+    the_path = request.original_url
     if remove_trailing_id and the_path =~ /\/[0-9]+$/
       the_path.sub!(/\/[0-9]+$/,"")
     end
