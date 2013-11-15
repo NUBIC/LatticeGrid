@@ -105,7 +105,7 @@ module ApplicationHelper
 
   def link_to_coauthors(co_authors, delimiter=", ")
     co_authors.collect{ |co_author|
-      if co_author.colleague.deleted_at.blank?
+      if co_author.colleague && co_author.colleague.deleted_at.blank?
         link_to( coauthor_span_class(co_author.colleague.name, co_author.publication_cnt).html_safe,
                  show_investigator_url(:id=>co_author.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
                  :title => co_author_link_title(co_author))

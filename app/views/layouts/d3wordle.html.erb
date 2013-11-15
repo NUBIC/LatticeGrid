@@ -5,29 +5,30 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %> Diagram</title>
-	<% @javascripts ||= [ 'd3/d3.js', 'd3/d3.layout.js', 'd3/d3.layout.cloud.js', 'd3/jsonp.js', 'd3/highlight.min.js'] %>
-	<!-- include JIT Library File -->
-	<%= javascript_include_tag @javascripts %> 
+	  <% @javascripts ||= [ 'd3/d3.js', 'd3/d3.layout.js', 'd3/d3.layout.cloud.js', 'd3/jsonp.js', 'd3/highlight.min.js'] %>
+	  <!-- include JIT Library File -->
+    <% @javascripts.each do |js| %>
+      <%= javascript_include_tag js %>
+    <% end %>
+	  <link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
 
-	<link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
-
-	<!-- CSS Files -->
-	<% @stylesheets ||= [ 'd3/bundle' ] %>
-	<%= stylesheet_link_tag @stylesheets %>
+  	<!-- CSS Files -->
+  	<% @stylesheets ||= [ 'd3/bundle' ] %>
+    <% @stylesheets.each do |ss| %>
+      <%= stylesheet_link_tag ss %>
+    <% end %>
     <style type="text/css">
-	body {
-	  font: 10px sans-serif;
-	}
-	path.chord {
-	  fill-opacity: .67;
-	}
-
+  	  body {
+  	    font: 10px sans-serif;
+  	  }
+  	  path.chord {
+  	    fill-opacity: .67;
+  	  }
     </style>
-</head>
-<body>
-	<div id="main">
-	<%= yield  %>
-	</div> <!-- end of main -->
-	
-</body>
+  </head>
+  <body>
+	  <div id="main">
+	    <%= yield  %>
+	  </div>
+  </body>
 </html>

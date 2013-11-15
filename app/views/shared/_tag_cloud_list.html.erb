@@ -4,15 +4,27 @@
 <% if ! tags.nil? %>
 	<% tag_cloud tags, tag_classes do |tag, css_class| %>
 		<% begin %>
-		<%= link_to( tag.name, tagged_abstracts_abstract_url(URI.escape(tag.name)), :class => css_class, :title => "Click to see all publications tagged with '#{tag.name}'") -%>&nbsp;<%= link_to( image_tag( "base.gif", :width=>"18px", :height=>"18px", :style=>"margin-bottom:-3px;" ), show_mesh_graphviz_url(tag.id), :class => css_class, :title => "Graph investigators tagged with MeSH term '#{tag.name}'") -%>
+		  <%= link_to(tag.name,
+		  	          tagged_abstracts_abstract_url(URI.escape(tag.name)),
+		              :class => css_class,
+		              :title => "Click to see all publications tagged with '#{tag.name}'") -%>
+		  &nbsp;
+		  <%= link_to( image_tag( "base.gif", :width=>"18px", :height=>"18px", :style=>"margin-bottom:-3px;" ),
+		               show_mesh_graphviz_url(tag.id),
+		               :class => css_class,
+		               :title => "Graph investigators tagged with MeSH term '#{tag.name}'") -%>
 		<% rescue %>
-		<%= tag.name %>
+		  <%= tag.name %>
 		<% end %>
-		<%= include_breaks ? "<br/>" : ", " %>
+		<% if include_breaks %>
+			<br />
+		<% else %>
+			<span class='comma'>,</span>
+		<% end %>
 	<% end %>
-	<% if controller.controller_name and ! investigator.nil? and include_more_link %> 
-		<%= link_to "&#8230;more", show_all_tags_investigator_url(investigator.username), :class => "tagcloud4" %> 
+	<% if controller.controller_name and ! investigator.nil? and include_more_link %>
+		<%= link_to "&#8230;more".html_safe, show_all_tags_investigator_url(investigator.username), :class => "tagcloud4" %>
 	<% end %>
 <% else %>
- No tags found<br/>
+  No tags found<br/>
 <% end %>

@@ -2,16 +2,16 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title>LatticeGrid: <%= controller.action_name %></title>
-  <style type="text/css">
-  <%= File.read("#{Rails.root}/public/stylesheets/excel.css") %>
-  </style>
-</head>
-<body>
-<div id="main">
-<%= yield  %>
-</div> <!-- end of main -->
-</body>
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <title>LatticeGrid: <%= controller.action_name %></title>
+    <style type="text/css">
+      <%= File.read("#{Rails.root}/public/stylesheets/excel.css") %>
+    </style>
+  </head>
+  <body>
+    <div id="main">
+      <%= yield %>
+    </div>
+  </body>
 </html>
