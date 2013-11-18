@@ -1,35 +1,47 @@
-<p>Dear Dr. <%= @last_name %>, </p>
+<p>
+  Dear Dr. <%= @last_name %>,
+</p>
 
-<p>I would like to ask you to login and review and update your <%= link_to("Cancer Center LatticeGrid profile", @profile_url) %>. 
-You currently have <%= @pub_valid %> publications that are available in your profile, 
-and <%= (@pub_total-@pub_valid) %> that may be your publications but have not been reviewed or approved.</p>
+<p>
+  I would like to ask you to login and review and update your <%= link_to("Cancer Center LatticeGrid profile", @profile_url) %>.
+  You currently have <%= @pub_valid %> publications that are available in your profile,
+  and <%= (@pub_total-@pub_valid) %> that may be your publications but have not been reviewed or approved.
+</p>
 
-<p>The URLs for reviewing and approving are here:</p>
+<p>
+  The URLs for reviewing and approving are here:
+</p>
 <ul>
-Login: <%= link_to(@login_url, @login_url) %><br/> 
-Publications: <%= link_to(@edit_publications_url, @edit_publications_url) %><br/>
-Profile: <%= link_to(@edit_profile_url, @edit_profile_url) %><br/>
-Your public LatticeGrid page: <%= link_to(@profile_url, @profile_url) %>
+  Login: <%= link_to(@login_url, @login_url) %><br/>
+  Publications: <%= link_to(@edit_publications_url, @edit_publications_url) %><br/>
+  Profile: <%= link_to(@edit_profile_url, @edit_profile_url) %><br/>
+  Your public LatticeGrid page: <%= link_to(@profile_url, @profile_url) %>
 </ul>
 
 <% if @abstract.blank? %>
-<p>Your current public research summary is blank. That means that your Cancer Center research statement is blank on both LatticeGrid 
-and the Cancer Center web site.Please update your profile and include a research statement.</p>
+  <p>
+    Your current public research summary is blank. That means that your Cancer Center research statement
+    is blank on both LatticeGrid and the Cancer Center web site.
+    Please update your profile and include a research statement.
+  </p>
 <% else %>
-<p>Your current public research statement, available both in LatticeGrid and the Cancer Center web site, is included below:</p>
-
-<ul>
-<%= @abstract %>
-</ul>
-
-<p>To update this research statement please go to <%= link_to(@edit_profile_url, @edit_profile_url) %>.</p>
+  <p>
+    Your current public research statement, available both in LatticeGrid and the Cancer Center web site, is included below:
+  </p>
+  <ul>
+    <%= @abstract %>
+  </ul>
+  <p>
+    To update this research statement please go to <%= link_to(@edit_profile_url, @edit_profile_url) %>.
+  </p>
 
 <% end %>
 
 <p>With kind regards,</p>
 
-<p>Matthew Ruchin (<a href="mailto:mruchin@northwestern.edu">mruchin@northwestern.edu</a>)<br/>
-Sr. Grants & Contracts Administrator<br/>
-Cancer Center Support Grant <br/>
-Robert H. Lurie Comprehensive Cancer Center<br/>
+<p>
+  Matthew Ruchin (<a href="mailto:mruchin@northwestern.edu">mruchin@northwestern.edu</a>)<br/>
+  Sr. Grants & Contracts Administrator<br/>
+  Cancer Center Support Grant <br/>
+  Robert H. Lurie Comprehensive Cancer Center<br/>
 </p>
