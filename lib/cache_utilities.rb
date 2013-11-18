@@ -1,9 +1,9 @@
 def public_path
-  "#{File.expand_path(RAILS_ROOT)}/public"
+  "#{File.expand_path(Rails.root)}/public"
 end
 
 def root_path
-  "#{File.expand_path(RAILS_ROOT)}"
+  "#{File.expand_path(Rails.root)}"
 end
 
 def clear_directory(dir_name)
