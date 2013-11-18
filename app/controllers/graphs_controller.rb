@@ -36,6 +36,7 @@ class GraphsController < ApplicationController
      Investigator.get_investigator_connections(@investigator, 25)
 
      @heading = "Interaction graph for Investigator #{@investigator.first_name} #{@investigator.last_name}"
+     request.format = "xml"
      respond_to do |format|
        format.xml
      end
