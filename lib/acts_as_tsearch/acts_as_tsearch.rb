@@ -1,5 +1,5 @@
 require 'active_record'
-require 'postgres_extensions'
+require 'acts_as_tsearch/postgres_extensions'
 
 module TsearchMixin
   module Acts #:nodoc:
@@ -29,13 +29,13 @@ module TsearchMixin
             #:fields => "somefield"
             if options[:fields].is_a?(String)
               @tsearch_config = {:vectors => default_config.clone}
-              @tsearch_config[:vectors][:fields] = 
+              @tsearch_config[:vectors][:fields] =
                 {"a" => {:columns => [options[:fields]], :weight => 1.0}}
               fields << options[:fields]
             #:fields => [:one, :two]
             elsif options[:fields].is_a?(Array)
               @tsearch_config = {:vectors => default_config.clone}
-              @tsearch_config[:vectors][:fields] = 
+              @tsearch_config[:vectors][:fields] =
                 {"a" => {:columns => options[:fields], :weight => 1.0}}
               fields = options[:fields]
             # :fields => {"a" => {:columns => [:one, :two], :weight => 1},
@@ -74,7 +74,7 @@ module TsearchMixin
                 #puts k.to_s + " yamled = " + @tsearch_config.to_yaml
               end
             end
-            
+
             fields.uniq!
             #check to make sure all fields exist
             #TODO Write check code for multi-table... ignoring this for now
@@ -82,18 +82,18 @@ module TsearchMixin
             fields.each do |f|
               missing_fields << f.to_s unless column_names().include?(f.to_s) or f.to_s.include?(".")
             end
-            raise ArgumentError, "Missing fields: #{missing_fields.sort.join(",")} in acts_as_tsearch definition for 
+            raise ArgumentError, "Missing fields: #{missing_fields.sort.join(",")} in acts_as_tsearch definition for
               table #{table_name}" if missing_fields.size > 0
           end
-          
+
           class_eval do
             @@postgresql_version = connection.instance_variable_get('@postgresql_version')
             def self.postgresql_version
               @@postgresql_version
             end
-            
+
             after_save :update_vector_row
-          
+
             extend TsearchMixin::Acts::Tsearch::SingletonMethods
           end
           include TsearchMixin::Acts::Tsearch::InstanceMethods
@@ -112,16 +112,16 @@ module TsearchMixin
           tsearch_options = {} if tsearch_options.nil?
           #assume vector column is named "vectors" unless otherwise specified
           tsearch_options[:vector] = "vectors" unless tsearch_options.keys.include?(:vector)
-          raise "Vector [#{tsearch_options[:vector].intern}] not found 
+          raise "Vector [#{tsearch_options[:vector].intern}] not found
                   in acts_as_tsearch config: #{@tsearch_config.to_yaml}
                   " if !@tsearch_config.keys.include?(tsearch_options[:vector].intern)
           tsearch_options[:fix_query] = true if tsearch_options[:fix_query].nil?
 
           locale = @tsearch_config[tsearch_options[:vector].intern][:locale]
           check_for_vector_column(tsearch_options[:vector])
-          
+
           search_string = fix_tsearch_query(search_string) if tsearch_options[:fix_query] == true
-          
+
           #add tsearch_rank to fields returned
           if is_postgresql_83?
             tsearch_rank_function = "ts_rank_cd(#{table_name}.#{tsearch_options[:vector]},tsearch_query#{','+tsearch_options[:normalization].to_s if tsearch_options[:normalization]})"
@@ -136,7 +136,7 @@ module TsearchMixin
           else
             options[:select] = "#{table_name}.*, #{select_part}"
           end
-#options[:select] << " o w w e"          
+#options[:select] << " o w w e"
           #add headlines
           if tsearch_options[:headlines]
             tsearch_options[:headlines].each do |h|
@@ -147,7 +147,7 @@ module TsearchMixin
               end
             end
           end
-          
+
           #add tsearch_query to from
           if is_postgresql_83?
             from_part = "to_tsquery('#{search_string}') as tsearch_query"
@@ -159,7 +159,7 @@ module TsearchMixin
           else
             options[:from] = "#{from_part}, #{table_name}"
           end
-          
+
           #add vector condition
           where_part = "#{table_name}.#{tsearch_options[:vector]} @@ tsearch_query"
           if options[:conditions] and options[:conditions].is_a? String
@@ -179,18 +179,18 @@ module TsearchMixin
           end
           options
         end
-          
+
         #Finds a tsearch2 formated query in the tables vector column and adds
         #tsearch_rank to the results
         #
         #Inputs:
-        #   search_string:  just about anything.  If you want to run a tsearch styled query 
-        #                   (see http://mira.sai.msu.su/~megera/pgsql/ftsdoc/fts-query.html for 
-        #                   details on this) just set fix_query = false.  
+        #   search_string:  just about anything.  If you want to run a tsearch styled query
+        #                   (see http://mira.sai.msu.su/~megera/pgsql/ftsdoc/fts-query.html for
+        #                   details on this) just set fix_query = false.
         #
         #   options: standard ActiveRecord find options - see http://api.rubyonrails.com/classes/ActiveRecord/Base.html#M000989
         #
-        #   headlines:  TSearch2 can generate snippets of text with words found highlighted.  Put in the column names 
+        #   headlines:  TSearch2 can generate snippets of text with words found highlighted.  Put in the column names
         #               of any of the columns in your vector and they'll come back as "{column_name}_headline"
         #               These are pretty expensive to generate - so only use them if you need them.
         #               example:  pass this [%w{title description}]
@@ -211,7 +211,7 @@ module TsearchMixin
           #   :order => "rank_cd(#{table_name}.vectors, query)",
           #   :limit => 100)
         end
-        
+
         # Return a scope instead of an array. This has several advantages:
         # * We can combine it with other named scopes
         # * It loads lazy
@@ -220,12 +220,12 @@ module TsearchMixin
           options = find_by_tsearch_options(search_string, options, tsearch_options)
           scoped(options)
         end
-        
+
         def count_by_tsearch(search_string, options = {}, tsearch_options = {})
             options[:select] = "count(*)"
             options[:order] = "1 desc"
             find_by_tsearch(search_string, options, tsearch_options)[0][:count].to_i
-        end        
+        end
 
         # Create a tsearch_query from a Google like query (and or " +)
         def fix_tsearch_query(query)
@@ -234,21 +234,21 @@ module TsearchMixin
           terms.shift
           terms.join
         end
-        
+
         # Convert a search query into an array of terms [prefix, term] where
         # Prefix is | or & (tsearch and/or) and term is a phrase (with or with negation)
         def query_to_terms(query)
           query.scan(/(\+|or \-?|and \-?|\-)?("[^"]*"?|[\w\-]+)/).collect do |prefix, term|
             term = "(#{term.scan(/[\w']+/).join('&')})" if term[0,1] == '"'
             term = "!#{term}" if prefix =~ /\-/
-            [(prefix =~ /or/) ? '|' : '&', term] 
+            [(prefix =~ /or/) ? '|' : '&', term]
           end
         end
-        
+
         def clean_query(query)
-          query.gsub(/[^\w\-\+'"]+/, " ").gsub("'", "''").strip.downcase     
+          query.gsub(/[^\w\-\+'"]+/, " ").gsub("'", "''").strip.downcase
         end
-        
+
         #checks to see if vector column exists.  if it doesn't exist, create it and update isn't index.
         def check_for_vector_column(vector_name = "vectors")
           #check for the basics
@@ -257,7 +257,7 @@ module TsearchMixin
             create_vector(vector_name)
             #puts "Update vector index"
             update_vector(nil,vector_name)
-            # raise "Table is missing column [vectors].  Run method create_vector and then 
+            # raise "Table is missing column [vectors].  Run method create_vector and then
             # update_vector to create this column and populate it."
           end
         end
@@ -281,19 +281,19 @@ module TsearchMixin
             end
           end
         end
-        
+
         def update_vectors(row_id = nil)
           @tsearch_config.keys.each do |k|
             update_vector(row_id, k.to_s)
           end
         end
-        
+
         #This will update the vector colum for all rows (unless a row_id is passed).  If you think your indexes are screwed
         #up try running this.  This get's called by the callback after_update when you change your model.
         # Sample SQL
-        #   update 
+        #   update
         # 	  blog_entries
-        #   set 
+        #   set
         # 	  vectors = to_tsvector('default',
         #   coalesce(blog_entries.title,'') || ' ' || coalesce(blog_comments.comment,'')
         #   )
@@ -335,7 +335,7 @@ module TsearchMixin
               if is_postgresql_83?
                 sql = "update #{table_name} set #{vector_name} = to_tsvector(#{fields})"
               else
-                sql = "update #{table_name} set #{vector_name} = to_tsvector('#{locale}', #{fields})"  
+                sql = "update #{table_name} set #{vector_name} = to_tsvector('#{locale}', #{fields})"
               end
             elsif fields.is_a?(Hash)
               if fields.size > 4
@@ -373,47 +373,47 @@ module TsearchMixin
             if where_arr.size > 0
               sql << " where " + where_arr.join(" and ")
             end
-            
+
             connection.execute(sql)
             #puts sql
           end #tsearch config test
         end
-        
+
         def acts_as_tsearch_config
           @tsearch_config
         end
-        
+
         def coalesce_array(arr)
           res = []
           arr.each do |f|
             res << "coalesce(#{f},'')"
           end
-          return res.join(" || ' ' || ")        
+          return res.join(" || ' ' || ")
         end
 
         def is_postgresql_83?
           self.postgresql_version >= 80300
         end
       end
-      
+
       # Adds instance methods.
       module InstanceMethods
-        
+
         def update_vector_row
           # self.class.tsearch_config.keys.each do |k|
           #    if self.class.tsearch_config[k][:auto_update_index] == true
           #      self.class.update_vector(self.id,k.to_s)
-          
+
           #fixes STI problems - contributed by Craig Barber http://code.google.com/p/acts-as-tsearch/issues/detail?id=1&can=2&q=
           klass = self.class
           klass = klass.superclass while klass.tsearch_config.nil?
           klass.tsearch_config.keys.each do |k|
             if klass.tsearch_config[k][:auto_update_index] == true
-              klass.update_vector(self.id,k.to_s)            
+              klass.update_vector(self.id,k.to_s)
             end
           end
         end
-        
+
       end
 
     end

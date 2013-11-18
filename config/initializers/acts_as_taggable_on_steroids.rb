@@ -1,0 +1,5 @@
+require 'acts_as_taggable_on_steroids/acts_as_taggable'
+require 'acts_as_taggable_on_steroids/tag'
+require 'acts_as_taggable_on_steroids/tag_list'
+require 'acts_as_taggable_on_steroids/tagging'
+require 'acts_as_taggable_on_steroids/tags_helper'
