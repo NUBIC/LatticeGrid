@@ -27,13 +27,6 @@ def d3_all_units_graph(units)
     graph_array << d3_unit_graph(unit)
     unit.primary_or_member_faculty.each do |investigator|
       graph_array << d3_unit_investigator_graph(unit, investigator, faculty_ids)
-
-#      if investigator_array.include?(investigator.username)
-#        graph_array << d3_simple_unit_investigator_graph(unit, investigator)
-#      else
-#        investigator_array << investigator.username
-#        graph_array << d3_unit_investigator_graph(unit, investigator, faculty_ids)
-#      end
     end
   end
   return graph_array
@@ -78,18 +71,9 @@ def d3_all_investigators_bundle(investigators)
   graph_array = []
   investigators.each do |investigator|
     org_unit = OrganizationalUnit.find_by_id(investigator.unit_list().first)
-    if org_unit.blank?
-      org_unit = "undefined"
-    else
-      org_unit = org_unit.abbreviation.to_s
-    end
-    #unless (org_unit == "TIMA" or org_unit == "HM"  or org_unit == "CCB")
-    #  graph_array << d3_investigator_edge(investigator, org_unit)
-    #end
+    org_unit = org_unit.blank? ? 'undefined' : org_unit.abbreviation.to_s
     edge = d3_investigator_edge(investigator, org_unit)
-    unless (edge[:size] == 0)
-      graph_array << edge
-    end
+    graph_array << edge unless (edge[:size] == 0)
   end
   return graph_array
 end
@@ -129,8 +113,6 @@ def d3_unit_graph(unit)
   }
 end
 
-
-
 def d3_investigator_graph(investigator, coauthor_ids, primary_name)
   {
     :name => investigator.last_name,
@@ -146,7 +128,6 @@ def d3_investigator_edge(investigator, org_unit)
   first = first.delete(".")
   {
     :name => "RHLCCC." +  org_unit + "."  + first  + "-" + investigator.last_name.delete("\'"),
-    #OrganizationalUnit.find_by_id(investigator.unit_list().first.to_s).abbreviation +
     :size => investigator.total_publications,
     :imports => d3_investigator_edge_imports(investigator)
   }
@@ -186,49 +167,45 @@ end
 
 
 def d3_investigator_imports(investigator, coauthor_ids, primary_name)
-    the_arry = []
-    return [''] if investigator.colleague_coauthors.length < 1
-    unless investigator.last_name.eql? primary_name
-      the_arry << primary_name
+  the_arry = []
+  return [''] if investigator.colleague_coauthors.length < 1
+  unless investigator.last_name.eql? primary_name
+    the_arry << primary_name
+  end
+  investigator.colleague_coauthors.each do |colleague|
+    next unless colleague
+    if coauthor_ids.include?(colleague.id)
+      the_arry << colleague.last_name
     end
-    investigator.colleague_coauthors.each do |colleague|
-      next unless colleague
-      if coauthor_ids.include?(colleague.id)
-        the_arry << colleague.last_name
-        #OrganizationalUnit.find_by_id(colleague.unit_list().first.to_s).abbreviation +
-      end
-    end
-    return the_arry
+  end
+  return the_arry
 end
 
-
 def d3_investigator_edge_imports(investigator)
-    the_arry = []
-    return [] if investigator.colleague_coauthors.length < 1
-    investigator.colleague_coauthors.each do |colleague|
-        org_unit = OrganizationalUnit.find_by_id(colleague.unit_list().first)
-        if org_unit.blank?
-          break
-        else
-          org_unit = org_unit.abbreviation.to_s
-        end
-        first = colleague.first_name.delete("\'")
-        first = first.delete("(")
-        first = first.delete(")")
-        first = first.delete(".")
-        the_arry << "RHLCCC." + org_unit.to_s + "." + first + "-" + colleague.last_name.delete("\'")
+  the_arry = []
+  return [] if investigator.colleague_coauthors.length < 1
+  investigator.colleague_coauthors.each do |colleague|
+    next unless colleague
+    org_unit = OrganizationalUnit.find_by_id(colleague.unit_list().first)
+    if org_unit.blank?
+      break
+    else
+      org_unit = org_unit.abbreviation.to_s
     end
-    if the_arry.blank?
-      return []
-    end
-    return the_arry
+    first = colleague.first_name.delete("\'")
+    first = first.delete("(")
+    first = first.delete(")")
+    first = first.delete(".")
+    the_arry << "RHLCCC." + org_unit.to_s + "." + first + "-" + colleague.last_name.delete("\'")
+  end
+  the_arry.blank? ? [] : the_arry
 end
 
 def d3_unit_investigator_by_date_graph(unit, investigator, faculty_ids, start_date, end_date)
   {
     :name => unit.abbreviation + "." + investigator.username,
-    :size=>investigator.total_publications,
-    :imports=> d3_unit_investigator_by_date_imports(unit, investigator, faculty_ids, start_date, end_date)
+    :size => investigator.total_publications,
+    :imports => d3_unit_investigator_by_date_imports(unit, investigator, faculty_ids, start_date, end_date)
   }
 end
 
