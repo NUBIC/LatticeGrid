@@ -18,9 +18,9 @@
     </tr>
   </thead>
   <tbody>
-    <% center_form.fields_for :programs, orgs do |program_fields| %>
+    <%= center_form.fields_for :programs, orgs do |program_fields| %>
       <tr>
-    	  <%= program_fields.hidden_field :id %>
+        <%= program_fields.hidden_field :id %>
         <td><%= program_fields.text_field :name, :size => 50 %></td>
         <td><%= program_fields.text_field :abbreviation, :size => 8 %></td>
         <td><%= program_fields.text_field :organization_url, :size => 50 %></td>
