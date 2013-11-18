@@ -1,72 +1,96 @@
 <% unless @investigators.blank? %>
+  <div style="float:right;padding-right:5px;">
+  	<%= link_to( "as pdf",listing_investigators_path('pdf')) if !defined?(@pdf) and ! @pdf %>
+  </div>
+  <h2>
+    Investigator Listing
+    <span style="font-size: 12px; font-weight: normal;"> -- <%= @investigators.length %></span>
+  </h2>
+  <%= render( :partial => "shared/pubmed_note.html" ) %>
+  <% cnt = 0 %>
+  <div style="font-family: Arial,Geneva,Helvetica,sans-serif; font-size: 12px; margin:0px; padding:0px;">
+    <table id="listingTable" class="listingTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Pubs</th>
+          <th>Last 5 years</th>
+          <th>First+last author</th>
+          <th>First author</th>
+          <th>Last author</th>
+          <th>Co-authors</th>
+          <th>intra-unit</th>
+          <th>extra-unit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for investigator in @investigators -%>
+          <tr>
+            <td style="font-size: 10px;text-align:right; padding-right:5px;"><%= cnt+=1 %></td>
+            <td>
+              <div style="float:left;">
+                <%= investigator.last_name %>, <%= investigator.first_name %>  <%= investigator.middle_name %>, <%= investigator.degrees %>
+              </div>
+              <div style="float:right;">
+                <%= link_to("details", investigator_url(investigator.username))  %>&nbsp;
+              </div>
+            </td>
+            <td style="text-align:right; padding-right:5px;">
+              <%= investigator.total_publications %>
+            </td>
+            <td style="text-align:right; padding-right:5px;">
+              <%= investigator.total_publications_last_five_years %>
+            </td>
+            <td style="text-align:right; padding-right:5px;">
+              <%= investigator.num_first_pubs + investigator.num_last_pubs %>
+            </td>
+            <td style="text-align:right; padding-right:5px;">
+              <%= investigator.num_first_pubs %>
+            </td>
+            <td style="text-align:right; padding-right:5px;">
+              <%= investigator.num_last_pubs %>
+            </td>
+            <td style="text-align:right; padding-right:5px;">
+              <%= investigator.num_intraunit_collaborators + investigator.num_extraunit_collaborators %>
+            </td>
+            <td style="text-align:right; padding-right:5px;">
+              <%= investigator.num_intraunit_collaborators  %>
+            </td>
+            <td style="text-align:right; padding-right:5px;">
+              <%= investigator.num_extraunit_collaborators %>
+            </td>
+          </tr>
+        <% end -%>
+      </tbody>
+    </table>
+  </div>
+  <br/>
+  <%= javascript_tag do %>
+    jQuery(document).ready(function() {
+      // call the tablesorter plugin
+      jQuery("#listingTable").tablesorter(
+        // turn off sorting on the 1st header
+        { headers: { 0: {sorter: false} }, widgets: ['zebra'] }
+      );
+      jQuery('#listingTable').fixheadertable({
+  	    caption  : 'Click on a header to sort by that element',
+        height   : 580,
+        width    : 1380,
+        colratio : [50, 400, 60, 100, 140, 100, 100, 100, 150, 150]
+      });
 
-<div style="float:right;padding-right:5px;">
-	<%= link_to( "as pdf",listing_investigators_path('pdf')) if !defined?(@pdf) and ! @pdf %>
-</div>
-<h2>Investigator Listing<span style="font-size: 12px; font-weight: normal;"> -- <%= @investigators.length %></span></h2>
-<%= render( :partial => "shared/pubmed_note.html" ) %>
-<% cnt = 0 %>
-<div style="font-family: Arial,Geneva,Helvetica,sans-serif; font-size: 12px; margin:0px; padding:0px;">
-<table id="listingTable" class="listingTable"> 
-<thead> 
-<tr>
-<th>#</th>
-<th>Name</th>
-<th>Pubs</th>
-<th>Last 5 years</th>
-<th>First+last author</th>
-<th>First author</th>
-<th>Last author</th>
-<th>Co-authors</th>
-<th>intra-unit</th>
-<th>extra-unit</th>
-</tr>
-</thead> 
-<tbody>
-<% for investigator in @investigators -%>
-<tr>
-<td style="font-size: 10px;text-align:right; padding-right:5px;"><%= cnt+=1 %></td>
-<td><div style="float:left;"><%= investigator.last_name %>, <%= investigator.first_name %>  <%= investigator.middle_name %>, <%= investigator.degrees %></div><div style="float:right;"> <%= link_to("details", investigator_url(investigator.username))  %>&nbsp;</div></td>
-<td style="text-align:right; padding-right:5px;"><%= investigator.total_publications %></td>
-<td style="text-align:right; padding-right:5px;"><%= investigator.total_publications_last_five_years %></td>
-<td style="text-align:right; padding-right:5px;"><%= investigator.num_first_pubs + investigator.num_last_pubs %></td>
-<td style="text-align:right; padding-right:5px;"><%= investigator.num_first_pubs %></td>
-<td style="text-align:right; padding-right:5px;"><%= investigator.num_last_pubs %></td>
-<td style="text-align:right; padding-right:5px;"><%= investigator.num_intraunit_collaborators + investigator.num_extraunit_collaborators %></td>
-<td style="text-align:right; padding-right:5px;"><%= investigator.num_intraunit_collaborators  %></td>
-<td style="text-align:right; padding-right:5px;"><%= investigator.num_extraunit_collaborators %></td>
-</tr><% end -%>
-</tbody>
-</table>
-</div>
-<br/>
-
-<% javascript_tag do %>
-jQuery(document).ready(function() {
-    // call the tablesorter plugin 
-  jQuery("#listingTable").tablesorter(
-      // turn off sorting on the 1st header
-      { headers: { 0: {sorter: false} }, widgets: ['zebra'] }
-  ); 
-  jQuery('#listingTable').fixheadertable({
-	caption  : 'Click on a header to sort by that element',
-    height  : 580,
-    width   : 1380,
-    colratio    : [50, 400, 60, 100, 140, 100, 100, 100, 150, 150]
-  });
-
-	var table = jQuery("#listingTable");
-	table.bind("sortEnd",function() { 
-	    var i = 1;
-	    table.find("tr").each(function(){
-	        jQuery(this).find("td:first").text(i);
-	        i++;
-	    });
-	});
-});
-<% end %>
-
+  	  var table = jQuery("#listingTable");
+  	  table.bind("sortEnd",function() {
+  	    var i = 1;
+  	    table.find("tr").each(function(){
+          jQuery(this).find("td:first").text(i);
+  	      i++;
+  	    });
+  	  });
+    });
+  <% end %>
 <% else %>
-<h3>Sorry. No investigators were found for inclusion in this report.</h3>
+  <h3>Sorry. No investigators were found for inclusion in this report.</h3>
 <% end %>
 

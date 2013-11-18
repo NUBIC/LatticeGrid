@@ -1,5 +1,5 @@
 <p>Paste in one or more pubmed_ids to add to LatticeGrid</p>
 
-<% javascript_tag do -%>
-<%= remote_function(:update => dom_id, :url => { :controller => "abstracts", :action => "update_pubmed_id", :pubmed_id => id }) %>
+<%= javascript_tag do -%>
+  <%= remote_function(:update => dom_id, :url => { :controller => "abstracts", :action => "update_pubmed_id", :pubmed_id => id }) %>
 <% end -%>

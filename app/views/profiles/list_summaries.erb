@@ -1,47 +1,70 @@
-<h2>Listing <%= @investigators.length -%> Investigator Summaries <%= "for #{@program.name}" unless @program.blank? -%></h2>
-<p>generated  <%= Time.now.to_s(:long) %></p>
-<table id="summaryTable" class="tablesorter { sortList: [[2,0]] }"> 
-  <thead> 
-  <tr>
-	<th>Name</th>
-	<th>Username</th>
-	<% unless @no_email %><th>email</th><% end %>
-	<th>Approvals<%= " after #{@approvals_after} " unless @approvals_after.blank? -%></th>
-	<th>Summary</th>
-	<th>Interests</th>
-    <th>Edit</th>
-  </tr>
- </thead> 
- <tbody>
-<% @investigators.each do |pi| %>
-  <% next if pi.blank? or pi.username.blank? %>
-  <tr>
-    <td><%= link_to(pi.sort_name.gsub(/ /,'&nbsp;'), investigator_url(pi.username), :title=>"View public profile for #{pi.full_name}") unless pi.sort_name.blank? %></td>
-    <td><%= pi.username %></td>
-    <% unless @no_email %><td><%= mail_to(pi.email, "email", 
-				:subject => "LatticeGrid Profile", 
-				:encode => "javascript", :title=>"Send email to #{pi.full_name}") unless pi.email.blank? %> </td><% end %>
-    <td><% if @approvals_after.blank? %>
-		<%= pi.logs.approved_profiles.map{|p| p.created_at.to_s(:justdate)}.join(", ") %>
-	<% else %>
-		<%= pi.logs.approved_profiles_after(@approvals_after).map{|p| p.created_at.to_s(:justdate)}.join(", ") %>
-	<% end %>
-	</td>
-    <td><%= pi.faculty_research_summary %></td>
-    <td><%= pi.faculty_interests %></td>
-    <td><%= link_to("Edit&nbsp;profile", edit_profile_url(pi.username)) %> <%= link_to("Edit&nbsp;pubs", edit_pubs_profile_url(pi.username))  %></td>
-  </tr>
-<% end %>
-</tbody>
+<h2>
+  Listing <%= @investigators.length -%> Investigator Summaries
+  <%= "for #{@program.name}" unless @program.blank? -%>
+</h2>
+<p>
+  generated  <%= Time.now.to_s(:long) %>
+</p>
+<table id="summaryTable" class="tablesorter { sortList: [[2,0]] }">
+  <thead>
+    <tr>
+    	<th>Name</th>
+    	<th>Username</th>
+    	<% unless @no_email %>
+        <th>email</th>
+      <% end %>
+    	<th>Approvals<%= " after #{@approvals_after} " unless @approvals_after.blank? -%></th>
+    	<th>Summary</th>
+    	<th>Interests</th>
+      <th>Edit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @investigators.each do |pi| %>
+      <% next if pi.blank? or pi.username.blank? %>
+      <tr>
+        <td>
+          <%= link_to(pi.sort_name.gsub(/ /,'&nbsp;'), investigator_url(pi.username), :title=>"View public profile for #{pi.full_name}") unless pi.sort_name.blank? %>
+        </td>
+        <td>
+          <%= pi.username %>
+        </td>
+        <% unless @no_email %>
+          <td>
+            <%= mail_to(pi.email, "email",
+    				            :subject => "LatticeGrid Profile",
+    				            :encode => "javascript", :title=>"Send email to #{pi.full_name}") unless pi.email.blank? %>
+          </td>
+        <% end %>
+        <td>
+          <% if @approvals_after.blank? %>
+    		    <%= pi.logs.approved_profiles.map{ |p| p.created_at.to_s(:justdate) }.join(", ") %>
+    	    <% else %>
+    		    <%= pi.logs.approved_profiles_after(@approvals_after).map{ |p| p.created_at.to_s(:justdate) }.join(", ") %>
+    	    <% end %>
+    	  </td>
+        <td>
+          <%= pi.faculty_research_summary %>
+        </td>
+        <td>
+          <%= pi.faculty_interests %>
+        </td>
+        <td>
+          <%= link_to("Edit&nbsp;profile".html_safe, edit_profile_url(pi.username)) %>
+          <%= link_to("Edit&nbsp;pubs".html_safe, edit_pubs_profile_url(pi.username)) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
 <% unless @no_email %>
-<% javascript_tag do %>
-jQuery(document).ready(function() { 
-    // call the tablesorter plugin 
-    jQuery("#summaryTable").tablesorter(
+  <%= javascript_tag do %>
+    jQuery(document).ready(function() {
+      // call the tablesorter plugin
+      jQuery("#summaryTable").tablesorter(
         // turn off sorting on the 7th header
         { headers: { 6: {sorter: false} } }
-    ); });
+      );
+    });
+  <% end %>
 <% end %>
-<% end %>
-	

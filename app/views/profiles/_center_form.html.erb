@@ -1,28 +1,33 @@
-<% if ! center_form.error_messages.blank? %><tr><td colspan="3"><%= center_form.error_messages %></td></tr><% end %>
-
-<table id="summaryTable" class="tablesorter { sortList: [[2,0]] }"> 
-  <thead> 
+<% if ! center_form.error_messages.blank? %>
   <tr>
-	<th>Name</th>
-	<th>Abbreviation</th>
-	<th>URL</th>
-	<th>Sort order</th>
-    <th>Type</th>
-    <th>Classification</th>
-  </tr>
- </thead> 
- <tbody>
-
-<% center_form.fields_for :programs, orgs do |program_fields| %>
-  <tr>
-	<%= program_fields.hidden_field :id %>
-    <td><%= program_fields.text_field :name, :size => 50 %></td>
-    <td><%= program_fields.text_field :abbreviation, :size => 8 %></td>
-    <td><%= program_fields.text_field :organization_url, :size => 50 %></td>
-    <td><%= program_fields.text_field :sort_order, :size => 4 %></td>
-    <td><%= program_fields.object.type %></td>
-    <td><%= program_fields.text_field :organization_classification, :size => 10 %></td>
+    <td colspan="3">
+      <%= center_form.error_messages %>
+    </td>
   </tr>
 <% end %>
-</tbody>
+
+<table id="summaryTable" class="tablesorter { sortList: [[2,0]] }">
+  <thead>
+    <tr>
+  	  <th>Name</th>
+  	  <th>Abbreviation</th>
+  	  <th>URL</th>
+    	<th>Sort order</th>
+      <th>Type</th>
+      <th>Classification</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% center_form.fields_for :programs, orgs do |program_fields| %>
+      <tr>
+    	  <%= program_fields.hidden_field :id %>
+        <td><%= program_fields.text_field :name, :size => 50 %></td>
+        <td><%= program_fields.text_field :abbreviation, :size => 8 %></td>
+        <td><%= program_fields.text_field :organization_url, :size => 50 %></td>
+        <td><%= program_fields.text_field :sort_order, :size => 4 %></td>
+        <td><%= program_fields.object.type %></td>
+        <td><%= program_fields.text_field :organization_classification, :size => 10 %></td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
