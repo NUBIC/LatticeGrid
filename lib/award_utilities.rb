@@ -214,7 +214,7 @@ def merge_child_records(parent)
 end
 
 def remove_proposal_investigator(the_award, inv_id)
-  inv = Investigator.find_by_id(inv_id)
+  inv = Investigator.find(inv_id)
   if the_award.institution_award_number ==  the_award.parent_institution_award_number
     puts "#{the_award.institution_award_number}: removing #{inv.name}"
   else

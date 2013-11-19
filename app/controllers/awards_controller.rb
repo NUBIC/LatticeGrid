@@ -9,24 +9,24 @@ class AwardsController < ApplicationController
 
   before_filter :check_allowed, :except => [:disallowed]
   caches_action( :listing, :investigator, :show, :org )  if LatticeGridHelper.CachePages()
-  
-  def show 
+
+  def show
     if params[:id].nil? then
       redirect_to( current_abstracts_url)
     else
       if params[:id] =~ /^\d+$/
-        @award = Proposal.find_by_id(params[:id])
+        @award = Proposal.find(params[:id])
       else
         @award = Proposal.find_by_institution_award_number(params[:id])
       end
       respond_to do |format|
-        format.html { 
+        format.html {
         	render
         }
       end
     end
-  end 
-  
+  end
+
 
   def listing
     @javascripts_add = ['jquery.min', 'jquery.tablesorter.min', 'jquery.fixheadertable.min']
@@ -35,13 +35,13 @@ class AwardsController < ApplicationController
     respond_to do |format|
       format.html { render :layout => 'printable'}
       format.xml  { render :xml => @investigators }
-      format.xls  { 
+      format.xls  {
         @pdf = 1
          send_data(render(:template => 'awards/listing.html', :layout => "excel"),
         :filename => "award_listing_#{Date.today.to_s}.xls",
         :type => 'application/vnd.ms-excel',
         :disposition => 'attachment') }
-      format.doc  { 
+      format.doc  {
         @pdf = 1
         send_data(render(:template => 'awards/listing.html', :layout => "excel"),
         :filename => "award_listing_#{Date.today.to_s}.doc",
@@ -49,15 +49,15 @@ class AwardsController < ApplicationController
         :disposition => 'attachment') }
       format.pdf do
         @pdf = true
-        render( :pdf => "Investigator Awards Listing", 
-            :stylesheets => ["pdf"], 
+        render( :pdf => "Investigator Awards Listing",
+            :stylesheets => ["pdf"],
             :template => "awards/listing.html",
             :layout => "pdf")
       end
     end
   end
-  
-  def investigator 
+
+  def investigator
     @javascripts_add = ['jquery-ui.min']
     @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]
     if params[:id].nil? then
@@ -66,18 +66,18 @@ class AwardsController < ApplicationController
       handle_member_name(false)  #sets @investigator
       @pi_awards = @investigator.investigator_proposals.by_role
       respond_to do |format|
-        format.html { 
+        format.html {
         	render
         }
-        format.xml  { 
+        format.xml  {
            render :xml => @investigator.proposals }
-        format.xls  { 
+        format.xls  {
           @pdf = 1
            send_data(render(:template => 'awards/investigator.html', :layout => "excel"),
           :filename => "award_listing_for_#{@investigator.first_name}_#{@investigator.last_name}.xls",
           :type => 'application/vnd.ms-excel',
           :disposition => 'attachment') }
-        format.doc  { 
+        format.doc  {
           @pdf = 1
           send_data(render(:template => 'awards/investigator.html', :layout => "excel"),
           :filename => "award_listing_for_#{@investigator.first_name}_#{@investigator.last_name}.doc",
@@ -85,16 +85,16 @@ class AwardsController < ApplicationController
           :disposition => 'attachment') }
         format.pdf do
           @pdf = 1
-          render( :pdf => "Award listing for " + @investigator.name, 
-              :stylesheets => ["pdf"], 
+          render( :pdf => "Award listing for " + @investigator.name,
+              :stylesheets => ["pdf"],
               :template => "awards/investigator.html",
               :layout => "pdf")
         end
       end
     end
-   end 
+   end
 
-    def recent 
+    def recent
       if params[:start_date].nil? or params[:end_date].nil? then
         redirect_to( current_abstracts_url)
       else
@@ -111,20 +111,20 @@ class AwardsController < ApplicationController
           funding_source = " for source type " + params[:funding_types]
         end
         @title = "Funding awards started between #{params[:start_date]} and #{params[:end_date]} #{funding_source}"
-        @awards_total = @awards.map{ |a| 
-          val = (previous.blank? or previous != a.id ) ? a.total_amount : 0 
+        @awards_total = @awards.map{ |a|
+          val = (previous.blank? or previous != a.id ) ? a.total_amount : 0
           previous = a.id
           val}.inject(0){|sum, element| sum+element}
         respond_to do |format|
           format.html { render :action => :org, :layout => 'printable' }
           format.xml  { render :xml => @awards }
-          format.xls  { 
+          format.xls  {
             @pdf = 1
             send_data(render(:template => 'awards/org.html', :layout => "excel"),
               :filename => "award_listing_between_#{params[:start_date]}_and_#{params[:end_date]}_#{funding_source}.xls",
               :type => 'application/vnd.ms-excel',
               :disposition => 'attachment') }
-          format.doc  { 
+          format.doc  {
             @pdf = 1
             send_data(render(:template => 'awards/org.html', :layout => "excel"),
               :filename => "award_listing_between_#{params[:start_date]}_and_#{params[:end_date]}_#{funding_source}.doc",
@@ -132,44 +132,44 @@ class AwardsController < ApplicationController
               :disposition => 'attachment') }
           format.pdf do
             @pdf = 1
-            render( :pdf => "Award listing between #{params[:start_date]} and #{params[:end_date]} #{funding_source}", 
-              :stylesheets => ["pdf"], 
+            render( :pdf => "Award listing between #{params[:start_date]} and #{params[:end_date]} #{funding_source}",
+              :stylesheets => ["pdf"],
               :template => "awards/org.html",
               :layout => "pdf")
           end
         end
       end
-    end 
-    
-    def ad_hoc_by_pi 
+    end
+
+    def ad_hoc_by_pi
       if params[:start_date].nil? or params[:end_date].nil? then
         redirect_to( current_abstracts_url)
       else
         @javascripts_add = ['jquery.min', 'jquery.tablesorter.min', 'jquery.fixheadertable.min', 'jquery-ui.min']
         @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]
-        
+
         @faculty = Investigator.find_investigators_in_list(params[:investigator_ids]).sort{|x,y| x.last_name+' '+x.first_name <=> y.last_name+' '+y.first_name}
         @investigators_in_unit = @faculty.map(&:id).sort.uniq
-         
+
         @awards = Proposal.recents_by_pi(@investigators_in_unit, params[:start_date], params[:end_date])
         previous = nil
         @css =  "#main {width:1900px;}"
         @title = "Funding awards started between #{params[:start_date]} and #{params[:end_date]}"
-         
-        @awards_total = @awards.map{ |a| 
-          val = (previous.blank? or previous != a.id ) ? a.total_amount : 0 
+
+        @awards_total = @awards.map{ |a|
+          val = (previous.blank? or previous != a.id ) ? a.total_amount : 0
           previous = a.id
           val}.inject(0){|sum, element| sum+element}
         respond_to do |format|
           format.html { render :action => :org, :layout => 'printable' }
           format.xml  { render :xml => @awards }
-          format.xls  { 
+          format.xls  {
             @pdf = 1
             send_data(render(:template => 'awards/org.html', :layout => "excel"),
               :filename => "award_listing_for_#{params[:funding_type]}.xls",
               :type => 'application/vnd.ms-excel',
               :disposition => 'attachment') }
-          format.doc  { 
+          format.doc  {
             @pdf = 1
             send_data(render(:template => 'awards/org.html', :layout => "excel"),
               :filename => "award_listing_for_#{params[:funding_type]}.doc",
@@ -177,16 +177,16 @@ class AwardsController < ApplicationController
               :disposition => 'attachment') }
           format.pdf do
             @pdf = 1
-            render( :pdf => "Award listing for " + params[:funding_type], 
-              :stylesheets => ["pdf"], 
+            render( :pdf => "Award listing for " + params[:funding_type],
+              :stylesheets => ["pdf"],
               :template => "awards/org.html",
               :layout => "pdf")
           end
         end
       end
-    end 
-   
-  def org 
+    end
+
+  def org
     @javascripts_add = ['jquery-ui.min']
     @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]
     if params[:id].nil? then
@@ -197,44 +197,44 @@ class AwardsController < ApplicationController
       @investigator_ids = @investigators.map(&:id)
       @awards = Proposal.belonging_to_pi_ids(@investigator_ids)
       previous = nil
-      @awards_total = @awards.map{ |a| 
-        val = (previous.blank? or previous != a.id ) ? a.total_amount : 0 
+      @awards_total = @awards.map{ |a|
+        val = (previous.blank? or previous != a.id ) ? a.total_amount : 0
         previous = a.id
         val}.inject(0){|sum, element| sum+element}
       respond_to do |format|
       format.html { render }
       format.xml  { render :xml => @investigator.proposals }
-      format.xls  { 
+      format.xls  {
         @pdf = 1
         send_data(render(:template => 'awards/org.html', :layout => "excel"),
           :filename => "award_listing_for_#{@unit.name}.xls",
           :type => 'application/vnd.ms-excel',
-          :disposition => 'attachment') 
+          :disposition => 'attachment')
       }
-      format.doc  { 
+      format.doc  {
         @pdf = 1
         send_data(render(:template => 'awards/org.html', :layout => "excel"),
           :filename => "award_listing_for_#{@unit.name}.doc",
           :type => 'application/msword',
-          :disposition => 'attachment') 
+          :disposition => 'attachment')
       }
       format.pdf do
         @pdf = 1
-        render( :pdf => "Award listing for " + @unit.name, 
-           :stylesheets => ["pdf"], 
+        render( :pdf => "Award listing for " + @unit.name,
+           :stylesheets => ["pdf"],
            :template => "awards/org.html",
            :layout => "pdf")
       end
       end
     end
-  end 
+  end
 
   private
-  
+
   def check_allowed
-    unless allowed_ip(get_client_ip()) then 
+    unless allowed_ip(get_client_ip()) then
       redirect_to disallowed_awards_url
     end
   end
-  
+
 end

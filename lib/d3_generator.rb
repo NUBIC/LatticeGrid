@@ -70,7 +70,7 @@ end
 def d3_all_investigators_bundle(investigators)
   graph_array = []
   investigators.each do |investigator|
-    org_unit = OrganizationalUnit.find_by_id(investigator.unit_list().first)
+    org_unit = OrganizationalUnit.find(investigator.unit_list().first)
     org_unit = org_unit.blank? ? 'undefined' : org_unit.abbreviation.to_s
     edge = d3_investigator_edge(investigator, org_unit)
     graph_array << edge unless (edge[:size] == 0)
@@ -186,7 +186,7 @@ def d3_investigator_edge_imports(investigator)
   return [] if investigator.colleague_coauthors.length < 1
   investigator.colleague_coauthors.each do |colleague|
     next unless colleague
-    org_unit = OrganizationalUnit.find_by_id(colleague.unit_list().first)
+    org_unit = OrganizationalUnit.find(colleague.unit_list().first)
     if org_unit.blank?
       break
     else
