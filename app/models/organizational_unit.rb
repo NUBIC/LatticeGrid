@@ -127,19 +127,19 @@ class OrganizationalUnit < ActiveRecord::Base
   @@menu_nodes = nil
 
   def self.all_units
-    @@all_units ||= OrganizationalUnit.find( :all, :order => "sort_order, search_name, name" )
+    @@all_units ||= OrganizationalUnit.order('sort_order, search_name, name').to_a
   end
 
   def self.head_node(node_name)
-    @@head_node ||= OrganizationalUnit.find_by_abbreviation( node_name ) || OrganizationalUnit.find_by_name( node_name )
+    @@head_node ||= OrganizationalUnit.find_by_abbreviation(node_name) || OrganizationalUnit.find_by_name(node_name)
   end
 
   def self.menu_nodes(node_name)
-    @@menu_nodes ||= (OrganizationalUnit.find_by_abbreviation( node_name ) || OrganizationalUnit.find_by_name( node_name )).self_and_descendants
+    @@menu_nodes ||= (OrganizationalUnit.find_by_abbreviation(node_name) || OrganizationalUnit.find_by_name(node_name)).self_and_descendants
   end
 
   def all_organization_abstracts
-    self.self_and_descendants.collect{|unit| unit.organization_abstracts}.flatten.sort_by(&:abstract_id).uniq
+    self.self_and_descendants.collect{ |unit| unit.organization_abstracts }.flatten.sort_by(&:abstract_id).uniq
   end
 
   def abstract_ids
@@ -151,7 +151,7 @@ class OrganizationalUnit < ActiveRecord::Base
   end
 
   def all_abstract_ids_by_date(start_date, end_date)
-    self.self_and_descendants.collect{|unit| unit.abstracts.abstracts_by_date(start_date, end_date).map(&:id)}.flatten.uniq
+    self.self_and_descendants.collect{ |unit| unit.abstracts.abstracts_by_date(start_date, end_date).map(&:id) }.flatten.uniq
   end
 
   def all_abstract_ids_by_date_count(start_date, end_date)
@@ -159,11 +159,11 @@ class OrganizationalUnit < ActiveRecord::Base
   end
 
   def proposal_ids_by_date(start_date, end_date)
-    (self.primary_faculty + self.members).map{|inv| inv.proposals.start_in_range(start_date, end_date).map(&:id)}.flatten.uniq
+    (self.primary_faculty + self.members).map{ |inv| inv.proposals.start_in_range(start_date, end_date).map(&:id) }.flatten.uniq
   end
 
   def all_proposal_ids_by_date(start_date, end_date)
-    self.self_and_descendants.collect{|unit| (unit.primary_faculty + unit.members).map{|inv| inv.proposals.start_in_range(start_date, end_date).map(&:id)}}.flatten.uniq
+    self.self_and_descendants.collect{ |unit| (unit.primary_faculty + unit.members).map{ |inv| inv.proposals.start_in_range(start_date, end_date).map(&:id) } }.flatten.uniq
   end
 
   def abstracts_count
@@ -171,11 +171,11 @@ class OrganizationalUnit < ActiveRecord::Base
   end
 
   def proposal_ids
-    (self.primary_faculty + self.members).map{|inv| inv.investigator_proposals.map(&:proposal_id)}.flatten.uniq
+    (self.primary_faculty + self.members).map{ |inv| inv.investigator_proposals.map(&:proposal_id) }.flatten.uniq
   end
 
   def all_abstract_ids
-    self.self_and_descendants.collect{|unit| unit.organization_abstracts.map(&:abstract_id)}.flatten.uniq
+    self.self_and_descendants.collect{ |unit| unit.organization_abstracts.map(&:abstract_id) }.flatten.uniq
   end
 
   def all_abstracts_count
@@ -183,52 +183,52 @@ class OrganizationalUnit < ActiveRecord::Base
   end
 
   def all_abstracts
-    self.self_and_descendants.collect{|unit| unit.abstracts}.flatten.sort {|x,y| y.year+y.pubmed <=> x.year+x.pubmed }.uniq
+    self.self_and_descendants.collect{ |unit| unit.abstracts }.flatten.sort { |x,y| y.year+y.pubmed <=> x.year+x.pubmed }.uniq
   end
 
   def all_members
-    self.self_and_descendants.collect{|unit| unit.members}.flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    self.self_and_descendants.collect{ |unit| unit.members }.flatten.sort { |x,y| x.sort_name <=> y.sort_name }.uniq
   end
 
   def all_any_members
-    self.self_and_descendants.collect{|unit| unit.any_members}.flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    self.self_and_descendants.collect{ |unit| unit.any_members }.flatten.sort { |x,y| x.sort_name <=> y.sort_name }.uniq
   end
 
   def all_associate_members
-    self.self_and_descendants.collect{|unit| unit.associate_members}.flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    self.self_and_descendants.collect{ |unit| unit.associate_members }.flatten.sort { |x,y| x.sort_name <=> y.sort_name }.uniq
   end
 
   def faculty
-    (self.primary_faculty + self.associated_faculty).sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    (self.primary_faculty + self.associated_faculty).sort { |x,y| x.sort_name <=> y.sort_name }.uniq
   end
 
   def all_primary_faculty
-    self.self_and_descendants.collect(&:primary_faculty).flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    self.self_and_descendants.collect(&:primary_faculty).flatten.sort { |x,y| x.sort_name <=> y.sort_name }.uniq
   end
 
   def all_joint_faculty
-    self.self_and_descendants.collect(&:joint_faculty).flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    self.self_and_descendants.collect(&:joint_faculty).flatten.sort { |x,y| x.sort_name <=> y.sort_name }.uniq
   end
 
   def all_secondary_faculty
-    self.self_and_descendants.collect(&:secondary_faculty).flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    self.self_and_descendants.collect(&:secondary_faculty).flatten.sort { |x,y| x.sort_name <=> y.sort_name }.uniq
   end
 
   # associated_faculty includes joint, secondary and members
   def all_associated_faculty
-    self.self_and_descendants.collect(&:associated_faculty).flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    self.self_and_descendants.collect(&:associated_faculty).flatten.sort { |x,y| x.sort_name <=> y.sort_name }.uniq
   end
 
   def primary_or_member_faculty
-    (self.primary_faculty + self.members).sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    (self.primary_faculty + self.members).sort { |x,y| x.sort_name <=> y.sort_name }.uniq
    end
 
   def all_primary_or_member_faculty
-    (all_primary_faculty + all_members).sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    (all_primary_faculty + all_members).sort { |x,y| x.sort_name <=> y.sort_name }.uniq
   end
 
   def all_faculty
-    (all_primary_faculty + all_associated_faculty).sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    (all_primary_faculty + all_associated_faculty).sort { |x,y| x.sort_name <=> y.sort_name }.uniq
   end
 
   def all_primary_or_member_faculty_count
@@ -240,7 +240,7 @@ class OrganizationalUnit < ActiveRecord::Base
     #have not implemented rank selectors yet
     if affiliation_types.blank? or affiliation_types.length == 0
       faculty = (all_primary_faculty + all_secondary_faculty + all_members).uniq
-      faculty.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+      faculty.sort { |x,y| x.sort_name <=> y.sort_name }.uniq
     elsif affiliation_types.length == 1
       if affiliation_types.grep(/primary/i).length > 0
         faculty = all_primary_faculty
@@ -252,7 +252,7 @@ class OrganizationalUnit < ActiveRecord::Base
         faculty = all_members
       else
         faculty = (all_primary_faculty + all_members).uniq
-        faculty.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+        faculty.sort { |x,y| x.sort_name <=> y.sort_name }.uniq
       end
     else
       faculty = []
@@ -260,7 +260,7 @@ class OrganizationalUnit < ActiveRecord::Base
       faculty += all_secondary_faculty if affiliation_types.grep(/secondary/i).length > 0
       faculty += all_members if affiliation_types.grep(/member/i).length > 0
       faculty += all_associate_members if affiliation_types.grep(/associate/i).length > 0
-      faculty.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+      faculty.sort { |x,y| x.sort_name <=> y.sort_name }.uniq
     end
     faculty
   end
@@ -270,29 +270,29 @@ class OrganizationalUnit < ActiveRecord::Base
     faculty.collect(&:abstracts).flatten.uniq
   end
 
-  def abstracts_shared_with_org( org_id )
+  def abstracts_shared_with_org(org_id)
      abs = self.all_abstracts
      OrganizationalUnit.find(org_id).all_abstracts & abs
   end
 
-  def abstract_ids_shared_with_org_obj( org )
+  def abstract_ids_shared_with_org_obj(org)
      self.all_abstract_ids & org.all_abstract_ids
   end
 
-  def abstract_ids_by_date_shared_with_org_obj( org, start_date, end_date )
-    self.abstract_ids_by_date( start_date, end_date ) & org.abstract_ids_by_date( start_date, end_date )
+  def abstract_ids_by_date_shared_with_org_obj(org, start_date, end_date)
+    self.abstract_ids_by_date(start_date, end_date) & org.abstract_ids_by_date(start_date, end_date)
   end
 
-  def all_abstract_ids_by_date_shared_with_org_obj( org, start_date, end_date )
-    self.all_abstract_ids_by_date( start_date, end_date ) & org.all_abstract_ids_by_date( start_date, end_date )
+  def all_abstract_ids_by_date_shared_with_org_obj(org, start_date, end_date)
+    self.all_abstract_ids_by_date(start_date, end_date) & org.all_abstract_ids_by_date(start_date, end_date)
   end
 
-  def proposal_ids_by_date_shared_with_org_obj( org, start_date, end_date)
-    self.proposal_ids_by_date( start_date, end_date ) & org.proposal_ids_by_date( start_date, end_date )
+  def proposal_ids_by_date_shared_with_org_obj(org, start_date, end_date)
+    self.proposal_ids_by_date(start_date, end_date) & org.proposal_ids_by_date(start_date, end_date)
   end
 
   def all_proposal_ids_by_date_shared_with_org_obj(org, start_date, end_date)
-    self.all_proposal_ids_by_date( start_date, end_date ) & org.all_proposal_ids_by_date( start_date, end_date )
+    self.all_proposal_ids_by_date(start_date, end_date) & org.all_proposal_ids_by_date(start_date, end_date)
   end
 
   def proposal_ids_shared_with_org_obj(org)
@@ -303,71 +303,57 @@ class OrganizationalUnit < ActiveRecord::Base
   # In order to paginate an Array it is necessary to require 'will_paginate/array'
   # cf. https://github.com/mislav/will_paginate/wiki/Backwards-incompatibility
   require 'will_paginate/array'
-  def abstract_data( page=1 )
-     self.all_abstracts.paginate(:page => page,
-      :per_page => 20,
-      :order => "year DESC, abstracts.publication_date DESC, electronic_publication_date DESC, authors ASC")
+  def abstract_data(page = 1)
+    self.all_abstracts.paginate(:page => page, :per_page => 20,
+      :order => 'year DESC, abstracts.publication_date DESC, electronic_publication_date DESC, authors ASC')
   end
 
-  def display_year_data( year=2008 )
-    self.abstracts.all(
-      :order => "investigators.last_name ASC,authors ASC",
-      :include => [:investigators],
-  		:conditions => ['year = :year',
-   		      {:year => year }])
+  def display_year_data(year = 2008)
+    self.abstracts.includes([:investigators])
+      .where('year = :year', { :year => year })
+      .order('investigators.last_name ASC, authors ASC')
+      .to_a
   end
 
-  def display_data_by_date( start_date, end_date )
-    self.abstracts.all(
-      :order => "year DESC, investigators.last_name ASC,authors ASC",
-      :include => [:investigators],
-  		:conditions => [' abstracts.publication_date between :start_date and :end_date',
-   		      {:start_date => start_date, :end_date => end_date }])
+  def display_data_by_date(start_date, end_date)
+    self.abstracts.includes([:investigators])
+      .where('year = :year', { :year => year })
+      .order('abstracts.publication_date between :start_date and :end_date',
+        { :start_date => start_date, :end_date => end_date })
+      .to_a
   end
 
-  def get_minimal_all_data( )
+  def get_minimal_all_data
     self.all_abstracts
   end
 
-  #    def investigator_abstracts
-  #      proxy_target.collect(&:investigator_abstract).uniq
-  #      def abstract
-  #        proxy_target.collect(&:abstract)
-  #      end
-  #    end
-  #  has_many :investigator_abstracts, :through => :investigators
-  #  has_many :abstracts, :through => :investigator_abstracts
-
-  def self.collaborations( start_date=nil, end_date=nil )
-    abstracts=nil
+  def self.collaborations(start_date = nil, end_date = nil)
+    abstracts = nil
     if end_date.blank? and start_date.blank?
-      abstracts=Abstract.find(:all)
+      abstracts = Abstract.all
     elsif start_date.blank?
-      abstracts=Abstract.find(:all,
-     		:conditions => [' abstracts.publication_date <= :end_date or electronic_publication_date <= :end_date ',
-     		      {:end_date => end_date }])
+      abstracts = Abstract.where('abstracts.publication_date <= :end_date or electronic_publication_date <= :end_date',
+        { :end_date => end_date }).to_a
     elsif end_date.blank?
-      abstracts=Abstract.find(:all,
-     		:conditions => [' abstracts.publication_date >= :start_date or electronic_publication_date >= :start_date ',
-     		      {:start_date => start_date}])
+      abstracts = Abstract.where('abstracts.publication_date >= :start_date or electronic_publication_date >= :start_date',
+        { :start_date => start_date }).to_a
     else
-      abstracts=Abstract.find(:all,
-     		:conditions => [' abstracts.publication_date between :start_date and :end_date or electronic_publication_date between :start_date and :end_date ',
-     		      {:start_date => start_date, :end_date => end_date }])
+      abstracts = Abstract.where('abstracts.publication_date between :start_date and :end_date or electronic_publication_date between :start_date and :end_date',
+        { :start_date => start_date, :end_date => end_date }).to_a
     end
-    primary_orgs = find(:all, :include => [:primary_faculty], :conditions => [' investigators.id > 0'])
-    orgs=find(:all, :order => "id",
-      :include => [:primary_faculty_publications],
-      :conditions => [' id IN (:org_ids) ',
- 		      {:org_ids => primary_orgs.collect(&:id) }])
-    init_matrix(orgs,abstracts)
+    primary_orgs = includes([:primary_faculty]).where('investigators.id > 0').all
+    orgs = includes([:primary_faculty_publications])
+      .where('id IN (:org_ids)', { :org_ids => primary_orgs.collect(&:id) })
+      .order('id')
+      .to_a
+    init_matrix(orgs, abstracts)
     build_matrix(orgs)
   end
 
   private
 
   def self.init_matrix(orgs, abstracts)
-    abstractids=abstracts.collect(&:id)
+    abstractids = abstracts.collect(&:id)
     orgs.each do |org|
       org.collaboration_matrix = Hash.new if org.collaboration_matrix.nil?
       org.collaboration_matrix[org.id] = abstractids & org.all_faculty_publications.collect(&:abstract_id)
@@ -376,7 +362,7 @@ class OrganizationalUnit < ActiveRecord::Base
   def self.build_matrix(orgs)
     orgs.each do |org_outer|
       orgs.each do |org_inner|
-          org_outer.collaboration_matrix[org_inner.id] = org_outer.collaboration_matrix[org_outer.id] & org_inner.collaboration_matrix[org_inner.id]
+        org_outer.collaboration_matrix[org_inner.id] = org_outer.collaboration_matrix[org_outer.id] & org_inner.collaboration_matrix[org_inner.id]
       end
     end
   end

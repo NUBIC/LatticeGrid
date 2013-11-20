@@ -742,7 +742,7 @@ has_many :investigator_appointments,
   end
 
   def self.distinct_primary_appointments
-    select('DISTINCT home_department_id as organizational_unit_id').to_a.
+    select('DISTINCT home_department_id as organizational_unit_id')
     .collect(&:organizational_unit_id)
   end
 

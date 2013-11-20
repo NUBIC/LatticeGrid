@@ -82,7 +82,6 @@ class Proposal < ActiveRecord::Base
       { :institution_award_number=> self.institution_award_number}).all
   end
 
-
   def pi_award
     pis = self.investigator_proposals.pis
     if pis.length > 0
@@ -108,25 +107,18 @@ class Proposal < ActiveRecord::Base
             { :ids => pi_ids, :start_date => start_date, :end_date => end_date }).order('proposals.sponsor_type_code,proposals.sponsor_code, proposals.award_start_date')
   end
 
+  # Funding_type is one of the following in NU InfoEd
+  # ASSOC - EDUC - FED - FORGOV - FOUND - HOSP - ILAGEN - INDUS - VOLHEAL
   def self.recents_by_type(funding_types, start_date, end_date)
-
-    # Funding_type is one of the following in NU InfoEd
-    # ASSOC
-    # EDUC
-    # FED
-    # FORGOV
-    # FOUND
-    # HOSP
-    # ILAGEN
-    # INDUS
-    # VOLHEAL
-
     if funding_types.blank?
       where("(proposals.project_start_date between :start_date and :end_date or proposals.award_start_date between :start_date and :end_date)",
-        { :start_date => start_date, :end_date => end_date }).order('proposals.sponsor_type_code,proposals.sponsor_code, proposals.award_start_date').all
+        { :start_date => start_date, :end_date => end_date })
+      .order('proposals.sponsor_type_code,proposals.sponsor_code, proposals.award_start_date')
+      .to_a
     else
       where("proposals.sponsor_type_code in (:funding_types) and (proposals.project_start_date between :start_date and :end_date or proposals.award_start_date between :start_date and :end_date)",
-        { :funding_types => funding_types, :start_date => start_date, :end_date => end_date }).order('proposals.sponsor_type_code,proposals.sponsor_code, proposals.award_start_date')
+        { :funding_types => funding_types, :start_date => start_date, :end_date => end_date })
+      .order('proposals.sponsor_type_code,proposals.sponsor_code, proposals.award_start_date')
     end
   end
 end

@@ -117,31 +117,29 @@ module GraphvizHelper
   end
 
   def build_graph(analysis, program, id, distance, stringency, include_orphans, start_date, end_date)
-    @graph_edges=[]
+    @graph_edges = []
     #include_orphans = "0" if include_orphans.to_s != "1"
     graph = graph_new(program)
 
-    graph = case analysis
-            when "member"
-              build_member_graph(graph, program, id, distance, stringency, include_orphans, start_date, end_date)
-            when "member_mesh"
-              build_member_mesh_graph(graph, program, id, distance, stringency, include_orphans)
-            when "member_awards"
-              build_member_awards_graph(graph, program, id, distance, stringency, include_orphans)
-            when "mesh"
-              build_mesh_graph(graph, program, id, distance, stringency, include_orphans)
-            when "org"
-              build_org_graph(graph, program, id, distance, stringency, include_orphans, start_date, end_date)
-            when "org_org"
-              build_org_org_graph(graph, program, id, distance, stringency, include_orphans)
-            when "org_mesh"
-              build_org_mesh_graph(graph, program, id, distance, stringency, include_orphans)
-            else
-              graph_no_data(graph, "Option #{analysis} was not found")
-            end
+    case analysis
+    when "member"
+      build_member_graph(graph, program, id, distance, stringency, include_orphans, start_date, end_date)
+    when "member_mesh"
+      build_member_mesh_graph(graph, program, id, distance, stringency, include_orphans)
+    when "member_awards"
+      build_member_awards_graph(graph, program, id, distance, stringency, include_orphans)
+    when "mesh"
+      build_mesh_graph(graph, program, id, distance, stringency, include_orphans)
+    when "org"
+      build_org_graph(graph, program, id, distance, stringency, include_orphans, start_date, end_date)
+    when "org_org"
+      build_org_org_graph(graph, program, id, distance, stringency, include_orphans)
+    when "org_mesh"
+      build_org_mesh_graph(graph, program, id, distance, stringency, include_orphans)
+    else
+      graph_no_data(graph, "Option #{analysis} was not found")
     end
-     graph
-   end
+  end
 
   def build_member_graph(graph, program, id, distance, stringency, include_orphans, start_date, end_date)
     @investigator = Investigator.find_by_username(id)
@@ -216,7 +214,7 @@ module GraphvizHelper
       #first pass to add all primaries
       filtered_colleagues.each do |colleague|
         co_authors = colleague.co_authors.shared_pubs(1)
-        if  distance == "0"
+        if distance == "0"
           co_authors = co_authors.collect{|ic| filtered_colleagues.include?(ic.colleague) ? ic : nil }.compact
         end
         if include_orphans == "1" or co_authors.length > 0

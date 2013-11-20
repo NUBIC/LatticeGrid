@@ -42,7 +42,8 @@ class WordFrequency < ActiveRecord::Base
   end
 
   def self.save_frequency_hash(item)
-    existing = WordFrequency.find(:first, :conditions=>["word_frequencies.word = :word and word_frequencies.the_type = :the_type", {:word => item[:word], :the_type => item[:the_type] }] )
+    existing = WordFrequency.where("word_frequencies.word = :word and word_frequencies.the_type = :the_type",
+      { :word => item[:word], :the_type => item[:the_type] }).first
     if existing.blank?
       the_freq = WordFrequency.create(item)
     elsif existing.frequency != item[:frequency].to_i
@@ -55,31 +56,30 @@ class WordFrequency < ActiveRecord::Base
     all_words = get_investigator_words
     unique_words = all_words.sort.uniq
     puts "save_investigator_frequency_map:all_words: #{all_words.length}; unique_words: #{unique_words.length}"
-    row_iterator(unique_words, 0, 2000) {|word| create_frequency_word(word,all_words,unique_words,'Investigator')}
+    row_iterator(unique_words, 0, 2000) { |word| create_frequency_word(word,all_words,unique_words,'Investigator') }
   end
 
   def self.save_abstract_frequency_map
     all_words = get_abstract_words
     unique_words = all_words.sort.uniq
     puts "save_abstract_frequency_map:all_words: #{all_words.length}; unique_words: #{unique_words.length}"
-    row_iterator(unique_words, 0, 2000) {|word| create_frequency_word(word,all_words,unique_words,'Abstract')}
+    row_iterator(unique_words, 0, 2000) { |word| create_frequency_word(word,all_words,unique_words,'Abstract') }
   end
 
   def self.create_frequency_word(word, word_array, unique_words, the_type)
     unless (FILLER_WORDS.include?(word) or word.length < 3 or unique_words.include?(word + "s") )
       frequency_hash = { :word => word, :frequency => word_array.count(word).to_i, :the_type => the_type }
       save_frequency_hash(frequency_hash)
-      #puts "frequency_hash: #{frequency_hash.inspect}"
     end
   end
 
-  def self.generate_frequency_map(word_array, the_type, high_frequency_words=[], unique_words=[])
+  def self.generate_frequency_map(word_array, the_type, high_frequency_words = [], unique_words = [])
     frequency_map = []
     unique_words = word_array.uniq if unique_words.blank?
 
     unique_words.each do  |word|
       unless (FILLER_WORDS.include?(word) or high_frequency_words.include?(word) or word.length < 3 or unique_words.include?(word + "s") )
-          frequency_map << { :word => word, :frequency => word_array.count(word).to_i, :the_type => the_type }
+        frequency_map << { :word => word, :frequency => word_array.count(word).to_i, :the_type => the_type }
       end
     end
     frequency_map
@@ -92,32 +92,32 @@ class WordFrequency < ActiveRecord::Base
     @@high_freq_words
   end
 
+  # investigator.abstract_words is limited to last 5 years. you can use investigator.abstracts.most_recent(25).abstract_words to get a different cut of the data
   def self.investigator_wordle_data(investigator)
-    # investigator.abstract_words is limited to last 5 years. you can use investigator.abstracts.most_recent(25).abstract_words to get a different cut of the data
-    frequency_map =  generate_frequency_map(investigator.abstract_words, 'Abstract', high_freq_words)
-    return frequency_map.sort_by{|word| word[:frequency]}
+    frequency_map = generate_frequency_map(investigator.abstract_words, 'Abstract', high_freq_words)
+    return frequency_map.sort_by{ |word| word[:frequency] }
   end
 
   def self.investigators_wordle_data(investigators)
-    shared_words =[]
-    all_words =[]
+    shared_words = []
+    all_words = []
     investigators.each do |investigator|
       all_words = all_words + investigator.abstract_words
       if shared_words.blank?
         shared_words = investigator.unique_abstract_words
       else
-         shared_words = shared_words & investigator.unique_abstract_words
-       end
+        shared_words = shared_words & investigator.unique_abstract_words
+      end
     end
     frequency_map = generate_frequency_map(all_words, 'Abstract', high_freq_words, shared_words)
-    return frequency_map.sort_by{|word| word[:frequency]}
+    return frequency_map.sort_by{ |word| word[:frequency] }
   end
 
   def self.investigators_difference_wordle_data(investigators)
     all_words = investigators[0].abstract_words
     uniq_words = all_words.uniq - investigators[1].unique_abstract_words
     frequency_map = generate_frequency_map(all_words, 'Abstract', high_freq_words, uniq_words)
-    return frequency_map.sort_by{|word| word[:frequency]}
+    return frequency_map.sort_by{ |word| word[:frequency] }
   end
 
   def self.wordle_distribution(words, max_words=300)
