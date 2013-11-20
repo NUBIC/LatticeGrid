@@ -391,17 +391,7 @@ class ProfilesController < ApplicationController
       else
         respond_to do |format|
           begin
-            Notifier.deliver_reminder_message(@investigator.last_name,
-                                              @investigator.email, "mruchin@northwestern.edu",
-                                              'Please approve your Lurie Cancer Center LatticeGrid profile',
-                                              show_investigator_url(:id => @investigator.username, :page => 1),
-                                              profiles_url,
-                                              profile_url(@investigator.username),
-                                              edit_pubs_profile_url(@investigator.username),
-                                              @investigator.investigator_abstracts.count,
-                                              @investigator.abstracts.count,
-                                              @investigator.faculty_research_summary)
-
+            Notifier.reminder_message(@investigator).deliver
           rescue Exception => err
             logger.error "Error occured. Unable to send notification email to #{@investigator.name} at #{@investigator.email}. Error: #{err.message}"
             pass = false
