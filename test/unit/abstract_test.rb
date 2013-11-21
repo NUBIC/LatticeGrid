@@ -19,7 +19,7 @@
 #  electronic_publication_date  :date
 #  endnote_citation             :text
 #  full_authors                 :text
-#  id                           :integer          not null, primary key
+#  id                           :integer          default(0), not null, primary key
 #  is_cancer                    :boolean          default(TRUE)
 #  is_first_author_investigator :boolean          default(FALSE)
 #  is_last_author_investigator  :boolean          default(FALSE)
