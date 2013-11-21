@@ -392,7 +392,8 @@ module TsearchMixin
         end
 
         def is_postgresql_83?
-          self.postgresql_version >= 80300
+          # self.postgresql_version >= 80300
+          true
         end
       end
 
