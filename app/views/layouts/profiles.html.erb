@@ -7,7 +7,7 @@
     <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
 
   	<!-- javascript files -->
-  	<% @javascripts ||= [ 'prototype', 'jquery.min', 'jquery.sparkline.min' ] %>
+  	<% @javascripts ||= [ 'application', 'prototype', 'jquery.min', 'jquery.sparkline.min' ] %>
   	<% @javascripts += @javascripts_add if defined?(@javascripts_add) %>
     <% @javascripts.each do |js| %>
       <%= javascript_include_tag js %>

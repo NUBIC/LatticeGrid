@@ -10,7 +10,7 @@
 <% include_collab_marker = false if include_collab_marker.nil? %>
 <% heading = "Publications " if heading.blank? %>
 
-<% if ! investigator.nil? %>
+<% if investigator %>
 	<table class="borderless">
 		<tr valign="top">
 			<td width="800px">
