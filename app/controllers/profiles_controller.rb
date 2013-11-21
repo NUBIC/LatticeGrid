@@ -240,7 +240,7 @@ class ProfilesController < ApplicationController
         clear_directory("investigators/#{@investigator.username}")
         clear_file("profiles/#{@investigator.username}.html")
         flash[:notice] = 'Profile was successfully updated.'
-        format.html { redirect_to(profiles_url }
+        format.html { redirect_to profiles_url }
         format.xml  { head :ok }
       else
         flash[:notice] += 'Profile could not be updated.'
@@ -303,7 +303,6 @@ class ProfilesController < ApplicationController
     investigator_id = @investigator.id if ! @investigator.blank?
     respond_to do |format|
       format.html do
-        @javascripts = [ "prototype", "jquery.min"]
         @abstracts = Abstract.display_all_investigator_data_include_deleted(investigator_id)
         render
       end
