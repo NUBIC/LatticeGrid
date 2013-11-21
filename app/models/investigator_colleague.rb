@@ -1,11 +1,11 @@
 # == Schema Information
-# Schema version: 20130327155943
+# Schema version: 20131121210426
 #
 # Table name: investigator_colleagues
 #
 #  colleague_id     :integer
 #  created_at       :timestamp
-#  id               :integer          default(0), not null, primary key
+#  id               :integer          not null, primary key
 #  in_same_program  :boolean          default(FALSE)
 #  investigator_id  :integer
 #  mesh_tags_cnt    :integer          default(0)

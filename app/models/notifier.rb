@@ -1,8 +1,8 @@
 class Notifier < ActionMailer::Base
-  default from: "mruchin@northwestern.edu"
+  SENDER = "mruchin@northwestern.edu"
+  default from: SENDER
 
   def reminder_message(investigator)
-    headers { "Reply-to" => "mruchin@northwestern.edu" }
     @content_type = "text/html"
 
     @abstract = investigator.faculty_research_summary
@@ -13,7 +13,7 @@ class Notifier < ActionMailer::Base
     @profile_url = show_investigator_url(:id => investigator.username, :page => 1)
     @edit_profile_url = profile_url(investigator.username)
     @edit_publications_url = edit_pubs_profile_url(investigator.username)
-    mail(:to => investigator.email, :subject => 'Please approve your Lurie Cancer Center LatticeGrid profile')
+    mail(:to => investigator.email, :reply_to => SENDER, :subject => 'Please approve your Lurie Cancer Center LatticeGrid profile')
   end
 
 end

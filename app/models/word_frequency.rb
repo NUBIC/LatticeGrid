@@ -1,11 +1,11 @@
 # == Schema Information
-# Schema version: 20130327155943
+# Schema version: 20131121210426
 #
 # Table name: word_frequencies
 #
 #  created_at :timestamp
 #  frequency  :integer
-#  id         :integer          default(0), not null, primary key
+#  id         :integer          not null, primary key
 #  the_type   :string(255)
 #  updated_at :timestamp
 #  word       :string(255)
@@ -21,7 +21,7 @@ class WordFrequency < ActiveRecord::Base
   scope :abstract_words, where("word_frequencies.the_type = 'Abstract'")
   scope :investigator_words, where("word_frequencies.the_type = 'Investigator'")
   scope :more_than, lambda { |the_freq|
-    { where('word_frequencies.frequency >= :the_freq ', { :the_freq => the_freq }) }
+    where('word_frequencies.frequency >= :the_freq ', { :the_freq => the_freq })
   }
 
   @@cutoff = (Investigator.count/5) + 10

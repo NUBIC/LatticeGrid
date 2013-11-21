@@ -1,11 +1,11 @@
 # == Schema Information
-# Schema version: 20130327155943
+# Schema version: 20131121210426
 #
 # Table name: investigator_appointments
 #
 #  created_at             :timestamp
 #  end_date               :date
-#  id                     :integer          default(0), not null, primary key
+#  id                     :integer          not null, primary key
 #  investigator_id        :integer          not null
 #  organizational_unit_id :integer          not null
 #  research_summary       :text
