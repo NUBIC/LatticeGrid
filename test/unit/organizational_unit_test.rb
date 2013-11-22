@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20130327155943
 #
 # Table name: organizational_units
 #
@@ -12,7 +12,7 @@
 #  depth                       :integer          default(0)
 #  division_id                 :integer          default(0)
 #  end_date                    :date
-#  id                          :integer          not null, primary key
+#  id                          :integer          default(0), not null, primary key
 #  lft                         :integer
 #  member_count                :integer          default(0)
 #  name                        :string(255)      not null

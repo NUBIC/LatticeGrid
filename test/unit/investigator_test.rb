@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20130327155943
 #
 # Table name: investigators
 #
@@ -33,7 +33,7 @@
 #  home_department_id                          :integer
 #  home_department_name                        :string(255)
 #  home_phone                                  :string(255)
-#  id                                          :integer          not null, primary key
+#  id                                          :integer          default(0), not null, primary key
 #  lab_phone                                   :string(255)
 #  last_login_failure                          :timestamp
 #  last_name                                   :string(255)      not null

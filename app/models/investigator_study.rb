@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20130327155943
 #
 # Table name: investigator_studies
 #
@@ -7,7 +7,7 @@
 #  completion_date :date
 #  consent_role    :string(255)
 #  created_at      :timestamp
-#  id              :integer          not null, primary key
+#  id              :integer          default(0), not null, primary key
 #  investigator_id :integer          not null
 #  role            :string(255)
 #  status          :string(255)

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20130327155943
 #
 # Table name: proposals
 #
@@ -17,7 +17,7 @@
 #  deleted_id                      :integer
 #  deleted_ip                      :string(255)
 #  direct_amount                   :integer
-#  id                              :integer          not null, primary key
+#  id                              :integer          default(0), not null, primary key
 #  indirect_amount                 :integer
 #  institution_award_number        :string(255)
 #  is_awarded                      :boolean          default(TRUE)

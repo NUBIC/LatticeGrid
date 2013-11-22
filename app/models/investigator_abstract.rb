@@ -1,11 +1,11 @@
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20130327155943
 #
 # Table name: investigator_abstracts
 #
 #  abstract_id      :integer          not null
 #  created_at       :timestamp
-#  id               :integer          not null, primary key
+#  id               :integer          default(0), not null, primary key
 #  investigator_id  :integer          not null
 #  is_first_author  :boolean          default(FALSE), not null
 #  is_last_author   :boolean          default(FALSE), not null

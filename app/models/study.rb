@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20130327155943
 #
 # Table name: studies
 #
@@ -18,7 +18,7 @@
 #  exclusion_criteria   :text
 #  had_import_errors    :boolean          default(FALSE)
 #  has_medical_services :boolean          default(FALSE), not null
-#  id                   :integer          not null, primary key
+#  id                   :integer          default(0), not null, primary key
 #  inclusion_criteria   :text
 #  irb_study_number     :string(255)
 #  is_clinical_trial    :boolean          default(FALSE), not null

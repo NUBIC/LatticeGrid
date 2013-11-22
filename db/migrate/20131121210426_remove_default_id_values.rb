@@ -1,5 +1,6 @@
 class RemoveDefaultIdValues < ActiveRecord::Migration
-  def up
+
+  def tables
     [
       :abstracts,
       :investigator_appointments,
@@ -16,11 +17,18 @@ class RemoveDefaultIdValues < ActiveRecord::Migration
       :proposals,
       :studies,
       :word_frequencies,
-    ].each do |table|
+    ]
+  end
+
+  def up
+    tables.each do |table|
       change_column_default(table, :id, nil)
     end
   end
 
   def down
+    tables.each do |table|
+      change_column_default(table, :id, 0)
+    end
   end
 end
