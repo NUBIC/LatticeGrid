@@ -1,4 +1,5 @@
 # == Schema Information
+# == Schema Information
 # Schema version: 20130327155943
 #
 # Table name: investigators
@@ -261,7 +262,7 @@ has_many :investigator_appointments,
   end
 
   def shared_abstracts_with_investigator(id)
-    Abstract.joins('investigator_abstracts, investigator_abstracts ia2')
+    Abstract.joins(', investigator_abstracts, investigator_abstracts ia2')
             .where('investigator_abstracts.abstract_id = abstracts.id ' +
                    'and ia2.abstract_id = abstracts.id ' +
                    'and investigator_abstracts.is_valid = true ' +

@@ -2,12 +2,11 @@
   Paste in one or more pubmed_ids to add to LatticeGrid.
 </p>
 <div id="pubmed_addition">
-	<% form_remote_tag(:url => { :controller => :abstracts, :action => :add_pubmed_ids },
-		:html => { :action => {:controller => :abstracts, :action => :add_pubmed_ids }},
-		:before => "Element.show('spinner')",
-		:complete => "Element.hide('spinner')" ) do |form| %>
+  <%= form_tag(:url => { :controller => :abstracts, :action => :add_pubmed_ids },
+    :html => { :action => {:controller => :abstracts, :action => :add_pubmed_ids } },
+    :remote => true ) do |form| %>
     <%= text_area_tag(:pubmed_ids, nil, :rows => 15, :cols => 15) %>
-    <%= submit_tag 'Add Pubmed_ids' %>
+    <%= submit_tag 'Add Pubmed IDs' %>
   <% end %>
 </div>
 <ul id="added_pubmed_ids">

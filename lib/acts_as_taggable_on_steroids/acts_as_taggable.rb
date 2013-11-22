@@ -216,7 +216,6 @@ module ActiveRecord #:nodoc:
         # The possible options are the same as the tag_counts class method.
         def tag_counts(options = {})
           return [] if tag_list.blank?
-
           options[:conditions] = self.class.send(:merge_conditions, options[:conditions], self.class.send(:tags_condition, tag_list))
           self.class.tag_counts(options)
         end
