@@ -55,10 +55,32 @@
 			                         options_for_select([["One","1"], ["Two","2"], ["Three","3"], ["Four","4"], ["Five","5"], ["Six","6"], ["Seven","7"], ["Eight","8"], ["Nine","9"], ["Ten","10"], ["Twelve","12"], ["Fifteen","15"]], [params[:stringency]])) %>
 	<% end %>
 	Date range: <%= text_field_tag( :start_date, params[:start_date], :size => 10) %> to <%= text_field_tag( :end_date, params[:end_date], :size => 10) %>
-	<input type="button" name="redraw" value="redraw" onclick="<%= graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans', 'start_date', 'end_date') %>" />
+	<input type="button" name="redraw" value="redraw"
+	       onclick="<%= graphviz_remote_function('graph',
+	                                             'program',
+	                                             'format',
+	                                             'distance',
+	                                             'stringency',
+	                                             'username',
+	                                             'analysis',
+	                                             'include_orphans',
+	                                             'start_date',
+	                                             'end_date') %>" />
 	<br/>
-	Include orphaned nodes:<%=  check_box_tag( :include_orphans,  1, params[:include_orphans] != "0",
-		{ :onchange => graphviz_remote_function('graph','program', 'format', 'distance', 'stringency', 'username', 'analysis', 'include_orphans', 'start_date', 'end_date')} ) %> &nbsp;
+	Include orphaned nodes:
+	<%= check_box_tag(:include_orphans,  1, params[:include_orphans] != "0",
+		   { :onchange => graphviz_remote_function('graph',
+		   	                                       'program',
+		   	                                       'format',
+		   	                                       'distance',
+		   	                                       'stringency',
+		   	                                       'username',
+		   	                                       'analysis',
+		   	                                       'include_orphans',
+		   	                                       'start_date',
+		   	                                       'end_date')
+		   })
+  %> &nbsp;
 </form>
 &nbsp;
 <%= link_to('Download the SVG graph',
