@@ -1,4 +1,4 @@
-class RemoveDefaultIdValues < ActiveRecord::Migration
+class ResetDefaultIdValues < ActiveRecord::Migration
 
   def tables
     [
@@ -22,7 +22,8 @@ class RemoveDefaultIdValues < ActiveRecord::Migration
 
   def up
     tables.each do |table|
-      change_column_default(table, :id, nil)
+      # change_column_default(table, :id, "nextval('#{table.to_s}_id_seq'::regclass)")
+      execute "ALTER TABLE #{table} ALTER COLUMN id SET DEFAULT NEXTVAL('#{table}_id_seq'::regclass);"
     end
   end
 
