@@ -2,7 +2,7 @@ module ActiveRecord
   module ConnectionAdapters
 
     class PostgreSQLAdapter < AbstractAdapter
-      
+
       alias_method :native_database_types_base, :native_database_types
 
       def native_database_types #:nodoc:
@@ -13,8 +13,8 @@ module ActiveRecord
           }
         )
       end
-      
-    
+
+    end
     class PostgreSQLColumn < Column #:nodoc:
       private
         alias_method :simplified_type_base, :simplified_type
@@ -31,9 +31,6 @@ module ActiveRecord
           end
         end
     end
-
-    end
-
   end
 end
 
