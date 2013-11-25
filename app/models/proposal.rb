@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20130327155943
+# Schema version: 20131121210426
 #
 # Table name: proposals
 #
@@ -10,7 +10,7 @@
 #  award_mechanism                 :string(255)
 #  award_start_date                :date
 #  award_type                      :string(255)
-#  created_at                      :timestamp
+#  created_at                      :timestamp        not null
 #  created_id                      :integer
 #  created_ip                      :string(255)
 #  deleted_at                      :timestamp
@@ -37,7 +37,7 @@
 #  submission_date                 :date
 #  title                           :string(255)
 #  total_amount                    :integer
-#  updated_at                      :timestamp
+#  updated_at                      :timestamp        not null
 #  updated_id                      :integer
 #  updated_ip                      :string(255)
 #  url                             :string(255)

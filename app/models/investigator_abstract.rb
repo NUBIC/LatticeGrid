@@ -1,10 +1,10 @@
 # == Schema Information
-# Schema version: 20130327155943
+# Schema version: 20131121210426
 #
 # Table name: investigator_abstracts
 #
 #  abstract_id      :integer          not null
-#  created_at       :timestamp
+#  created_at       :timestamp        not null
 #  id               :integer          default(0), not null, primary key
 #  investigator_id  :integer          not null
 #  is_first_author  :boolean          default(FALSE), not null
@@ -17,7 +17,7 @@
 #  reviewed_at      :timestamp
 #  reviewed_id      :integer
 #  reviewed_ip      :string(255)
-#  updated_at       :timestamp
+#  updated_at       :timestamp        not null
 #
 
 class InvestigatorAbstract < ActiveRecord::Base

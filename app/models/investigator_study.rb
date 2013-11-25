@@ -1,18 +1,18 @@
 # == Schema Information
-# Schema version: 20130327155943
+# Schema version: 20131121210426
 #
 # Table name: investigator_studies
 #
 #  approval_date   :date
 #  completion_date :date
 #  consent_role    :string(255)
-#  created_at      :timestamp
+#  created_at      :timestamp        not null
 #  id              :integer          default(0), not null, primary key
 #  investigator_id :integer          not null
 #  role            :string(255)
 #  status          :string(255)
 #  study_id        :integer          not null
-#  updated_at      :timestamp
+#  updated_at      :timestamp        not null
 #
 
 class InvestigatorStudy < ActiveRecord::Base

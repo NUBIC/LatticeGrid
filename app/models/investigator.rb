@@ -1,6 +1,5 @@
 # == Schema Information
-# == Schema Information
-# Schema version: 20130327155943
+# Schema version: 20131121210426
 #
 # Table name: investigators
 #
@@ -15,7 +14,7 @@
 #  city                                        :string(255)
 #  consecutive_login_failures                  :integer          default(0)
 #  country                                     :string(255)
-#  created_at                                  :timestamp
+#  created_at                                  :timestamp        not null
 #  created_id                                  :integer
 #  created_ip                                  :string(255)
 #  degrees                                     :string(255)
@@ -75,7 +74,7 @@
 #  total_publications_last_five_years          :integer          default(0)
 #  total_studies                               :integer          default(0), not null
 #  total_studies_collaborators                 :integer          default(0), not null
-#  updated_at                                  :timestamp
+#  updated_at                                  :timestamp        not null
 #  updated_id                                  :integer
 #  updated_ip                                  :string(255)
 #  username                                    :string(255)      not null

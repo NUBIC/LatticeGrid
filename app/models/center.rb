@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20130327155943
+# Schema version: 20131121210426
 #
 # Table name: organizational_units
 #
@@ -7,7 +7,7 @@
 #  appointment_count           :integer          default(0)
 #  campus                      :string(255)
 #  children_count              :integer          default(0)
-#  created_at                  :timestamp
+#  created_at                  :timestamp        not null
 #  department_id               :integer          default(0), not null
 #  depth                       :integer          default(0)
 #  division_id                 :integer          default(0)
@@ -25,7 +25,7 @@
 #  sort_order                  :integer          default(1)
 #  start_date                  :date
 #  type                        :string(255)      not null
-#  updated_at                  :timestamp
+#  updated_at                  :timestamp        not null
 #
 
 class Center < School
