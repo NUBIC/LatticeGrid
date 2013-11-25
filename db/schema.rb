@@ -45,15 +45,11 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
     t.string    "created_ip"
     t.integer   "updated_id"
     t.string    "updated_ip"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
-    t.boolean   "is_cancer",                    :default => true
+    t.timestamp "created_at",                                      :null => false
+    t.timestamp "updated_at",                                      :null => false
+    t.boolean   "is_cancer",                    :default => true,  :null => false
     t.string    "pubmedcentral"
     t.text      "vectors"
-    t.text      "journal_vector"
-    t.text      "author_vector"
-    t.text      "abstract_vector"
-    t.text      "mesh_vector"
     t.boolean   "is_valid",                     :default => true,  :null => false
     t.timestamp "reviewed_at"
     t.integer   "reviewed_id"
@@ -66,10 +62,6 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
     t.text      "author_affiliations"
   end
 
-  add_index "abstracts", ["abstract_vector"], :name => "abstracts_fts_abstract_vector_index"
-  add_index "abstracts", ["author_vector"], :name => "abstracts_fts_author_vector_index"
-  add_index "abstracts", ["journal_vector"], :name => "abstracts_fts_journal_vector_index"
-  add_index "abstracts", ["mesh_vector"], :name => "abstracts_fts_mesh_vector_index"
   add_index "abstracts", ["pubmed", "doi"], :name => "by_pubmed_doi_unique", :unique => true
   add_index "abstracts", ["vectors"], :name => "abstracts_fts_vectors_index"
 
@@ -78,8 +70,8 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
     t.integer   "investigator_id",                     :null => false
     t.boolean   "is_first_author",  :default => false, :null => false
     t.boolean   "is_last_author",   :default => false, :null => false
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.timestamp "created_at",                          :null => false
+    t.timestamp "updated_at",                          :null => false
     t.boolean   "is_valid",         :default => false, :null => false
     t.timestamp "reviewed_at"
     t.integer   "reviewed_id"
@@ -98,8 +90,8 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
     t.string    "type"
     t.date      "start_date"
     t.date      "end_date"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.timestamp "created_at",             :null => false
+    t.timestamp "updated_at",             :null => false
     t.text      "research_summary"
   end
 
@@ -118,8 +110,8 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
     t.text      "proposal_list"
     t.integer   "study_cnt",        :default => 0
     t.text      "study_list"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.timestamp "created_at",                          :null => false
+    t.timestamp "updated_at",                          :null => false
   end
 
   add_index "investigator_colleagues", ["colleague_id", "investigator_id", "mesh_tags_ic"], :name => "by_colleague_mesh_ic"
@@ -129,8 +121,8 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
 
   create_table "investigator_proposals", :force => true do |t|
     t.string    "role"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.timestamp "created_at",                         :null => false
+    t.timestamp "updated_at",                         :null => false
     t.integer   "investigator_id",                    :null => false
     t.integer   "proposal_id",                        :null => false
     t.integer   "percent_effort",  :default => 0
@@ -142,8 +134,8 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
     t.date      "approval_date"
     t.date      "completion_date"
     t.string    "role"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.timestamp "created_at",      :null => false
+    t.timestamp "updated_at",      :null => false
     t.integer   "investigator_id", :null => false
     t.integer   "study_id",        :null => false
     t.string    "consent_role"
@@ -210,8 +202,8 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
     t.timestamp "deleted_at"
     t.integer   "deleted_id"
     t.string    "deleted_ip"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.timestamp "created_at",                                                                  :null => false
+    t.timestamp "updated_at",                                                                  :null => false
     t.text      "faculty_keywords"
     t.text      "faculty_research_summary"
     t.text      "faculty_interests"
@@ -246,8 +238,8 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
     t.integer   "total_articles"
     t.float     "eigenfactor_score"
     t.float     "article_influence_score"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.timestamp "created_at",                                  :null => false
+    t.timestamp "updated_at",                                  :null => false
     t.boolean   "include_as_high_impact",   :default => false, :null => false
   end
 
@@ -255,8 +247,8 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
 
   create_table "load_dates", :force => true do |t|
     t.timestamp "load_date"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.timestamp "created_at", :null => false
+    t.timestamp "updated_at", :null => false
   end
 
   add_index "load_dates", ["load_date"], :name => "index_load_dates_on_load_date", :unique => true
@@ -269,8 +261,8 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
     t.string    "action_name"
     t.text      "params"
     t.string    "created_ip"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.timestamp "created_at",      :null => false
+    t.timestamp "updated_at",      :null => false
   end
 
   create_table "organization_abstracts", :force => true do |t|
@@ -278,8 +270,8 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
     t.integer   "abstract_id",            :null => false
     t.date      "start_date"
     t.date      "end_date"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.timestamp "created_at",             :null => false
+    t.timestamp "updated_at",             :null => false
   end
 
   add_index "organization_abstracts", ["organizational_unit_id", "abstract_id"], :name => "by_unit_abstract_unique", :unique => true
@@ -305,8 +297,8 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
     t.integer   "depth",                       :default => 0
     t.date      "start_date"
     t.date      "end_date"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.timestamp "created_at",                                 :null => false
+    t.timestamp "updated_at",                                 :null => false
   end
 
   add_index "organizational_units", ["department_id", "division_id"], :name => "index_organizational_units_on_department_id_and_division_id", :unique => true
@@ -335,8 +327,8 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
     t.timestamp "deleted_at"
     t.integer   "deleted_id"
     t.string    "deleted_ip"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.timestamp "created_at",                                         :null => false
+    t.timestamp "updated_at",                                         :null => false
     t.date      "award_start_date"
     t.date      "award_end_date"
     t.integer   "direct_amount"
@@ -369,8 +361,8 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
     t.timestamp "deleted_at"
     t.integer   "deleted_id"
     t.string    "deleted_ip"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.timestamp "created_at",                              :null => false
+    t.timestamp "updated_at",                              :null => false
     t.integer   "enotis_study_id"
     t.string    "irb_study_number"
     t.string    "research_type"
@@ -406,8 +398,8 @@ ActiveRecord::Schema.define(:version => 20131121210426) do
     t.integer   "frequency"
     t.string    "word"
     t.string    "the_type"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.timestamp "created_at", :null => false
+    t.timestamp "updated_at", :null => false
   end
 
   add_index "word_frequencies", ["word", "the_type"], :name => "by_word_type_unique", :unique => true
