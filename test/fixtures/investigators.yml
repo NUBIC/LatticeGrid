@@ -14,11 +14,11 @@
 #  city                                        :string(255)
 #  consecutive_login_failures                  :integer          default(0)
 #  country                                     :string(255)
-#  created_at                                  :timestamp        not null
+#  created_at                                  :datetime         not null
 #  created_id                                  :integer
 #  created_ip                                  :string(255)
 #  degrees                                     :string(255)
-#  deleted_at                                  :timestamp
+#  deleted_at                                  :datetime
 #  deleted_id                                  :integer
 #  deleted_ip                                  :string(255)
 #  email                                       :string(255)
@@ -33,12 +33,12 @@
 #  home_department_id                          :integer
 #  home_department_name                        :string(255)
 #  home_phone                                  :string(255)
-#  id                                          :integer          default(0), not null, primary key
+#  id                                          :integer          not null, primary key
 #  lab_phone                                   :string(255)
-#  last_login_failure                          :timestamp
+#  last_login_failure                          :datetime
 #  last_name                                   :string(255)      not null
 #  last_pubmed_search                          :date
-#  last_successful_login                       :timestamp
+#  last_successful_login                       :datetime
 #  mailcode                                    :string(255)
 #  middle_name                                 :string(255)
 #  nu_start_date                               :date
@@ -52,7 +52,7 @@
 #  num_last_pubs_last_five_years               :integer          default(0)
 #  pager                                       :string(255)
 #  password                                    :string(255)
-#  password_changed_at                         :timestamp
+#  password_changed_at                         :datetime
 #  password_changed_id                         :integer
 #  password_changed_ip                         :string(255)
 #  postal_code                                 :string(255)
@@ -74,7 +74,7 @@
 #  total_publications_last_five_years          :integer          default(0)
 #  total_studies                               :integer          default(0), not null
 #  total_studies_collaborators                 :integer          default(0), not null
-#  updated_at                                  :timestamp        not null
+#  updated_at                                  :datetime         not null
 #  updated_id                                  :integer
 #  updated_ip                                  :string(255)
 #  username                                    :string(255)      not null

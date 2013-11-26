@@ -4,12 +4,14 @@
 # Table name: abstracts
 #
 #  abstract                     :text
+#  abstract_vector              :text
 #  author_affiliations          :text
+#  author_vector                :text
 #  authors                      :text
 #  citation_cnt                 :integer          default(0)
-#  citation_last_get_at         :timestamp
+#  citation_last_get_at         :datetime
 #  citation_url                 :string(255)
-#  created_at                   :timestamp        not null
+#  created_at                   :datetime         not null
 #  created_id                   :integer
 #  created_ip                   :string(255)
 #  deposited_date               :date
@@ -17,7 +19,7 @@
 #  electronic_publication_date  :date
 #  endnote_citation             :text
 #  full_authors                 :text
-#  id                           :integer          default(0), not null, primary key
+#  id                           :integer          not null, primary key
 #  is_cancer                    :boolean          default(TRUE), not null
 #  is_first_author_investigator :boolean          default(FALSE)
 #  is_last_author_investigator  :boolean          default(FALSE)
@@ -27,10 +29,12 @@
 #  issue                        :string(255)
 #  journal                      :string(255)
 #  journal_abbreviation         :string(255)
-#  last_reviewed_at             :timestamp
+#  journal_vector               :text
+#  last_reviewed_at             :datetime
 #  last_reviewed_id             :integer
 #  last_reviewed_ip             :string(255)
 #  mesh                         :text
+#  mesh_vector                  :text
 #  pages                        :string(255)
 #  publication_date             :date
 #  publication_status           :string(255)
@@ -38,12 +42,12 @@
 #  pubmed                       :string(255)
 #  pubmed_creation_date         :date
 #  pubmedcentral                :string(255)
-#  reviewed_at                  :timestamp
+#  reviewed_at                  :datetime
 #  reviewed_id                  :integer
 #  reviewed_ip                  :string(255)
 #  status                       :string(255)
 #  title                        :text
-#  updated_at                   :timestamp        not null
+#  updated_at                   :datetime         not null
 #  updated_id                   :integer
 #  updated_ip                   :string(255)
 #  url                          :string(255)
