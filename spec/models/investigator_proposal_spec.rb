@@ -14,11 +14,18 @@
 #  updated_at      :datetime         not null
 #
 
-class InvestigatorProposal < ActiveRecord::Base
-  belongs_to :investigator
-  belongs_to :proposal
+require 'spec_helper'
 
-  scope :by_role, joins(:proposal).order('investigator_proposals.role DESC, proposals.project_end_date DESC')
-  scope :distinct_roles, select('investigator_proposals.role, count(*) as count').order('role').group('investigator_proposals.role')
-  scope :pis, where("investigator_proposals.role = 'PD/PI'")
+describe InvestigatorProposal do
+
+  it { should belong_to(:investigator) }
+  it { should belong_to(:proposal) }
+
+  it 'can be instantiated' do
+    FactoryGirl.build(:investigator_proposal).should be_an_instance_of(InvestigatorProposal)
+  end
+
+  it 'can be saved successfully' do
+    FactoryGirl.create(:investigator_proposal).should be_persisted
+  end
 end

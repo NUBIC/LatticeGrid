@@ -5,11 +5,6 @@ FactoryGirl.define do
     type 'OrganizationalUnit'
   end
 
-  factory :school, :class => 'School' do
-    name 'school'
-    type 'School'
-  end
-
   factory :center, :class => 'Center' do
     name 'center'
     type 'Center'
@@ -18,5 +13,15 @@ FactoryGirl.define do
   factory :division, :class => 'Division' do
     name 'division'
     type 'Division'
+  end
+
+  factory :program, :class => 'Program' do
+    name 'program'
+    type 'Program'
+  end
+
+  factory :school, :class => 'School' do
+    name 'school'
+    type 'School'
   end
 end

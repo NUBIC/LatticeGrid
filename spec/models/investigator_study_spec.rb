@@ -16,11 +16,18 @@
 #  updated_at      :datetime         not null
 #
 
-class InvestigatorStudy < ActiveRecord::Base
-  belongs_to :investigator
-  belongs_to :study
+require 'spec_helper'
 
-  scope :by_role, joins(:study).order('investigator_studies.role DESC')
-  scope :distinct_roles, order('role').select('role, count(*) as count').group('role')
-  scope :pis, joins(:investigator).where("role = 'PI'")
+describe InvestigatorStudy do
+
+  it { should belong_to(:investigator) }
+  it { should belong_to(:study) }
+
+  it 'can be instantiated' do
+    FactoryGirl.build(:investigator_study).should be_an_instance_of(InvestigatorStudy)
+  end
+
+  it 'can be saved successfully' do
+    FactoryGirl.create(:investigator_study).should be_persisted
+  end
 end

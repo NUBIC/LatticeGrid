@@ -21,19 +21,18 @@
 #  updated_at       :datetime         not null
 #
 
-class InvestigatorColleague < ActiveRecord::Base
-  belongs_to :investigator
-  # need this for a bug in Rails 2.3.5
-  belongs_to :colleague, :class_name => 'Investigator', :foreign_key => 'colleague_id'
+require 'spec_helper'
 
-  def publications
-    Abstract.where("abstracts.id IN (:publication_list)",
-        { :publication_list => self.publication_list.split(",") })
-      .order('abstracts.publication_date DESC, electronic_publication_date DESC, authors ASC')
-      .all
+describe InvestigatorColleague do
+
+  it { should belong_to(:investigator) }
+  it { should belong_to(:colleague) }
+
+  it 'can be instantiated' do
+    FactoryGirl.build(:investigator_colleague).should be_an_instance_of(InvestigatorColleague)
   end
 
-  scope :mesh_ic, lambda { |*args| where('mesh_tags_ic >= :mesh_ic', { :mesh_ic => args.first }) }
-  scope :shared_pubs, lambda { |*args| where('publication_cnt >= :shared_pubs', { :shared_pubs => args.first }) }
-
+  it 'can be saved successfully' do
+    FactoryGirl.create(:investigator_colleague).should be_persisted
+  end
 end

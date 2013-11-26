@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # == Schema Information
 # Schema version: 20131121210426
 #
@@ -6,13 +7,13 @@
 #  action_name     :string(255)
 #  activity        :string(255)
 #  controller_name :string(255)
-#  created_at      :timestamp        not null
+#  created_at      :datetime         not null
 #  created_ip      :string(255)
-#  id              :integer          default(0), not null, primary key
+#  id              :integer          not null, primary key
 #  investigator_id :integer
 #  params          :text
 #  program_id      :integer
-#  updated_at      :timestamp        not null
+#  updated_at      :datetime         not null
 #
 
 class Log < ActiveRecord::Base

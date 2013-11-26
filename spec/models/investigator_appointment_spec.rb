@@ -1,3 +1,20 @@
+# -*- coding: utf-8 -*-
+# == Schema Information
+# Schema version: 20131121210426
+#
+# Table name: investigator_appointments
+#
+#  created_at             :datetime         not null
+#  end_date               :date
+#  id                     :integer          not null, primary key
+#  investigator_id        :integer          not null
+#  organizational_unit_id :integer          not null
+#  research_summary       :text
+#  start_date             :date
+#  type                   :string(255)
+#  updated_at             :datetime         not null
+#
+
 require 'spec_helper'
 
 describe InvestigatorAppointment do
@@ -12,10 +29,82 @@ describe InvestigatorAppointment do
   end
 end
 
+describe AssociateMember do
+  context 'subclasses of InvestigatorAppointment' do
+    it 'can be saved successfully' do
+      FactoryGirl.create(:associate_member).should be_persisted
+    end
+  end
+end
+
+describe Joint do
+  context 'subclasses of InvestigatorAppointment' do
+    it 'can be saved successfully' do
+      FactoryGirl.create(:joint).should be_persisted
+    end
+  end
+end
+
 describe Member do
   context 'subclasses of InvestigatorAppointment' do
     it 'can be saved successfully' do
       FactoryGirl.create(:member).should be_persisted
+    end
+  end
+end
+
+describe PrimaryMember do
+  context 'subclasses of InvestigatorAppointment' do
+    it 'can be saved successfully' do
+      FactoryGirl.create(:primary_member).should be_persisted
+    end
+  end
+end
+
+describe PrimaryAssociateMember do
+  context 'subclasses of InvestigatorAppointment' do
+    it 'can be saved successfully' do
+      FactoryGirl.create(:primary_associate_member).should be_persisted
+    end
+  end
+end
+
+describe Secondary do
+  context 'subclasses of InvestigatorAppointment' do
+    it 'can be saved successfully' do
+      FactoryGirl.create(:secondary).should be_persisted
+    end
+  end
+end
+
+describe SecondaryMember do
+  context 'subclasses of InvestigatorAppointment' do
+    it 'can be saved successfully' do
+      FactoryGirl.create(:secondary_member).should be_persisted
+    end
+  end
+end
+
+describe SecondaryAssociateMember do
+  context 'subclasses of InvestigatorAppointment' do
+    it 'can be saved successfully' do
+      FactoryGirl.create(:secondary_associate_member).should be_persisted
+    end
+  end
+end
+
+describe TertiaryMember do
+  context 'subclasses of InvestigatorAppointment' do
+    it 'can be saved successfully' do
+      FactoryGirl.create(:tertiary_member).should be_persisted
+    end
+  end
+end
+
+describe TertiaryAssociateMember do
+  context 'subclasses of InvestigatorAppointment' do
+    it 'can be saved successfully' do
+      FactoryGirl.create(:tertiary_associate_member).should be_persisted
     end
   end
 end

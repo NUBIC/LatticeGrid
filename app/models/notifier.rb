@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Notifier < ActionMailer::Base
   SENDER = "mruchin@northwestern.edu"
   default from: SENDER

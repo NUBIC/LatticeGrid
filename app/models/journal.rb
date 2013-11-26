@@ -1,12 +1,13 @@
+# -*- coding: utf-8 -*-
 # == Schema Information
 # Schema version: 20131121210426
 #
 # Table name: journals
 #
 #  article_influence_score  :float
-#  created_at               :timestamp        not null
+#  created_at               :datetime         not null
 #  eigenfactor_score        :float
-#  id                       :integer          default(0), not null, primary key
+#  id                       :integer          not null, primary key
 #  immediacy_index          :float
 #  impact_factor            :float
 #  impact_factor_five_year  :float
@@ -18,7 +19,7 @@
 #  score_year               :integer
 #  total_articles           :integer
 #  total_cites              :integer
-#  updated_at               :timestamp        not null
+#  updated_at               :datetime         not null
 #
 
 class Journal < ActiveRecord::Base
@@ -27,6 +28,9 @@ class Journal < ActiveRecord::Base
     :primary_key =>  'issn',
     :readonly => true,
     :order => 'year DESC, authors ASC'
+
+  validates :journal_abbreviation, presence: true
+  validates :journal_name, presence: true
 
   def self.match_by_abbrev
     select('DISTINCT journals.id, journals.score_year, journals.impact_factor, journals.journal_abbreviation, journals.issn, journals.total_cites, journals.impact_factor_five_year, journals.immediacy_index, journals.total_articles, journals.eigenfactor_score, journals.article_influence_score, abstracts.issn as pubmed_issn')

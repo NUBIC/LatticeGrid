@@ -1,3 +1,26 @@
+# -*- coding: utf-8 -*-
+# == Schema Information
+# Schema version: 20131121210426
+#
+# Table name: investigator_abstracts
+#
+#  abstract_id      :integer          not null
+#  created_at       :datetime         not null
+#  id               :integer          not null, primary key
+#  investigator_id  :integer          not null
+#  is_first_author  :boolean          default(FALSE), not null
+#  is_last_author   :boolean          default(FALSE), not null
+#  is_valid         :boolean          default(FALSE), not null
+#  last_reviewed_at :datetime
+#  last_reviewed_id :integer
+#  last_reviewed_ip :string(255)
+#  publication_date :date
+#  reviewed_at      :datetime
+#  reviewed_id      :integer
+#  reviewed_ip      :string(255)
+#  updated_at       :datetime         not null
+#
+
 require 'spec_helper'
 
 describe InvestigatorAbstract do

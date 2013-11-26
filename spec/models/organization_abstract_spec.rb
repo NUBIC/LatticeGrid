@@ -13,8 +13,18 @@
 #  updated_at             :datetime         not null
 #
 
-class OrganizationAbstract < ActiveRecord::Base
-  belongs_to :organizational_unit
-  belongs_to :abstract
-  validates_uniqueness_of :organizational_unit_id, :scope => "abstract_id"
+require 'spec_helper'
+
+describe OrganizationAbstract do
+
+  it { should belong_to(:organizational_unit) }
+  it { should belong_to(:abstract) }
+
+  it 'can be instantiated' do
+    FactoryGirl.build(:organization_abstract).should be_an_instance_of(OrganizationAbstract)
+  end
+
+  it 'can be saved successfully' do
+    FactoryGirl.create(:organization_abstract).should be_persisted
+  end
 end
