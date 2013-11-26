@@ -45,6 +45,12 @@ module LatticeGrid
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    # necessary in order to run rake db:test:prepare
+    # so that the *_vector columns are included in the test database
+    # preferrably this would only be in the environments/test.rb file
+    # but apparently this does not work
+    config.active_record.schema_format = :sql
   end
 
   def LatticeGrid.the_instance

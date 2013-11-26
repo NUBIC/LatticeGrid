@@ -1,4 +1,5 @@
 LatticeGrid::Application.routes.draw do
+
   match 'investigators/:id/collaborators.js' => 'investigators#collaborators', :as => :collaborators_investigator, :via => :get
   match 'investigators/:id/barchart.js' => 'investigators#barchart', :as => :barchart_investigator, :via => :get
   match 'cytoscape/:id/d3_investigator_wordle_data.js' => 'cytoscape#d3_investigator_wordle_data', :as => :d3_investigator_wordle_data, :via => :get

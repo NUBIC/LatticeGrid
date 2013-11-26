@@ -58,7 +58,7 @@
         <% for publication in abstracts %>
           <tr valign="middle" class="<%= cycle('list-line-odd', 'list-line-even') %>">
             <% if include_collab_marker %>
-  	          <%= render :partial => "shared/publication_collab_marker.html",
+  	          <%= render :partial => "shared/publication_collab_marker",
                     :locals => {
                       :publication => publication,
                       :investigators_in_unit => investigators_in_unit
@@ -70,21 +70,21 @@
                 <%= publication.updated_at.to_s(:justdate) %>
               </td>
             <% end -%>
-  	        <%= render( :partial => "shared/pubmed_id_item.html", :locals => { :publication => publication }) if include_pubmed_id %>
+  	        <%= render( :partial => "shared/pubmed_id_item", :locals => { :publication => publication }) if include_pubmed_id %>
   	        <% if include_impact_factor -%>
           	  <td class="list-left">
           		  <%= publication.journals[0].impact_factor if !publication.journals.blank? %>
           	  </td>
   	        <% end -%>
             <% if show_valid_checkboxes %>
-  	          <%= render :partial => "shared/show_valid_checkboxes.html",
+  	          <%= render :partial => "shared/show_valid_checkboxes",
                     :locals => {
                       :publication => publication,
                       :show_cancer_related_checkbox => show_cancer_related_checkbox
                     }
               -%>
             <% end -%>
-	          <%= render :partial => "shared/publication_item.html",
+	          <%= render :partial => "shared/publication_item",
                   :locals => {
                     :publication => publication,
                     :bold_members => bold_members,
@@ -95,7 +95,7 @@
                   }
             -%>
             <% if show_valid_checkboxes %>
-  	          <%= render :partial => "shared/publication_investigators_item.html",
+  	          <%= render :partial => "shared/publication_investigators_item",
                     :locals => {
                       :show_valid_checkboxes => show_valid_checkboxes,
                       :publication => publication,

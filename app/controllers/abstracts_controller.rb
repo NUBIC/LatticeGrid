@@ -11,7 +11,7 @@ class AbstractsController < ApplicationController
   require 'pubmed_utilities'  #loads including 'pubmed_config'  'bio' (bioruby) and
 
   def index
-    year = handle_year()
+    year = handle_year
     redirect_to abstracts_by_year_url(:id => year, :page => '1')
   end
 

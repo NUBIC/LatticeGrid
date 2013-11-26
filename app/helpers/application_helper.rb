@@ -7,9 +7,9 @@ module ApplicationHelper
   end
   require 'config'
 
-  def handle_year(the_year=nil)
+  def handle_year(the_year = nil)
     return @year if !@year.blank? and the_year.blank?
-    year_array = LatticeGridHelper.year_array()
+    year_array = LatticeGridHelper.year_array
     @year = year_array[0].to_s
     @year = cookies[:the_year] if !cookies[:the_year].blank?
     if !the_year.blank? then

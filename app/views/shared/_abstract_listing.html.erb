@@ -45,7 +45,7 @@
 		<%= will_paginate(abstracts, :outer_window => 5, :inner_window => 5) -%>
 	<% end -%>
 
-	<%= render :partial => "shared/abstract_listing_table.html",
+	<%= render :partial => "shared/abstract_listing_table",
 	      :locals => {
 	      	:abstracts => abstracts,
 	      	:investigators_in_unit => investigators_in_unit,
