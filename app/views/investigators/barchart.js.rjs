@@ -3,7 +3,5 @@ investigator ||= @investigator
 publications_per_year=abstracts_per_year_as_string(investigator.abstracts) unless investigator.blank?
 
 unless publications_per_year.blank?
-  page.insert_html(:bottom, 'main', js_sparkline_barchart('barchart_'+investigator.username, publications_per_year) ) 
-  #<--jQuery('#barchart_<%= investigator.username %>').title("publications per year: <%= publications_per_year %>"); -->
-  
+  page.insert_html(:bottom, 'main', js_sparkline_barchart('barchart_'+investigator.username, publications_per_year).html_safe )
 end

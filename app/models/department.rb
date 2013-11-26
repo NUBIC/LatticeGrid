@@ -29,7 +29,7 @@
 #
 
 class Department < OrganizationalUnit
-  belongs_to :school
+  belongs_to :school, :foreign_key => :parent_id
   has_many :divisions
   accepts_nested_attributes_for :divisions
 end

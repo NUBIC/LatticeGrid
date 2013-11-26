@@ -18,7 +18,6 @@ class InvestigatorAppointment < ActiveRecord::Base
   belongs_to :investigator
   belongs_to :organizational_unit
   belongs_to :center, :foreign_key => :organizational_unit_id
-  #belongs_to :organizational_unit
   has_many :investigator_abstracts, :through => :investigator
   validates_uniqueness_of :investigator_id, :scope => [:organizational_unit_id, :type]
 

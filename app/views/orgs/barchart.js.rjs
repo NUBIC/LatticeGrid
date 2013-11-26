@@ -3,5 +3,5 @@ org ||= @unit
 publications_per_year=abstracts_per_year_as_string(org.abstracts) unless org.blank?
 
 unless publications_per_year.blank?
-  js_sparkline_barchart('barchart_'+org.id.to_s, publications_per_year) 
+  js_sparkline_barchart('barchart_'+org.id.to_s, publications_per_year).html_safe
 end

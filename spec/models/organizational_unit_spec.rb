@@ -6,6 +6,25 @@ describe OrganizationalUnit do
   end
 end
 
+describe Center do
+  it { should belong_to(:school) }
+  it { should have_many(:programs) }
+end
+
+describe Department do
+  it { should belong_to(:school) }
+  it { should have_many(:divisions) }
+end
+
+describe Division do
+  context 'subclasses of OrganizationalUnit' do
+    it 'can be saved successfully' do
+      FactoryGirl.create(:division).should be_persisted
+    end
+  end
+end
+
+
 describe School do
   context 'subclasses of OrganizationalUnit' do
     it 'can be saved successfully' do

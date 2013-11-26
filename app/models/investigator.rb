@@ -215,6 +215,8 @@ class Investigator < ActiveRecord::Base
 
   default_scope where('(investigators.deleted_at is null and investigators.end_date is null)')
 
+  validates_presence_of :first_name
+  validates_presence_of :last_name
   validates_presence_of :username
   validates_uniqueness_of :username
 
@@ -731,7 +733,7 @@ class Investigator < ActiveRecord::Base
     abstracts.abstracts_last_five_years.length
   end
 
-  def self.generate_date(number_years=5)
+  def self.generate_date(number_years = 5)
     cutoff_date = number_years.years.ago.to_date.to_s(:db)
   end
 
@@ -743,44 +745,44 @@ class Investigator < ActiveRecord::Base
 
   def self.distinct_primary_appointments
     select('DISTINCT home_department_id as organizational_unit_id')
-    .collect(&:organizational_unit_id)
+      .collect(&:organizational_unit_id)
   end
 
   def self.distinct_joint_appointments
     joins([:investigator_appointments])
-    .select('DISTINCT organizational_unit_id')
-    .where("type='Joint'")
-    .to_a
-    .collect(&:organizational_unit_id)
+      .select('DISTINCT organizational_unit_id')
+      .where("type='Joint'")
+      .to_a
+      .collect(&:organizational_unit_id)
   end
 
   def self.distinct_secondary_appointments
     joins([:investigator_appointments])
-    .select('DISTINCT organizational_unit_id')
-    .where("type='Secondary'")
-    .to_a
-    .collect(&:organizational_unit_id)
+      .select('DISTINCT organizational_unit_id')
+      .where("type='Secondary'")
+      .to_a
+      .collect(&:organizational_unit_id)
   end
 
   def self.distinct_memberships
     joins([:member_appointments])
-    .select('DISTINCT organizational_unit_id')
-    .to_a
-    .collect(&:organizational_unit_id)
+      .select('DISTINCT organizational_unit_id')
+      .to_a
+      .collect(&:organizational_unit_id)
   end
 
   def self.distinct_associate_memberships
     joins([:associate_member_appointments])
-    .select('DISTINCT organizational_unit_id')
-    .to_a
-    .collect(&:organizational_unit_id)
+      .select('DISTINCT organizational_unit_id')
+      .to_a
+      .collect(&:organizational_unit_id)
   end
 
   def self.distinct_other_appointments_or_memberships
     joins([:investigator_appointments])
-    .select('DISTINCT organizational_unit_id')
-    .to_a
-    .collect(&:organizational_unit_id)
+      .select('DISTINCT organizational_unit_id')
+      .to_a
+      .collect(&:organizational_unit_id)
   end
 
   def self.distinct_all_appointments_and_memberships
@@ -968,13 +970,13 @@ class Investigator < ActiveRecord::Base
     end
   end
 
-  def self.add_collaborations_to_investigator(investigator_abstracts, investigator, investigators_in_unit )
+  def self.add_collaborations_to_investigator(investigator_abstracts, investigator, investigators_in_unit)
     investigator_abstracts.each do |ia|
       add_collaboration_to_investigator(ia, investigator, investigators_in_unit) if ia.is_valid == true
     end
   end
 
-  def self.add_collaborations_to_investigators(investigator_abstracts, input_investigators )
+  def self.add_collaborations_to_investigators(investigator_abstracts, input_investigators)
     investigator_abstracts.each do |ia|
       investigator = input_investigators.find { |i| i.id == ia.investigator_id }
       # this should enforce that only internal investigators are added!
@@ -984,7 +986,7 @@ class Investigator < ActiveRecord::Base
     end
   end
 
-  def self.get_connections(investigators, number_years=5)
+  def self.get_connections(investigators, number_years = 5)
     add_collaboration_hash_to_investigators(investigators)
     publication_collection = Abstract.investigator_publications(investigators, number_years )
     #iterate over all publications
@@ -995,7 +997,7 @@ class Investigator < ActiveRecord::Base
     end
   end
 
-  def self.get_investigator_connections(investigator, number_years=5)
+  def self.get_investigator_connections(investigator, number_years = 5)
     unit_list = investigator.unit_list
     if unit_list.length == 1 then
       investigators_in_unit =

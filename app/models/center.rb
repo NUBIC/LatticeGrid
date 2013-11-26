@@ -29,7 +29,7 @@
 #
 
 class Center < School
-  belongs_to :school
-  has_many :programs
+  belongs_to :school, :foreign_key => :parent_id
+  has_many :programs, :foreign_key => :parent_id
   accepts_nested_attributes_for :programs
 end

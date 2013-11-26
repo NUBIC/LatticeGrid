@@ -45,11 +45,12 @@ class InvestigatorAbstract < ActiveRecord::Base
     where('investigator_abstracts.investigator_id IN (:pi_ids) AND investigator_abstracts.is_valid = true', { :pi_ids => ids.first })
   }
 
-  def self.investigator_shared_publication_count_by_date_range(investigator_id,start_date,end_date)
-    abs = select('abstract_id').where('investigator_abstracts.investigator_id = :investigator_id and investigator_abstracts.is_valid = true and investigator_abstracts.publication_date between :start_date and :end_date',
+  def self.investigator_shared_publication_count_by_date_range(investigator_id, start_date, end_date)
+    abs = select('abstract_id')
+            .where('investigator_abstracts.investigator_id = :investigator_id and investigator_abstracts.is_valid = true and investigator_abstracts.publication_date between :start_date and :end_date',
               { :investigator_id => investigator_id, :start_date => start_date, :end_date => end_date } ).all
     abstract_ids = abs.map(&:abstract_id)
-    # TODO: How was this a hash? The method call was .count?
+    # TODO: How is this a hash? The method call is .count?
     the_hash = InvestigatorAbstract.where('investigator_abstracts.abstract_id IN (:ids) AND investigator_abstracts.is_valid = true AND NOT investigator_abstracts.investigator_id = :investigator_id',
       { :ids => abstract_ids, :investigator_id => investigator_id }).group('investigator_id').count
     return nil if the_hash.keys.blank?

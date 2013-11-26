@@ -71,8 +71,9 @@ class Abstract < ActiveRecord::Base
     :conditions => ['(investigators.end_date is null or investigators.end_date >= :now) and investigator_abstracts.is_valid = true', {:now => Date.today }]
   has_many :investigator_appointments, :through => :investigator_abstracts,
     :conditions => ['investigator_appointments.end_date is null or investigator_appointments.end_date >= :now', {:now => Date.today }]
+
   has_many :organization_abstracts,
-        :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
+    :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
   has_many :organizational_units, :through => :organization_abstracts
 
   # if pubmed if blank, force uniqueness (non-blankness!) for doi, and vice versus. Both cannot be blank!
@@ -83,9 +84,6 @@ class Abstract < ActiveRecord::Base
   validates_uniqueness_of :pubmed, :allow_nil => true
   validates_uniqueness_of :doi, :allow_nil => true
   validates_uniqueness_of :doi, :allow_nil => false, :message => "and pubmed can't both be nil", :if => :check_pubmed_doi_blank?
-
-  has_many :organization_abstracts,
-    :conditions => ['organization_abstracts.end_date is null or organization_abstracts.end_date >= :now', {:now => Date.today }]
 
   scope :most_recent, lambda { |latest|
     if latest.blank?

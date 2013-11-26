@@ -9,4 +9,14 @@ FactoryGirl.define do
     name 'school'
     type 'School'
   end
+
+  factory :center, :class => 'Center' do
+    name 'center'
+    type 'Center'
+  end
+
+  factory :division, :class => 'Division' do
+    name 'division'
+    type 'Division'
+  end
 end
