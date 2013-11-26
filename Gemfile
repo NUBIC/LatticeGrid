@@ -45,8 +45,11 @@ group :test do
   gem 'database_cleaner'
   gem 'shoulda'
   gem 'factory_girl'
+  gem 'factory_girl_rails'
   gem 'simplecov', require: false
   gem 'fakeweb'
   gem 'webmock', require: false
   gem 'rack-test'
+  gem 'rails3_pg_deferred_constraints'
 end
+
