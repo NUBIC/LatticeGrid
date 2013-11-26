@@ -33,3 +33,7 @@ public/cytoscape*.js
 public/graphviz/
 public/investigators/
 public/orgs/
+
+# Ignore coverage
+coverage
+coverage/*
