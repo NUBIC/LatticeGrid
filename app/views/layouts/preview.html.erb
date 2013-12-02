@@ -2,105 +2,104 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	<title>LatticeGrid: <%= controller.action_name %></title>
-  <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
-	<style type="text/css">
-	
-	/* Global styles */
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+		<title>LatticeGrid: <%= controller.action_name %></title>
+	  <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
+		<style type="text/css">
 
-	body { 
-		font-family : Arial, Helvetica, Geneva, Sans-serif;
-		font-size : 9pt;
-		color : black;
-		background-color: white; 
-		line-height: 12px;
-		background: white; 
-		margin: 5px 5px 5px 5px;
-	}
+			/* Global styles */
 
-	h1, h2, .h2, h3, .h3 {
-	    font-family: Arial, Helvetica, Geneva, Sans-serif;
-	    font-size: 11pt;
-	    font-weight: bold;
-		color: #226;
-	    line-height: 140%;
-	    padding-bottom: 0px;
-	    margin-bottom: 2px;
-	    margin-top: 8px;
-	    padding-top: 0px;
-	}
+			body {
+				font-family : Arial, Helvetica, Geneva, Sans-serif;
+				font-size : 9pt;
+				color : black;
+				background-color: white;
+				line-height: 12px;
+				background: white;
+				margin: 5px 5px 5px 5px;
+			}
 
-	a { color: #000; }
-	a:visited { color: #666; }
-	a:hover { color: #fff; background-color:#888; }
+			h1, h2, .h2, h3, .h3 {
+			    font-family: Arial, Helvetica, Geneva, Sans-serif;
+			    font-size: 11pt;
+			    font-weight: bold;
+				color: #226;
+			    line-height: 140%;
+			    padding-bottom: 0px;
+			    margin-bottom: 2px;
+			    margin-top: 8px;
+			    padding-top: 0px;
+			}
 
+			a { color: #000; }
+			a:visited { color: #666; }
+			a:hover { color: #fff; background-color:#888; }
 
-	#main {
-		margin-left: auto;
-		margin-right: auto;
-		padding: 0px;
-		width: 100%;
-		height:auto;
-		vertical-align: top;
-		background-color: #FFFFFF;
-	}
+			#main {
+				margin-left: auto;
+				margin-right: auto;
+				padding: 0px;
+				width: 100%;
+				height:auto;
+				vertical-align: top;
+				background-color: #FFFFFF;
+			}
 
-	/* Styles for admin/list */
+			/* Styles for admin/list */
 
-	table {
-		border: 1px indigo solid;
-	}
+			table {
+				border: 1px indigo solid;
+			}
 
-	tr.header {
-		background:   #709fc7;
-	}
+			tr.header {
+				background:   #709fc7;
+			}
 
-	tr.even {
-		background:   white;
-	}
+			tr.even {
+				background:   white;
+			}
 
-	tr.odd {
-		background:   silver;
-	}
+			tr.odd {
+				background:   silver;
+			}
 
-	td,th {
-		padding-top: 0.25em;
-		padding-bottom: 0.25em;
-	}
+			td,th {
+				padding-top: 0.25em;
+				padding-bottom: 0.25em;
+			}
 
-	table.borderless {
-		border: 0px;
-	}
+			table.borderless {
+				border: 0px;
+			}
 
-	td.list-left, th.list-left {
-		padding-left: 1em;
-	}
+			td.list-left, th.list-left {
+				padding-left: 1em;
+			}
 
-	td.list-title-left {
-		padding-left: 1em;
-		color:        #244;
-		font-weight:  bold;
-	}
+			td.list-title-left {
+				padding-left: 1em;
+				color:        #244;
+				font-weight:  bold;
+			}
 
-	#listing .list-heading {
-		background-color: #709fc7;
-		color:        #244;
-		font-weight:  bold;
-	}
+			#listing .list-heading {
+				background-color: #709fc7;
+				color:        #244;
+				font-weight:  bold;
+			}
 
-	#listing .list-title {
-		color:        #244;
-		font-weight:  bold;
-	}
-</style>
-	
-<%= LatticeGridHelper.google_analytics -%>
-</head>
-<body>
-	<div id="main" class="autoclear">
-	<%= yield  %>
-	</div>
-</body>
+			#listing .list-title {
+				color:        #244;
+				font-weight:  bold;
+			}
+	  </style>
+
+	  <%= LatticeGridHelper.google_analytics.html_safe -%>
+	</head>
+	<body>
+		<div id="main" class="autoclear">
+		  <%= yield  %>
+		</div>
+	</body>
 </html>

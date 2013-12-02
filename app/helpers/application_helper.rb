@@ -7,9 +7,9 @@ module ApplicationHelper
   end
   require 'config'
 
-  def handle_year(the_year=nil)
+  def handle_year(the_year = nil)
     return @year if !@year.blank? and the_year.blank?
-    year_array = LatticeGridHelper.year_array()
+    year_array = LatticeGridHelper.year_array
     @year = year_array[0].to_s
     @year = cookies[:the_year] if !cookies[:the_year].blank?
     if !the_year.blank? then
@@ -23,12 +23,12 @@ module ApplicationHelper
     model.created_ip ||= request.remote_ip if defined?(request) and ! request.nil?
     model.created_id ||= session[:user_id] if defined?(session) and ! session.nil? and ! session[:user_id].blank?
     before_update(model)
-  end 
+  end
 
   def before_update(model)
     model.updated_ip = request.remote_ip if defined?(request) and ! request.nil?
     model.updated_id = session[:user_id] if defined?(session) and ! session.nil? and ! session[:user_id].blank?
-  end 
+  end
 
   # Overrides `current_abstracts_url` from the router.
   def current_abstracts_url
@@ -36,8 +36,15 @@ module ApplicationHelper
     abstracts_by_year_url(:id => year, :page => '1')
   end
 
+  def current_abstracts_path
+    year = handle_year()
+    abstracts_by_year_path(:id => year, :page => '1')
+  end
+
+
   def base_path(remove_trailing_id=false)
-    the_path=request.env['REQUEST_URI']
+    # the_path=request.env['REQUEST_URI']
+    the_path = request.original_url
     if remove_trailing_id and the_path =~ /\/[0-9]+$/
       the_path.sub!(/\/[0-9]+$/,"")
     end
@@ -64,11 +71,11 @@ module ApplicationHelper
      return false  #disallowed
   end
 
-  def capitalize_words(string) 
-    string.downcase.gsub(/\b\w/) { $&.upcase } 
-  end 
-  
-  def truncate_words(phrase, count=20) 
+  def capitalize_words(string)
+    string.downcase.gsub(/\b\w/) { $&.upcase }
+  end
+
+  def truncate_words(phrase, count=20)
     return "" if phrase.blank?
     re = Regexp.new('^(.{'+count.to_s+'}\w*)(.*)', Regexp::MULTILINE)
     phrase.gsub(re) {$2.empty? ? $1 : $1 + '...'}
@@ -84,12 +91,12 @@ module ApplicationHelper
       end
     end
     years
-  end   
+  end
 
   def abstracts_per_year_as_string(all_abstracts)
     abstracts_per_year(all_abstracts, LatticeGridHelper.year_array.sort).join(", ")
   end
-  
+
   def link_to_faculty(faculty, delimiter=", ")
     faculty.collect{|pi| link_to( pi.name,
       show_investigator_url(:id=>pi.username, :page=>1), # can't use this form for usernames including non-ascii characters
@@ -98,24 +105,43 @@ module ApplicationHelper
   end
 
   def link_to_coauthors(co_authors, delimiter=", ")
-    co_authors.collect{|co_author| link_to( coauthor_span_class(co_author.colleague.name, co_author.publication_cnt),
-     show_investigator_url(:id=>co_author.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
-      :title => "#{co_author.publication_cnt} shared pubs; #{co_author.colleague.total_publications} pubs; "+(co_author.colleague.num_intraunit_collaborators+co_author.colleague.num_extraunit_collaborators).to_s+" collaborators") if co_author.colleague.deleted_at.blank? }.compact.join(delimiter)
+    co_authors.collect{ |co_author|
+      if co_author.colleague && co_author.colleague.deleted_at.blank?
+        link_to( coauthor_span_class(co_author.colleague.name, co_author.publication_cnt).html_safe,
+                 show_investigator_url(:id=>co_author.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
+                 :title => co_author_link_title(co_author))
+      end
+    }.compact.join(delimiter)
+  end
+
+  def co_author_link_title(co_author)
+    "#{co_author.publication_cnt} shared pubs; #{co_author.colleague.total_publications} pubs; " +
+    (co_author.colleague.num_intraunit_collaborators+co_author.colleague.num_extraunit_collaborators).to_s +
+    " collaborators"
   end
 
   def link_to_collaborators(collaborators, delimiter=", ")
-    collaborators.collect{|investigator| link_to( investigator.name, 
+    collaborators.collect{|investigator| link_to( investigator.name,
       show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
         :title => "#{investigator.total_publications} pubs; "+(investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators")  if investigator.deleted_at.blank? }.compact.join(delimiter)
   end
 
   def link_to_similar_investigators(relationships, delimiter=", ")
-    relationships.collect{|relationship| 
-      link_to( similarity_span_class(relationship.colleague.name, relationship.mesh_tags_ic.round), 
-      show_investigator_url(:id=>relationship.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
-        :title => "Similarity score of #{relationship.mesh_tags_ic.round}; #{relationship.colleague.total_publications} total pubs; "+(relationship.colleague.num_intraunit_collaborators+relationship.colleague.num_extraunit_collaborators).to_s+" collaborators; shared tags: #{relationship.tag_list}") if relationship.colleague.deleted_at.blank?}.compact.join(delimiter)
+    relationships.collect{|relationship|
+      if relationship.colleague && relationship.colleague.deleted_at.blank?
+        link_to( similarity_span_class(relationship.colleague.name, relationship.mesh_tags_ic.round).html_safe,
+                 show_investigator_url(:id=>relationship.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
+                 :title => similarity_link_title(relationship))
+      end
+    }.compact.join(delimiter)
   end
- 
+
+  def similarity_link_title(relationship)
+    "Similarity score of #{relationship.mesh_tags_ic.round}; #{relationship.colleague.total_publications} total pubs; " +
+    (relationship.colleague.num_intraunit_collaborators + relationship.colleague.num_extraunit_collaborators).to_s +
+    " collaborators; shared tags: #{relationship.tag_list}"
+  end
+
   def coauthor_span_class(link_out, score)
     similarity_class = case score
     when 41..100000
@@ -135,8 +161,8 @@ module ApplicationHelper
     end
     "<span class='#{similarity_class}'>#{link_out}</span>"
   end
-  
-  
+
+
   def similarity_span_class(link_out, score)
     similarity_class = case score
     when 6000..100000
@@ -156,8 +182,8 @@ module ApplicationHelper
     end
     "<span class='#{similarity_class}'>#{link_out}</span>"
   end
-  
-   
+
+
   def link_to_primary_department(investigator)
     return link_to( investigator.home_department.name, show_investigators_org_url(investigator.home_department_id), :title => "Show investigators in #{investigator.home_department.name}" ) if !investigator.home_department_id.nil?
     begin
@@ -168,18 +194,18 @@ module ApplicationHelper
     end
     return ""
   end
-  
+
   def link_to_units(investigator_appointments, delimiter="<br/>")
       investigator_appointments.collect{ |investigator_appointment| link_to_unit(investigator_appointment.organizational_unit, investigator_appointment.type)}.join(delimiter)
   end
-  
+
   def link_to_unit(unit, the_type=nil)
     return if unit.blank?
     link_name =  unit.name
     link_name += " (#{the_type})" unless the_type.blank?
     link_to( link_name , show_investigators_org_url(unit.id), :title => "Show investigators in #{unit.name}" )
   end
-  
+
   def handle_tr_format(title, object, re="", replacement="")
     return "" if object.blank?
     if re.blank?
@@ -192,21 +218,21 @@ module ApplicationHelper
 		output += "</tr>"
 		return output
 	end
-	
+
 	def email_link(email, name="")
 	  return "" if email.blank?
 	  return ""  if email.kind_of?(Array) and email.length == 0
 	  email = email[0] if email.kind_of?(Array) and email.length > 0
 	  name = email.split("@").join(" at ") if name.blank?
-	  return mail_to(email, name, 
+	  return mail_to(email, name,
           		:subject => LatticeGridHelper.email_subject(),
-          		:encode => "javascript") 
+          		:encode => "javascript")
   end
-  
+
   def handle_ldap(applicant)
     return applicant if applicant.blank? or applicant.username.blank?
     begin
-      pi_data = GetLDAPentry(applicant.username) 
+      pi_data = GetLDAPentry(applicant.username)
      # logger.warn("dump of pi_data: #{pi_data.inspect}")
       if pi_data.nil?
         logger.warn("Probable error reaching the LDAP server in GetLDAPentry: GetLDAPentry returned null using netid #{applicant.username}.")
@@ -222,9 +248,9 @@ module ApplicationHelper
     end
     applicant
   end
-    
+
 	def hidden_div_if(condition, attributes = {}, &block)
-    if condition 
+    if condition
       attributes["style"] = "display: none;"
     end
     content_tag("div", attributes, &block)
@@ -237,7 +263,7 @@ module ApplicationHelper
     end
    abs_path
   end
- 
+
   def format_bool_yn(obj)
     if obj.nil? or obj.blank? or !obj
       "No"
@@ -247,17 +273,17 @@ module ApplicationHelper
   end
 
   def link_to_pubmed(text, abstract, tooltip=nil)
-    tooltip ||= text 
-    link_to( text, ((abstract.url.blank?) ? "http://www.ncbi.nlm.nih.gov/pubmed/"+abstract.pubmed : abstract.url), :target => '_blank', :title=>tooltip) 
+    tooltip ||= text
+    link_to( text, ((abstract.url.blank?) ? "http://www.ncbi.nlm.nih.gov/pubmed/"+abstract.pubmed : abstract.url), :target => '_blank', :title=>tooltip)
   end
-  
+
   def link_to_pubmedcentral(text, abstract, tooltip=nil)
-    tooltip ||= text 
-    link_to( text, "http://www.ncbi.nlm.nih.gov/pmc/articles/"+abstract.pubmedcentral, :target => '_blank', :title=>tooltip) 
+    tooltip ||= text
+    link_to( text, "http://www.ncbi.nlm.nih.gov/pmc/articles/"+abstract.pubmedcentral, :target => '_blank', :title=>tooltip)
   end
-  
+
   def link_to_doi(text, abstract, tooltip=nil)
-    tooltip ||= text 
-    link_to( text, "http://dx.doi.org/"+abstract.doi, :target => '_blank', :title=>tooltip) 
+    tooltip ||= text
+    link_to( text, "http://dx.doi.org/"+abstract.doi, :target => '_blank', :title=>tooltip)
   end
 end

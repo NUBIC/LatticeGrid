@@ -1,24 +1,39 @@
-<h1><%= @heading %></h1>
+<h1>
+	<%= @heading %>
+</h1>
 
-<p>The following publications are sorted by year and author. Click on the investigator listed to the right of the reference to find other publications by that investigator. Click on the title for a publication to see the abstract. </p>
+<p>
+	The following publications are sorted by year and author.
+	Click on the investigator listed to the right of the reference to find other publications by that investigator.
+	Click on the title for a publication to see the abstract.
+</p>
 
 <div id="listing">
-  
-  <% for unit in @head_node.children.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation} %>
-	<table cellpadding="2" cellspacing="0" width="900" class="borderless"> 
-	<tr valign="bottom" colspan="3">
-	<td class="list-title-center">
-		<%= unit.name %><br/>
-	</td>
-	</tr>
-	</table>
-	
-	<%= "<div id='list_#{unit.id}'></div>" %>
-	<script type="text/javascript" language="javascript">
-	<%= remote_function(:url => {:controller => :orgs, :action => :list_abstracts_during_period_rjs, :id => unit.id, :start_date => @start_date, :end_date => @end_date, :affiliation_types => params[:affiliation_types], :exclude_letters => params[:exclude_letters] }, :before => "Element.show('spinner')", 
-	:complete => "Element.hide('spinner')" ) %> 
-	</script>
-  <% end %>
+  <% for unit in @head_node.children.sort{ |x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation } %>
+	  <table cellpadding="2" cellspacing="0" width="900" class="borderless">
+	    <tr valign="bottom" colspan="3">
+        <td class="list-title-center">
+		      <%= unit.name %>
+		      <br/>
+	      </td>
+	    </tr>
+	  </table>
 
-<br/>
+	  <%= "<div id='list_#{unit.id}'></div>".html_safe %>
+	  <script type="text/javascript" language="javascript">
+	    <%= remote_function(
+	    	    :url => {
+		    	    :controller => :orgs,
+		    	    :action => :list_abstracts_during_period_rjs,
+		    	    :id => unit.id, :start_date => @start_date,
+		    	    :end_date => @end_date,
+		    	    :affiliation_types => params[:affiliation_types],
+		    	    :exclude_letters => params[:exclude_letters]
+            },
+            :before => "Element.show('spinner')",
+            :complete => "Element.hide('spinner')" )
+	    %>
+	  </script>
+  <% end %>
+  <br/>
 </div>

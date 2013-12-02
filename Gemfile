@@ -2,25 +2,34 @@ source 'https://rubygems.org'
 source 'http://download.bioinformatics.northwestern.edu/gems'
 
 gem 'bundler'
-gem "rails", "~> 2.3", :require => nil
+
+gem 'rails', '3.2.15'
+
 gem 'rmagick', :require => nil
 gem 'ruby-graphviz'
-gem 'json', "1.6.6"
-#gem 'sparklines'
+gem 'json'
+
 gem 'fastercsv'
 gem 'pg'
-gem 'haml', '3.1.7'
-gem 'will_paginate', "~> 2.3"
-gem 'awesome_nested_set', "~> 1.4"
-#gem "acts_as_taggable_on_steroids", "~> 1.2"
-gem "princely", "~> 1.2.5"
+gem 'haml'
+gem 'will_paginate'
+gem 'awesome_nested_set'
+gem 'princely'
 gem 'net-ldap'
 gem 'bio'
 gem 'aker-rails'
 gem 'aker'
-gem 'rdoc', '3.12' # necessary for rails 2.3.12 and higher
-gem 'bcdatabase', '~> 1.0.6'
-#gem 'wordcram'
+gem 'rdoc'
+gem 'bcdatabase'
+gem 'prototype-rails'
+
+group :assets do
+  gem 'sass-rails',   '~> 3.2'
+  gem 'coffee-rails', '~> 3.2'
+  gem 'uglifier', '>= 1.0.3'
+end
+
+gem 'jquery-rails'
 
 group :development do
   gem 'capistrano'
@@ -28,3 +37,19 @@ group :development do
   gem 'capistrano-rails'
   gem 'annotate', '~> 2.5.0'
 end
+
+group :test do
+  gem 'rspec-rails'
+  gem 'capybara'
+  gem 'poltergeist'
+  gem 'database_cleaner'
+  gem 'shoulda'
+  gem 'factory_girl'
+  gem 'factory_girl_rails'
+  gem 'simplecov', require: false
+  gem 'fakeweb'
+  gem 'webmock', require: false
+  gem 'rack-test'
+  gem 'rails3_pg_deferred_constraints'
+end
+

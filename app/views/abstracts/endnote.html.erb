@@ -1,6 +1,10 @@
-<h1>EndNote Reference</h1>
-<p>Copy the following text and paste it into endnote to import this record</p>
+<h1>
+  EndNote Reference
+</h1>
+<p>
+  Copy the following text and paste it into endnote to import this record
+</p>
 <div id="abstractcontent">
-<%= @publication.endnote_citation.gsub("%","<br/>%") %>
-<br/>
+  <%= @publication.endnote_citation.gsub("%","<br/>%").html_safe %>
+  <br/>
 </div>

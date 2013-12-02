@@ -1,13 +1,16 @@
 <p>
-<%= link_to( "Introduction/Splash screen", splash_profiles_url ) %>
+  <%= link_to( "Introduction/Splash screen", splash_profiles_url ) %>
 </p>
-<p>Please select an investigator to edit then choose whether you want to edit the profile or the publication.</p>
+<p>
+  Please select an investigator to edit then choose whether you want to edit the profile or the publication.
+</p>
 
 <div id="select_investigator">
-	<% form_for :profiles, :url => profile_edit_url, :html => { :method => :post, :class => "p", :id => 'edit_profile' }   do |form| %> 
-
-  	<p><%= collection_select '', 'id', @investigators, :username, :sort_name, {}, :size=>"30"  %> Select investigator name </p>
-	  <%= submit_tag 'Edit PI Research Profile' %>
-	  <%= submit_tag 'Edit PI Publications List', :onclick => "$('edit_profile').action = '#{image_path('../publications_edit')}'" %>
-	<% end %> 
+  <%= form_tag '/profiles/admin_edit', :method => :post, :class => "p", :id => 'edit_profile' do |form| %>
+  	<p>
+      <%= collection_select '', 'investigator_id', @investigators, :username, :sort_name, {}, :size=>"30"  %> Select investigator name
+    </p>
+	  <%= submit_tag 'Edit PI Research Profile', :name => 'profile' %>
+	  <%= submit_tag 'Edit PI Publications List', :name => 'publications' %>
+	<% end %>
 </div>

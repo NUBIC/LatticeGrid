@@ -1,13 +1,18 @@
 <div style="padding-left:12px;">
-<span style="float:right; padding-right:15px; z-index:3; "><%= link_to( "as pdf",high_impact_by_month_abstracts_url('pdf')) if !defined?(@pdf) and ! @pdf %></span>
+  <span style="float:right; padding-right:15px; z-index:3; ">
+    <%= link_to( "as pdf",high_impact_by_month_abstracts_url('pdf')) if !defined?(@pdf) and ! @pdf %>
+  </span>
 <h1>High Impact-Factor Research</h1>
-<%= latticegrid_high_impact_description %>
+  <%= latticegrid_high_impact_description.html_safe %>
 </div>
 <%= render( :partial => "high_impact_by_month_table.html", :locals => { :abstracts => @abstracts }) -%>
 
-
 <div style="padding-left:12px; padding-top:24px">
-<p>ISI 2010 Impact Factors were used in generating this list of high impact publications by faculty in the <%= LatticeGridHelper.organization_name %>.  The list of high impact journals used to make this publication listing is available at <%= link_to high_impact_abstracts_url, high_impact_abstracts_url %>. More details on impact factors are available in this Wikipedia article: 
-<a href="http://en.wikipedia.org/wiki/Impact_factor">About Impact Factors</a>. 
-</p>
+  <p>
+    ISI 2010 Impact Factors were used in generating this list of high impact publications by faculty in the
+    <%= LatticeGridHelper.organization_name %>.  The list of high impact journals used to make this publication
+    listing is available at <%= link_to high_impact_abstracts_url, high_impact_abstracts_url %>.
+    More details on impact factors are available in this Wikipedia article:
+    <a href="http://en.wikipedia.org/wiki/Impact_factor">About Impact Factors</a>.
+  </p>
 </div>

@@ -3,7 +3,11 @@
 		<% investigators_on_citation = publication.investigators.collect{|x| x.id } %>
 		<% hasIntra = investigators_on_citation & investigators_in_unit %>
 		<% hasInter = (investigators_on_citation | investigators_in_unit) - investigators_in_unit %>
-		<%= "*" if hasIntra.length > 1  %>
-		<%= "&bull;" if hasInter.length > 0  %>
-	<% end %>
+    <% if hasIntra.length > 1  %>
+      <span>*</span>
+		<% end -%>
+    <% if hasIntra.length > 0  %>
+		  <span>&bull;</span>
+    <% end -%>
+	<% end -%>
 </td>

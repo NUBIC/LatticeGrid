@@ -1,69 +1,108 @@
-<% unless  investigators.nil? or  investigators.length == 0 %>
-<div id="listing"> 
-	<h2><%= heading %> <%= "(#{investigators.length})" if !investigators.nil? %></h2>
-<%= sparkline_barchart_setup() %>
-<table cellpadding="2" cellspacing="0" class="fullsize"> 
-  <tr valign="bottom">
-	  <th bgcolor="lightgrey" align="left"  class="list-left">Investigator</th>
-	  <th bgcolor="lightgrey" align="left"  class="list-left">Pubs</th>
-	  <th bgcolor="lightgrey" align="left"  class="list-left">Pubs last 5 years</th>
-	  <th bgcolor="lightgrey" align="left"  class="list-left">PPY</th>
-	  <th bgcolor="lightgrey" align="left"  class="list-left">Collaborators</th>
-	  <th bgcolor="lightgrey" align="left"  class="list-left" width="350px">MeSH</th>
-	  <th bgcolor="lightgrey" align="left"  class="list-left">&nbsp;</th>
-	  <th bgcolor="lightgrey" align="left"  class="list-left">Graphs</th>
-  </tr>
+<% unless investigators.nil? or investigators.length == 0 %>
+	<div id="listing">
+		<h2>
+			<%= heading %> <%= "(#{investigators.length})" if !investigators.nil? %>
+		</h2>
+	  <%= sparkline_barchart_setup.html_safe %>
+		<table cellpadding="2" cellspacing="0" class="fullsize">
+		  <tr valign="bottom">
+			  <th bgcolor="lightgrey" align="left"  class="list-left">Investigator</th>
+			  <th bgcolor="lightgrey" align="left"  class="list-left">Pubs</th>
+			  <th bgcolor="lightgrey" align="left"  class="list-left">Pubs last 5 years</th>
+			  <th bgcolor="lightgrey" align="left"  class="list-left">PPY</th>
+			  <th bgcolor="lightgrey" align="left"  class="list-left">Collaborators</th>
+			  <th bgcolor="lightgrey" align="left"  class="list-left" width="350px">MeSH</th>
+			  <th bgcolor="lightgrey" align="left"  class="list-left">&nbsp;</th>
+			  <th bgcolor="lightgrey" align="left"  class="list-left">Graphs</th>
+		  </tr>
 
-<% count=0 %>
-<% for investigator in investigators %>
-  <tr valign="middle" class="<%= cycle('list-line-odd', 'list-line-even') %>"> 
-	<td class="list-left">
-		<%= link_to( image_tag("base.gif"), show_member_graph_url(investigator.username), :title => "Graph member collaborations through co-publications ") %> 
-		<%= link_to( investigator.first_name + "&nbsp;" + investigator.last_name, show_investigator_url(:id=>investigator.username, :page=>1)) %>&nbsp;<br/>
-	</td>
-	<td class="list-left">
-		<%= link_to( investigator.total_publications, show_investigator_url(:id=>investigator.username, :page=>1), :title => "Total: #{investigator.total_publications}")  %>&nbsp;<br/>
-	</td>
-	<td class="list-left">
-		<%= link_to( investigator.total_publications_last_five_years, show_investigator_url(:id=>investigator.username, :page=>1), :title => "Total: #{investigator.abstracts.length}; First Author: #{investigator.num_first_pubs}; Last Author: #{investigator.num_last_pubs}")  %>&nbsp;<br/>
-	</td>
-	<td class="list-left">
-		<% if @pdf.blank? %>
-		<div><span class='barchart_<%= investigator.username -%>' id='barchart_<%= investigator.username -%>'> &nbsp; </span></div>
-		<script type="text/javascript" language="javascript">
-		<%= remote_function(:url => barchart_investigator_path( investigator.username ), :method => :get, :before => "Element.show('spinner')", :complete => "Element.hide('spinner')" ) %> 
-		</script>
-		<% else %>
-		  <% unless true or investigator.abstracts.length < 9 %>
-			<% publications_per_year=abstracts_per_year_as_string(investigator.abstracts) %>
-			<span class='inlinebarchart' values='<%= publications_per_year -%>' title='publications per year: <%= publications_per_year -%>'>&nbsp;</span>
-	      <% end %>
-		<% end %>
-	</td>
-	<td class="list-left">
-		<% if @pdf.blank? %>
-		<div <%= "id='collaborators_#{investigator.username}'" %>></div>
-		<script type="text/javascript" language="javascript">
-		<%= remote_function(:url => collaborators_investigator_path( investigator.username ), :method => :get, :before => "Element.show('spinner')", :complete => "Element.hide('spinner')" ) %> 
-		</script>
-		<% else %>
-		<%= link_to_collaborators(investigator.direct_coauthors, "<br/>") 
-		%><br/>
-		<% end %>
-	</td>
-	<td class="list-left" <%= "id='short_tag_cloud_#{investigator.id}'" %>>
-		<% tag_cloud investigator.abstracts.tag_counts(:limit => 5, :order => "count desc" ), %w(tagcloud1 tagcloud2 tagcloud3 tagcloud4) do |tag, css_class| %>
-		   <%= link_to tag.name, tagged_abstracts_abstract_url(URI.escape(tag.name)), :class => css_class, :title => "Total of #{tag.count} tags" %>
-		<% end %>
-	</td>
-	<td class="list-center">
-		<%= email_link(investigator.email) %>
-	</td>
-	<td class="list-center">
-		<%= link_to( image_tag("base.gif"), show_member_graph_url(investigator.username), :title => "Authorship graph ") + link_to( image_tag("cluster_icon_16.png"), show_member_graphviz_url(investigator.username), :title => "Authorship network diagram ") + link_to( image_tag("cluster_icon_16.png"), show_member_mesh_graphviz_url(investigator.username), :title => "MeSH similarities network diagram") %> 
-	</td>
-	</tr>
-<% end%>
-</table>
-<% end %>
+		  <% count = 0 %>
+		  <% for investigator in investigators %>
+		    <tr valign="middle" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+			    <td class="list-left">
+				    <%= link_to(image_tag("base.gif"),
+				                show_member_graph_url(investigator.username),
+				                :title => "Graph member collaborations through co-publications")
+				    %>
+				    <%= link_to((investigator.first_name + "&nbsp;" + investigator.last_name).html_safe,
+				                show_investigator_url(:id => investigator.username, :page => 1))
+				    %>
+				    &nbsp;
+				    <br/>
+			    </td>
+					<td class="list-left">
+						<%= link_to(investigator.total_publications,
+						            show_investigator_url(:id => investigator.username, :page => 1),
+						            :title => "Total: #{investigator.total_publications}")
+						%>
+						&nbsp;
+						<br/>
+					</td>
+					<td class="list-left">
+						<% title = "Total: #{investigator.abstracts.length}; First Author: #{investigator.num_first_pubs}; Last Author: #{investigator.num_last_pubs}" %>
+						<%= link_to(investigator.total_publications_last_five_years,
+						            show_investigator_url(:id => investigator.username, :page => 1),
+						            :title => title)
+						%>
+						&nbsp;
+						<br/>
+					</td>
+					<td class="list-left">
+						<% if @pdf.blank? %>
+							<div>
+								<span class='barchart_<%= investigator.username -%>' id='barchart_<%= investigator.username -%>'>
+									&nbsp;
+								</span>
+							</div>
+							<script type="text/javascript" language="javascript">
+								<%= remote_function(:url => barchart_investigator_path(investigator.username),
+									                  :method => :get,
+								   	                :before => "Element.show('spinner')",
+								                    :complete => "Element.hide('spinner')" )
+							  %>
+						  </script>
+						<% else %>
+						  <% unless true or investigator.abstracts.length < 9 %>
+							  <% publications_per_year=abstracts_per_year_as_string(investigator.abstracts) %>
+							  <span class='inlinebarchart' values='<%= publications_per_year -%>' title='publications per year: <%= publications_per_year -%>'>
+							  	&nbsp;
+							  </span>
+					    <% end %>
+						<% end %>
+					</td>
+					<td class="list-left">
+						<% if @pdf.blank? %>
+						  <div <%= "id='collaborators_#{investigator.username}'" %>></div>
+						  <script type="text/javascript" language="javascript">
+							  <%= remote_function(:url => collaborators_investigator_path(investigator.username),
+							  	                  :method => :get,
+							  	                  :before => "Element.show('spinner')",
+							  	                  :complete => "Element.hide('spinner')" )
+							  %>
+							</script>
+						<% else %>
+						  <%= link_to_collaborators(investigator.direct_coauthors, "<br/>").html_safe %>
+						  <br/>
+						<% end %>
+					</td>
+					<td class="list-left" <%= "id='short_tag_cloud_#{investigator.id}'" %>>
+						<% tag_counts = investigator.abstracts.tag_counts(:limit => 5, :order => "count desc") %>
+						<% tag_classes = %w(tagcloud1 tagcloud2 tagcloud3 tagcloud4) %>
+						<% tag_cloud tag_counts, tag_classes do |tag, css_class| %>
+						   <%= link_to tag.name, tagged_abstracts_abstract_url(URI.escape(tag.name)), :class => css_class, :title => "Total of #{tag.count} tags" %>
+						<% end %>
+					</td>
+					<td class="list-center">
+						<%= email_link(investigator.email) %>
+					</td>
+					<td class="list-center">
+						<%= link_to(image_tag("base.gif"), show_member_graph_url(investigator.username), :title => "Authorship graph ") +
+						    link_to( image_tag("cluster_icon_16.png"), show_member_graphviz_url(investigator.username), :title => "Authorship network diagram ") +
+						    link_to( image_tag("cluster_icon_16.png"), show_member_mesh_graphviz_url(investigator.username), :title => "MeSH similarities network diagram")
+						%>
+					</td>
+			  </tr>
+		  <% end %>
+		</table>
+	<% end %>
 </div>

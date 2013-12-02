@@ -1,9 +1,9 @@
 module AbstractsHelper
   include ProfilesHelper
-  
+
   def prepare_edit_investigator_listing
     if params[:id] =~ /^\d+$/
-      @investigator = Investigator.find_by_id(params[:id])
+      @investigator = Investigator.find(params[:id])
     else
       @investigator = Investigator.find_by_username(params[:id])
     end
@@ -15,10 +15,10 @@ module AbstractsHelper
     @include_mesh = false
     @include_graph_link = false
     @show_paginator = false
-    @include_investigators=true 
-    @include_pubmed_id = true 
+    @include_investigators=true
+    @include_pubmed_id = true
   end
-  
+
   def before_abstract_save(model)
     model.last_reviewed_ip = request.remote_ip if defined?(request)
     model.last_reviewed_at = Time.now
@@ -28,5 +28,5 @@ module AbstractsHelper
     end
     model.reviewed_ip ||= request.remote_ip if defined?(request)
     model.reviewed_at ||= Time.now
-  end   
+  end
 end

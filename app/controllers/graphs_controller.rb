@@ -1,13 +1,13 @@
 class GraphsController < ApplicationController
   caches_page( :show_org, :show_member, :member_nodes, :org_nodes) if LatticeGridHelper.CachePages()
-  
+
   include ApplicationHelper
-  
+
   def index
     redirect_to show_org_graph_url(1)
   end
-  
-  
+
+
   def show_org
     @javascripts_add = ['prototype', 'scriptaculous', 'effects']
     if params[:id].blank? then
@@ -22,10 +22,10 @@ class GraphsController < ApplicationController
        params[:id]=params[:id]+'.'+params[:format]
      end
      @investigator = Investigator.find_by_username(params[:id])
-   else 
+   else
      redirect_to show_org_graph_url(1)
-   end 
-  end 
+   end
+  end
 
   def member_nodes
     if !params[:id].blank? then
@@ -36,14 +36,15 @@ class GraphsController < ApplicationController
      Investigator.get_investigator_connections(@investigator, 25)
 
      @heading = "Interaction graph for Investigator #{@investigator.first_name} #{@investigator.last_name}"
+     request.format = "xml"
      respond_to do |format|
        format.xml
      end
-   else 
+   else
      strXML = "<chart><set label='invalid data' value='10' link='/abstracts/2009/year_list' toolText='Invalid Data' /><set label='id was nil' value='11' /></chart>"
      headers['Content-Type'] = 'text/xml'
      render :text=> strXML, :layout=>false
-   end 
+   end
   end
 
   def org_nodes
@@ -52,6 +53,7 @@ class GraphsController < ApplicationController
     @investigators = (@unit.primary_faculty+@unit.associated_faculty).uniq
     Investigator.get_connections(@investigators,25)
     @heading = "Faculty graph for '#{@unit.name}'"
+    request.format = "xml"
     respond_to do |format|
       format.xml
     end

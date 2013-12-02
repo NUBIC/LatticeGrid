@@ -1,16 +1,16 @@
 # -*- ruby -*-
 
 #need to refactor all Match/Find methods
-def show_regexp(a, re) 
-  if a =~ re 
-    "#{$`}<<#{$&}>>#{$'}" 
-  else 
-    "no match" 
-  end 
-end 
+def show_regexp(a, re)
+  if a =~ re
+    "#{$`}<<#{$&}>>#{$'}"
+  else
+    "no match"
+  end
+end
 
 def SimpleFindREmatch(str,re)
-  return false if str.blank? 
+  return false if str.blank?
   if str =~ re then
     return true
   end
@@ -79,39 +79,39 @@ def GetInvestigatorIDfromAuthorRecord(author_rec, author_string="")
   return 0  if author_rec.compact.length < 2
   if author_rec.length > 2 then
     # search for last_name, first_name and middle_name
-    investigators = Investigator.find(:all, 
-      :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name  and lower(middle_name) like :middle_name  ", 
+    investigators = Investigator.find(:all,
+      :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name  and lower(middle_name) like :middle_name  ",
           {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase+'%', :middle_name => author_rec[2].downcase+'%'}] )
     if investigators.length == 0 and author_rec[1] != author_rec[1].first then
       # now look for last_name first_initial and middle_initial
-      investigators = Investigator.find(:all, 
-        :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name and lower(middle_name) like :middle_name ", 
+      investigators = Investigator.find(:all,
+        :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name and lower(middle_name) like :middle_name ",
             {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase+'%', :middle_name => author_rec[2].first.downcase+'%'}] )
     end
     if investigators.length == 0 then
       # now look for last_name first_initial in entries where the middle name is blank!
-      investigators = Investigator.find(:all, 
-        :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name and (middle_name is NULL or middle_name = '') ", 
+      investigators = Investigator.find(:all,
+        :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name and (middle_name is NULL or middle_name = '') ",
             {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase+'%'}] )
     end
   else # last_name and first_name only
     # search for last_name and first_name
-    investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name  ", 
+    investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name  ",
         {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase+'%'}] )
     return investigators[0].id if investigators.length == 1
     if investigators.length == 0 and author_rec[1] != author_rec[1].first then
-      investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name and (middle_name is NULL or middle_name = '')", 
+      investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name and (middle_name is NULL or middle_name = '')",
             {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase+'%'}] )
     end
     if investigators.length == 0 and author_rec[1] != author_rec[1].first then
-      investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name ", 
+      investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name ",
             {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase+'%'}] )
     end
   end
   puts "Multiple investigators matching #{author_rec.inspect} found. Author was #{author_string}" if investigators.length > 1 and LatticeGridHelper.debug?
   return investigators[0].id if investigators.length == 1
   0
-end  
+end
 
 def FindFirstAuthor(abstract)
   author_array = GetAuthor(abstract.author_array.first, abstract.has_full)
@@ -145,7 +145,6 @@ def updateAbstractWithPMCID(pubmed_record)
   InsertPublication(pubmed_record, true)
 end
 
-
 # takes a PubMed record, hashed, as an inputs
 def InsertPublication(publication, update_if_pmc_exists=false)
   puts "InsertPublication: this shouldn't happen - publication was nil" if publication.nil?
@@ -164,10 +163,10 @@ def InsertPublication(publication, update_if_pmc_exists=false)
   if thePub.nil? || thePub.id < 1 then
     thePub = Abstract.find_by_doi_include_deleted(medline.doi)
   end
-  begin 
+  begin
     if thePub.nil? || thePub.id < 1 then
       thePub = Abstract.create!(
-        :endnote_citation => reference.endnote, 
+        :endnote_citation => reference.endnote,
         :abstract => reference.abstract,
         :authors => reference.authors.join("\n"),
         :full_authors => medline.full_authors,
@@ -177,7 +176,7 @@ def InsertPublication(publication, update_if_pmc_exists=false)
         :deposited_date => medline.deposited_date,
         :status => medline.status,
         :publication_status => medline.publication_status,
-        :title   => reference.title,
+        :title => reference.title,
         :publication_type => medline.publication_type[0],
         :journal => medline.full_journal[0..253],
         :journal_abbreviation => medline.ta, #journal Title Abbreviation
@@ -220,7 +219,7 @@ def InsertPublication(publication, update_if_pmc_exists=false)
       puts "InsertPublication: unable to find or insert reference with the pubmed id of '#{reference.pubmed}. error message: #{exc.message}"
       raise "InsertPublication: unable to find or insert reference with the pubmed id of  '#{reference.pubmed}. error message: #{exc.message}"
     end
-  end 
+  end
   thePub
 end
 
@@ -236,7 +235,7 @@ def UpdateOrganizationAbstract(unit_id, abstract_id)
 end
 
 def InsertOrganizationAbstract(unit_id, abstract_id)
-  begin 
+  begin
      theOrgPub = OrganizationAbstract.create!(
        :abstract_id => abstract_id,
        :organizational_unit_id  => unit_id
@@ -244,7 +243,7 @@ def InsertOrganizationAbstract(unit_id, abstract_id)
    rescue ActiveRecord::RecordInvalid
      if theOrgPub.nil? then # something bad happened
        puts "InsertOrganizationAbstract: unable to either insert or find a reference with the abstract_id '#{abstract_id}' and the unit_id '#{unit_id}'"
-       return 
+       return
      end
     end
    theOrgPub.id
@@ -256,7 +255,7 @@ def check_date(pub_date, edate, created_date, pubmed_id)
     puts "pubdate for #{pubmed_id} was blank!"
     return nil
   end
-  begin 
+  begin
     pub_date.to_date
   rescue
     today = Date.today

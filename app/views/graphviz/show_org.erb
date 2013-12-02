@@ -1,6 +1,6 @@
 <h1>Network diagram for <%= @name %></h1>
 
-<p><%= org_nav_heading() %></p>
+<p><%= org_nav_heading.html_safe %></p>
 
 <%= render( :partial => "graphviz_template" ) %>
 

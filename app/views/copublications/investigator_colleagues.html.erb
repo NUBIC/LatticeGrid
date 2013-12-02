@@ -9,27 +9,43 @@
 <% @include_collab_marker = false if @include_collab_marker.nil? %>
 
 <% if ! @abstracts.nil? %>
+  <h2>
+    Shared publications between
+    <i><%= @investigator_colleague.investigator.name %></i>
+    and
+    <i><%= @investigator_colleague.colleague.name %></i>
+  </h2>
 
-<h2> Shared publications between <i><%= @investigator_colleague.investigator.name %></i> and <i><%= @investigator_colleague.colleague.name %></i>
-</h2>
-
-<table class="borderless">
-<tr valign="top">
-	<td width="800px">
-		<%= render :partial => "shared/abstract_listing", :locals => { :abstracts => @abstracts, :do_pagination => @do_pagination, :heading => "Publications (#{@total_entries})", :show_paginator => @show_paginator, :include_investigators => @include_investigators, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker  } %>
-	</td>
-	<td>
-		<h3>Co-Authors:</h3> 
-		<div id="collaborators">
-		<%= link_to_collaborators(Abstract.co_authors(@abstracts), "<br/>") %>
-		</div>
-		<h3>Keywords (MeSH):</h3>
-		<div id="tag_cloud_side"></div>
-		<script type="text/javascript" language="JavaScript">
-		<%= remote_function(:url => tag_cloud_side_copublication_url( @investigator_colleague.id), :method => :get, :before => "Element.show('spinner')", 
-		:complete => "Element.hide('spinner')" ) %> 
-		</script>
-	</td>
-</tr>
-</table>
+  <table class="borderless">
+    <tr valign="top">
+      <td width="800px">
+        <%= render :partial => "shared/abstract_listing",
+              :locals => {
+                :abstracts => @abstracts,
+                :do_pagination => @do_pagination,
+                :heading => "Publications (#{@total_entries})",
+                :show_paginator => @show_paginator,
+                :include_investigators => @include_investigators,
+                :include_pubmed_id => @include_pubmed_id,
+                :include_collab_marker => @include_collab_marker
+              }
+        %>
+      </td>
+      <td>
+        <h3>Co-Authors:</h3>
+        <div id="collaborators">
+          <%= link_to_collaborators(Abstract.co_authors(@abstracts), "<br/>").html_safe %>
+        </div>
+        <h3>Keywords (MeSH):</h3>
+        <div id="tag_cloud_side"></div>
+        <script type="text/javascript" language="JavaScript">
+          <%= remote_function(:url => tag_cloud_side_copublication_url(@investigator_colleague.id),
+                              :method => :get,
+                              :before => "Element.show('spinner')",
+                              :complete => "Element.hide('spinner')" )
+          %>
+        </script>
+      </td>
+    </tr>
+  </table>
 <% end %>

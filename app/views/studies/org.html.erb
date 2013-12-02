@@ -13,7 +13,7 @@
 	    <% if ! @all_abstracts.nil? && @all_abstracts.length > 9 -%>
 		  <% publications_per_year=abstracts_per_year_as_string(@all_abstracts) -%>
 		  <span class='inlinebarchart' values='<%= publications_per_year -%>' title='publications per year: <%= publications_per_year -%>'>&nbsp;</span>
-	   	  <%= sparkline_barchart_setup({'barWidth'=>2,'barSpacing'=>2}) -%>
+	   	  <%= sparkline_barchart_setup({'barWidth'=>2,'barSpacing'=>2}).html_safe -%>
 	    <% end -%>
 	<% end -%>
 	</h1>
@@ -32,14 +32,14 @@
 	<%= link_to( "as PDF", org_award_url(params[:id],'pdf'))  %>
 </div>
 <% if @include_graph_link %>
-<p><%= org_nav_heading() %></p>
+<p><%= org_nav_heading.html_safe %></p>
 <% end %>
 
 <% end %>
 <% end %>
 
 <div id="listing">
-  <table cellpadding="2" cellspacing="0" class="borderless"> 
+  <table cellpadding="2" cellspacing="0" class="borderless">
 	<tr valign="bottom" class="header">
 		<td class="list-title-left">
 			#

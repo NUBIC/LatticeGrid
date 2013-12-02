@@ -1,54 +1,69 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
-  <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
-	<% @javascripts ||= [ 'cytoscape/cytoscapeweb.min', 'cytoscape/jquery-1.3.2.min', 'cytoscape/flash_detect_min', 'cytoscape/jquery.cytoscapeweb', 'cytoscape/json2.min', 'AC_OETags.min', 'cytoscape/cytoscapeweb.min', 'cytoscape/cytoscapeweb-defaults', 'cytoscape/cytoscapeweb-file', 'cytoscape/home', 'jquery.min', 'jquery.sparkline.min', 'jquery-ui.min' ] %>
-	<!-- include JIT Library File -->
-	<%= javascript_include_tag @javascripts %> 
-	<!-- CSS Files -->
-	<% @stylesheets ||= [ 'cytoscape/layout','publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ] %>
-	<%= stylesheet_link_tag @stylesheets %>
-	<link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
-  <%= LatticeGridHelper.google_analytics -%>
-</head>
-<body>
-
-<% if Rails.env == 'development' %>
-    <div id="debug" style="margin: 5px 5px 5px 5px;">
-        <a href="#" onclick="jQuery('#debug_info').toggle(); return false" style="text-decoration: none; color: #999;">Show Debug Info &#10162;</a>
-        <div id="debug_info" style="display : none;">
-            <%= debug session %>
-            <%= debug params %>
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
+    <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
+  	<% @javascripts ||= [ 'cytoscape/cytoscapeweb.min', 'cytoscape/jquery-1.3.2.min', 'cytoscape/flash_detect_min', 'cytoscape/jquery.cytoscapeweb', 'cytoscape/json2.min', 'AC_OETags.min', 'cytoscape/cytoscapeweb.min', 'cytoscape/cytoscapeweb-defaults', 'cytoscape/cytoscapeweb-file', 'cytoscape/home', 'jquery.min', 'jquery.sparkline.min', 'jquery-ui.min' ] %>
+  	<!-- include JIT Library File -->
+    <% @javascripts.each do |js| %>
+      <%= javascript_include_tag js %>
+    <% end %>
+  	<!-- CSS Files -->
+  	<% @stylesheets ||= [ 'cytoscape/layout','publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ] %>
+    <% @stylesheets.each do |ss| %>
+      <%= stylesheet_link_tag ss %>
+    <% end %>
+  	<link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
+    <%= LatticeGridHelper.google_analytics.html_safe -%>
+  </head>
+  <body>
+    <% if Rails.env == 'development' %>
+      <div id="debug" style="margin: 5px 5px 5px 5px;">
+        <a href="#" onclick="jQuery('#debug_info').toggle(); return false" style="text-decoration: none; color: #999;">
+          Show Debug Info &#10162;
+        </a>
+        <div id="debug_info" style="display: none;">
+          <%= debug session %>
+          <%= debug params %>
         </div>
-    </div>
-<% end %>
-<div id="main" class="autoclear">
-	<div id="banner"><a href="<%= LatticeGridHelper.home_url %>" ><%= image_tag "#{lattice_grid_instance}/pageheader.jpg", options={:alt=>LatticeGridHelper.header_title} %></a></div>
-	<div id="results" class="notice"><%= flash[:notice] %> 	<%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %> </div>
-	<div id="title"><%= LatticeGridHelper.header_title -%></div>
-	<%= render :partial => "shared/search" %>
-	<div id="side">
-		<div id="sideinfo" style="margin-top:15px;margin-bottom:75px;">
-			<%= link_to("Publications", current_abstracts_path, :style=>"color:indigo;font-size:20pt;") %>
-		</div> <!-- end of sideinfo -->
-		<div id="lattice_grid">
-			<%= link_to( image_tag( 'latticegrid.png', :size => "65x93" ), "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %> <br/>
-			Powered by <%= link_to( "LatticeGrid", "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %> 
-		</div>
-		<br/>
-		<div id="nubic">
-			<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://informatics.northwestern.edu/") %> 
-		 	<%= link_to( "Built by NUBIC", "http://informatics.northwestern.edu/") %>
-		</div>
-		<p></p>
-	</div> <!-- end of side -->
-	<div id="maincontent">
-		<div id="niceline"></div>
-		<%= yield  %>
-	</div> <!-- end of maincontent -->
-</div> <!-- end of main -->
-</body>
+      </div>
+    <% end %>
+    <div id="main" class="autoclear">
+    	<div id="banner">
+        <a href="<%= LatticeGridHelper.home_url %>" >
+          <%= image_tag "#{lattice_grid_instance}/pageheader.jpg", options={:alt=>LatticeGridHelper.header_title} %>
+        </a>
+      </div>
+    	<div id="results" class="notice">
+        <%= flash[:notice] %>
+        <%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %>
+      </div>
+    	<div id="title">
+        <%= LatticeGridHelper.header_title -%>
+      </div>
+    	<%= render :partial => "shared/search" %>
+    	<div id="side">
+    		<div id="sideinfo" style="margin-top:15px;margin-bottom:75px;">
+    			<%= link_to("Publications", current_abstracts_path, :style=>"color:indigo;font-size:20pt;") %>
+    		</div> <!-- end of sideinfo -->
+    		<div id="lattice_grid">
+    			<%= link_to( image_tag( 'latticegrid.png', :size => "65x93" ), "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %>
+          <br/>
+    			Powered by <%= link_to( "LatticeGrid", "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %>
+    		</div>
+    		<br/>
+    		<div id="nubic">
+    			<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://informatics.northwestern.edu/") %>
+    		 	<%= link_to( "Built by NUBIC", "http://informatics.northwestern.edu/") %>
+    		</div>
+    		<p></p>
+    	</div> <!-- end of side -->
+    	<div id="maincontent">
+    		<div id="niceline"></div>
+    		<%= yield  %>
+    	</div> <!-- end of maincontent -->
+    </div> <!-- end of main -->
+  </body>
 </html>

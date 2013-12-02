@@ -1,6 +1,6 @@
-  require 'publication_utilities' 
+  require 'publication_utilities'
   require 'link_helper'
-  
+
   # class methods
   def LatticeGridHelper.page_title
     return 'LatticeGrid Publications'
@@ -9,11 +9,11 @@
   def LatticeGridHelper.header_title
     return 'LatticeGrid Publications and Abstracts Site'
   end
-  
+
   def LatticeGridHelper.direct_preview_title
      'LatticeGrid Publications'
   end
-  
+
   # does CCSG access require authentication?
   def LatticeGridHelper.require_authentication?
     return false
@@ -28,15 +28,15 @@
   def LatticeGridHelper.allowed_membership_types
     return ['Member']
   end
-  
-  def LatticeGridHelper.include_org_type(org) 
+
+  def LatticeGridHelper.include_org_type(org)
     (org.type == 'Program')
   end
 
   def LatticeGridHelper.include_summary_by_member?
     return true
   end
-  
+
   def LatticeGridHelper.include_research_summary_by_organization?
     return false
   end
@@ -74,29 +74,29 @@
    def LatticeGridHelper.google_analytics
      ""
    end
-   
+
    def LatticeGridHelper.curl_host
-   	my_env = Rails.env
-   	my_env = 'home' if public_path =~ /Users/ 
-   	case 
-   	  when my_env == 'home' then 'localhost:3000'
-   	  when my_env == 'development' then 'rails-staging2.nubic.northwestern.edu'
-   	  when my_env == 'staging' then 'rails-staging2.nubic.northwestern.edu'
-   	  when my_env == 'production' then 'latticegrid.cancer.northwestern.edu'
-   	  else 'rails-dev.bioinformatics.northwestern.edu/cancer'
-   	end 
+    my_env = Rails.env
+    my_env = 'home' if public_path =~ /Users/
+    case
+      when my_env == 'home' then 'localhost:3000'
+      when my_env == 'development' then 'rails-staging2.nubic.northwestern.edu'
+      when my_env == 'staging' then 'rails-staging2.nubic.northwestern.edu'
+      when my_env == 'production' then 'latticegrid.cancer.northwestern.edu'
+      else 'rails-dev.bioinformatics.northwestern.edu/cancer'
+    end
    end
 
    def LatticeGridHelper.curl_protocol
-   	my_env = Rails.env
-   	my_env = 'home' if public_path =~ /Users/ 
-   	case 
-   	  when my_env == 'home' then 'http'
-   	  when my_env == 'development' then 'https'
-   	  when my_env == 'staging' then 'https'
-   	  when my_env == 'production' then 'https'
-   	  else 'http'
-   	end 
+    my_env = Rails.env
+    my_env = 'home' if public_path =~ /Users/
+    case
+      when my_env == 'home' then 'http'
+      when my_env == 'development' then 'https'
+      when my_env == 'staging' then 'https'
+      when my_env == 'production' then 'https'
+      else 'http'
+    end
    end
 
   def LatticeGridHelper.year_array
@@ -119,7 +119,7 @@
   def LatticeGridHelper.organization_name
     "institution"
   end
-  
+
   def latticegrid_high_impact_description
     '<p>Researchers at our institution publish thousands of articles in peer-reviewed journals every year.  The following recommended reading showcases a selection of their recent work.</p>'
   end
@@ -151,7 +151,7 @@
      "directory.northwestern.edu"
    end
 
-   def LatticeGridHelper.ldap_treebase 
+   def LatticeGridHelper.ldap_treebase
      "ou=People, dc=northwestern,dc=edu"
    end
 
@@ -171,16 +171,16 @@
      # ric: 69.216
      [':1','127.0.0.*','165.124.*','129.105.*','199.125.*','209.107.*','165.20.*','204.26.*','69.216.*']
    end
-   
+
  def LatticeGridHelper.setInvestigatorClass(citation, investigator, isMember=false)
    if isMember
-     if IsLastAuthor(citation,investigator) then "member_last_author" 
+     if IsLastAuthor(citation,investigator) then "member_last_author"
      elsif IsFirstAuthor(citation,investigator) then "member_first_author"
      else
        "member_author"
      end
    else
-     if IsLastAuthor(citation,investigator) then "last_author" 
+     if IsLastAuthor(citation,investigator) then "last_author"
      elsif IsFirstAuthor(citation,investigator) then "first_author"
      else
        "author"
@@ -230,13 +230,13 @@ def LatticeGridHelper.build_institution_search_string_from_department?
   false
 end
 
-def LatticeGridHelper.affilation_name 
+def LatticeGridHelper.affilation_name
   "Department"
 end
 
-# build LatticeGridHelper.institutional_limit_search_string to identify all the publications at your institution 
+# build LatticeGridHelper.institutional_limit_search_string to identify all the publications at your institution
 
-def LatticeGridHelper.institutional_limit_search_string 
+def LatticeGridHelper.institutional_limit_search_string
   '( "Northwestern University"[affil] OR "Feinberg School"[affil] OR "Robert H. Lurie Comprehensive Cancer Center"[affil] OR "Northwestern Healthcare"[affil] OR "Children''s Memorial"[affil] OR "Northwestern Memorial"[affil] OR "Northwestern Medical"[affil])'
 end
 
@@ -300,7 +300,7 @@ def LatticeGridHelper.second_degree_other_fill_color
   '#A3DADA'
 end
 
-# super pale green 
+# super pale green
 def LatticeGridHelper.second_degree_other_fill_color
   '#CCF5CC'
 end
@@ -316,51 +316,51 @@ end
 # citation style
 def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bold=false, investigators_in_unit=[], speed_display=false, simple_links=false)
   #  out = publication.authors
-    out = (mark_members_bold) ? highlightMemberInvestigator(publication, speed_display, simple_links, investigators_in_unit) : highlightInvestigator(publication, speed_display, simple_links)
-    out << " "
-    if link_abstract_to_pubmed
-  	out << link_to( publication.title, "http://www.ncbi.nlm.nih.gov/pubmed/"+publication.pubmed, :target => '_blank', :title=>'PubMed ID')
-    else
-  	out << link_to( publication.title, abstract_url(publication))
-    end 
-    out << "<i>#{publication.journal_abbreviation}</i> "
-    out << " (#{publication.year}) "
-    if publication.pages.length > 0
-  	out << h(publication.volume) +":"+ h(publication.pages)+". "
-    else
-  	out << "<i>In process.</i> "
-    end
-    out << [quicklink_to_pubmed(publication.pubmed), quicklink_to_pubmedcentral(publication.pubmedcentral), quicklink_to_doi(publication.doi)].compact.join("; ")
+  out = (mark_members_bold) ? highlightMemberInvestigator(publication, speed_display, simple_links, investigators_in_unit) : highlightInvestigator(publication, speed_display, simple_links)
+  out << " "
+  if link_abstract_to_pubmed
+    out << link_to( publication.title, "http://www.ncbi.nlm.nih.gov/pubmed/"+publication.pubmed, :target => '_blank', :title=>'PubMed ID')
+  else
+    out << link_to( publication.title, abstract_url(publication))
   end
+  out << "<i>#{publication.journal_abbreviation}</i> "
+  out << " (#{publication.year}) "
+  if publication.pages.length > 0
+    out << h(publication.volume) +":"+ h(publication.pages)+". "
+  else
+    out << "<i>In process.</i> "
+  end
+  out << [quicklink_to_pubmed(publication.pubmed), quicklink_to_pubmedcentral(publication.pubmedcentral), quicklink_to_doi(publication.doi)].compact.join("; ")
+end
 
-def link_to_investigator(citation, investigator, name=nil, isMember=false, speed_display=false, simple_links=false, class_name=nil) 
-   name=investigator.last_name if name.blank?
-  link_to( name, 
-   show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
-     :class => ((class_name.blank?) ? (speed_display) ? 'author' : LatticeGridHelper.setInvestigatorClass(citation, investigator, isMember) : class_name),
-     :title => (simple_links ? "Go to #{investigator.full_name}: #{investigator.total_publications} pubs" : "Go to #{investigator.full_name}: #{investigator.total_publications} pubs, " + (investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators") )
+def link_to_investigator(citation, investigator, name=nil, isMember=false, speed_display=false, simple_links=false, class_name=nil)
+  name=investigator.last_name if name.blank?
+  link_to(name,
+          show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
+          :class => ((class_name.blank?) ? (speed_display) ? 'author' : LatticeGridHelper.setInvestigatorClass(citation, investigator, isMember) : class_name),
+          :title => (simple_links ? "Go to #{investigator.full_name}: #{investigator.total_publications} pubs" : "Go to #{investigator.full_name}: #{investigator.total_publications} pubs, " + (investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators") )
 end
 
   # investigator highlighting
   def highlightMemberInvestigator(citation, speed_display=false, simple_links=false, memberArray=nil)
     if memberArray.blank?
-  	authors = highlightInvestigator(citation, speed_display, simple_links)
+      authors = highlightInvestigator(citation, speed_display, simple_links)
     else
-  	authors = highlightInvestigator(citation, speed_display, simple_links, citation.authors, memberArray)
+      authors = highlightInvestigator(citation, speed_display, simple_links, citation.authors, memberArray)
     end
     authors
   end
 
   def highlightInvestigator(citation, speed_display=false, simple_links=false, authors=nil,memberArray=nil)
     if authors.blank?
-  	authors = citation.authors
+      authors = citation.authors
     end
     #authors = authors.gsub(", "," ")
     #authors = authors.gsub(/\. ?/,"")
     citation.investigators.each do |investigator|
-  	re = Regexp.new('('+investigator.last_name.downcase+', '+investigator.first_name.at(0).downcase+'[^;\n]*)', Regexp::IGNORECASE)
-  	isMember = (!memberArray.blank? and memberArray.include?(investigator.id))
-  	authors.gsub!(re){|author_match| link_to_investigator(citation, investigator, author_match.gsub(" ","| "), isMember, speed_display, simple_links)}
+      re = Regexp.new('('+investigator.last_name.downcase+', '+investigator.first_name.at(0).downcase+'[^;\n]*)', Regexp::IGNORECASE)
+      isMember = (!memberArray.blank? and memberArray.include?(investigator.id))
+      authors.gsub!(re) { |author_match| link_to_investigator(citation, investigator, author_match.gsub(" ","| "), isMember, speed_display, simple_links) }
     end
     authors = authors.gsub("|","")
     authors = authors.gsub("\n","; ")
@@ -371,65 +371,69 @@ end
     link_to("Edit profile", profiles_path, :title=>"Login with your NetID and NetID password to change your profile")
   end
 
-   def latticegrid_menu_script
-   "<div id='side_nav_menu' class='ddsmoothmenu-v'>
-   <ul>
-   	<li><a href='#'>Publications by year</a>
-   		#{build_year_menu}
-   	</li>
-   	<li><a href='#'>Publications by program</a>
-   		#{build_menu(@head_node.children.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation}, Program) {|id| org_path(id)} }
-   	</li>
-   	<li><a href='#'>Faculty by program</a>
-   		#{build_menu(@head_node.children.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation}, Program) {|id| show_investigators_org_path(id)} }
-   	</li>
-   	<li><a href='#'>Graphs by program</a>
-   		#{build_menu(@head_node.children.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation}, Program) {|id| show_org_graph_path(id)} }
-   	</li>
-   	<li>#{link_to( 'High Impact', high_impact_by_month_abstracts_path, :title=>'Recent high-impact publications')} </li>
-   	<li>#{link_to( 'MeSH tag cloud', tag_cloud_abstracts_path, :title=>'Display MeSH tag cloud for all publications')} </li>
-   	<li>#{link_to( 'Bundle Graph', investigator_edge_bundling_cytoscape_path, :title=>'Display Hierarchical Edge Bundle graph for all investigators')} </li>
-   	<li>#{link_to( 'Chord Graph', chord_cytoscape_path, :title=>'Display Chord graph for all investigators')} </li>
-   	<li>#{link_to( 'Overview', programs_orgs_path, :title => 'Display an overview for all programs')}</li>
-   </ul>
-   <br style='clear: left' />
-   </div>"
-   end
+  def latticegrid_menu_script
+    " <div id='side_nav_menu' class='ddsmoothmenu-v'>
+        <ul>
+          <li><a href='#'>Publications by year</a>
+            #{build_year_menu}
+          </li>" + latticegrid_menu_script_head_node_children(@head_node) +
+         "<li>#{link_to( 'High Impact', high_impact_by_month_abstracts_path, :title=>'Recent high-impact publications')} </li>
+          <li>#{link_to( 'MeSH tag cloud', tag_cloud_abstracts_path, :title=>'Display MeSH tag cloud for all publications')} </li>
+          <li>#{link_to( 'Bundle Graph', investigator_edge_bundling_cytoscape_index_path, :title=>'Display Hierarchical Edge Bundle graph for all investigators')} </li>
+          <li>#{link_to( 'Chord Graph', chord_cytoscape_index_path, :title=>'Display Chord graph for all investigators')} </li>
+          <li>#{link_to( 'Overview', programs_orgs_path, :title => 'Display an overview for all programs')}</li>
+        </ul>
+        <br style='clear: left' />
+      </div>"
+  end
+
+  def latticegrid_menu_script_head_node_children(head_node)
+    return "" unless head_node.try(:children)
+   "<li><a href='#'>Publications by program</a>
+      #{build_menu(head_node.children.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation}, Program) {|id| org_path(id)} }
+    </li>
+    <li><a href='#'>Faculty by program</a>
+      #{build_menu(head_node.children.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation}, Program) {|id| show_investigators_org_path(id)} }
+    </li>
+    <li><a href='#'>Graphs by program</a>
+      #{build_menu(head_node.children.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation}, Program) {|id| show_org_graph_path(id)} }
+    </li>"
+  end
 
    def build_menu(nodes, org_type=nil, &block)
      out="<ul>"
- 		for unit in nodes
- 		  if org_type.nil? or unit.kind_of?(org_type)
-     		out+="<li>"
-     		out+=link_to( truncate(unit.name.gsub(/\'/, ""),:length=>80), yield(unit.id))
-         out+=build_menu(unit.children, nil, &block) if ! unit.leaf?
-     		out+="</li>"
-   		end
- 		end
- 		out+="</ul>"
- 		out
- 	end
+    for unit in nodes
+      if org_type.nil? or unit.kind_of?(org_type)
+        out+="<li>"
+        out+=link_to( truncate(unit.name.gsub(/\'/, ""),:length=>80), yield(unit.id))
+        out+=build_menu(unit.children, nil, &block) if ! unit.leaf?
+        out+="</li>"
+      end
+    end
+    out+="</ul>"
+    out
+  end
 
   def build_year_menu
-     out="<ul>"
- 		for the_year in LatticeGridHelper.year_array()
- 			if  controller.action_name.match('year_list') != nil && the_year.to_s == @year
- 				out+="<li class='current'>"
- 			else
-     		out+="<li>"
- 			end
- 			out+=link_to( the_year, abstracts_by_year_url(:id => the_year, :page=> 1))
-    		out+="</li>"
- 		end
- 		out+="</ul>"
- 		out
+    out="<ul>"
+    for the_year in LatticeGridHelper.year_array()
+      if  controller.action_name.match('year_list') != nil && the_year.to_s == @year
+        out+="<li class='current'>"
+      else
+        out+="<li>"
+      end
+      out+=link_to( the_year, abstracts_by_year_url(:id => the_year, :page=> 1))
+      out+="</li>"
+    end
+    out+="</ul>"
+    out
   end
 
   def is_admin?
     begin
       return true unless LatticeGridHelper.require_authentication?
       if [ 'wakibbe', 'admin', 'tvo743', 'jkk366', 'jhl197', 'ddc830', 'mar352', 'vvs359', 'pfr957' ].include?(current_user.username.to_s)  then
-    	  return true
+        return true
       end
     rescue
       begin

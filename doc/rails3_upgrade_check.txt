@@ -1,0 +1,156 @@
+unable to load TagsHelper. Tagging plugin installed?
+[31m[1mSoon-to-be-deprecated ActiveRecord calls[0m
+[37mMethods such as find(:all), find(:first), finds with conditions, and the :joins option will soon be deprecated.
+[1mMore information:[0m [36mhttp://m.onkey.org/2010/1/22/active-record-query-interface
+
+[37mThe culprits: 
+[33m	- app/controllers/abstracts_controller.rb
+[33m	- app/controllers/graphviz_controller.rb
+[33m	- app/controllers/mesh_controller.rb
+[33m	- app/controllers/orgs_controller.rb
+[33m	- app/controllers/profiles_controller.rb
+[33m	- app/helpers/mesh_helper.rb
+[33m	- app/helpers/orgs_helper.rb
+[33m	- app/models/investigator.rb
+[33m	- app/controllers/abstracts_controller.rb
+[33m	- app/controllers/application_controller.rb
+[33m	- app/controllers/profiles_controller.rb
+[33m	- app/models/abstract.rb
+[33m	- app/models/word_frequency.rb
+[33m	- app/controllers/abstracts_controller.rb
+[33m	- app/controllers/graphviz_controller.rb
+[33m	- app/helpers/orgs_helper.rb
+[33m	- app/models/organizational_unit.rb
+[33m	- app/models/abstract.rb
+[33m	- app/models/investigator.rb
+[33m	- app/models/investigator_proposal.rb
+[33m	- app/models/investigator_study.rb
+[33m	- app/models/journal.rb
+[33m	- app/models/log.rb
+[33m	- app/models/organizational_unit.rb
+[33m	- app/models/proposal.rb
+[33m	- app/models/study.rb
+[0m
+[31m[1mnamed_scope is now just scope[0m
+[37mThe named_scope method has been renamed to just scope.
+[1mMore information:[0m [36mhttp://github.com/rails/rails/commit/d60bb0a9e4be2ac0a9de9a69041a4ddc2e0cc914
+
+[37mThe culprits: 
+[33m	- app/models/abstract.rb
+[33m	- app/models/investigator.rb
+[33m	- app/models/investigator_abstract.rb
+[33m	- app/models/investigator_appointment.rb
+[33m	- app/models/investigator_colleague.rb
+[33m	- app/models/investigator_proposal.rb
+[33m	- app/models/investigator_study.rb
+[33m	- app/models/log.rb
+[33m	- app/models/organizational_unit.rb
+[33m	- app/models/proposal.rb
+[33m	- app/models/word_frequency.rb
+[0m
+[31m[1mOld router API[0m
+[37mThe router API has totally changed.
+[1mMore information:[0m [36mhttp://yehudakatz.com/2009/12/26/the-rails-3-router-rack-it-up/
+
+[37mThe culprits: 
+[33m	- config/routes.rb
+[0m
+[31m[1mDeprecated test_help path[0m
+[37mYou now must require 'rails/test_help' not just 'test_help'.
+[1mMore information:[0m [36mhttp://weblog.rubyonrails.org/2009/9/1/gem-packaging-best-practices
+
+[37mThe culprits: 
+[33m	- test/test_helper.rb
+[0m
+[31m[1mNew file needed: config/application.rb[0m
+[37mYou need to add a config/application.rb.
+[1mMore information:[0m [36mhttp://omgbloglol.com/post/353978923/the-path-to-rails-3-approaching-the-upgrade
+
+[37mThe culprits: 
+[33m	- config/application.rb
+[0m
+[31m[1mDeprecated constant(s)[0m
+[37mConstants like RAILS_ENV, RAILS_ROOT, and RAILS_DEFAULT_LOGGER are now deprecated.
+[1mMore information:[0m [36mhttp://litanyagainstfear.com/blog/2010/02/03/the-rails-module/
+
+[37mThe culprits: 
+[33m	- lib/PDFRender.rb
+[33m	- app/views/layouts/excel.erb
+[33m	- app/views/layouts/high_impact.html.erb
+[33m	- app/views/layouts/printable.html.erb
+[33m	- app/views/layouts/scaled.erb
+[33m	- lib/award_utilities.rb
+[33m	- lib/cache_utilities.rb
+[33m	- lib/investigator_appointment_utilities.rb
+[0m
+[31m[1mDeprecated ActionMailer API[0m
+[37mYou're using the old ActionMailer API to send e-mails in a controller, model, or observer.
+[1mMore information:[0m [36mhttp://lindsaar.net/2010/1/26/new-actionmailer-api-in-rails-3
+
+[37mThe culprits: 
+[33m	- app/controllers/profiles_controller.rb
+[0m
+[31m[1mOld ActionMailer class API[0m
+[37mYou're using the old API in a mailer class.
+[1mMore information:[0m [36mhttp://lindsaar.net/2010/1/26/new-actionmailer-api-in-rails-3
+
+[37mThe culprits: 
+[33m	- app/models/notifier.rb
+[33m	- app/models/notifier.rb
+[33m	- app/models/abstract.rb
+[33m	- app/models/investigator.rb
+[33m	- app/models/journal.rb
+[33m	- app/models/notifier.rb
+[33m	- app/models/proposal.rb
+[33m	- app/models/study.rb
+[0m
+[31m[1mOld Rails generator API[0m
+[37mA plugin in the app is using the old generator API (a new one may be available at http://github.com/trydionel/rails3-generators).
+[1mMore information:[0m [36mhttp://blog.plataformatec.com.br/2010/01/discovering-rails-3-generators/
+
+[37mThe culprits: 
+[33m	- vendor/plugins/acts_as_taggable_on_steroids/generators/
+[33m	- vendor/plugins/acts_as_taggable_on_steroids/generators/acts_as_taggable_migration/
+[0m
+[31m[1mDeprecated ERb helper calls[0m
+[37mBlock helpers that use concat (e.g., form_for) should use <%= instead of <%.  The current form will continue to work for now, but you will get deprecation warnings since this form will go away in the future.
+[1mMore information:[0m [36mhttp://weblog.rubyonrails.org/
+
+[37mThe culprits: 
+[33m	- app/views/abstracts/_initiate_pubmed_search.html.erb
+[33m	- app/views/audits/view_activities.html.erb
+[33m	- app/views/awards/listing.html.erb
+[33m	- app/views/graphviz/_graphviz_template.erb
+[33m	- app/views/investigators/listing.html.erb
+[33m	- app/views/profiles/list_orgs.html.erb
+[33m	- app/views/profiles/list_summaries.erb
+[33m	- app/views/studies/listing.html.erb
+[33m	- app/views/abstracts/ccsg.html.erb
+[33m	- app/views/profiles/admin_index.html.erb
+[33m	- app/views/profiles/edit_pubs.html.erb
+[33m	- app/views/shared/_search.html.erb
+[33m	- app/views/profiles/_center_form.html.erb
+[33m	- app/views/profiles/_profile_form.html.erb
+[0m
+[31m[1mDeprecated AJAX helper calls[0m
+[37mAJAX javascript helpers have been switched to be unobtrusive and use :remote => true instead of having a seperate function to handle remote requests.
+[1mMore information:[0m [36mhttp://blog.jordanwest.me/modest-rubyist-archive/rails-3-ujs-and-csrf-meta-tags
+
+[37mThe culprits: 
+[33m	- app/views/abstracts/add_abstracts.html.erb
+[33m	- app/views/profiles/edit_pubs.html.erb
+[0m
+[31m[1mDeprecated session secret setting[0m
+[37mPreviously, session secret was set directly on ActionController::Base; it's now config.secret_token.
+[1mMore information:[0m [36mhttp://lindsaar.net/2010/4/7/rails_3_session_secret_and_session_store
+
+[37mThe culprits: 
+[33m	- config/initializers/session_store.rb
+[0m
+[31m[1mDeprecated ActionMailer attribute :sent_on[0m
+[37mUsing the new mailer API, you can specify :date to the mail method.
+[1mMore information:[0m [36mhttp://stackoverflow.com/questions/7367185/weird-error-when-delivering-mail-undefined-method-index-for-2011-09-09-2215
+
+[37mThe culprits: 
+[33m	- app/models/notifier.rb
+[0m

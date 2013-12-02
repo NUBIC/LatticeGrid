@@ -26,22 +26,22 @@
 	<% div_id = 'barchart_'+@org.id.to_s %>
 	<span class='<%= div_id %>' id='<%= div_id %>'> ... </span>
 	<%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? -%>
-			
+
  	<script type='text/javascript' language='javascript'>
 	var request = jQuery.ajax({
 	    url: '<%= barchart_org_path( @org.id ) %>',
 	 	type: 'GET',
 		dataType: 'script'
-	});		
+	});
  	</script>
 </h1>
 	<% if @include_graph_link %>
-	<p><%= org_nav_heading() %></p>
+	<p><%= org_nav_heading.html_safe %></p>
 	<% end %>
 	<% elsif ! @investigator.blank? %>
 	<% all_abstracts = @all_abstracts || nil -%>
 	<% title = @title || nil -%>
-	<%= investigator_bio_heading(@investigator, all_abstracts, title) %>
+	<%= investigator_bio_heading(@investigator, all_abstracts, title).html_safe %>
 	<% elsif ! @title.blank? %>
 	  <h1><%= @title %></h1>
 	<% end %>
@@ -85,7 +85,7 @@
 			<option value='1' >One</option>
 			<option selected  value="0">Two</option>
 			<% end %>
-		</select> 
+		</select>
  	</form>
 	<% end %>
  </div>
@@ -93,7 +93,7 @@
 	<!-- hide
 	var g_awards;
 	var g_awards2;
-	
+
 	jQuery("#nodeLabelsVisibleCheckbox").bind('click', function(event){
 		vis.nodeLabelsVisible(!vis.nodeLabelsVisible());
 		setItemCheckStatus("#nodeLabelsVisibleCheckbox",vis.nodeLabelsVisible())
@@ -154,7 +154,7 @@
 		)
 	});
 	jQuery("input[name='layout']").parent().css({border:"1px darkblue solid", padding: "5px"});
-	
+
 	function refreshEdges() {
         var the_val = jQuery( "#slider" ).slider( "value" );
 		var show_award = getItemCheckStatus("#showAwardEdgeCheckbox");
@@ -189,7 +189,7 @@
         });
         jQuery( "#amount" ).val( jQuery( "#slider" ).slider( "value" ) );
     });
-    	
+
 	function changeCytoscapeLayout(layout_name) {
 		vis.layout({name: layout_name, options: LAYOUTS[layout_name]});
 		return true;
@@ -230,7 +230,7 @@
 
 	// end hide -->
 	</script>
-  
+
 	<!-- begin page content -->
 	<div id="content" class="half_and_half">
 		<div id="location"></div>
@@ -246,4 +246,4 @@
 </script>
 <% end %>
 
-</div> 
+</div>

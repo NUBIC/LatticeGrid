@@ -1,0 +1,166 @@
+/* same as publications.css for now */
+h1, h2, .h2, h3, .h3 {
+    font-family: Arial, Helvetica, Geneva, Sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+	color: #183470;
+    line-height: 140%;
+    padding-bottom: 0px;
+    margin-bottom: 2px;
+    margin-top: 8px;
+    padding-top: 0px;
+}
+
+a:visited { color: #666; }
+
+#biograph table tr td {
+	padding-top: 0.125em;
+	padding-bottom: 0px;
+	vertical-align:top;
+	color:        #183470;
+	line-height: 14px;
+}
+
+#investigator_title_block #full_name, #investigator_title_block #page_title {
+    font-family: Arial, Helvetica, Geneva, Sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    color: #183470;
+    line-height: 140%;
+    padding-bottom: 0px;
+    margin-bottom: 2px;
+    margin-top: 8px;
+    padding-top: 0px;
+}
+
+td.list-title-left {
+	padding-left: 1em;
+	color:        #183470;
+	font-weight:  bold;
+}
+
+#listing .list-heading {
+	background-color: #CCC;
+	color:        #183470;
+	font-weight:  bold;
+}
+
+#listing .list-title {
+	color:        #183470;
+	font-weight:  bold;
+}
+
+#listing .list-title-center {
+	color:        #183470;
+	font-weight:  bold;
+	text-align: center;
+}
+
+#listing .list-title-right {
+	color:        #183470;
+	font-weight:  bold;
+	padding-right: 1em;
+	text-align: right;
+}
+
+#listing .list-title-right {
+	color:        #183470;
+	font-weight:  bold;
+	padding-right: 1em;
+	text-align: right;
+}
+
+/* --- HEADER --- */
+#banner {
+	border-bottom: 1px solid #183470;
+	margin-left:auto;
+	margin-right:auto;
+	width:1180px;
+	height:229px;
+/*	background: url(../images/pageheader.jpg) ; */
+	vertical-align:bottom;
+    text-align: center;
+	font-size:12px;
+	display: block;}
+
+#main {
+	border: 1px #183470 solid;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px;
+	width: 1180px;
+	height:auto;
+	vertical-align: top;
+	background-color: #FFFFFF;
+}
+
+#side {
+	float: left;  
+	margin-top: 0px;
+	margin-left: 0px;
+	padding: 5px;
+	vertical-align: top;
+	width: 160px;
+	height: 790px;
+	color: #000;
+	background-color: #CCC;
+}
+
+#title {
+  margin: 0px;
+  padding: 5px;
+  padding-left: 20px;
+  padding-bottom: 10px;
+  font:  180% sans-serif;
+  color: #183470;
+  background-color: lightyellow;
+}
+
+#title a {
+  padding: 5px;
+  color: #183470;
+  text-decoration:none;
+  background: none;
+}
+
+#search {
+  padding: 3px;
+  padding-left: 115px;
+  margin: 0px;
+    color: #fff;
+    font-size: 12px;
+    background-color: #09286B;
+}
+
+#search a:hover { background-color: #CCC; }
+
+#niceline {
+  padding-left: 50px;
+  height: 8px;
+  margin: 0px;
+    color: #fff;
+    font-size: 11px;
+    background-color: #CCC;
+}
+
+
+.ddsmoothmenu-v ul li a:link, .ddsmoothmenu-v ul li a:visited, .ddsmoothmenu-v ul li a:active{
+background: #09286B; /*background of menu items (default state)*/
+color: white;
+}
+
+
+.ddsmoothmenu-v ul li a.selected{ /*CSS class that's dynamically added to the currently active menu items' LI A element*/
+background: black; 
+color: white;
+}
+
+.ddsmoothmenu-v ul li a:hover{
+background: black; /*background of menu items during onmouseover (hover state)*/
+color: white;
+}
+
+.ddsmoothmenu-v ul li ul li.current, .ddsmoothmenu-v ul li ul li.current a {
+	background-color: #09286B;
+}
+ 

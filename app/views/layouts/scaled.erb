@@ -2,29 +2,36 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
-  <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
-  <style type="text/css">
-  <%= File.read("#{RAILS_ROOT}/public/stylesheets/publications.css") %>
-  <%= File.read("#{RAILS_ROOT}/public/stylesheets/latticegrid/#{lattice_grid_instance}.css") %>
-  </style>
-  <%= javascript_include_tag :defaults %> 
-
-  <%= LatticeGridHelper.google_analytics -%>
-</head>
-<body>
-
-<div id="main" class="autoclear">
-	<div id="banner"><a href="<%= LatticeGridHelper.home_url %>" ><%= image_tag "#{lattice_grid_instance}/pageheader.jpg", options={:alt=>LatticeGridHelper.header_title} %></a></div>
-	<div id="results" class="notice"><%= flash[:notice] %> 	<%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %> </div>
-	<div id="title"><%= LatticeGridHelper.header_title -%></div>
-	<div id="niceline"></div>
-	<%= yield  %>
-	<div id="last_load_date">
-		Last updated from PubMed on <%= session[:last_load_date].strftime("%A, %B %d, %Y") %>
-	</div>
-</div> <!-- end of main -->
-</body>
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
+    <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
+    <style type="text/css">
+      <%= File.read("#{Rails.root}/public/stylesheets/publications.css") %>
+      <%= File.read("#{Rails.root}/public/stylesheets/latticegrid/#{lattice_grid_instance}.css") %>
+    </style>
+    <%= javascript_include_tag :defaults %>
+    <%= LatticeGridHelper.google_analytics.html_safe -%>
+  </head>
+  <body>
+    <div id="main" class="autoclear">
+    	<div id="banner">
+        <a href="<%= LatticeGridHelper.home_url %>">
+          <%= image_tag "#{lattice_grid_instance}/pageheader.jpg", options={:alt=>LatticeGridHelper.header_title} %>
+        </a>
+      </div>
+    	<div id="results" class="notice">
+        <%= flash[:notice] %>
+        <%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %>
+      </div>
+    	<div id="title">
+        <%= LatticeGridHelper.header_title -%>
+      </div>
+    	<div id="niceline"></div>
+    	<%= yield  %>
+    	<div id="last_load_date">
+    		Last updated from PubMed on <%= session[:last_load_date].strftime("%A, %B %d, %Y") %>
+    	</div>
+    </div> <!-- end of main -->
+  </body>
 </html>

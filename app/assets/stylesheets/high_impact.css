@@ -1,0 +1,49 @@
+@page {
+    size: US-Letter;
+    margin: 40pt 25pt 40pt 30pt;
+}
+#main {
+	margin-left: 5px;
+	margin-right: 5px;
+	padding: 1px;
+	width: auto;
+	height:auto;
+	font-size: 14px;
+}
+
+p {
+	line-height: 22px;
+	font-size: 14px;
+}
+
+td.list-title-left{
+	padding-left: 12px;
+	padding-top: 1em;
+	padding-bottom: 0.25em;
+	font-size: 24px;
+	line-height: 28px;
+}
+
+td.list-left{
+	padding-left: 12px;
+	padding-right: 1em;
+	padding-bottom: 12px;
+	font-size: 18px;
+	line-height: 22px;
+} 
+
+.author, .first_author, .last_author {
+    color: #000;
+    font-weight:bold;
+}
+a { color: #000; text-decoration: none; }
+a:visited { color: #111;  }
+a:hover { color: #111; background-color:#ccc; }
+
+.list-line-even .author, .list-line-even .last_author, .list-line-even .first_author {
+	background:   aliceblue;
+}
+
+.list-line-odd .author, .list-line-odd .last_author, .list-line-odd .first_author {
+	background:   lightyellow;
+}

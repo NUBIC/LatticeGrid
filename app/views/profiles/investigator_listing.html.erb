@@ -12,6 +12,21 @@
 
 
 
-<%= render :partial => "shared/abstract_listing.html", 
-	:locals => { :abstracts => @abstracts, :investigators_in_unit => @investigators_in_unit, :include_pubmed_id => @include_pubmed_id, :include_collab_marker => @include_collab_marker, :include_investigators => @include_investigators, :show_valid_checkboxes => @show_valid_checkboxes, :show_paginator => @show_paginator, :heading => @heading, :link_abstract_to_pubmed => @link_abstract_to_pubmed, :include_impact_factor => @include_impact_factor, :include_updated_at => @include_updated_at, :simple_links => @simple_links, :speed_display => @speed_display } %>
+<%= render :partial => "shared/abstract_listing.html",
+	    :locals => {
+        :abstracts => @abstracts,
+        :investigators_in_unit => @investigators_in_unit,
+        :include_pubmed_id => @include_pubmed_id,
+        :include_collab_marker => @include_collab_marker,
+        :include_investigators => @include_investigators,
+        :show_valid_checkboxes => @show_valid_checkboxes,
+        :show_paginator => @show_paginator,
+        :heading => @heading,
+        :link_abstract_to_pubmed => @link_abstract_to_pubmed,
+        :include_impact_factor => @include_impact_factor,
+        :include_updated_at => @include_updated_at,
+        :simple_links => @simple_links,
+        :speed_display => @speed_display
+      }
+%>
 

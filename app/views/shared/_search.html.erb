@@ -1,5 +1,4 @@
 <div id="search">
-	
 	<span style="float:right;">
 		<%= link_to("atom/rss", feed_abstracts_url(:format => :atom )) %>
 	</span>
@@ -11,8 +10,9 @@
 	<% investigator_path_for_form = image_path('../investigators_search/') %>
 	<% investigator_all_path_for_form = image_path('../investigators_search_all/') %>
 	<% default_path_for_form = abstracts_search_url %>
-	<% form_tag(investigator_path_for_form, {:method => :get, :id => 'search_form', :onsubmit => "the_value = encodeURIComponent($('keywords').value); if ($('search_field').value.search(/allbyinvestigator/i) != -1)   {$('search_form').action = '#{investigator_all_path_for_form}'+the_value } else if ($('search_field').value.search(/investigator/i) != -1)   {$('search_form').action = '#{investigator_path_for_form}'+the_value } else {$('search_form').action = '#{default_path_for_form}'} " }) do %>
-	  <%= text_field_tag(:keywords, params[:keywords], :size => 20) %> Search 
-	  <%= select_tag("search_field",options_for_select(%w{ Investigator AllByInvestigator TitleOrAbstract Journal FacultySummary Keywords MeSH All},params[:search_field]), {:class => "dropdown"}) %> Enter term and hit return. Use '*' as a wildcard.
-	<% end %> 
+	<%= form_tag(investigator_path_for_form, {:method => :get, :id => 'search_form', :onsubmit => "the_value = encodeURIComponent($('keywords').value); if ($('search_field').value.search(/allbyinvestigator/i) != -1)   {$('search_form').action = '#{investigator_all_path_for_form}'+the_value } else if ($('search_field').value.search(/investigator/i) != -1)   {$('search_form').action = '#{investigator_path_for_form}'+the_value } else {$('search_form').action = '#{default_path_for_form}'} " }) do %>
+	  <%= text_field_tag(:keywords, params[:keywords], :size => 20) %> Search
+	  <%= select_tag("search_field",options_for_select(%w{ Investigator AllByInvestigator TitleOrAbstract Journal FacultySummary Keywords MeSH All},params[:search_field]), {:class => "dropdown"}) %>
+	  Enter term and hit return. Use '*' as a wildcard.
+	<% end %>
 </div>

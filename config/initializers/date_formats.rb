@@ -1,10 +1,12 @@
-ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(
+Date::DATE_FORMATS.merge!(
   :justdate => "%m/%d/%Y",
   :db_date => "%Y-%m-%d",
-  :integer_date => "%Y%m%d"
+  :integer_date => "%Y%m%d",
+  :payment => lambda { |date| date.strftime("%B %e, %Y") }
 )
-ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!(
+Time::DATE_FORMATS.merge!(
   :justdate => "%m/%d/%Y",
   :db_date => "%Y-%m-%d",
-  :integer_date => "%Y%m%d"
+  :integer_date => "%Y%m%d",
+  :payment => lambda { |date| date.strftime("%B %e, %Y") }
 )

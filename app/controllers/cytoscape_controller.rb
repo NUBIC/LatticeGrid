@@ -3,7 +3,7 @@ class CytoscapeController < ApplicationController
 
   caches_page( :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :org_org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data, :investigator_edge_bundling, :d3_investigator_edge_data, :investigator_wordle, :d3_investigator_wordle_data, :simularity_wordle, :d3_investigators_wordle_data, :d3_investigator_chord_data, :show_all_orgs, :all_org_cytoscape_data, :d3_program_investigators_chord_data, :d3_all_investigators_chord_data) if LatticeGridHelper.CachePages()
   caches_action( :listing, :investigator, :awards, :studies )  if LatticeGridHelper.CachePages()
-  
+
   require 'cytoscape_config'
   require 'cytoscape_generator'
   require 'protovis_generator'
@@ -54,7 +54,7 @@ class CytoscapeController < ApplicationController
     @title = "Publications Collaborations"
     @org = find_unit_by_id_or_name(params[:id])
     @dataurl = org_cytoscape_data_url(params[:id], params[:depth], params[:include_publications], params[:include_awards], params[:include_studies])
-    
+
     show
   end
 
@@ -65,7 +65,7 @@ class CytoscapeController < ApplicationController
     @org = find_unit_by_id_or_name(params[:id])
     @title = "#{@org.name}: inter-unit ollaborations"
     @dataurl = org_org_cytoscape_data_url(params[:id], params[:depth], params[:include_publications], params[:include_awards], params[:include_studies])
-    
+
     show
   end
 
@@ -77,7 +77,7 @@ class CytoscapeController < ApplicationController
     handle_data_params
     @title = "All inter-unit collaborations from #{params[:start_date]} to #{params[:end_date]}"
     @dataurl = all_org_cytoscape_data_url(params[:include_publications], params[:include_awards], params[:include_studies], params[:start_date], params[:end_date] )
-    
+
     show
   end
 
@@ -89,11 +89,11 @@ class CytoscapeController < ApplicationController
     handle_data_params
     @title = "All inter-unit collaborations from #{params[:start_date]} to #{params[:end_date]}"
     @dataurl = all_org_cytoscape_data_url(params[:include_publications], params[:include_awards], params[:include_studies], params[:start_date], params[:end_date] )
-    
+
     show
   end
-  
-  
+
+
   def awards
     params[:include_publications] ||= "0"
     params[:include_studies] ||= "0"
@@ -147,12 +147,12 @@ class CytoscapeController < ApplicationController
     investigator=Investigator.find_by_username(params[:id])
     @subtree_hash = adjacencies(investigator)
   end
-  
+
   def protovis
-    #needs the username 
+    #needs the username
     render :layout => false
   end
-  
+
   def member_cytoscapejs_data
     @investigator=Investigator.find_by_username(params[:id])
     handle_data_params
@@ -162,7 +162,7 @@ class CytoscapeController < ApplicationController
     end
   end
 
-  
+
   def member_cytoscape_data
     @investigator=Investigator.find_by_username(params[:id])
     handle_data_params
@@ -195,7 +195,7 @@ class CytoscapeController < ApplicationController
       format.js{ render :layout=> false, :json=> {:dataSchema => data_schema.as_json(), :data => data.as_json()}  }
     end
   end
-  
+
   def all_org_cytoscape_data
     handle_data_params
     data_schema = generate_cytoscape_schema()
@@ -210,7 +210,7 @@ class CytoscapeController < ApplicationController
     #all the data should be passed in as a big blob
     send_data(request.raw_post, :filename => "cytoscape.pdf", :type => "application/pdf")
   end
-  
+
 
 
   #protovis methods
@@ -228,7 +228,7 @@ class CytoscapeController < ApplicationController
 
   #d3 methods
   # this one is a collection - doesn't have an :id parameter
-  
+
   def chord
     @json_callback = "../cytoscape/d3_data.js"
     @title = 'Chord Diagram showing inter- and intra-programmatic connections through multi-investigator publications'
@@ -243,7 +243,7 @@ class CytoscapeController < ApplicationController
     @json_callback = "../cytoscape/d3_data.js"
     @title = 'Chord Diagram showing programmatic connections'
     unless params[:id].blank?
-      program = OrganizationalUnit.find_by_id(params[:id])
+      program = OrganizationalUnit.find(params[:id])
       if program.blank?
         flash[:notice] = "unable to find unit #{params[:id]}"
         params[:id] = nil
@@ -258,16 +258,16 @@ class CytoscapeController < ApplicationController
     end
   end
 
-#!!!!! 
-  def investigator_chord 
+#!!!!!
+  def investigator_chord
     @title = 'Chord Diagram showing publications between various investigators'
-    unless params[:id].blank? 
+    unless params[:id].blank?
       @investigator = Investigator.find_by_username(params[:id])
       @json_callback = "../cytoscape/"+params[:id]+"/d3_investigator_chord_data.js"
-      if @investigator.blank? 
+      if @investigator.blank?
         flash[:notice] = "unable to find investigator"
-        params[:id] = nil 
-      else 
+        params[:id] = nil
+      else
         @title = 'Chord Diagram showing investigator collaborations through publications for ' + @investigator.name
       end
     end
@@ -277,8 +277,8 @@ class CytoscapeController < ApplicationController
     end
   end
 
-#!!!!! 
-  def all_investigator_chord 
+#!!!!!
+  def all_investigator_chord
     @title = 'Chord Diagram showing publications between investigators'
     @json_callback = "../cytoscape/d3_all_investigators_chord_data.js"
     respond_to do |format|
@@ -289,7 +289,7 @@ class CytoscapeController < ApplicationController
 
 
 #!!!!!
-  def investigator_edge_bundling 
+  def investigator_edge_bundling
     @title = 'Hierarchical Edge Bundle Diagram by program and investigator'
     @json_callback = "../cytoscape_d3_investigator_edge_data.js"
     respond_to do |format|
@@ -305,7 +305,7 @@ class CytoscapeController < ApplicationController
       @investigator = Investigator.find_by_username(params[:id])
       if @investigator.blank?
         flash[:notice] = "unable to find investigator"
-        params[:id] = nil 
+        params[:id] = nil
       else
         @title = 'Word cloud (Wordle) display of abstracts from ' + @investigator.name
         @json_callback = "../cytoscape/" + params[:id] + "/d3_investigator_wordle_data.js"
@@ -323,7 +323,7 @@ class CytoscapeController < ApplicationController
       @investigators = Investigator.all(:conditions=>["investigators.username in (:usernames)",{:usernames=>params[:id].split(",")}])
       if @investigators.blank?
         flash[:notice] = "unable to find investigator"
-        params[:id] = nil 
+        params[:id] = nil
       else
         @title = 'Word cloud (Wordle) similarity between ' + @investigators.map(&:name).join(" and ")
         @json_callback = "../cytoscape/" + params[:id] + "/d3_investigator_similarity_wordle_data.js"
@@ -334,7 +334,7 @@ class CytoscapeController < ApplicationController
       format.json { render :layout => false, :text => ""}
     end
   end
-  
+
   def difference_wordle
     @title = 'Wordle for NO ONE BECAUSE THE ID IS INVALID'
     unless params[:id].blank?
@@ -343,7 +343,7 @@ class CytoscapeController < ApplicationController
       @investigators=[investigator1,investigator2]
       if @investigators.blank?
         flash[:notice] = "unable to find investigator"
-        params[:id] = nil 
+        params[:id] = nil
       else
         @title = 'Word cloud (Wordle) difference between ' + @investigators.map(&:name).join(" and ")
         @json_callback1 = "../cytoscape/" + params[:id] + "/d3_investigator_difference_wordle_data.js"
@@ -355,7 +355,7 @@ class CytoscapeController < ApplicationController
       format.json { render :layout => false, :text => ""}
     end
   end
-  
+
   def chord_by_date
     start_date = params[:start_date] || 5.years.ago.to_date
     end_date = params[:end_date] || Date.today
@@ -370,15 +370,15 @@ class CytoscapeController < ApplicationController
   end
 
   def d3_data
-    @units = @head_node.descendants.sort_by(&:abbreviation) 
+    @units = @head_node.descendants.sort_by(&:abbreviation)
     if (params[:id].blank?)
       # children are one level down - descendants are all levels down
       graph = d3_all_units_graph(@units)
-    else 
-      @master_unit = OrganizationalUnit.find_by_id(params[:id])
+    else
+      @master_unit = OrganizationalUnit.find(params[:id])
       graph = d3_master_unit_graph(@units,@master_unit)
     end
-    depth = 1    
+    depth = 1
     respond_to do |format|
       #format.json{ render :partial => "member_protovis_data", :locals => {:nodes_array_hash => protovis_nodes, :edges_array_hash => protovis_edges}  }
       format.json{ render :layout=> false, :json => graph.as_json() }
@@ -390,28 +390,28 @@ class CytoscapeController < ApplicationController
   def d3_program_investigators_chord_data
     #@investigators = @head_node.descendants.sort_by(&:name)
     if (params[:id])
-      program = OrganizationalUnit.find_by_id(params[:id])
+      program = OrganizationalUnit.find(params[:id])
       graph = d3_all_investigators_graph(program)
     end
-    depth = 1 
-    respond_to do |format| 
+    depth = 1
+    respond_to do |format|
       format.json{ render :layout => false, :json => graph.as_json()}
       format.js{ render :layout => false, :json => graph.as_json()}
     end
   end
-    
+
 
 #!!!!
   def d3_all_investigators_chord_data
     #@investigators = @head_node.descendants.sort_by(&:name)
     graph = d3_all_investigators_graph()
-    depth = 1 
-    respond_to do |format| 
+    depth = 1
+    respond_to do |format|
       format.json{ render :layout => false, :json => graph.as_json()}
       format.js{ render :layout => false, :json => graph.as_json()}
     end
   end
-    
+
 
 #!!!!
   def d3_investigator_chord_data
@@ -420,35 +420,35 @@ class CytoscapeController < ApplicationController
         investigator = Investigator.find_all_by_username(params[:id]).first
         graph = d3_master_investigator_graph(investigator)
       end
-      depth = 1 
-      respond_to do |format| 
+      depth = 1
+      respond_to do |format|
         format.json{ render :layout => false, :json => graph.as_json()}
         format.js{ render :layout => false, :json => graph.as_json()}
       end
     end
-    
-  #!!!!!  
+
+  #!!!!!
   def d3_investigator_edge_data
     #@investigators = @head_node.descendants.sort_by(&:name)
     departments = OrganizationalUnit.all
     #investigators = []
-    #departments.each {|dep| 
+    #departments.each {|dep|
     #  dep.primary_or_member_faculty.each {|inv|
     #      investigators << inv
-    #    } 
-    #  } 
+    #    }
+    #  }
     investigators = Investigator.all
     investigators.sort!{|a, b| a.unit_list().first <=> b.unit_list().first}
- 
+
     graph = d3_all_investigators_bundle(investigators.uniq)
-    depth = 1 
-    respond_to do |format| 
+    depth = 1
+    respond_to do |format|
       format.json{ render :layout => false, :json => graph.as_json()}
       format.js{ render :layout => false, :json => graph.as_json()}
     end
-  end    
+  end
 
-  #!!! 
+  #!!!
   def d3_investigator_wordle_data
     words = []
     if (params[:id])
@@ -462,7 +462,7 @@ class CytoscapeController < ApplicationController
       format.js{ render :layout => false, :json => words.as_json()}
     end
   end
-  
+
   def d3_investigator_similarity_wordle_data
     words = []
     if (params[:id])
@@ -475,7 +475,7 @@ class CytoscapeController < ApplicationController
       format.js{ render :layout => false, :json => words.as_json()}
     end
   end
-  
+
   def d3_investigator_difference_wordle_data
     words = []
     if (params[:id])
@@ -489,11 +489,11 @@ class CytoscapeController < ApplicationController
       format.js{ render :layout => false, :json => words.as_json()}
     end
   end
-  
+
   def d3_date_data
     @units = @head_node.descendants.sort_by(&:abbreviation)
     graph = d3_units_by_date_graph(@units, params[:start_date].to_date,  params[:end_date].to_date)
-    depth = 1    
+    depth = 1
     respond_to do |format|
       #format.json{ render :partial => "member_protovis_data", :locals => {:nodes_array_hash => protovis_nodes, :edges_array_hash => protovis_edges}  }
       format.json{ render :layout=> false, :json => graph.as_json() }
@@ -501,10 +501,10 @@ class CytoscapeController < ApplicationController
     end
   end
 
-  private  
+  private
 
   def check_allowed
-    unless allowed_ip(get_client_ip()) then 
+    unless allowed_ip(get_client_ip()) then
       redirect_to disallowed_awards_url
     end
   end
@@ -520,5 +520,5 @@ class CytoscapeController < ApplicationController
     params[:end_date] ||= Date.today.to_s
     params[:end_date] ||= 5.years.ago.to_date.to_s
   end
- 
+
 end

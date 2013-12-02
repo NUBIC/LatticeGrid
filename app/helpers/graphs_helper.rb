@@ -4,7 +4,7 @@ module GraphsHelper
       @internal = internal
       @external = external
     end
-    def internal 
+    def internal
       @internal
     end
     def external
@@ -16,7 +16,7 @@ module GraphsHelper
     # assume 0,0 to 100,100
     # start at 0,0 and move around the clock.
     # 360 / total is the number of degrees per node
-    
+
     radians_in_circle = 360/57.3
     cos = Math.cos(radians_in_circle*theCnt/total)
     sin = Math.sin(radians_in_circle*theCnt/total)
@@ -29,7 +29,7 @@ module GraphsHelper
     # assume 0,0 to 100,100
     # start at 0,0 and move around the clock.
     # 360 / total is the number of degrees per node
-    
+
     degrees_per_node = 360/total
     radians_per_node = degrees_per_node/57.3
     cos = Math.cos(radians_per_node*theCnt)
@@ -41,7 +41,7 @@ module GraphsHelper
 
   def calculateExternalPosition(total,theCnt)
     # all x=0, y=0 to 100
-    
+
     x = 5
     y = 95-(theCnt*95/total)
     [x,y]
@@ -67,11 +67,11 @@ module GraphsHelper
     new_nodes.push(match_node) if new_nodes.index( match_node ).nil?
     match_node.internal_collaborators.keys.each do |key_id|
       found_node = old_nodes.find { |i| i.id.to_i == key_id.to_i }
-      #logger.info 'looking for key '+key_id 
+      #logger.info 'looking for key '+key_id
       if ! found_node.nil?
-       # logger.info 'found node for key '+key_id 
+       # logger.info 'found node for key '+key_id
         new_nodes.push(found_node) if new_nodes.index( found_node ).nil?
-        old_nodes.delete(found_node) 
+        old_nodes.delete(found_node)
       end
     end
     return rearrangeNodes(old_nodes, new_nodes)
@@ -82,9 +82,9 @@ module GraphsHelper
     external_nodes=Array.new(0)
     investigators.each do |inv|
       if inv.internal_collaborators.length > 0
-          internal_nodes[internal_nodes.length]=inv 
+          internal_nodes[internal_nodes.length]=inv
       else
-          external_nodes[external_nodes.length]=inv 
+          external_nodes[external_nodes.length]=inv
       end
     end
     internal_nodes=sortNodes(internal_nodes)
@@ -95,14 +95,14 @@ module GraphsHelper
   def assignInvestigatorPositions(investigator)
     collaborator_nodes=Hash.new
     investigator.internal_collaborators.keys.each do |investigator_id|
-      collaborator = Investigator.find_by_id(investigator_id)
+      collaborator = Investigator.find(investigator_id)
       if !collaborator.nil?
         collaborator_nodes[investigator_id]=collaborator
         collaborator_nodes[investigator_id]['isInternal'] = true
       end
     end
     investigator.external_collaborators.keys.each do |investigator_id|
-      collaborator = Investigator.find_by_id(investigator_id)
+      collaborator = Investigator.find(investigator_id)
       if !collaborator.nil?
         collaborator_nodes[investigator_id]=collaborator
         collaborator_nodes[investigator_id]['isInternal'] = false
