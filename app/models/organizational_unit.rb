@@ -318,9 +318,9 @@ class OrganizationalUnit < ActiveRecord::Base
 
   def display_data_by_date(start_date, end_date)
     self.abstracts.includes([:investigators])
-      .where('year = :year', { :year => year })
-      .order('abstracts.publication_date between :start_date and :end_date',
+      .where('abstracts.publication_date between :start_date and :end_date',
         { :start_date => start_date, :end_date => end_date })
+      .order('year DESC, investigators.last_name ASC, authors ASC')
       .to_a
   end
 

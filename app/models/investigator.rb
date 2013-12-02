@@ -687,7 +687,7 @@ class Investigator < ActiveRecord::Base
     numeric_terms = terms.collect{|term| (term =~ /^[0-9]+$/) ? term : nil }.uniq
     [
       Investigator.find_all_by_username(terms) +
-      Investigator.where('lower(email) in (:terms)', { :terms=>terms } ).to_a +
+      Investigator.where('lower(email) in (:terms)', { :terms => terms } ).to_a +
       Investigator.find_all_by_employee_id(numeric_terms)
     ].flatten.uniq
   end

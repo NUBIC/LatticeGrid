@@ -82,13 +82,8 @@ class Abstract < ActiveRecord::Base
   has_many :organizational_units, :through => :organization_abstracts
 
   # if pubmed if blank, force uniqueness (non-blankness!) for doi, and vice versus. Both cannot be blank!
-  # test only needs to be one sided.
-  # rails 3.x syntax
-  # validates :pubmed, :uniqueness => true, :if => "doi.blank?"
-  # validates :doi, :uniqueness => true, :if => "pubmed.blank?"
-  validates_uniqueness_of :pubmed, :allow_nil => true
-  validates_uniqueness_of :doi, :allow_nil => true
-  validates_uniqueness_of :doi, :allow_nil => false, :message => "and pubmed can't both be nil", :if => :check_pubmed_doi_blank?
+  validates :pubmed, :uniqueness => true, :presence => true, :if => "doi.blank?"
+  validates :doi, :uniqueness => true, :presence => true, :if => "pubmed.blank?"
 
   scope :most_recent, lambda { |latest|
     if latest.blank?
@@ -428,7 +423,7 @@ class Abstract < ActiveRecord::Base
       :order => "abstracts.publication_date DESC, abstracts.electronic_publication_date DESC, abstracts.authors ASC",
       :include => [:investigators],
       :conditions => ['year = :year and investigator_abstracts.is_valid = true',
-  		      {:year => year }])
+  		      { :year => year }])
   end
 
   def self.display_all_data(year = 2008)

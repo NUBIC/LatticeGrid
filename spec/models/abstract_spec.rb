@@ -75,4 +75,76 @@ describe Abstract do
   it 'can be saved successfully' do
     FactoryGirl.create(:abstract).should be_persisted
   end
+
+  context 'validity' do
+    it 'is invalid when pubmed is not unique' do
+      existing_abstract = FactoryGirl.create(:abstract)
+      new_abstract = Abstract.new(pubmed: existing_abstract.pubmed)
+      new_abstract.should_not be_valid
+      new_abstract.errors.messages[:pubmed].should_not be_blank
+    end
+
+    it 'is invalid when pubmed and doi are both blank' do
+      ab = Abstract.new(pubmed: nil, doi: nil)
+      ab.should_not be_valid
+    end
+  end
+
+  context 'with valid data' do
+    let(:investigator_abstract) { FactoryGirl.create(:investigator_abstract, is_valid: true) }
+    let(:investigator)          { investigator_abstract.investigator }
+    let!(:abstract)             { investigator_abstract.abstract }
+
+    describe '#display_data' do
+      it 'returns matching records' do
+        abstracts = Abstract.display_data(abstract.year)
+        abstracts.should_not be_empty
+        abstracts.total_entries.should_not be_nil
+        abstracts.length.should eq abstracts.total_entries
+      end
+    end
+
+    describe '#display_all_data' do
+      it 'returns matching records' do
+        abstracts = Abstract.display_all_data(abstract.year)
+        abstracts.length.should eq 1
+        expect { abstracts.total_entries }.to raise_error(NoMethodError)
+      end
+    end
+
+    describe '#abstracts_by_date' do
+      it 'returns matching records' do
+        abstracts = Abstract.abstracts_by_date('5/1/2000', '5/1/2020')
+        abstracts.length.should eq Abstract.count
+        expect { abstracts.total_entries }.to raise_error(NoMethodError)
+      end
+    end
+
+    describe '#display_investigator_data' do
+      it 'returns matching records' do
+        abstracts = Abstract.display_investigator_data(investigator.id)
+        abstracts.should_not be_empty
+        abstracts.total_entries.should_not be_nil
+        abstracts.length.should eq abstracts.total_entries
+      end
+    end
+
+    describe '#display_all_investigator_data' do
+      it 'returns matching records' do
+        abstracts = Abstract.display_all_investigator_data(investigator.id)
+        abstracts.length.should eq 1
+        expect { abstracts.total_entries }.to raise_error(NoMethodError)
+      end
+    end
+
+    describe '#investigator_publications' do
+      it 'returns matching records' do
+        investigators = Investigator.all
+        abstracts = Abstract.investigator_publications(investigators)
+        abstracts.length.should eq 1
+        expect { abstracts.total_entries }.to raise_error(NoMethodError)
+      end
+    end
+
+  end
 end
