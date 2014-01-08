@@ -45,13 +45,9 @@ ActiveRecord::Schema.define(:version => 20130327155943) do
     t.string    "updated_ip"
     t.timestamp "created_at"
     t.timestamp "updated_at"
-    t.boolean   "is_cancer",                    :default => true
+    t.boolean   "is_cancer",                    :default => true,  :null => false
     t.string    "pubmedcentral"
     t.text      "vectors"
-    t.text      "journal_vector"
-    t.text      "author_vector"
-    t.text      "abstract_vector"
-    t.text      "mesh_vector"
     t.boolean   "is_valid",                     :default => true,  :null => false
     t.timestamp "reviewed_at"
     t.integer   "reviewed_id"
@@ -60,6 +56,10 @@ ActiveRecord::Schema.define(:version => 20130327155943) do
     t.integer   "last_reviewed_id"
     t.string    "last_reviewed_ip"
     t.date      "pubmed_creation_date"
+    t.text      "author_vector"
+    t.text      "abstract_vector"
+    t.text      "mesh_vector"
+    t.text      "journal_vector"
     t.string    "doi"
     t.text      "author_affiliations"
   end

@@ -20,7 +20,7 @@
 #  endnote_citation             :text
 #  full_authors                 :text
 #  id                           :integer          default(0), not null, primary key
-#  is_cancer                    :boolean          default(TRUE)
+#  is_cancer                    :boolean          default(TRUE), not null
 #  is_first_author_investigator :boolean          default(FALSE)
 #  is_last_author_investigator  :boolean          default(FALSE)
 #  is_valid                     :boolean          default(TRUE), not null

@@ -80,6 +80,13 @@ def LatticeGridHelper.do_ldap?
  false
 end
 
+def LatticeGridHelper.limit_to_MeSH_terms?
+  true
+end
+
+def LatticeGridHelper.MeSH_terms_array
+  ["ras genes[MeSH Terms]", "ras proteins[MeSH Terms]", "p21ras", "ras gtpase-activating proteins", "ras-grf1", "ras GTPase-Activating Proteins[nm]"]
+end
 
 def LatticeGridHelper.ldap_perform_search?
  false
@@ -97,8 +104,12 @@ def LatticeGridHelper.include_awards?
  false
 end
 
-# build LatticeGridHelper.institutional_limit_search_string to identify all the publications at your institution 
+# use full first name in PubMed searches
+def LatticeGridHelper.global_pubmed_search_full_first_name?
+  false
+end
 
+# build LatticeGridHelper.institutional_limit_search_string to identify all the publications at your institution 
 def LatticeGridHelper.institutional_limit_search_string 
   ''
 end

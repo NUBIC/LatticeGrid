@@ -230,6 +230,15 @@ def LatticeGridHelper.build_institution_search_string_from_department?
   false
 end
 
+def LatticeGridHelper.limit_to_MeSH_terms?
+  false
+end
+
+def LatticeGridHelper.MeSH_terms
+  ""
+end
+
+
 def LatticeGridHelper.affilation_name 
   "Department"
 end
@@ -256,7 +265,7 @@ end
 
 # you shouldn't need to change these ...
 def LatticeGridHelper.all_years
-  10
+  20
 end
 
 def LatticeGridHelper.default_number_years

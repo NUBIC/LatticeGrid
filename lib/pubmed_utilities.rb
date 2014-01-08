@@ -58,7 +58,16 @@ def BuildPISearch(pi, full_first_name=true)
   if limit_to_institution(pi) then
     result = LimitSearchToInstitution(result, pi)
   end
+  result= LimitSearchToMeSHterms(result)
   result
+end
+
+def LimitSearchToMeSHterms(phrase_to_limit)
+  if LatticeGridHelper.limit_to_MeSH_terms? and not LatticeGridHelper.MeSH_terms_array.blank?
+    terms = LatticeGridHelper.MeSH_terms_array.map{|a| "(#{a})"}.join(" OR ")
+    return "(#{phrase_to_limit}) AND (#{terms})"
+  end
+  return phrase_to_limit
 end
 
 def LimitSearchToInstitution(term, pi)
@@ -101,7 +110,7 @@ def FindPubMedIDs (all_investigators, options, number_years, debug=false, smart_
     repeatCnt=0
     entries = nil
     perform_esearch=true
-    keywords = BuildPISearch(investigator, true)
+    keywords = BuildPISearch(investigator, LatticeGridHelper.global_pubmed_search_full_first_name?() )
     investigator["mark_pubs_as_valid"]= limit_to_institution(investigator) 
     while perform_esearch && repeatCnt < 3 && attempt < 4
       begin

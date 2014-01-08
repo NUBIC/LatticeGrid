@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-source 'http://download.bioinformatics.northwestern.edu/gems'
+#source 'http://download.bioinformatics.northwestern.edu/gems'
 
 gem 'bundler'
 gem "rails", "~> 2.3", :require => nil
