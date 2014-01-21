@@ -57,4 +57,7 @@ LatticeGrid::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+
+  # set the lattice_grid_instance for this env
+  lattice_grid_instance
 end

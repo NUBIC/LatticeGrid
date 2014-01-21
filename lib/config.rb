@@ -1,11 +1,3 @@
-def lattice_grid_instance
-  #LatticeGrid should be defined in the config/initializers
-  return @@lattice_grid_instance if defined?(@@lattice_grid_instance) and ! @@lattice_grid_instance.blank?
-  @@lattice_grid_instance = 'defaults'
-  if defined?(LatticeGrid) and !LatticeGrid.blank? and ! LatticeGrid.the_instance.blank?
-    @@lattice_grid_instance = LatticeGrid.the_instance
-  end
-  @@lattice_grid_instance
-end
-
+# moved lattice_grid_instance method to config/application.rb
+# due to load order issues
 require File.dirname(__FILE__) + '/../app/helpers/lattice_grid_helper'

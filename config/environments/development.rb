@@ -39,8 +39,10 @@ LatticeGrid::Application.configure do
 
     # The portal to which this application belongs.  Optional.
     # portal :LatticeGrid
-    puts "loading local static aker file"
     login_config = File.join(Rails.root, %w(config logins development.yml))
     authority Aker::Authorities::Static.from_file(login_config)
   end
+
+  # set the lattice_grid_instance for this env
+  lattice_grid_instance
 end

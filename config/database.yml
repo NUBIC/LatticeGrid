@@ -4,8 +4,7 @@
 %>
 
 <%
-  require 'latticegrid'
-  the_database = case LatticeGrid.the_instance
+  the_database = case lattice_grid_instance
     when 'RHLCCC' then "rhlccc_latticegrid"
     when 'Feinberg' then "fsm_latticegrid"
     when 'CCNE' then "ccne_latticegrid"

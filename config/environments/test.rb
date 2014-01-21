@@ -40,4 +40,6 @@ LatticeGrid::Application.configure do
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
 
+  # set the lattice_grid_instance for this env
+  lattice_grid_instance
 end
