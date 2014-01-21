@@ -9,8 +9,8 @@ class MeshController < ApplicationController
     @tags = Tag.all
     respond_to do |format|
       format.html
-      format.json { render :layout => false, :json => @tags.to_json }
-      format.xml  { render :layout => false, :xml => @tags.to_xml }
+      format.json { render :layout => false, :json => @tags.as_json }
+      format.xml  { render :layout => false, :xml  => @tags.to_xml }
     end
   end
 
@@ -18,8 +18,8 @@ class MeshController < ApplicationController
     @tags = MeshHelper.do_mesh_search(params[:id])
     respond_to do |format|
       format.html { render }
-      format.json { render :layout => false, :json => @tags.to_json }
-      format.xml  { render :layout => false, :xml => @tags.to_xml }
+      format.json { render :layout => false, :json => @tags.as_json }
+      format.xml  { render :layout => false, :xml  => @tags.to_xml }
     end
   end
 
@@ -34,8 +34,8 @@ class MeshController < ApplicationController
                        .all
     respond_to do |format|
       format.html { render }
-      format.json { render :layout => false, :json => @taggings.to_json(:include => [:tag]) }
-      format.xml  { render :layout => false, :xml => @taggings.to_xml(:include => [:tag]) }
+      format.json { render :layout => false, :json => @taggings.as_json(:include => [:tag]) }
+      format.xml  { render :layout => false, :xml  => @taggings.to_xml(:include => [:tag]) }
     end
   end
 
@@ -46,8 +46,8 @@ class MeshController < ApplicationController
     abstract_total     = Abstract.count
     investigator_count = 0
     abstract_tag_count = 0
+    abstract_count     = 0
     max_investigator_tag_count = 0
-    abstract_count     = 0.to_i
     tag_name = params[:id]
     investigators_array = []
 
@@ -73,8 +73,8 @@ class MeshController < ApplicationController
       format.html { render :text => "Tagging count for <i>#{tag_name}</i> (total tags: #{tag_total}; tags found: #{tags.length} )<br/>
                                      Investigators: (#{investigator_count} out of #{investigator_total})<br/>
                                      Abstracts: (#{abstract_tag_count} out of #{abstract_total})" }
-      format.json { render :layout => false, :json => {"Tag_name" => tag_name, "Tag_total" => tag_total, "Investigator_total" => investigator_total, "Abstract_total" => abstract_total, "Investigator_count" => investigator_count, "Abstract_count" => abstract_tag_count, "investigators" => investigators_array, "max_investigator_tag_count" => max_investigator_tag_count }.as_json() }
-      format.xml  { render :layout => false, :xml => {"Tag_name" => tag_name, "Tag_total" => tag_total, "Investigator_total" => investigator_total, "Abstract_total" => abstract_total, "Investigator_count" => investigator_count, "Abstract_count" => abstract_tag_count, "max_investigator_tag_count" => max_investigator_tag_count, "investigators" => investigators_array }.to_xml() }
+      format.json { render :layout => false, :json => {"Tag_name" => tag_name, "Tag_total" => tag_total, "Investigator_total" => investigator_total, "Abstract_total" => abstract_total, "Investigator_count" => investigator_count, "Abstract_count" => abstract_tag_count, "investigators" => investigators_array, "max_investigator_tag_count" => max_investigator_tag_count }.as_json }
+      format.xml  { render :layout => false, :xml =>  {"Tag_name" => tag_name, "Tag_total" => tag_total, "Investigator_total" => investigator_total, "Abstract_total" => abstract_total, "Investigator_count" => investigator_count, "Abstract_count" => abstract_tag_count, "investigators" => investigators_array, "max_investigator_tag_count" => max_investigator_tag_count }.to_xml }
     end
   end
 
@@ -86,8 +86,8 @@ class MeshController < ApplicationController
     end
     respond_to do |format|
       format.html { render :text => "Investigator count for #{params[:id]} is #{investigator_count} and tag count is #{tags.length}" }
-      format.json { render :layout => false, :json => {"Investigator_count" => investigator_count}.as_json() }
-      format.xml  { render :layout => false, :xml => {"Investigator_count" => investigator_count}.to_xml() }
+      format.json { render :layout => false, :json => {"Investigator_count" => investigator_count}.as_json }
+      format.xml  { render :layout => false, :xml  => {"Investigator_count" => investigator_count}.to_xml }
     end
   end
 
@@ -109,7 +109,7 @@ class MeshController < ApplicationController
     respond_to do |format|
       format.html { render :text => "Tags found: (#{tags.length}); Tags: #{tag_array}"}
       format.json { render :layout => false, :json => { "tags" => tag_array}.as_json }
-      format.xml  { render :layout => false, :xml => { "tags" => tag_array}.to_xml }
+      format.xml  { render :layout => false, :xml =>  { "tags" => tag_array}.to_xml }
     end
   end
 
@@ -120,7 +120,7 @@ class MeshController < ApplicationController
     respond_to do |format|
       format.html { redirect_to show_all_tags_investigator_url(params[:username]) }
       format.xml  { render :layout => false, :xml  => tags.to_xml }
-      format.json { render :layout => false, :json => tags.to_json }
+      format.json { render :layout => false, :json => tags.as_json }
     end
   end
 

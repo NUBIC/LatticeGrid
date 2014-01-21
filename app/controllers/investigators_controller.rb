@@ -13,29 +13,29 @@ class InvestigatorsController < ApplicationController
   skip_before_filter  :get_organizations, :only => [:tag_cloud_side, :tag_cloud, :search, :collaborators, :barchart]
   skip_before_filter  :handle_pagination, :only => [:tag_cloud_side, :tag_cloud, :search, :collaborators, :barchart]
   skip_before_filter  :define_keywords, :only => [:tag_cloud_side, :tag_cloud, :search, :collaborators, :barchart]
-  
+
   def index
     redirect_to( current_abstracts_url )
   end
-  
+
   def list_all
-    @investigators = Investigator.all(:include=>[:home_department,:appointments], :order => "last_name, first_name")   
+    @investigators = Investigator.all(:include=>[:home_department,:appointments], :order => "last_name, first_name")
     respond_to do |format|
       format.html { render :layout => 'printable'}
       format.xml  { render :xml => @units }
       format.pdf {
         @pdf = true
-        render( :pdf => "Investigator Listing", 
-            :stylesheets => ["pdf"], 
+        render( :pdf => "Investigator Listing",
+            :stylesheets => ["pdf"],
             :template => "investigators/list_all.html",
             :layout => "pdf") }
-      format.xls  { 
+      format.xls  {
         @pdf = true
         send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
         :filename => "Investigator_Listing_#{Date.today.to_s}.xls",
         :type => 'application/vnd.ms-excel',
         :disposition => 'attachment') }
-      format.doc  { 
+      format.doc  {
         @pdf = true
         send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
         :filename => "Investigator_Listing_#{Date.today.to_s}.doc",
@@ -43,7 +43,7 @@ class InvestigatorsController < ApplicationController
         :disposition => 'attachment') }
     end
   end
-  
+
   def list_by_ids
     if params[:investigator_ids].nil? then
       redirect_to( year_list_abstracts_url )
@@ -54,17 +54,17 @@ class InvestigatorsController < ApplicationController
         format.xml  { render :xml => @investigators }
         format.pdf {
           @pdf = true
-          render( :pdf => "Investigator Listing", 
-              :stylesheets => ["pdf"], 
+          render( :pdf => "Investigator Listing",
+              :stylesheets => ["pdf"],
               :template => "investigators/list_all.html",
               :layout => "pdf") }
-        format.xls  { 
+        format.xls  {
           @pdf = true
           send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
             :filename => "Investigator Listing.xls",
             :type => 'application/vnd.ms-excel',
             :disposition => 'attachment') }
-        format.doc  { 
+        format.doc  {
           @pdf = true
           send_data(render(:template => 'investigators/list_all.html', :layout => "excel"),
             :filename => "Investigator Listing.doc",
@@ -73,37 +73,37 @@ class InvestigatorsController < ApplicationController
       end
     end
   end
-  
+
   def listing
     @javascripts_add = ['jquery.min', 'jquery.tablesorter.min', 'jquery.fixheadertable.min']
-    @investigators = Investigator.all( :conditions=>['total_publications > 2'], :order => "total_publications desc", :limit => 3000 )   
+    @investigators = Investigator.all( :conditions=>['total_publications > 2'], :order => "total_publications desc", :limit => 3000 )
     respond_to do |format|
       format.html { render :layout => 'printable'}
       format.xml  { render :xml => @investigators }
       format.pdf do
         @pdf = true
-        render( :pdf => "Investigator Listing", 
-            :stylesheets => ["pdf"], 
+        render( :pdf => "Investigator Listing",
+            :stylesheets => ["pdf"],
             :template => "investigators/listing.html",
             :layout => "pdf")
       end
     end
   end
-  
+
   def collaborators
       handle_member_name(false) # converts params[:id] to params[:investigator_id] and sets @investigator
       respond_to do |format|
         format.js { render :layout => false }
       end
   end
-  
+
   def barchart
       handle_member_name(false) # converts params[:id] to params[:investigator_id] and sets @investigator
       respond_to do |format|
         format.js { render :layout => false }
       end
   end
-  
+
   def full_show
     if params[:id].nil? then
       redirect_to( year_list_abstracts_url )
@@ -122,33 +122,31 @@ class InvestigatorsController < ApplicationController
         format.xml  { render :layout => false, :xml  => @abstracts.to_xml() }
         format.pdf do
           @pdf = true
-          render( :pdf => "Publications for #{@investigator.full_name}", 
-              :stylesheets => ["pdf"], 
+          render( :pdf => "Publications for #{@investigator.full_name}",
+              :stylesheets => ["pdf"],
               :template => "investigators/show.html",
               :layout => "pdf")
         end
       end
     end
   end
-  
+
   def publications
     # set variables used in show
     handle_member_name # sets @investigator
     @do_pagination = "0"
     @abstracts = Abstract.display_all_investigator_data(params[:investigator_id])
-    @all_abstracts=@abstracts
-    @total_entries=@abstracts.length
+    @all_abstracts = @abstracts
+    @total_entries = @abstracts.length
 
     respond_to do |format|
       format.html { render :action => 'show' }
-      format.json do
-        render :layout => false, :json => @abstracts.to_json() 
-      end
-      format.xml  { render :layout => false, :xml  => @abstracts.to_xml() }
+      format.json { render :layout => false, :json => @abstracts.as_json }
+      format.xml  { render :layout => false, :xml  => @abstracts.to_xml }
     end
-    
+
   end
-  
+
   def abstract_count
     # set variables used in show
     handle_member_name(false) # sets @investigator
@@ -156,7 +154,7 @@ class InvestigatorsController < ApplicationController
     abstract_count = 0
     tags = ""
     if !investigator.nil?
-      abstract_count = investigator.abstracts.length 
+      abstract_count = investigator.abstracts.length
       tags = investigator.tags.collect(&:name).join(', ')
     end
     respond_to do |format|
@@ -164,16 +162,16 @@ class InvestigatorsController < ApplicationController
       format.json { render :layout => false, :json => {"abstract_count" => abstract_count, "tags" => tags, "investigator_id" => params[:investigator_id] }.as_json() }
       format.xml  { render :layout => false, :xml  => {"abstract_count" => abstract_count, "tags" => tags, "investigator_id" => params[:investigator_id]}.to_xml() }
     end
-    
+
   end
-  
+
   def show_colleagues
     handle_member_name(false)
     investigator = @investigator
     coauthors = investigator.co_authors
     colleagues = []
-    ugh = "" 
-    if !investigator.nil? 
+    ugh = ""
+    if !investigator.nil?
       ugh = coauthors.collect(&:publication_cnt).join(', ')
       coauthors.each{|ca| colleagues << ca.colleague}
       lol = ""
@@ -183,8 +181,8 @@ class InvestigatorsController < ApplicationController
       format.html {render :text => "colleague count = #{investigator.co_authors.length}, who are #{lol} their respective publication counts #{ugh}"}
     end
   end
-  
-  def show 
+
+  def show
     if params[:id].nil? then
       redirect_to( year_list_abstracts_url)
     elsif params[:page].nil? then
@@ -199,8 +197,8 @@ class InvestigatorsController < ApplicationController
       @include_pubmed_id = true unless params[:include_pubmed_id].blank?
       @total_entries=@abstracts.total_entries
     end
-  end 
-  
+  end
+
   def show_all_tags
     if params[:id].nil? then
       redirect_to( year_list_abstracts_url)
@@ -218,7 +216,7 @@ class InvestigatorsController < ApplicationController
         format.html { render :action => :show }
       end
     end
-  end 
+  end
 
   def tag_cloud_side
     if params[:id] =~ /^\d+$/
@@ -231,116 +229,124 @@ class InvestigatorsController < ApplicationController
       format.html { render :template => "shared/tag_cloud", :locals => {:tags => tags, :investigator => investigator}}
       format.js  { render  :partial => "shared/tag_cloud", :locals => {:tags => tags, :investigator => investigator, :update_id => 'tag_cloud_side', :include_breaks => true} }
     end
-  end 
-  
+  end
+
   def tag_cloud
     handle_member_name(false)
     respond_to do |format|
-      format.html { 
+      format.html {
         tags = @investigator.abstracts.map{|ab| ab.tags.map(&:name) }.flatten
         render :text => tags.join(", ")
       }
-      format.js  { 
+      format.js  {
         tags = @investigator.abstracts.tag_counts( :order => "count desc")
-        render  :partial => "shared/tag_cloud", :locals => {:tags => tags}  
+        render  :partial => "shared/tag_cloud", :locals => {:tags => tags}
       }
     end
-  end 
-  
+  end
+
   def research_summary
     handle_member_name(false)
     if @investigator.blank?
-      summary = "" 
+      summary = ''
     else
-      summary = @investigator.faculty_research_summary 
-      summary = @investigator.investigator_appointments.map(&:research_summary).join("; ") if summary.blank?
+      summary = @investigator.faculty_research_summary
+      summary = @investigator.investigator_appointments.map(&:research_summary).join('; ') if summary.blank?
     end
     respond_to do |format|
       format.html { render :text => summary }
-      format.js  { render :json => summary.to_json  }
-      format.json  { render :json => summary.to_json  }
+      format.js   { render :json => summary.as_json }
+      format.json { render :json => summary.as_json }
     end
-  end 
+  end
 
   def title
     handle_member_name(false)
     if @investigator.blank?
-      title = "" 
+      title = ''
     else
       title = @investigator.title
     end
     respond_to do |format|
       format.html { render :text => title }
-      format.js  { render :json => title.to_json  }
-      format.json  { render :json => title.to_json  }
+      format.js   { render :json => title.as_json }
+      format.json { render :json => title.as_json }
     end
-  end 
+  end
 
   def email
     handle_member_name(false)
     if @investigator.blank?
-      email = "" 
+      email = ''
     else
       email = @investigator.email
     end
     respond_to do |format|
       format.html { render :text => email }
-      format.js  { render :json => email.to_json  }
-      format.json  { render :json => email.to_json  }
+      format.js   { render :json => email.as_json }
+      format.json { render :json => email.as_json }
     end
-  end 
+  end
 
   def home_department
     handle_member_name
-    home_department_name = "" 
+    home_department_name = ''
     unless @investigator.blank?
-      home_department_name = @investigator.home_department_name
-      home_department_name = @investigator.home_department.name if home_department_name.blank? and ! @investigator.home_department.blank? 
-      home_department_name = @investigator.home if home_department_name.blank? and ! @investigator.home.blank?
+      home_department_name = determine_home_department_name(@investigator)
     end
     respond_to do |format|
       format.html { render :text => home_department_name }
-      format.js  { render :json => home_department_name.to_json  }
-      format.json  { render :json => home_department_name.to_json  }
+      format.js   { render :json => home_department_name.as_json }
+      format.json { render :json => home_department_name.as_json }
     end
-  end 
+  end
+
+  def determine_home_department_name(investigator)
+    home_department_name = investigator.home_department_name
+    if home_department_name.blank?
+      home_department_name = investigator.home_department.try(:name)
+    end
+    if home_department_name.blank?
+      home_department_name = investigator.try(:home)
+    end
+    home_department_name
+  end
+  private :determine_home_department_name
 
   def affiliations
     handle_member_name(false)
     affiliations = []
     @investigator.appointments.each { |appt| affiliations << [appt.name, appt.division_id, appt.id] }
     respond_to do |format|
-      format.html { render :text => affiliations.join("; ") }
-      format.js  { render :json => affiliations.to_json  }
-      format.json  { render :json => affiliations.to_json  }
+      format.html { render :text => affiliations.join('; ') }
+      format.js   { render :json => affiliations.as_json }
+      format.json { render :json => affiliations.as_json }
     end
-  end 
+  end
 
   def bio
     handle_member_name
-    home_department_name = "" 
+    home_department_name = ''
     unless @investigator.blank?
-      home_department_name = @investigator.home_department_name
-      home_department_name = @investigator.home_department.name if home_department_name.blank? and ! @investigator.home_department.blank? 
-      home_department_name = @investigator.home if home_department_name.blank? and ! @investigator.home.blank?
-      investigator=@investigator
+      home_department_name = determine_home_department_name(@investigator)
+      investigator = @investigator
       summary = investigator.faculty_research_summary
-      summary = investigator.investigator_appointments.map(&:research_summary).join("; ") if summary.blank?
+      summary = investigator.investigator_appointments.map(&:research_summary).join('; ') if summary.blank?
       affiliations = []
       investigator.appointments.each { |appt| affiliations << [appt.name, appt.division_id, appt.id] }
       respond_to do |format|
         format.html { render :text => summary }
-        format.js { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "home_department" => home_department_name, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
-        format.json { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "home_department" => home_department_name, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json() }
+        format.js   { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "home_department" => home_department_name, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json }
+        format.json { render :json => {"name" => investigator.full_name, "title" => investigator.title, "publications_count" => investigator.total_publications, "home_department" => home_department_name, "research_summary" => summary, "email" => investigator.email, "affiliations" => affiliations }.as_json }
       end
     else
       render :text => 'investigator not found'
     end
-  end 
-  
+  end
+
   #:title => :get, :bio=>:get, :email=>:get, :affiliations=>:get
-  
-  
+
+
   # Differs from above because the Investigator is found by username instead of id
   # Then it will send a json response to the requester
   def tag_cloud_list
@@ -352,10 +358,10 @@ class InvestigatorsController < ApplicationController
     result = []
     tags = investigator.abstracts.tag_counts(:limit => 15, :order => "count desc")
     tags.each { |tag| result << [tag.name, tag.count] }
-    render :json => result.to_json
+    render :json => result.as_json
   end
-  
-  def investigators_search 
+
+  def investigators_search
     if params[:id].blank? and !params[:keywords].blank?
       params[:id] = params[:keywords]
     end
@@ -365,17 +371,17 @@ class InvestigatorsController < ApplicationController
         redirect_to show_investigator_path(:id=>@investigators[0].username, :page=>1)
       else
         @heading = "There were #{@investigators.length} matches to search term <i>"+params[:id].downcase+"</i>"
-        @include_mesh=false
-        render :action => :index, :layout => "searchable"
+        @include_mesh = false
+        render :action => :index, :layout => 'searchable'
       end
-    else 
-      logger.error "search did not have a defined keyword"
+    else
+      logger.error 'search did not have a defined keyword'
       year_list  # includes a render
-    end 
+    end
    end
-  
-  
-  def search 
+
+
+  def search
     if params[:id].blank? and !params[:keywords].blank?
       params[:id] = params[:keywords]
     end
@@ -383,35 +389,35 @@ class InvestigatorsController < ApplicationController
       @investigators = Investigator.all_tsearch(params[:id])
       @heading = "There were #{@investigators.length} matches to search term <i>"+params[:id].downcase+"</i>"
       @include_mesh=false
-      render :action => :index, :layout => "searchable"
-    else 
-      logger.error "search did not have a defined keyword"
+      render :action => :index, :layout => 'searchable'
+    else
+      logger.error 'search did not have a defined keyword'
       year_list  # includes a render
-    end 
+    end
    end
-  
-   def preview 
+
+   def preview
      if !params[:id].blank? then
        @investigators = Investigator.top_ten_tsearch(params[:id])
-       render :action => :preview, :layout => "preview"
-     else 
-       logger.error "search did not have a defined keyword"
+       render :action => :preview, :layout => 'preview'
+     else
+       logger.error 'search did not have a defined keyword'
        year_list  # includes a render
-     end 
+     end
     end
 
-   def direct_search 
+   def direct_search
      logger.error "direct_search called with #{params[:id]}"
      if !params[:id].blank? then
        @search_length = Investigator.count_all_tsearch(params[:id])
-     else 
-       logger.error "search did not have a defined keyword"
-       @search_length=0
-     end 
-     render :layout => false, :template => 'investigators/direct_search.xml'  # direct_search.xml.builder 
+     else
+       logger.error 'search did not have a defined keyword'
+       @search_length = 0
+     end
+     render :layout => false, :template => 'investigators/direct_search.xml'  # direct_search.xml.builder
      logger.error "direct_search completed with #{params[:id]}"
    end
-   
+
   private
 
 end
