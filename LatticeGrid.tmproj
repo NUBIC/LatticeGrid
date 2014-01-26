@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>db/imports/RHLCCC/faculty.txt</string>
+	<string>doc/project_history.txt</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -63,35 +63,35 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>db/imports/RAS/root_lookup.txt</key>
+		<key>doc/console_commands.txt</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>53</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>1</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>db/imports/RHLCCC/department_lookup.txt</key>
+		<key>doc/customization.txt</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>83</integer>
+				<integer>15</integer>
 				<key>line</key>
-				<integer>2</integer>
+				<integer>241</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>db/imports/RHLCCC/division_lookup.txt</key>
+		<key>doc/database_export_import.txt</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -104,36 +104,6 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
-		</dict>
-		<key>db/imports/RHLCCC/faculty.txt</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>78</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>76</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>87</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
 		</dict>
 		<key>doc/example_loads.txt</key>
 		<dict>
@@ -165,95 +135,79 @@
 				<integer>31</integer>
 			</dict>
 		</dict>
-		<key>doc/installing latticegrid.txt</key>
+		<key>doc/project_history.txt</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>20</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>11</integer>
+				<integer>275</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>256</integer>
+		</dict>
+		<key>doc/upgrading.txt</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>125</integer>
+				<key>line</key>
+				<integer>36</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>lib/latticegrid/RAS.rb</key>
+		<key>lib/organization_utilities.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>58</integer>
+				<integer>19</integer>
 				<key>line</key>
-				<integer>107</integer>
+				<integer>12</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>87</integer>
+			<integer>0</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>22</integer>
+				<integer>2</integer>
 				<key>line</key>
-				<integer>107</integer>
+				<integer>12</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>58</integer>
+				<integer>25</integer>
 				<key>line</key>
-				<integer>107</integer>
+				<integer>12</integer>
 			</dict>
-		</dict>
-		<key>lib/publication_utilities.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>26</integer>
-				<key>line</key>
-				<integer>162</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>247</integer>
-		</dict>
-		<key>lib/pubmed_utilities.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>46</integer>
-				<key>line</key>
-				<integer>78</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>103</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
 		<string>Gemfile</string>
 		<string>doc/example_loads.txt</string>
-		<string>lib/publication_utilities.rb</string>
-		<string>lib/pubmed_utilities.rb</string>
-		<string>doc/installing latticegrid.txt</string>
-		<string>db/imports/RHLCCC/department_lookup.txt</string>
-		<string>db/imports/RHLCCC/division_lookup.txt</string>
-		<string>db/imports/RAS/root_lookup.txt</string>
-		<string>db/imports/RHLCCC/faculty.txt</string>
-		<string>lib/latticegrid/RAS.rb</string>
+		<string>doc/database_export_import.txt</string>
+		<string>lib/organization_utilities.rb</string>
+		<string>doc/console_commands.txt</string>
+		<string>doc/customization.txt</string>
+		<string>doc/upgrading.txt</string>
+		<string>doc/project_history.txt</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{60, 10}, {956, 868}}</string>
+	<string>{{14, 54}, {980, 824}}</string>
 </dict>
 </plist>

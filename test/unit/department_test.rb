@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20130327155943
+# Schema version: 20140124011303
 #
 # Table name: organizational_units
 #
@@ -20,6 +20,7 @@
 #  organization_phone          :string(255)
 #  organization_url            :string(255)
 #  parent_id                   :integer
+#  pubmed_search_name          :string(255)
 #  rgt                         :integer
 #  search_name                 :string(255)
 #  sort_order                  :integer          default(1)

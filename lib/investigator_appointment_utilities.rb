@@ -376,6 +376,7 @@ end
 
 def MergeInvestigatorData(dest_pi, source_pi, overwrite)
   dest_pi.first_name               = DoOverwrite(dest_pi.first_name, source_pi.first_name, overwrite)
+  dest_pi.middle_name               = DoOverwrite(dest_pi.middle_name, source_pi.middle_name, overwrite)
   dest_pi.title               = DoOverwrite(dest_pi.title, source_pi.title, overwrite)
   dest_pi.campus              = DoOverwrite(dest_pi.campus, source_pi.campus, overwrite)
   dest_pi.degrees             = DoOverwrite(dest_pi.degrees, source_pi.degrees, overwrite)

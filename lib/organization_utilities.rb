@@ -10,6 +10,7 @@ def CreateSchoolDepartmentFromHash(data_row)
   node_name = data_row['APPT_ENTITY_NAME'] || data_row['NODE_NAME'] || data_row['ENTITY_NAME']
   node_search_name = data_row['APPT_SEARCH_NAME'] || data_row['SEARCH_NAME']
   node_label = data_row['LABEL_NAME'] || node_name
+  node_pubmed_search_name = data_row['PUBMED_NAME'] || data_row['PUBMED_SEARCH_NAME'] || data_row['SEARCH_NAME'] || node_name
   node_id = data_row['APPT_ENTITY_ID'] || data_row['ENTITY_ID'] || data_row['ID'] || data_row['NODE_ID'] || data_row['dept_id'] || data_row['department_id'] || data_row['DEPT_ID'] || data_row['DEPARTMENT_ID']
   root_name = data_row['APPT_ENTITY_SCHOOL'] || data_row['ROOT'] || data_row['ROOT_NAME']
   if root_name == node_abbrev || node_name =~ /school/i || node_name =~ /college/i
@@ -27,8 +28,10 @@ def CreateSchoolDepartmentFromHash(data_row)
   org.name = node_label
   org.abbreviation = node_abbrev
   org.search_name = node_search_name
+  org.pubmed_search_name = node_pubmed_search_name
   org.abbreviation.strip! unless org.abbreviation.blank?
   org.search_name.strip! unless org.search_name.blank?
+  org.pubmed_search_name.strip! unless org.pubmed_search_name.blank?
   org.name.strip! unless org.name.blank?
   if org.name.blank? then
     puts "org #{org.name} #{org.abbreviation}  does not have a name"
@@ -54,6 +57,7 @@ def CreateSchoolDepartmentFromHash(data_row)
       existing_org.move_to_child_of school_org if existing_org.parent_id.blank? && ! school_org.nil?
       existing_org.department_id = org.department_id if existing_org.department_id.blank?
       existing_org.name = org.name unless org.name.blank? or existing_org.name == org.name
+      existing_org.pubmed_search_name = org.pubmed_search_name unless org.pubmed_search_name.blank? or existing_org.pubmed_search_name == org.pubmed_search_name
       existing_org.abbreviation = org.abbreviation unless org.abbreviation.blank? or existing_org.abbreviation == org.abbreviation
       existing_org.save!
       org = existing_org
@@ -159,11 +163,16 @@ def CreateOrganizationFromHash(data_row)
     org.organization_phone = data_row['DV_PHONE'] || data_row['PHONE'] || data_row['phone']
     org.organization_url = data_row['DV_URL'] || data_row['URL'] || data_row['dv_url']
     org.organization_classification = data_row['DV_TYPE'] || data_row['TYPE'] || data_row['dv_type'] #Research, Basic, Clinical, ??
+    org.pubmed_search_name = data_row['PUBMED_NAME'] || data_row['PUBMED_SEARCH_NAME'] || org.search_name
     org.abbreviation.strip! unless org.abbreviation.blank?
     org.search_name.strip! unless org.search_name.blank?
+    org.pubmed_search_name.strip! unless org.pubmed_search_name.blank?
     org.name.strip! unless org.name.blank?
     if org.name =~ /rollup/i
       return org
+    end
+    if org.name.blank? and org.division_id.blank?
+      return
     end
     if !data_row['CENTER_FLAG'].blank? && data_row['CENTER_FLAG'].to_i > 0
       org.type = "Center"
@@ -206,6 +215,7 @@ def CreateOrganizationFromHash(data_row)
         existing_org.name = org.name unless org.name.blank? or existing_org.name == org.name
         existing_org.abbreviation = org.abbreviation unless org.abbreviation.blank? or existing_org.abbreviation == org.abbreviation
         existing_org.organization_url = org.organization_url unless org.organization_url.blank? or existing_org.organization_url == org.organization_url
+        existing_org.pubmed_search_name = org.pubmed_search_name unless org.pubmed_search_name.blank? or existing_org.pubmed_search_name == org.pubmed_search_name
         existing_org.save!
         org = existing_org
   	  end

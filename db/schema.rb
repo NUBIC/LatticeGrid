@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130327155943) do
+ActiveRecord::Schema.define(:version => 20140124011303) do
 
   create_table "abstracts", :force => true do |t|
     t.text      "endnote_citation"
@@ -56,12 +56,12 @@ ActiveRecord::Schema.define(:version => 20130327155943) do
     t.integer   "last_reviewed_id"
     t.string    "last_reviewed_ip"
     t.date      "pubmed_creation_date"
+    t.string    "doi"
+    t.text      "author_affiliations"
     t.text      "author_vector"
     t.text      "abstract_vector"
     t.text      "mesh_vector"
     t.text      "journal_vector"
-    t.string    "doi"
-    t.text      "author_affiliations"
   end
 
   add_index "abstracts", ["abstract_vector"], :name => "abstracts_fts_abstract_vector_index"
@@ -305,6 +305,7 @@ ActiveRecord::Schema.define(:version => 20130327155943) do
     t.date      "end_date"
     t.timestamp "created_at"
     t.timestamp "updated_at"
+    t.string    "pubmed_search_name"
   end
 
   add_index "organizational_units", ["department_id", "division_id"], :name => "index_organizational_units_on_department_id_and_division_id", :unique => true

@@ -25,12 +25,12 @@ var line = d3.svg.line.radial()
     .angle(function(d) { return d.x / 180 * Math.PI; });
 
 
-var div = d3.select("#chart");
 
-var svg = div.append("svg")
-    .attr("width", width)
-    .attr("height", width)
-  .append("g")
+var svg = d3.select("#chart")
+  .append("svg")
+    .attr("width", width+10)
+    .attr("height", height+10)
+    .append("g")
     .attr("transform", "translate(" + rx + "," + ry + ")");
 
 svg.append("svg:path")

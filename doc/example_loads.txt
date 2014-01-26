@@ -1,4 +1,8 @@
 #Stanford December 2013 / January 2014 loads
+# on staging run this:
+export RAILS_ENV=staging 
+
+
 bundle exec rake db:migrate
 
 bundle exec rake importDepartments file=db/imports/Stanford/department_lookup.txt

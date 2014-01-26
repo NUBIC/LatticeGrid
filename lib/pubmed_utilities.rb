@@ -74,7 +74,7 @@ def LimitSearchToInstitution(term, pi)
   # temporarily reverse logic limit by institution
   # term + " NOT " + LatticeGridHelper.institutional_limit_search_string()
   if LatticeGridHelper.build_institution_search_string_from_department?
-    "(" + term + ") AND (" + BuildAffiliationLimitString(pi.home_department_name) +")"
+    "(" + term + ") AND (" + BuildAffiliationLimitString(pi) +")"
   else
     "(" + term + ") AND (" + LatticeGridHelper.institutional_limit_search_string() + ")"
   end
@@ -89,8 +89,15 @@ def BuildSearchOptions (number_years, max_num_records=500)
   }
 end
 
-def BuildAffiliationLimitString(str)
+def BuildAffiliationLimitString(pi)
+  str = pi.home_department_name
+  unless pi.home_department.blank? or pi.home_department.pubmed_search_name.blank?
+    str = pi.home_department.pubmed_search_name
+  end
   return "" if str.blank?
+  if str =~ /[\(\)]/
+    return str
+  end
   str_arr = str.split(" ")
   out_arr = []
   str_arr.each do |txt|
