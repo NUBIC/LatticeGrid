@@ -31,6 +31,7 @@ the_relative_url_root = case LatticeGrid.the_instance
   when 'UIC' then "uic-latticegrid"
   when 'AAS' then "aas-latticegrid"
   when 'LLS' then "lls-latticegrid"
+  when 'RAS' then "ras-latticegrid"
   else "latticegrid"
 end
 

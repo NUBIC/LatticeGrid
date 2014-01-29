@@ -88,6 +88,8 @@ scp fsm_latticegrid_20121018.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/hom
 pg_restore -d fsm_latticegrid -U latticegrid -h pprod2 fsm_latticegrid_20121018.dmp
 
 pg_dump -Fc ras_latticegrid -U latticegrid > ras_latticegrid_20140128.dmp
+scp ras_latticegrid_20140128.dmp wakibbe@rails-staging2.nubic.northwestern.edu:/home/wakibbe/ras_latticegrid_20140128.dmp  
+pg_restore -d ras_latticegrid -U latticegrid -h pstage2 ras_latticegrid_20140128.dmp
 
 
 # award and study data
