@@ -62,9 +62,16 @@ def BuildPISearch(pi, full_first_name=true)
   result
 end
 
+def BuildSearchByMeSHterms()
+  if LatticeGridHelper.limit_to_MeSH_terms? 
+    return LatticeGridHelper.MeSH_terms_string
+  end
+  return ""
+end
+
 def LimitSearchToMeSHterms(phrase_to_limit)
-  if LatticeGridHelper.limit_to_MeSH_terms? and not LatticeGridHelper.MeSH_terms_array.blank?
-    terms = LatticeGridHelper.MeSH_terms_array.map{|a| "(#{a})"}.join(" OR ")
+  terms = BuildSearchByMeSHterms()
+  unless terms.blank?
     return "(#{phrase_to_limit}) AND (#{terms})"
   end
   return phrase_to_limit

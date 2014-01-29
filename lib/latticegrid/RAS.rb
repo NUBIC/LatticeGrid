@@ -31,6 +31,14 @@ def LatticeGridHelper.page_title
   return 'RAS Initiative Community Publications'
 end
 
+def LatticeGridHelper.year_array
+  return @@year_array if defined?(@@year_array)
+  starting_year=Time.now.year
+  @@year_array = (starting_year-34 .. starting_year).to_a
+  @@year_array.reverse!
+  return @@year_array
+end
+
 def LatticeGridHelper.header_title
   return 'The RAS Initiative Community Publications and Abstracts Site'
 end
@@ -82,6 +90,10 @@ end
 
 def LatticeGridHelper.limit_to_MeSH_terms?
   true
+end
+
+def LatticeGridHelper.MeSH_terms_string
+  '("genes, ras"[MeSH Terms] OR ("genes"[All Fields] AND "ras"[All Fields]) OR "ras genes"[All Fields] OR ("ras"[All Fields] AND "genes"[All Fields])) OR ("ras proteins"[MeSH Terms] OR ("ras"[All Fields] AND "proteins"[All Fields]) OR "ras proteins"[All Fields]) OR (("oncogene proteins"[MeSH Terms] OR ("oncogene"[All Fields] AND "proteins"[All Fields]) OR "oncogene proteins"[All Fields] OR ("oncogene"[All Fields] AND "protein"[All Fields]) OR "oncogene protein"[All Fields]) AND p21ras[All Fields]) OR (("proto-oncogene proteins"[MeSH Terms] OR ("proto-oncogene"[All Fields] AND "proteins"[All Fields]) OR "proto-oncogene proteins"[All Fields] OR ("proto"[All Fields] AND "oncogene"[All Fields] AND "proteins"[All Fields]) OR "proto oncogene proteins"[All Fields]) AND p21ras[All Fields]) OR ("ras gtpase-activating proteins"[MeSH Terms] OR ("ras"[All Fields] AND "gtpase-activating"[All Fields] AND "proteins"[All Fields]) OR "ras gtpase-activating proteins"[All Fields] OR ("ras"[All Fields] AND "gtpase"[All Fields] AND "activating"[All Fields] AND "proteins"[All Fields]) OR "ras gtpase activating proteins"[All Fields]) OR ("ras-grf1"[MeSH Terms] OR "ras-grf1"[All Fields] OR ("ras"[All Fields] AND "grf1"[All Fields]) OR "ras grf1"[All Fields])'
 end
 
 def LatticeGridHelper.MeSH_terms_array

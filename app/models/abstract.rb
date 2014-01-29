@@ -424,12 +424,12 @@ class Abstract < ActiveRecord::Base
   end
 
   def self.display_data( year=2007, page=1)
-    paginate(:page => page,
-      :per_page => 20, 
-      :order => "abstracts.publication_date DESC, abstracts.electronic_publication_date DESC, abstracts.authors ASC",
-      :include => [:investigators],
-      :conditions => ['year = :year and investigator_abstracts.is_valid = true', 
-  		      {:year => year }])
+      paginate(:page => page,
+        :per_page => 20, 
+        :order => "abstracts.publication_date DESC, abstracts.electronic_publication_date DESC, abstracts.authors ASC",
+#        :include => [:investigators],
+        :conditions => ['abstracts.year = :year', 
+    		      {:year => year }])
   end
   
   def self.display_all_data( year=2008)
@@ -511,11 +511,10 @@ class Abstract < ActiveRecord::Base
     end
     if defined?(abstract_ids) and !abstract_ids.nil? then 
       abstracts = Abstract.paginate(:page => page,
-        :include => [:investigators],
         :per_page => 20, 
         :limit => limit,
         :order => "year DESC, authors ASC",
-        :conditions => ["abstracts.id IN (:abstract_ids) and investigator_abstracts.is_valid = true",
+        :conditions => ["abstracts.id IN (:abstract_ids)",
            {:abstract_ids => abstract_ids.collect(&:id)} ])
     end
     abstracts

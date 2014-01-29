@@ -234,8 +234,12 @@ def LatticeGridHelper.limit_to_MeSH_terms?
   false
 end
 
-def LatticeGridHelper.MeSH_terms
+def LatticeGridHelper.MeSH_terms_string
   ""
+end
+
+def LatticeGridHelper.MeSH_terms_array
+  []
 end
 
 
@@ -265,7 +269,7 @@ end
 
 # you shouldn't need to change these ...
 def LatticeGridHelper.all_years
-  20
+  35
 end
 
 def LatticeGridHelper.default_number_years

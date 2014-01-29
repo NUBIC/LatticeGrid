@@ -4,8 +4,6 @@
 # Bcdatabase.load[:pstage, :lls_latticegrid]['password']
 # Bcdatabase.load[:pstage, :stanford_latticegrid]['password']
 
-adios5,bins
-odes8}dachas
 
 scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/study_roles_2012-10-17.csv .
 scp wakibbe@enotis.nubic.northwestern.edu:/home/wakibbe/studies_2012-10-17.csv .
@@ -88,6 +86,8 @@ pg_restore -d fsm_latticegrid -U latticegrid -h pprod2 fsm_latticegrid_20120727.
 pg_dump -Fc fsm_latticegrid -U latticegrid > fsm_latticegrid_20121018.dmp
 scp fsm_latticegrid_20121018.dmp wakibbe@rails-prod2.nubic.northwestern.edu:/home/wakibbe/fsm_latticegrid_20121018.dmp  
 pg_restore -d fsm_latticegrid -U latticegrid -h pprod2 fsm_latticegrid_20121018.dmp
+
+pg_dump -Fc ras_latticegrid -U latticegrid > ras_latticegrid_20140128.dmp
 
 
 # award and study data
