@@ -19,17 +19,7 @@
     <%= LatticeGridHelper.google_analytics.html_safe -%>
   </head>
   <body>
-    <% if Rails.env == 'development' %>
-      <div id="debug" style="margin: 5px 5px 5px 5px;">
-        <a href="#" onclick="jQuery('#debug_info').toggle(); return false" style="text-decoration: none; color: #999;">
-          Show Debug Info &#10162;
-        </a>
-        <div id="debug_info" style="display: none;">
-          <%= debug session %>
-          <%= debug params %>
-        </div>
-      </div>
-    <% end %>
+    <%= render 'shared/debug_section' %>
     <div id="main" class="autoclear">
     	<div id="banner">
         <a href="<%= LatticeGridHelper.home_url %>" >
@@ -48,16 +38,7 @@
     		<div id="sideinfo" style="margin-top:15px;margin-bottom:75px;">
     			<%= link_to("Publications", current_abstracts_path, :style=>"color:indigo;font-size:20pt;") %>
     		</div> <!-- end of sideinfo -->
-    		<div id="lattice_grid">
-    			<%= link_to( image_tag( 'latticegrid.png', :size => "65x93" ), "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %>
-          <br/>
-    			Powered by <%= link_to( "LatticeGrid", "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %>
-    		</div>
-    		<br/>
-    		<div id="nubic">
-    			<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://informatics.northwestern.edu/") %>
-    		 	<%= link_to( "Built by NUBIC", "http://informatics.northwestern.edu/") %>
-    		</div>
+        <%= render 'shared/nubic_branding' %>
     		<p></p>
     	</div> <!-- end of side -->
     	<div id="maincontent">

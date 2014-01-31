@@ -21,19 +21,12 @@
 		<div id="banner"><a href="<%= LatticeGridHelper.home_url %>" ><%= image_tag "#{lattice_grid_instance}/pageheader.jpg", options={:alt=>LatticeGridHelper.header_title} %></a></div>
 		<div id="results" class="notice"><%= flash[:notice] %> 	<%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %> </div>
 		<div id="title"><%= LatticeGridHelper.header_title -%></div>
-		<%= render :partial => "shared/search" %>
+		<%= render "shared/search" %>
 		<div id="side">
 			<div id="sideinfo" style="margin-top:15px;margin-bottom:75px;">
 				<%= link_to("Publications", current_abstracts_url, :style=>"color:indigo;font-size:20pt;") %>
 			</div> <!-- end of sideinfo -->
-			<div id="lattice_grid">
-				<%= link_to( image_tag( 'latticegrid.png', :size => "65x93" ), "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %> <br/>
-				Powered by <%= link_to( "LatticeGrid", "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %>
-			</div>
-			<div id="nubic">
-				<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://informatics.northwestern.edu/") %>
-			 	<%= link_to( "Built by NUBIC", "http://informatics.northwestern.edu/") %>
-			</div>
+			<%= render 'shared/nubic_branding' %>
 			<p></p>
 		</div> <!-- end of side -->
 		<div id="maincontent">

@@ -47,21 +47,12 @@
     	<div id="title">
         <%= link_to( LatticeGridHelper.header_title, current_abstracts_url) -%>
       </div>
-    	<%= render :partial => "shared/search" %>
+    	<%= render :"shared/search" %>
     	<div id="side">
     		<div id="sideinfo">
-    			<%= render :partial => "shared/menus", :locals => { :menu_nodes => @menu_nodes } %>
+    			<%= render "shared/menus", :menu_nodes => @menu_nodes %>
     		</div> <!-- end of sideinfo -->
-    		<div id="lattice_grid">
-    			<%= link_to( image_tag( 'latticegrid.png', :size => "65x93" ), "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %>
-          <br/>
-    			Powered by <%= link_to( "LatticeGrid", "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %>
-    		</div>
-    		<br/>
-    		<div id="nubic">
-    			<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://informatics.northwestern.edu/") %>
-    		 	<%= link_to( "Built by NUBIC", "http://informatics.northwestern.edu/") %>
-    		</div>
+        <%= render 'shared/nubic_branding' %>
     		<p></p>
     	</div> <!-- end of side -->
     	<div id="maincontent">

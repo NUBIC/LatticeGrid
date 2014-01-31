@@ -368,6 +368,7 @@ class InvestigatorsController < ApplicationController
     if !params[:id].blank? then
       @investigators = Investigator.investigators_tsearch(params[:id])
       if @investigators.length == 1
+        Rails.logger.info"~~~ investigators_search found investigator #{@investigators[0].inspect}"
         redirect_to show_investigator_path(:id=>@investigators[0].username, :page=>1)
       else
         @heading = "There were #{@investigators.length} matches to search term <i>"+params[:id].downcase+"</i>"

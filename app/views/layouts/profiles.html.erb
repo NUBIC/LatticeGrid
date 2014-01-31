@@ -28,17 +28,7 @@
     <%= LatticeGridHelper.google_analytics.html_safe -%>
   </head>
   <body>
-    <% if Rails.env == 'development' %>
-      <div id="debug" style="margin: 5px 5px 5px 5px;">
-        <a href="#" onclick="$j('#debug').toggle(); return false" style="text-decoration: none; color: #999;">
-          Show Debug Info &#10162;
-        </a>
-        <div id="debug_info" style="display : none;">
-          <%= debug session %>
-          <%= debug params %>
-        </div>
-      </div>
-    <% end %>
+    <%= render 'shared/debug_section' %>
     <div id="main" class="autoclear"> <!-- start of main -->
     	<div id="banner">
         <a href="<%= LatticeGridHelper.home_url %>" >

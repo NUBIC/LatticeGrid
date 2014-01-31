@@ -372,6 +372,7 @@ end
   end
 
   def latticegrid_menu_script
+    Rails.logger.info("~~~ latticegrid_menu_script default #{@head_node.inspect}")
     " <div id='side_nav_menu' class='ddsmoothmenu-v'>
         <ul>
           <li><a href='#'>Publications by year</a>
@@ -401,7 +402,8 @@ end
   end
 
    def build_menu(nodes, org_type=nil, &block)
-     out="<ul>"
+    Rails.logger.info("~~~ build_menu default #{nodes.inspect}")
+    out="<ul>"
     for unit in nodes
       if org_type.nil? or unit.kind_of?(org_type)
         out+="<li>"

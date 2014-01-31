@@ -1,15 +1,15 @@
 /* Global styles */
 
-body { 
+body {
 	font-family : Verdana, Arial, sans-serif;
 	font-size : 10pt;
 	color : black;
-	background-color: #dfdfdf; 
+	background-color: #dfdfdf;
 	line-height: 16px;
 	/* min-width: 800px; */
-	background: #dfdfdf; 
-	margin-top: 0px; 
-	margin-left:10px; 
+	background: #dfdfdf;
+	margin-top: 0px;
+	margin-left:10px;
 }
 
 p, ol, ul, td {
@@ -86,7 +86,7 @@ a:hover { color: #555; background-color:#cee; }
 	float: left;
 	margin: 50px 0px 0px 10px;
 	display:inline;
-} 
+}
 
 #footer-row {
 	float: left;
@@ -338,7 +338,7 @@ div.notice {
 }
 
 #maincontent {
-	float: right;  
+	float: right;
 	margin-top: 0px;
 	margin-right: 0px;
     width: 1010px ;
@@ -348,7 +348,7 @@ div.notice {
 }
 
 #side {
-	float: left;  
+	float: left;
 	margin-top: 0px;
 	margin-left: 0px;
 	padding: 5px;
@@ -364,7 +364,7 @@ div.notice {
 }
 .section_heading {
   float:left;
-  width:100%;    
+  width:100%;
   display:inline; /* So IE plays nice */
 }
 
@@ -397,7 +397,6 @@ div.notice {
   padding-bottom: 10px;
   font:  180% sans-serif;
   color: #226;
-  background-color: lightyellow;
 }
 
 #title a {
@@ -499,7 +498,7 @@ div.notice {
 }
 
 #last_load_date {
-	float: right;  
+	float: right;
 	margin-top: -15px;
 	margin-right: 10px;
 	padding: 3px;
@@ -580,7 +579,7 @@ tr.odd td .investigator_awards{
 
 
 /*** special tags ***/
-	
+
 div.autoclear:after {
     display: block ;
     content: ' ';
@@ -591,13 +590,13 @@ div.autoclear:after {
 
 /* in place edit tags */
 
-.inplaceeditor-form input[type="text"] { 
-width: 260px; 
-} 
+.inplaceeditor-form input[type="text"] {
+width: 260px;
+}
 
-.inplaceeditor-form textarea { 
-width: 400px; 
-} 
+.inplaceeditor-form textarea {
+width: 400px;
+}
 
 
 .submit {
@@ -750,7 +749,7 @@ form {
 #railContainer {
   background-color:#0ff;
   float:left;
-  width:100%;    
+  width:100%;
   border-left:150px solid #0f0;
   border-right:200px solid #f00;
   margin-left:-150px;
@@ -825,7 +824,7 @@ color: white;
 }
 
 .ddsmoothmenu ul li a.selected{ /*CSS class that's dynamically added to the currently active menu items' LI A element*/
-background: black; 
+background: black;
 color: white;
 }
 
@@ -833,7 +832,7 @@ color: white;
 background: black; /*background of menu items during onmouseover (hover state)*/
 color: white;
 }
-	
+
 /*1st sub level menu*/
 .ddsmoothmenu ul li ul{
 position: absolute;
@@ -909,7 +908,7 @@ font: bold 12px Verdana;
 
 border-bottom: 1px solid #ccc;
 }
- 
+
 .ddsmoothmenu-v ul li{
 position: relative;
 }
@@ -934,7 +933,7 @@ color: white;
 
 
 .ddsmoothmenu-v ul li a.selected{ /*CSS class that's dynamically added to the currently active menu items' LI A element*/
-background: #414141; 
+background: #414141;
 color: white;
 }
 
@@ -962,7 +961,7 @@ font-weight: normal;
 .ddsmoothmenu-v ul li ul li.current, .ddsmoothmenu-v ul li ul li.current a {
 	background-color: #339;
 }
- 
+
 /* Holly Hack for IE \*/
 * html .ddsmoothmenu-v ul li { float: left; height: 1%; }
 * html .ddsmoothmenu-v ul li a { height: 1%; }

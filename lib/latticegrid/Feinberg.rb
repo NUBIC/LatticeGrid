@@ -130,9 +130,10 @@ def edit_profile_link
 end
 
 def latticegrid_menu_script
-
+  Rails.logger.info("~~~ latticegrid_menu_script Feinberg #{@head_node.inspect}")
 "<div id='side_nav_menu' class='ddsmoothmenu-v'>
 <ul>
+  <li>#{@head_node.inspect}</li>
   <li><a href='#'>Publications by year</a>
     #{build_year_menu}
   </li>

@@ -1,5 +1,5 @@
-<% @include_mesh=true if @include_mesh.nil? %>
-<% @speed_display=false if @speed_display.nil? %>
+<% @include_mesh = true if @include_mesh.nil? && !@abstracts.blank? %>
+<% @speed_display = false if @speed_display.nil? %>
 
 <h1>
   <% if ! @investigator.blank? and ! params[:id].blank? %>
@@ -8,13 +8,11 @@
     </span>
   <% end %>
 </h1>
-<%= render( :partial => "shared/abstract_listing",
-      :locals => {
-        :abstracts => @abstracts,
-        :do_pagination => @do_pagination,
-        :heading => @heading,
-        :speed_display => @speed_display
-      })
+<%= render( "shared/abstract_listing",
+            :abstracts => @abstracts,
+            :do_pagination => @do_pagination,
+            :heading => @heading,
+            :speed_display => @speed_display )
 %>
 
 <% if @include_mesh %>

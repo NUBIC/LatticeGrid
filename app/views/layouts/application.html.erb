@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-    <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
+    <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name.titleize %></title>
     <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
   	<!-- javascript files -->
   	<% @javascripts ||= [ 'prototype', 'scriptaculous', 'FusionCharts', 'ddsmoothmenu', 'jquery.min', 'jquery.sparkline.min' ] %>
@@ -17,7 +17,7 @@
       <%= stylesheet_link_tag ss %>
     <% end %>
 
-  	<%= render :partial => "shared/menu_scripts", :locals => { :menu_nodes => @menu_nodes } %>
+  	<%= render 'shared/menu_scripts', :menu_nodes => @menu_nodes %>
   	<link rel="shortcut icon" href='<%= image_tag("#{lattice_grid_instance}/favicon.ico") -%>' />
     <% if @javascripts.join =~ /jquery/i %>
     <script type="text/javascript" language="JavaScript">
@@ -29,21 +29,8 @@
     <%= LatticeGridHelper.google_analytics.html_safe -%>
   </head>
   <body>
-    <% if Rails.env == 'development' %>
-      <div id="debug" style="margin: 5px 5px 5px 5px;">
-        <a href="#" onclick="$j('#debug_info').toggle(); return false" style="text-decoration: none; color: #999;">Show Debug Info &#10162;</a>
-        <div id="debug_info" style="display : none;">
-          <%= debug session %>
-          <%= debug params %>
-        </div>
-      </div>
-    <% end %>
+    <%= render 'shared/debug_section' %>
     <div id="main" class="autoclear">
-    	<div id="banner">
-        <a href="<%= LatticeGridHelper.home_url %>" >
-          <%= image_tag "#{lattice_grid_instance}/pageheader.jpg", :alt=>LatticeGridHelper.header_title %>
-        </a>
-      </div>
     	<div id="results" class="notice">
         <%= flash[:notice] %>
         <div id="errors">
@@ -52,22 +39,15 @@
         <%= image_tag 'loading.gif', :id => 'spinner', :style => "display:none; float:right;" %>
       </div>
     	<div id="title">
-        <%= link_to( LatticeGridHelper.header_title, current_abstracts_url) -%>
+        <%= link_to( image_tag( 'latticegrid.png', :size => "65x93" ), "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid" ) -%>
+        <%= link_to( LatticeGridHelper.header_title, current_abstracts_url, :id => 'title_link' ) -%>
       </div>
-    	<%= render :partial => "shared/search" %>
+    	<%= render 'shared/search' %>
     	<div id="side">
     		<div id="sideinfo">
-    			<%= render :partial => "shared/menus", :locals => { :menu_nodes => @menu_nodes } %>
+    			<%= render 'shared/menus', :menu_nodes => @menu_nodes %>
     		</div> <!-- end of sideinfo -->
-    		<div id="lattice_grid">
-    			<%= link_to( image_tag( 'latticegrid.png', :size => "65x93" ), "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %> <br/>
-    			Powered by <%= link_to( "LatticeGrid", "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %>
-    		</div>
-    		<br/>
-    		<div id="nubic">
-    			<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://informatics.northwestern.edu/") %>
-    		 	<%= link_to( "Built by NUBIC", "http://informatics.northwestern.edu/") %>
-    		</div>
+        <%= render 'shared/nubic_branding' %>
     		<p></p>
     	</div> <!-- end of side -->
     	<div id="maincontent">
@@ -79,6 +59,11 @@
     			Last updated from PubMed on <%= session[:last_load_date].strftime("%A, %B %d, %Y") %>
     		</div>
     	</div> <!-- end of maincontent -->
+      <div id="banner">
+        <a href="<%= LatticeGridHelper.home_url %>" >
+          <%= image_tag "#{lattice_grid_instance}/pageheader.jpg", :alt=>LatticeGridHelper.header_title %>
+        </a>
+      </div>
     </div> <!-- end of main -->
   </body>
 </html>

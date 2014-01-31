@@ -3,68 +3,81 @@ a:visited { color: #666; }
 a:hover { color: #fff; background-color:#888; }
 
 #listing .list-heading {
-	background-color: #709fc7;
-	color:        #520063;
-	font-weight:  bold;
+  background-color: #709fc7;
+  color:        #520063;
+  font-weight:  bold;
 }
 
 #listing .list-title {
-	color:        #520063;
-	font-weight:  bold;
+  color:        #520063;
+  font-weight:  bold;
 }
 
 #listing .list-title-center {
-	color:        #520063;
-	font-weight:  bold;
-	text-align: center;
+  color:        #520063;
+  font-weight:  bold;
+  text-align: center;
 }
 
 #listing .list-title-right {
-	color:        #520063;
-	font-weight:  bold;
-	padding-right: 1em;
-	text-align: right;
+  color:        #520063;
+  font-weight:  bold;
+  padding-right: 1em;
+  text-align: right;
 }
 
 #side {
-	float: left;  
-	margin-top: 0px;
-	margin-left: 0px;
-	padding: 5px;
-	vertical-align: top;
-	width: 160px;
-	height: 790px;
-	color: #000;
-    background-color: #A3A3A3;
-	/* background-color: #709fc7; */
+  float: left;
+  margin-top: 0px;
+  margin-left: 0px;
+  padding: 5px;
+  vertical-align: top;
+  width: 160px;
+  height: 790px;
+  color: #000;
+  background-color: #A3A3A3;
 }
 
 #banner {
-	height:98px;
+  height:98px;
 }
+
 #title {
-  margin: 0px;
+  margin: 1em 0;
   padding: 5px;
   padding-left: 20px;
   padding-bottom: 2px;
   font:  180% sans-serif;
   color: #226;
-  background-color: lightyellow;
+}
+
+#title a#title_link {
+  display: inline-block;
+  margin-top: 1em;
 }
 
 #search {
-  padding: 3px;
-  padding-left: 115px;
+  padding: 1.5em 1em 2em 8em;
   margin: 0px;
-    color: #fff;
-    font-size: 12px;
-	background-color: #520063;
-/*  background-color: #339; */
-
+  color: #fff;
+  height: 2em;
+  font-size: 14px;
+  background-color: #520063;
 }
 
-#search a:hover { background-color: #A3A3A3; }
+#search input,
+#search select {
+  font-size: 1.25em;
+}
 
+#search #search_instructions {
+  font-size: 12px;
+  font-style: italic;
+}
+
+#search
+
+#search a:hover { background-color: #A3A3A3; }
 
 #niceline {
   padding-left: 50px;
@@ -73,23 +86,23 @@ a:hover { color: #fff; background-color:#888; }
     color: #fff;
     font-size: 11px;
     background-color: #A3A3A3;
-	/* background-color: #709fc7; */
+  /* background-color: #709fc7; */
 }
 
 #OrgGraph, #MemberGraph {
-	margin-left: -8px;
-	z-index: -10;
+  margin-left: -8px;
+  z-index: -10;
 }
 
 .inter_unit {
-	background-color: #D86666;
-	text-decoration: none;
+  background-color: #D86666;
+  text-decoration: none;
 }
 
 .first_author, .member_first_author {
-	color: #520063;
-	background-color: #CCAF9F;
-	text-decoration: none;
+  color: #520063;
+  background-color: #CCAF9F;
+  text-decoration: none;
 }
 
 .submit {
@@ -107,7 +120,7 @@ color: white;
 
 
 .ddsmoothmenu-v ul li a.selected{ /*CSS class that's dynamically added to the currently active menu items' LI A element*/
-background: black; 
+background: black;
 color: white;
 }
 

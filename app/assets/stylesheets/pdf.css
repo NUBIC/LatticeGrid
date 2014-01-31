@@ -5,13 +5,13 @@
 
 /* Global styles */
 
-body { 
+body {
 	font-family : Verdana, Arial, sans-serif;
 	font-size : 8pt;
 	color : black;
-	background-color: white; 
+	background-color: white;
 	line-height: 14px;
-	background: white; 
+	background: white;
 	margin: 5px 5px 5px 5px;
 }
 
@@ -175,31 +175,31 @@ td.list-title-right {
 }
 
 #listing .list-title-right {
-	color:        #244;
-	font-weight:  bold;
+	color: #244;
+	font-weight: bold;
 	padding-right: 1em;
 	text-align: right;
 }
 
 #listing .list-image {
-	width:        60px;
-	height:       70px;
+	width: 60px;
+	height: 70px;
 }
 
 
 #listing .list-actions {
-	font-size:    x-small;
-	text-align:   right;
+	font-size: x-small;
+	text-align: right;
 	padding-left: 0.5em;
 }
 
 #listing .list-line-even {
-	background:   aliceblue;
+	background: aliceblue;
 	padding-bottom: 0.5em;
 }
 
 #listing .list-line-odd {
-	background:   lightyellow;
+	background: lightyellow;
 	padding-bottom: 0.5em;
 }
 
@@ -208,10 +208,7 @@ td.list-title-right {
 	padding-bottom: 0.5em;
 }
 
-
-
 /* Styles for psd */
-
 
 /* --- main --- */
 #main {
@@ -225,7 +222,7 @@ td.list-title-right {
 }
 
 #maincontent {
-	float: right;  
+	float: right;
 	margin-top: 0px;
 	margin-right: 0px;
     width: 100% ;
@@ -312,7 +309,7 @@ td.list-title-right {
 }
 
 #last_load_date {
-	float: right;  
+	float: right;
 	margin-top: -15px;
 	margin-right: 10px;
 	padding: 3px;

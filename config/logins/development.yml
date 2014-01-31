@@ -13,22 +13,4 @@ users:
     first_name: Rex
     last_name: Chisholm
     password: chisholm
-  user:
-    password: user
-    portals:
-      - FRB:
-        - Faculty
-  jab155:
-    first_name: Jim
-    last_name: Bray
-    password: jab155
-    portals:
-      - FRB:
-        - Curator
-  cac286:
-    first_name: Cynthia
-    last_name: Csernansky
-    password: cac286
-    portals:
-      - FRB:
-        - Admin
+
