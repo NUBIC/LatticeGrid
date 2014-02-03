@@ -32,3 +32,6 @@ public/cache
 # Ignore coverage
 coverage
 coverage/*
+
+lattice_grid.sublime-project
+lattice_grid.sublime-workspace
