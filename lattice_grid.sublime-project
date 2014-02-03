@@ -1,9 +1,0 @@
-{
-	"folders":
-	[
-		{
-			"path": "/Users/paulfriedman/work/LatticeGrid",
-      "folder_exclude_patterns": ["db/imports", "doc", "app/assets", "coverage", "public/javascripts"]
-		}
-	]
-}
