@@ -1,7 +1,7 @@
 ClassLength:
   Max: 150
 LineLength:
-  Max: 150
+  Max: 175
 MethodLength:
   Max: 18
 AllCops:

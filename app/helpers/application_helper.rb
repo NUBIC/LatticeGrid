@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-# Methods added to this helper will be available to all templates in the application.
+# Methods added to this helper will be available to all templates in the application
 module ApplicationHelper
+  require 'acts_as_taggable_on_steroids/tags_helper'
   begin
     include TagsHelper
   rescue
@@ -13,7 +14,7 @@ module ApplicationHelper
     year_array = LatticeGridHelper.year_array
     @year = year_array[0].to_s
     @year = cookies[:the_year] unless cookies[:the_year].blank?
-    if !the_year.blank?
+    unless the_year.blank?
       cookies[:the_year] = the_year
       @year = the_year
     end
