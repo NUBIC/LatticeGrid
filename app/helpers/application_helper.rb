@@ -1,18 +1,19 @@
+# -*- coding: utf-8 -*-
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
   begin
-  include TagsHelper
+    include TagsHelper
   rescue
-    puts "unable to load TagsHelper. Tagging plugin installed?"
+    puts 'unable to load TagsHelper. Tagging plugin installed?'
   end
   require 'config'
 
   def handle_year(the_year = nil)
-    return @year if !@year.blank? and the_year.blank?
+    return @year if !@year.blank? && the_year.blank?
     year_array = LatticeGridHelper.year_array
     @year = year_array[0].to_s
-    @year = cookies[:the_year] if !cookies[:the_year].blank?
-    if !the_year.blank? then
+    @year = cookies[:the_year] unless cookies[:the_year].blank?
+    if !the_year.blank?
       cookies[:the_year] = the_year
       @year = the_year
     end
@@ -20,104 +21,109 @@ module ApplicationHelper
   end
 
   def before_create(model)
-    model.created_ip ||= request.remote_ip if defined?(request) and ! request.nil?
-    model.created_id ||= session[:user_id] if defined?(session) and ! session.nil? and ! session[:user_id].blank?
+    model.created_ip ||= request.remote_ip if request_exists?
+    model.created_id ||= session[:user_id] if session_exists?
     before_update(model)
   end
 
   def before_update(model)
-    model.updated_ip = request.remote_ip if defined?(request) and ! request.nil?
-    model.updated_id = session[:user_id] if defined?(session) and ! session.nil? and ! session[:user_id].blank?
+    model.updated_ip = request.remote_ip if request_exists?
+    model.updated_id = session[:user_id] if session_exists?
   end
+
+  def request_exists?
+    defined?(request) && !request.nil?
+  end
+  private :request_exists?
+
+  def session_exists?
+    defined?(session) && !session.nil? && !session[:user_id].blank?
+  end
+  private :session_exists?
 
   # Overrides `current_abstracts_url` from the router.
   def current_abstracts_url
-    year = handle_year()
-    abstracts_by_year_url(:id => year, :page => '1')
+    year = handle_year
+    abstracts_by_year_url(id: year, page: '1')
   end
 
   def current_abstracts_path
-    year = handle_year()
-    abstracts_by_year_path(:id => year, :page => '1')
+    year = handle_year
+    abstracts_by_year_url(id: year, page: '1')
   end
 
-
-  def base_path(remove_trailing_id=false)
-    # the_path=request.env['REQUEST_URI']
+  def base_path(remove_trailing_id = false)
+    # the_path = request.env['REQUEST_URI']
     the_path = request.original_url
-    if remove_trailing_id and the_path =~ /\/[0-9]+$/
-      the_path.sub!(/\/[0-9]+$/,"")
-    end
-    the_path += "/" unless the_path =~ /\/$/
+    the_path.sub!(/\/[0-9]+$/, '') if remove_trailing_id && the_path =~ /\/[0-9]+$/
+    the_path += '/' unless the_path =~ /\/$/
     the_path
   end
 
   def require_admin
-     if is_admin?
-       return true
-     end
-     return false  #disallowed
+    is_admin?
   end
 
   def allowed_ip(this_ip)
-     ips = LatticeGridHelper.allowed_ips() # from config.rb in project lib directory
-     ips.each do |ip|
-       if this_ip =~ /^#{ip}$/ then
-         logger.warn "allowed_ip passed with #{this_ip}"
-         return true
-       end
-     end
-     logger.warn "allowed_ip failed #{this_ip}"
-     return false  #disallowed
+    # from config.rb in project lib directory
+    LatticeGridHelper.allowed_ips.each do |ip|
+      if this_ip =~ /^#{ip}$/
+        logger.warn "allowed_ip passed with #{this_ip}"
+        return true
+      end
+    end
+    logger.warn "allowed_ip failed #{this_ip}"
+    false # disallowed
   end
 
   def capitalize_words(string)
     string.downcase.gsub(/\b\w/) { $&.upcase }
   end
 
-  def truncate_words(phrase, count=20)
-    return "" if phrase.blank?
-    re = Regexp.new('^(.{'+count.to_s+'}\w*)(.*)', Regexp::MULTILINE)
-    phrase.gsub(re) {$2.empty? ? $1 : $1 + '...'}
+  def truncate_words(phrase, count = 20)
+    return '' if phrase.blank?
+    re = Regexp.new('^(.{' + count.to_s + '}\w*)(.*)', Regexp::MULTILINE)
+    phrase.gsub(re) { $2.empty? ? $1 : $1 + '...' }
   end
 
   def abstracts_per_year(abstracts, year_array)
-    years=Array.new(year_array.length, 0)
+    years = Array.new(year_array.length, 0)
     first_year = year_array[0].to_i
     abstracts.each do |abs|
-      if !abs.nil? and !abs.year.nil?
+      if !abs.nil? && !abs.year.nil?
         pos = abs.year.to_i - first_year
-        years[pos] = years[pos]+1 if pos >= 0 and pos < year_array.length
+        years[pos] = years[pos] + 1 if pos >= 0 && pos < year_array.length
       end
     end
     years
   end
 
   def abstracts_per_year_as_string(all_abstracts)
-    abstracts_per_year(all_abstracts, LatticeGridHelper.year_array.sort).join(", ")
+    abstracts_per_year(all_abstracts, LatticeGridHelper.year_array.sort).join(', ')
   end
 
-  def link_to_faculty(faculty, delimiter=", ")
-    faculty.collect{|pi| link_to( pi.name,
-      show_investigator_url(:id=>pi.username, :page=>1), # can't use this form for usernames including non-ascii characters
-      :title => " Go to #{pi.name}; #{pi.total_publications} pubs")
-      }.compact.join(delimiter)
+  def link_to_faculty(faculty, delimiter = ', ')
+    faculty.map do |pi|
+      # can't use this form for usernames including non-ascii characters
+      link_to(pi.name, show_investigator_url(id: pi.username, page: 1),
+              title: " Go to #{pi.name}; #{pi.total_publications} pubs")
+    end.compact.join(delimiter)
   end
 
-  def link_to_coauthors(co_authors, delimiter=", ")
-    co_authors.collect{ |co_author|
+  def link_to_coauthors(co_authors, delimiter = ', ')
+    co_authors.map do |co_author|
       if co_author.colleague && co_author.colleague.deleted_at.blank?
-        link_to( coauthor_span_class(co_author.colleague.name, co_author.publication_cnt).html_safe,
-                 show_investigator_url(:id=>co_author.colleague.username, :page=>1), # can't use this form for usernames including non-ascii characters
-                 :title => co_author_link_title(co_author))
+        link_to(coauthor_span_class(co_author.colleague.name, co_author.publication_cnt).html_safe,
+                show_investigator_url(id: co_author.colleague.username, page: 1),
+                title: co_author_link_title(co_author))
       end
-    }.compact.join(delimiter)
+    end.compact.join(delimiter)
   end
 
   def co_author_link_title(co_author)
     "#{co_author.publication_cnt} shared pubs; #{co_author.colleague.total_publications} pubs; " +
-    (co_author.colleague.num_intraunit_collaborators+co_author.colleague.num_extraunit_collaborators).to_s +
-    " collaborators"
+    (co_author.colleague.num_intraunit_collaborators + co_author.colleague.num_extraunit_collaborators).to_s +
+    ' collaborators'
   end
 
   def link_to_collaborators(collaborators, delimiter=", ")
@@ -143,7 +149,8 @@ module ApplicationHelper
   end
 
   def coauthor_span_class(link_out, score)
-    similarity_class = case score
+    similarity_class =
+    case score
     when 41..100000
       'similarity1'
     when 20..40
@@ -164,7 +171,8 @@ module ApplicationHelper
 
 
   def similarity_span_class(link_out, score)
-    similarity_class = case score
+    similarity_class =
+    case score
     when 6000..100000
       'similarity1'
     when 5000..6000
@@ -185,18 +193,22 @@ module ApplicationHelper
 
 
   def link_to_primary_department(investigator)
-    return link_to( investigator.home_department.name, show_investigators_org_url(investigator.home_department_id), :title => "Show investigators in #{investigator.home_department.name}" ) if !investigator.home_department_id.nil?
+    unless investigator.home_department_id.nil?
+      return link_to(investigator.home_department.name,
+                     show_investigators_org_url(investigator.home_department_id),
+                     title: "Show investigators in #{investigator.home_department.name}")
+    end
     begin
       return investigator.home_department_name unless investigator.home_department_name.blank?
       return investigator.home unless investigator.home.blank?
     rescue
-      ""
+      ''
     end
-    return ""
+    ''
   end
 
   def link_to_units(investigator_appointments, delimiter="<br/>")
-      investigator_appointments.collect{ |investigator_appointment| link_to_unit(investigator_appointment.organizational_unit, investigator_appointment.type)}.join(delimiter)
+    investigator_appointments.collect{ |investigator_appointment| link_to_unit(investigator_appointment.organizational_unit, investigator_appointment.type)}.join(delimiter)
   end
 
   def link_to_unit(unit, the_type=nil)
@@ -239,7 +251,7 @@ module ApplicationHelper
       elsif pi_data.blank?
           logger.warn("Entry not found. GetLDAPentry returned null using netid #{applicant.username}.")
       else
-        ldap_rec=CleanPIfromLDAP(pi_data)
+        ldap_rec = CleanPIfromLDAP(pi_data)
         applicant = BuildPIobject(ldap_rec) if applicant.id.blank?
         applicant = MergePIrecords(applicant,ldap_rec)
       end

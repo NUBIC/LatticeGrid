@@ -9,7 +9,7 @@ class AbstractsController < ApplicationController
   include AbstractsHelper
   include ApplicationHelper
   include ProfilesHelper
-  include MeshHelper  # for the do_mesh_search method
+  include MeshHelper # for the do_mesh_search method
 
   require 'publication_utilities'
   require 'pubmed_utilities' # loads including 'pubmed_config' 'bio' (bioruby) and
