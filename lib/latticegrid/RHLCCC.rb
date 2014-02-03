@@ -31,7 +31,7 @@ def LatticeGridHelper.menu_head_abbreviation
   "Lurie Cancer Center"
 end
 
-def LatticeGridHelper.GetDefaultSchool()
+def LatticeGridHelper.get_default_school
   "Feinberg"
 end
 
@@ -59,15 +59,15 @@ def LatticeGridHelper.google_analytics
 
    </script>"
 end
- 
+
 # profile example summaries
 def profile_example_summaries()
-  out = "<p>Example summaries:"  
+  out = "<p>Example summaries:"
   out << "<ul>"
   out << "<li>"
   out << link_to("Cancer Control Example", investigator_url('rbe510'))
   out << "<li>"
-  out << link_to("Basic Science Example", investigator_url('tvo')) 
+  out << link_to("Basic Science Example", investigator_url('tvo'))
   out << "<li>"
   out << link_to("Clinical Program Example", investigator_url('lpl530'))
   out << "</ul>"

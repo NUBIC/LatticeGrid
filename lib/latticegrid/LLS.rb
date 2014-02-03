@@ -2,7 +2,7 @@ def LatticeGridHelper.menu_head_abbreviation
   "LLS"
 end
 
-def LatticeGridHelper.GetDefaultSchool()
+def LatticeGridHelper.get_default_school
   "LLS"
 end
 
@@ -28,26 +28,26 @@ end
 
 def LatticeGridHelper.curl_host
 	my_env = Rails.env
-	my_env = 'home' if public_path =~ /Users/ 
-	case 
+	my_env = 'home' if public_path =~ /Users/
+	case
 	  when my_env == 'home' then 'localhost:3000'
 	  when my_env == 'development' then 'rails-staging2.nubic.northwestern.edu'
 	  when my_env == 'staging' then 'rails-staging2.nubic.northwestern.edu'
 	  when my_env == 'production' then 'latticegrid.lls.org'
 	  else 'rails-dev.bioinformatics.northwestern.edu/lls_pubs'
-	end 
+	end
 end
 
 def LatticeGridHelper.curl_protocol
 	my_env = Rails.env
-	my_env = 'home' if public_path =~ /Users/ 
-	case 
+	my_env = 'home' if public_path =~ /Users/
+	case
 	  when my_env == 'home' then 'http'
 	  when my_env == 'development' then 'http'
 	  when my_env == 'staging' then 'http'
 	  when my_env == 'production' then 'http'
 	  else 'http'
-	end 
+	end
 end
 
 def LatticeGridHelper.include_awards?
@@ -76,7 +76,7 @@ def LatticeGridHelper.do_ldap?
 end
 
 def latticegrid_menu_script
-  
+
 "<div id='side_nav_menu' class='ddsmoothmenu-v'>
 <ul>
 	<li><a href='#'>Publications by year</a>

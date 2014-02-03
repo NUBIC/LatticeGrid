@@ -63,7 +63,7 @@ def LatticeGridHelper.high_impact_issns
   []
 end
 
-def LatticeGridHelper.GetDefaultSchool
+def LatticeGridHelper.get_default_school
   'Feinberg'
 end
 

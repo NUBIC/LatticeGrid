@@ -113,7 +113,7 @@ class InvestigatorsController < ApplicationController
     else
       handle_member_name # converts params[:id] to params[:investigator_id] and sets @investigator
       @do_pagination = "0"
-      @heading = "Selected publications from 2004-2013" if LatticeGridHelper.GetDefaultSchool() == 'UMDNJ'
+      @heading = "Selected publications from 2004-2013" if LatticeGridHelper.get_default_school == 'UMDNJ'
       @abstracts = Abstract.display_all_investigator_data(params[:investigator_id])
       @all_abstracts=@abstracts
       @total_entries=@abstracts.length
@@ -190,7 +190,7 @@ class InvestigatorsController < ApplicationController
       redirect_to params
     else
       handle_member_name # sets @investigator
-      @heading = "Selected publications from 2004-2013" if LatticeGridHelper.GetDefaultSchool() == 'UMDNJ'
+      @heading = "Selected publications from 2004-2013" if LatticeGridHelper.get_default_school == 'UMDNJ'
       @do_pagination = "1"
       @abstracts = Abstract.display_investigator_data(params[:investigator_id],params[:page] )
       @all_abstracts = Abstract.display_all_investigator_data(params[:investigator_id])

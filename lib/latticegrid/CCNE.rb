@@ -16,7 +16,7 @@ def LatticeGridHelper.menu_head_abbreviation
   "CCNE"
 end
 
-def LatticeGridHelper.GetDefaultSchool()
+def LatticeGridHelper.get_default_school
   "NU"
 end
 
@@ -66,7 +66,7 @@ def latticegrid_menu_script
 </div>"
 end
 
-def LatticeGridHelper.affilation_name 
+def LatticeGridHelper.affilation_name
   "Center"
 end
 

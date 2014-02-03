@@ -35,7 +35,7 @@ def LatticeGridHelper.menu_head_abbreviation
   "The Cancer Institute of New Jersey"
 end
 
-def LatticeGridHelper.GetDefaultSchool()
+def LatticeGridHelper.get_default_school
   "UMDNJ"
 end
 
@@ -50,26 +50,26 @@ end
 
 def LatticeGridHelper.curl_host
 my_env = Rails.env
-my_env = 'home' if public_path =~ /Users/ 
-case 
+my_env = 'home' if public_path =~ /Users/
+case
   when my_env == 'home' then 'localhost:3000'
   when my_env == 'development' then 'rails-staging2.nubic.northwestern.edu'
   when my_env == 'staging' then 'rails-staging2.nubic.northwestern.edu'
   when my_env == 'production' then 'latticegrid.cinj.org'
   else 'latticegrid.cinj.org'
-end 
+end
 end
 
 def LatticeGridHelper.curl_protocol
 my_env = Rails.env
-my_env = 'home' if public_path =~ /Users/ 
-case 
+my_env = 'home' if public_path =~ /Users/
+case
   when my_env == 'home' then 'http'
   when my_env == 'development' then 'http'
   when my_env == 'staging' then 'http'
   when my_env == 'production' then 'http'
   else 'http'
-end 
+end
 end
 
 def profile_example_summaries()
@@ -90,7 +90,7 @@ def LatticeGridHelper.ldap_host
  "directory.cinj.org"
 end
 
-def LatticeGridHelper.ldap_treebase 
+def LatticeGridHelper.ldap_treebase
  "ou=People, dc=cinj,dc=org"
 end
 
@@ -102,9 +102,9 @@ def LatticeGridHelper.include_studies?
   false
 end
 
-# build LatticeGridHelper.institutional_limit_search_string to identify all the publications at your institution 
+# build LatticeGridHelper.institutional_limit_search_string to identify all the publications at your institution
 
-def LatticeGridHelper.institutional_limit_search_string 
+def LatticeGridHelper.institutional_limit_search_string
   '("The Cancer Institute of New Jersey "[affil] or "UMDNJ"[affil] or ("University"[affil] AND "New Jersey"[affil]) or "Robert Wood Johnson"[affil] or "Rutgers"[affil] or "Princeton University"[affil])'
 end
 
@@ -116,7 +116,7 @@ def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bol
   	out << link_to( publication.title, "http://www.ncbi.nlm.nih.gov/pubmed/"+publication.pubmed, :target => '_blank', :title=>'PubMed ID')
     else
   	out << link_to( publication.title, abstract_url(publication))
-    end 
+    end
   out << " "
   out << publication.journal_abbreviation
   out << ", "

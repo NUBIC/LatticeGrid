@@ -23,7 +23,7 @@ def LatticeGridHelper.build_institution_search_string_from_department?
   true
 end
 
-def LatticeGridHelper.affilation_name 
+def LatticeGridHelper.affilation_name
   "Institution"
 end
 
@@ -39,7 +39,7 @@ def LatticeGridHelper.menu_head_abbreviation
   "Association for Academic Surgery"
 end
 
-def LatticeGridHelper.GetDefaultSchool()
+def LatticeGridHelper.get_default_school
   "AAS"
 end
 
@@ -49,26 +49,26 @@ end
 
 def LatticeGridHelper.curl_host
 my_env = Rails.env
-my_env = 'home' if public_path =~ /Users/ 
-case 
+my_env = 'home' if public_path =~ /Users/
+case
   when my_env == 'home' then 'localhost:3000'
   when my_env == 'development' then 'rails-staging2.nubic.northwestern.edu'
   when my_env == 'staging' then 'rails-staging2.nubic.northwestern.edu'
   when my_env == 'production' then 'latticegrid.aasurg.org'
   else 'latticegrid.aasurg.org'
-end 
+end
 end
 
 def LatticeGridHelper.curl_protocol
 my_env = Rails.env
-my_env = 'home' if public_path =~ /Users/ 
-case 
+my_env = 'home' if public_path =~ /Users/
+case
   when my_env == 'home' then 'http'
   when my_env == 'development' then 'http'
   when my_env == 'staging' then 'http'
   when my_env == 'production' then 'http'
   else 'http'
-end 
+end
 end
 
 def profile_example_summaries()
@@ -89,7 +89,7 @@ def LatticeGridHelper.ldap_host
  "directory.aasurg.org"
 end
 
-def LatticeGridHelper.ldap_treebase 
+def LatticeGridHelper.ldap_treebase
  "ou=People, dc=aas,dc=org"
 end
 
@@ -97,9 +97,9 @@ def LatticeGridHelper.include_awards?
  false
 end
 
-# build LatticeGridHelper.institutional_limit_search_string to identify all the publications at your institution 
+# build LatticeGridHelper.institutional_limit_search_string to identify all the publications at your institution
 
-def LatticeGridHelper.institutional_limit_search_string 
+def LatticeGridHelper.institutional_limit_search_string
   '(Madison[ad] or Wisconsin[ad])'
 end
 
@@ -113,7 +113,7 @@ def LatticeGridHelper.do_ldap?
 end
 
 def latticegrid_menu_script
-  
+
 "<div id='side_nav_menu' class='ddsmoothmenu-v'>
 <ul>
 	<li><a href='#'>Publications by year</a>

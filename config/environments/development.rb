@@ -29,8 +29,8 @@ LatticeGrid::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
-  # Turn on page caching
-  config.action_controller.perform_caching = true
+  # Turn off/on page caching
+  config.action_controller.perform_caching = false
 
   config.aker do
     # The authentication protocol to use for interactive access.

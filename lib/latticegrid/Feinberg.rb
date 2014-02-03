@@ -1,55 +1,99 @@
+module LatticeGridHelper
 
-def LatticeGridHelper.menu_head_abbreviation
-  "Feinberg"
-end
+  def self.menu_head_abbreviation
+    'Feinberg'
+  end
 
-def LatticeGridHelper.include_org_type(org)
-  (org.type == 'Department' or org.type == 'Division' or org.type == 'School')
-end
+  def self.include_org_type(org)
+    org.type == 'Department' || org.type == 'Division' || org.type == 'School'
+  end
 
-def LatticeGridHelper.high_impact_issns
-  ["0028-4793", "0732-0582", "1471-0072", "1474-175X", "1061-4036", "0028-0836", "1474-1733", "0140-6736", "1471-0056", "0092-8674", "0036-8075", "1087-0156", "1748-3387", "0098-7484", "1476-1122", "0066-4154", "1471-0048", "1474-1776", "0031-9333", "1535-6108", "0147-006X", "1934-5909", "1529-2908", "1078-8956", "1074-7613", "0140-525X", "0066-4197", "1474-4422", "1548-7091", "1740-1526", "1465-7392", "1550-4131", "1755-4330", "1470-2045", "0003-4819", "1473-3099", "0066-4278", "1552-4450", "1549-1277", "1359-4184", "0022-1007", "0009-7322", "1097-2765", "1097-6256", "0021-9738", "1081-0706", "0896-6273", "1534-5807", "1545-9985", "0955-0674", "0959-535X", "1674-2788", "0890-9369", "1544-9173", "0066-4219", "0027-8424"]
-end
+  def self.high_impact_issns
+    [
+      '0028-4793', '0732-0582', '1471-0072', '1474-175X', '1061-4036', '0028-0836', '1474-1733', '0140-6736', '1471-0056',
+      '0092-8674', '0036-8075', '1087-0156', '1748-3387', '0098-7484', '1476-1122', '0066-4154', '1471-0048', '1474-1776',
+      '0031-9333', '1535-6108', '0147-006X', '1934-5909', '1529-2908', '1078-8956', '1074-7613', '0140-525X', '0066-4197',
+      '1474-4422', '1548-7091', '1740-1526', '1465-7392', '1550-4131', '1755-4330', '1470-2045', '0003-4819', '1473-3099',
+      '0066-4278', '1552-4450', '1549-1277', '1359-4184', '0022-1007', '0009-7322', '1097-2765', '1097-6256', '0021-9738',
+      '1081-0706', '0896-6273', '1534-5807', '1545-9985', '0955-0674', '0959-535X', '1674-2788', '0890-9369', '1544-9173',
+      '0066-4219', '0027-8424'
+    ]
+  end
 
-def LatticeGridHelper.GetDefaultSchool()
-  "Feinberg"
-end
+  def self.get_default_school
+    'Feinberg'
+  end
 
-def LatticeGridHelper.page_title
-  return 'Feinberg Faculty Publications'
-end
+  def self.page_title
+    'Feinberg Faculty Publications'
+  end
 
-def LatticeGridHelper.header_title
-  return 'Feinberg Publications and Abstracts Site'
-end
+  def self.header_title
+    'Feinberg Publications and Abstracts Site'
+  end
 
-def LatticeGridHelper.direct_preview_title
-   ''
-end
+  def self.direct_preview_title
+    ''
+  end
 
-def LatticeGridHelper.google_analytics
-   "<script type='text/javascript'>
+  def self.google_analytics
+    "<script type='text/javascript'>
 
-     var _gaq = _gaq || [];
-     _gaq.push(['_setAccount', 'UA-30096153-1']);
-     _gaq.push(['_trackPageview']);
+       var _gaq = _gaq || [];
+       _gaq.push(['_setAccount', 'UA-30096153-1']);
+       _gaq.push(['_trackPageview']);
 
-     (function() {
-       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-     })();
+       (function() {
+         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+       })();
 
-   </script>
-   "
-end
+    </script>"
+  end
 
-def LatticeGridHelper.home_url
-  "http://www.feinberg.northwestern.edu"
-end
+  def self.home_url
+    'http://www.feinberg.northwestern.edu'
+  end
 
-def LatticeGridHelper.organization_name
-  "Feinberg School of Medicine"
+  def self.organization_name
+    'Feinberg School of Medicine'
+  end
+
+  def self.curl_host
+    my_env = Rails.env
+    my_env = 'home' if public_path =~ /Users/
+    case my_env
+    when 'home'
+      'localhost:3000'
+    when 'development', 'staging'
+      'rails-staging2.nubic.northwestern.edu'
+    when 'production'
+      'latticegrid.feinberg.northwestern.edu'
+    else
+      'rails-dev.bioinformatics.northwestern.edu/fsm_pubs'
+    end
+  end
+
+  def self.curl_protocol
+    my_env = Rails.env
+    my_env = 'home' if public_path =~ /Users/
+    case my_env
+    when 'home', 'development', 'staging', 'production'
+      'http'
+    else
+      'http'
+    end
+  end
+
+  def self.include_awards?
+    true
+  end
+
+  def self.include_studies?
+    true
+  end
+
 end
 
 def latticegrid_high_impact_description
@@ -93,38 +137,6 @@ def highlightInvestigator(citation, speed_display=false, simple_links=false, aut
   authors
 end
 
-def LatticeGridHelper.curl_host
-  my_env = Rails.env
-  my_env = 'home' if public_path =~ /Users/
-  case
-    when my_env == 'home' then 'localhost:3000'
-    when my_env == 'development' then 'rails-staging2.nubic.northwestern.edu'
-    when my_env == 'staging' then 'rails-staging2.nubic.northwestern.edu'
-    when my_env == 'production' then 'latticegrid.feinberg.northwestern.edu'
-    else 'rails-dev.bioinformatics.northwestern.edu/fsm_pubs'
-  end
-end
-
-def LatticeGridHelper.curl_protocol
-  my_env = Rails.env
-  my_env = 'home' if public_path =~ /Users/
-  case
-    when my_env == 'home' then 'http'
-    when my_env == 'development' then 'http'
-    when my_env == 'staging' then 'http'
-    when my_env == 'production' then 'http'
-    else 'http'
-  end
-end
-
-def LatticeGridHelper.include_awards?
-  true
-end
-
-def LatticeGridHelper.include_studies?
-  true
-end
-
 def edit_profile_link
   link_to("Edit your FSM profile", "https://fsmweb.northwestern.edu/facultylogin/", :title=>"Login with your NetID and NetID password to change your profile and publication record")
 end
@@ -132,7 +144,6 @@ end
 def latticegrid_menu_script
 "<div id='side_nav_menu' class='ddsmoothmenu-v'>
 <ul>
-  <li>#{@head_node.inspect}</li>
   <li><a href='#'>Publications by year</a>
     #{build_year_menu}
   </li>

@@ -1,29 +1,29 @@
 /* Global styles */
 
 body {
-	font-family : Verdana, Arial, sans-serif;
-	font-size : 10pt;
-	color : black;
-	background-color: #dfdfdf;
-	line-height: 16px;
-	/* min-width: 800px; */
-	background: #dfdfdf;
-	margin-top: 0px;
-	margin-left:10px;
+  font-family : Verdana, Arial, sans-serif;
+  font-size : 10pt;
+  color : black;
+  background-color: #dfdfdf;
+  line-height: 16px;
+  /* min-width: 800px; */
+  background: #dfdfdf;
+  margin-top: 0px;
+  margin-left:10px;
 }
 
 p, ol, ul, td {
-	font-family: Arial, Helvetica, Geneva, Sans-serif;
-	font-size: 12px;
-	line-height: 18px;
+  font-family: Arial, Helvetica, Geneva, Sans-serif;
+  font-size: 12px;
+  line-height: 18px;
 }
 
 p {
     padding: 0px 0px 4px 0px;
     margin:  0px 0px 4px 0px;
-	color : black;
-	font-size : 8pt;
-	font-family : Verdana,  Arial,  sans-serif;
+  color : black;
+  font-size : 8pt;
+  font-family : Verdana,  Arial,  sans-serif;
 }
 
 ul {
@@ -55,16 +55,16 @@ pre {
 }
 
 h1, h2, .h2, h3, .h3 {
-    font-family: Arial, Helvetica, Geneva, Sans-serif;
-    font-size: 13px;
-    font-weight: bold;
-	color: #226;
-    line-height: 140%;
-    padding-bottom: 0px;
-    padding-left: 5px;
-    margin-bottom: 2px;
-    margin-top: 8px;
-    padding-top: 0px;
+  font-family: Arial, Helvetica, Geneva, Sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  color: #226;
+  line-height: 140%;
+  padding-bottom: 0px;
+  padding-left: 5px;
+  margin-bottom: 2px;
+  margin-top: 8px;
+  padding-top: 0px;
 }
 
 h1, .h1 {
@@ -83,100 +83,100 @@ a:visited { color: #333; }
 a:hover { color: #555; background-color:#cee; }
 
 #nci-logo {
-	float: left;
-	margin: 50px 0px 0px 10px;
-	display:inline;
+  float: left;
+  margin: 50px 0px 0px 10px;
+  display:inline;
 }
 
 #footer-row {
-	float: left;
-	width: 995px;
-	padding: 8px 0px 8px 165px;
-	font-size: .9em;
-	border-top-style: solid;
-	border-top-width: 1px;
-	border-color: #cccccc;
-	background: #ffffff;
+  float: left;
+  width: 995px;
+  padding: 8px 0px 8px 165px;
+  font-size: .9em;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-color: #cccccc;
+  background: #ffffff;
 }
 
 /* Styles for admin/list */
 
 table {
-	border: 1px indigo solid;
+  border: 1px indigo solid;
 }
 
 tr.header {
-	background:   #709fc7;
+  background:   #709fc7;
 }
 
 tr.even {
-	background:   white;
+  background:   white;
 }
 
 tr.odd, .odd {
-	background:   silver;
+  background:   silver;
 }
 
 td,th {
-	padding-top: 0.25em;
-	padding-bottom: 0.25em;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
 }
 
 table.borderless {
-	border: 0px;
+  border: 0px;
 }
 
 table.borderless tr td,th {
-	padding-top: 0.5em;
-	padding-bottom: 0.2em;
+  padding-top: 0.5em;
+  padding-bottom: 0.2em;
 }
 
 table.dense {
-	border: 0px;
+  border: 0px;
 }
 
 table.dense tr td,th {
-	padding: 0px;
-	padding-left: 0.5em;
-	padding-right: 0.5em;
-	margin: 0px;
-	margin-left: 0.5em;
+  padding: 0px;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  margin: 0px;
+  margin-left: 0.5em;
 }
 
 #biograph table {
-	padding-left: 1em;
-	border: 0px;
+  padding-left: 1em;
+  border: 0px;
 }
 
 #biograph table tr td table {
-	padding-left: 2em;
-	border: 0px;
+  padding-left: 2em;
+  border: 0px;
 }
 
 #biograph table tr td table tr th {
-	vertical-align:middle;
+  vertical-align:middle;
 }
 
 #biograph table tr th {
-	padding-top: 0.125em;
-	padding-bottom: 0px;
-	padding-right: 0.5em;
-	vertical-align:top;
-	color:        #555;
-	text-align:   right;
-	line-height: 14px;
+  padding-top: 0.125em;
+  padding-bottom: 0px;
+  padding-right: 0.5em;
+  vertical-align:top;
+  color:        #555;
+  text-align:   right;
+  line-height: 14px;
 }
 
 #biograph table tr td {
-	padding-top: 0.125em;
-	padding-bottom: 0px;
-	vertical-align:top;
-	color:        #520063;
-	line-height: 14px;
+  padding-top: 0.125em;
+  padding-bottom: 0px;
+  vertical-align:top;
+  color:        #520063;
+  line-height: 14px;
 }
 
 #investigator_title_block {
-	display: block;
+  display: block;
 }
 
 #investigator_title_block #full_name, #investigator_title_block #page_title {
@@ -192,85 +192,85 @@ table.dense tr td,th {
 }
 
 table.fullsize {
-	width: 970px;
+  width: 970px;
 }
 
 td.list-left, th.list-left {
-	padding-left: 1em;
+  padding-left: 1em;
 }
 
 td.list-right {
-	padding-right: 1em;
-	text-align: right;
+  padding-right: 1em;
+  text-align: right;
 }
 
 th {
-	padding-bottom: 0px;
+  padding-bottom: 0px;
 }
 
 td.list-title-left {
-	padding-left: 1em;
-	color:        #244;
-	font-weight:  bold;
+  padding-left: 1em;
+  color:        #244;
+  font-weight:  bold;
 }
 
 td.list-title-center {
-	text-align: center;
+  text-align: center;
 }
 td.list-title-right {
-	padding-right: 1em;
-	text-align: right;
+  padding-right: 1em;
+  text-align: right;
 }
 
 #listing .list-heading {
-	background-color: #709fc7;
-	color:        #244;
-	font-weight:  bold;
+  background-color: #709fc7;
+  color:        #244;
+  font-weight:  bold;
 }
 
 #listing .list-title {
-	color:        #244;
-	font-weight:  bold;
+  color:        #244;
+  font-weight:  bold;
 }
 
 #listing .list-title-center {
-	color:        #244;
-	font-weight:  bold;
-	text-align: center;
+  color:        #244;
+  font-weight:  bold;
+  text-align: center;
 }
 
 #listing .list-title-right {
-	color:        #244;
-	font-weight:  bold;
-	padding-right: 1em;
-	text-align: right;
+  color:        #244;
+  font-weight:  bold;
+  padding-right: 1em;
+  text-align: right;
 }
 
 #listing .list-image {
-	width:        60px;
-	height:       70px;
+  width:        60px;
+  height:       70px;
 }
 
 
 #listing .list-actions {
-	font-size:    x-small;
-	text-align:   right;
-	padding-left: 0.5em;
+  font-size:    x-small;
+  text-align:   right;
+  padding-left: 0.5em;
 }
 
 #listing .list-line-even {
-	background:   aliceblue;
-	padding-bottom: 0.5em;
+  background:   aliceblue;
+  padding-bottom: 0.5em;
 }
 
 #listing .list-line-odd {
-	background:   lightyellow;
-	padding-bottom: 0.5em;
+  background:   lightyellow;
+  padding-bottom: 0.5em;
 }
 
 #listing .list-line-highlight {
-	background:   yellow;
-	padding-bottom: 0.5em;
+  background:   yellow;
+  padding-bottom: 0.5em;
 }
 
 /* Styles for main page */
@@ -278,90 +278,89 @@ td.list-title-right {
 /* --- HEADER --- */
 #banner {
   padding-left: 1em;
-	border-bottom: 1px solid #1c1079;
-	margin-left:auto;
-	margin-right:auto;
-	width:1180px;
-	height:120px;
-	vertical-align:bottom;
+  margin-left:auto;
+  margin-right:auto;
+  width:1180px;
+  height:120px;
+  vertical-align:bottom;
   text-align: center;
-	font-size:12px;
-	display: block;
+  font-size:12px;
+  display: block;
 }
 
 #banner a span {
-	visibility: hidden;
+  visibility: hidden;
 }
 
 
 #banner img {
-	float: left;
+  float: left;
 }
 
 #columns {
-	background: #141;
+  background: #141;
 }
 
 /* START:notice */
 #notice {
-	border: 2px solid red;
-	padding: 1em;
-	padding-bottom: 2em;
-	margin: 0px;
-	font: bold smaller sans-serif;
+  border: 2px solid red;
+  padding: 1em;
+  padding-bottom: 2em;
+  margin: 0px;
+  font: bold smaller sans-serif;
 }
 
 div.notice {
-	margin: 0px;
-	padding: 4px;
-	padding-left: 30px;
-	color: green ;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-weight: bold;
-	font-size:   14px;
-	line-height: 24px;
+  margin: 0px;
+  padding: 4px;
+  padding-left: 30px;
+  color: green ;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size:   14px;
+  line-height: 24px;
 }
 
 /* END:notice */
 
 /* --- main --- */
 #main {
-	border: 1px #1c1079 solid;
+  border: 1px #1c1079 solid;
   border-radius: 25px;
   box-shadow: 10px 10px 5px #777;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 0 0 1em 0;
-	width: 1180px;
-	height:auto;
-	vertical-align: top;
-	background-color: #FFFFFF;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 0 1em 0;
+  width: 1180px;
+  height:auto;
+  vertical-align: top;
+  background-color: #FFFFFF;
 }
 
 #maincontent {
-	float: right;
-	margin-top: 0px;
-	margin-right: 0px;
+  float: right;
+  margin-top: 0px;
+  margin-right: 0px;
     width: 1010px ;
-	height:auto;
-	vertical-align: top;
-	background-color: #FFFFFF;
+  height:auto;
+  vertical-align: top;
+  background-color: #FFFFFF;
 }
 
 #side {
-	float: left;
-	margin-top: 0px;
-	margin-left: 0px;
-	padding: 5px;
-	vertical-align: top;
-	width: 160px;
-	height: 790px;
-	color: #000;
-	background-color: #709fc7;
+  float: left;
+  margin-top: 0px;
+  margin-left: 0px;
+  padding: 5px;
+  vertical-align: top;
+  width: 160px;
+  height: 790px;
+  color: #000;
+  background-color: #709fc7;
 }
 
 .float_right {
-	float:right;
+  float:right;
 }
 .section_heading {
   float:left;
@@ -370,25 +369,25 @@ div.notice {
 }
 
 .width_80 {
-	float:left;
-	width:300px;
-	text-align: right;
-	padding-right: 8px;
+  float:left;
+  width:300px;
+  text-align: right;
+  padding-right: 8px;
 }
 
 #sideinfo {
-	margin-top: 2px;
-	font-size: 13px;
-	font-family: Arial, Helvetica, sans-serif;
-	color: #FFF;
+  margin-top: 2px;
+  font-size: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #FFF;
 }
 
 #nubic {
-	margin-top: 2px;
-	font-size: 13px;
-	font-family: Arial, Helvetica, sans-serif;
-	z-index: 10;
-	position: relative;
+  margin-top: 2px;
+  font-size: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+  z-index: 10;
+  position: relative;
 }
 
 #title {
@@ -441,13 +440,13 @@ div.notice {
 }
 
 #splash_screen p {
-	font-size:14px;
-	line-height: 22px;
+  font-size:14px;
+  line-height: 22px;
 }
 
 #splash_screen p, #splash_screen ol {
-	font-size:14px;
-	line-height: 22px;
+  font-size:14px;
+  line-height: 22px;
 }
 
 #collaborators, #similar_investigators {
@@ -460,62 +459,62 @@ div.notice {
 }
 
 #collaborators a, #similar_investigators a {
-	text-decoration: none;
-	color: #229;
+  text-decoration: none;
+  color: #229;
 }
 #collaborators a:visited, #similar_investigators a:visited { color: #88C; }
 #collaborators a:hover, #similar_investigators a:hover { color: #fff; background-color:#888; }
 
 
 #OrgGraph, #MemberGraph {
-	margin-left: -6px;
-	z-index: -10;
+  margin-left: -6px;
+  z-index: -10;
 }
 
 #abstractcontent {
-	margin-left: 30px;
-	padding: 15px;
-	padding-left: 15px;
-	padding-right: 5px;
-	margin-right: 30px;
- 	height:auto;
-	vertical-align: top;
-	background-color: #FFFFFF;
+  margin-left: 30px;
+  padding: 15px;
+  padding-left: 15px;
+  padding-right: 5px;
+  margin-right: 30px;
+  height:auto;
+  vertical-align: top;
+  background-color: #FFFFFF;
 }
 
 #endnotecontent {
-	margin-left: 30px;
-	margin-top:   3px;
-	padding: 3px;
-	padding-left: 15px;
-	padding-right: 15px;
-	margin-right: 30px;
-	vertical-align: top;
-	background-color: #FFFFFF;
+  margin-left: 30px;
+  margin-top:   3px;
+  padding: 3px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-right: 30px;
+  vertical-align: top;
+  background-color: #FFFFFF;
 }
 
 #endnotecontent br {
-	margin: 0px;
-	padding: 3px;
+  margin: 0px;
+  padding: 3px;
 }
 
 #last_load_date {
-	float: right;
-	margin-top: -15px;
-	margin-right: 10px;
-	padding: 3px;
+  float: right;
+  margin-top: -15px;
+  margin-right: 10px;
+  padding: 3px;
 }
 
 #abstract, #import, #mesh {
-	border-top: 1px indigo solid;
- 	margin-top: 15px;
+  border-top: 1px indigo solid;
+  margin-top: 15px;
 }
 
 #linkout {
-	border: 1px indigo solid;
-	padding: 3px;
-	padding-left: 10px;
- 	margin-top: 15px;
+  border: 1px indigo solid;
+  padding: 3px;
+  padding-left: 10px;
+  margin-top: 15px;
 }
 
 .disabled {
@@ -523,60 +522,60 @@ div.notice {
 }
 
 .intra_unit {
-	background-color: #AFD8F8;
-	text-decoration: none;
+  background-color: #AFD8F8;
+  text-decoration: none;
 }
 .inter_unit {
-	background-color: #FFCC33;
-	text-decoration: none;
+  background-color: #FFCC33;
+  text-decoration: none;
 }
 
 .no_intra_unit {
-	background-color: #FF99FF;
-	text-decoration: none;
+  background-color: #FF99FF;
+  text-decoration: none;
 }
 
 .first_author, .member_first_author {
-	color: #660066;
-	background-color: #CCAF9F;
-	text-decoration: none;
+  color: #660066;
+  background-color: #CCAF9F;
+  text-decoration: none;
 }
 .last_author, .member_last_author {
-	color: #002EB8;
-	background-color: khaki;
-	text-decoration: none;
+  color: #002EB8;
+  background-color: khaki;
+  text-decoration: none;
 }
 .author, .member_author {
-	color: #353;
-	background-color: peachpuff;
-	text-decoration: none;
+  color: #353;
+  background-color: peachpuff;
+  text-decoration: none;
 }
 tr.deleted td{
-	color: red;
-	background-color: khaki;
+  color: red;
+  background-color: khaki;
 }
 
 .underlined {
-	color: #353;
-	text-decoration: underline;
+  color: #353;
+  text-decoration: underline;
 }
 .member_first_author, .member_last_author, .member_author {
-	color: #330;
-	font-weight: bold;
-	font-size : larger;
+  color: #330;
+  font-weight: bold;
+  font-size : larger;
 }
 .author:hover, .first_author:hover, .last_author:hover, .member_first_author:hover, .member_last_author:hover, .member_author:hover {
-	background: #AAA;
+  background: #AAA;
 }
 
 .investigator_awards {
-	color: #226;
-	background-color: #EEE;
-	text-decoration: none;
+  color: #226;
+  background-color: #EEE;
+  text-decoration: none;
 }
 
 tr.odd td .investigator_awards{
-	background:   silver;
+  background:   silver;
 }
 
 
@@ -635,7 +634,7 @@ img
 
 form {
     margin: 1px ;
-	display: inline;
+  display: inline;
 }
 
 #note {
@@ -657,16 +656,16 @@ form {
 }
 
 .note {
-	clear:both;
-	text-decoration:none;
-	background: none;
-	padding: 0px 0px 8px 6px;
-	margin:  0px;
-	color : indigo;
-	line-height: 110%;
-	font-weight: normal;
-	font-size: 10px;
-	font-family : Verdana,  Arial,  sans-serif;
+  clear:both;
+  text-decoration:none;
+  background: none;
+  padding: 0px 0px 8px 6px;
+  margin:  0px;
+  color : indigo;
+  line-height: 110%;
+  font-weight: normal;
+  font-size: 10px;
+  font-family : Verdana,  Arial,  sans-serif;
 }
 
 /*** for DIGG style pagination  ***/
@@ -703,24 +702,24 @@ form {
 /* cloud tag styles */
 
 #tag_cloud {
-	border: 1px indigo solid;
-	padding: 10px;
-	margin-bottom: 15px;
-	padding-top: 15px;
-	padding-left: 15px;
- 	height:auto;
-	vertical-align: top;
+  border: 1px indigo solid;
+  padding: 10px;
+  margin-bottom: 15px;
+  padding-top: 15px;
+  padding-left: 15px;
+  height:auto;
+  vertical-align: top;
 }
 
 #tag_cloud_side {
-	padding: 2px;
-	padding-left: 4px;
-	margin: 0px;
-	margin-left: 10px;
-	margin-bottom: 2px;
- 	height:auto;
-	vertical-align: top;
-	background-color: lightyellow;
+  padding: 2px;
+  padding-left: 4px;
+  margin: 0px;
+  margin-left: 10px;
+  margin-bottom: 2px;
+  height:auto;
+  vertical-align: top;
+  background-color: lightyellow;
 }
 
 .similarity1 {font-size: 1.6em; color: #660000; line-height: 20px;}
@@ -897,7 +896,7 @@ opacity: 0.8;
 }
 
 .ddsmoothmenu ul li.currentyear, .ddsmoothmenu ul li ul li.currentyear {
-	background-color: #339;
+  background-color: #339;
 }
 
 .ddsmoothmenu-v ul{
@@ -960,7 +959,7 @@ font-weight: normal;
 
 
 .ddsmoothmenu-v ul li ul li.current, .ddsmoothmenu-v ul li ul li.current a {
-	background-color: #339;
+  background-color: #339;
 }
 
 /* Holly Hack for IE \*/
@@ -971,39 +970,39 @@ font-weight: normal;
 /* tables */
 table.tablesorter {
     clear: both ;
-	font-family:arial;
-	background-color: #CDCDCD;
-	margin:10px 0pt 15px;
-	font-size: 8pt;
-	width: 100%;
-	text-align: left;
+  font-family:arial;
+  background-color: #CDCDCD;
+  margin:10px 0pt 15px;
+  font-size: 8pt;
+  width: 100%;
+  text-align: left;
 }
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
-	background-color: #e6EEEE;
-	border: 1px solid #FFF;
-	font-size: 8pt;
-	padding: 4px;
+  background-color: #e6EEEE;
+  border: 1px solid #FFF;
+  font-size: 8pt;
+  padding: 4px;
 }
 table.tablesorter thead tr .header {
-	background-image: url(../images/bg.gif);
-	background-repeat: no-repeat;
-	background-position: center right;
-	cursor: pointer;
+  background-image: url(../images/bg.gif);
+  background-repeat: no-repeat;
+  background-position: center right;
+  cursor: pointer;
 }
 table.tablesorter tbody td {
-	color: #3D3D3D;
-	padding: 4px;
-	background-color: #FFF;
-	vertical-align: top;
+  color: #3D3D3D;
+  padding: 4px;
+  background-color: #FFF;
+  vertical-align: top;
 }
 table.tablesorter tbody tr.odd td {
-	background-color:#F0F0F6;
+  background-color:#F0F0F6;
 }
 table.tablesorter thead tr .headerSortUp {
-	background-image: url(../images/asc.gif);
+  background-image: url(../images/asc.gif);
 }
 table.tablesorter thead tr .headerSortDown {
-	background-image: url(../images/desc.gif);
+  background-image: url(../images/desc.gif);
 }
 table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
   background-color: #8dbdd8;
