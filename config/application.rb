@@ -1,20 +1,20 @@
+# -*- coding: utf-8 -*-
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
-  Bundler.require(*Rails.groups(:assets => %w(development test)))
+  Bundler.require(*Rails.groups(assets: %w(development test)))
   # If you want your assets lazily compiled in production, use this line
   # Bundler.require(:default, :assets, Rails.env)
 end
 
 module LatticeGrid
+  # Settings in config/environments/* take precedence over those specified here.
+  # Application configuration should go into files in config/initializers
+  # -- all .rb files in that directory are automatically loaded.
   class Application < Rails::Application
-    # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration should go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded.
-
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
 
@@ -35,7 +35,7 @@ module LatticeGrid
     # config.i18n.default_locale = :de
 
     # Configure the default encoding used in templates for Ruby 1.9.
-    config.encoding = "utf-8"
+    config.encoding = 'utf-8'
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
@@ -45,6 +45,8 @@ module LatticeGrid
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    config.action_controller.page_cache_directory = "#{::Rails.root}/public/cache"
 
     # necessary in order to run rake db:test:prepare
     # so that the *_vector columns are included in the test database
@@ -59,34 +61,34 @@ module LatticeGrid
       'Feinberg'
     else
       case "#{File.expand_path(Rails.root)}"
-        when /fsm/i
-          'Feinberg'
-        when /cancer/i
-          'RHLCCC'
-        when /rhlccc/i
-          'RHLCCC'
-        when /ccne/i
-          'CCNE'
-        when /lls/i
-          'LLS'
-        when /umich/i
-          'UMich'
-        when /uwisc/i
-          'UWCCC'
-        when /stanford/i
-          'Stanford'
-        when /ucsf/i
-          'UCSF'
-        when /cinj/i
-          'CINJ'
-        when /uchicago/i
-          'UChicago'
-        when /uic/i
-          'UIC'
-        when /aas/i
-          'AAS'
-        else
-          'defaults'
+      when /fsm/i
+        'Feinberg'
+      when /cancer/i
+        'RHLCCC'
+      when /rhlccc/i
+        'RHLCCC'
+      when /ccne/i
+        'CCNE'
+      when /lls/i
+        'LLS'
+      when /umich/i
+        'UMich'
+      when /uwisc/i
+        'UWCCC'
+      when /stanford/i
+        'Stanford'
+      when /ucsf/i
+        'UCSF'
+      when /cinj/i
+        'CINJ'
+      when /uchicago/i
+        'UChicago'
+      when /uic/i
+        'UIC'
+      when /aas/i
+        'AAS'
+      else
+        'defaults'
       end
     end
   end
@@ -99,7 +101,9 @@ require 'taggable_information'
 
 def lattice_grid_instance
   # LatticeGrid is defined above
-  return @@lattice_grid_instance if defined?(@@lattice_grid_instance) and ! @@lattice_grid_instance.blank?
+  if defined?(@@lattice_grid_instance) && !@@lattice_grid_instance.blank?
+    return @@lattice_grid_instance
+  end
   @@lattice_grid_instance = 'defaults'
 
   # determine which lattice grid instance using logic above

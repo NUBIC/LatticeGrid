@@ -16,7 +16,6 @@ describe 'Abstracts' do
       visit '/'
       expect(page).to have_content('LatticeGrid Publications and Abstracts Site')
       expect(page).to have_content("Publication Listing for #{Time.now.year}")
-      expect(page).to have_content("MeSH cloud from publications for the year #{Time.now.year}")
     end
 
     describe 'without any publications' do
@@ -40,14 +39,8 @@ describe 'Abstracts' do
       # Note that the investigator_abstract.is_valid must be true
       # and abstracts.is_valid must also be true
       # and abstracts requires authors and pages fields to be populated
-      let(:pi)  { FactoryGirl.create(:investigator,
-                                      last_name: 'last_name',
-                                      first_name: 'first_name') }
-      let(:pub) { FactoryGirl.create(:abstract,
-                                      year: Time.now.year.to_s,
-                                      is_valid: true,
-                                      authors: 'last_name, f.',
-                                      full_authors: 'last_name, first_name') }
+      let(:pi)  { FactoryGirl.create(:investigator, last_name: 'last', first_name: 'first') }
+      let(:pub) { FactoryGirl.create(:abstract, year: Time.now.year.to_s, is_valid: true, authors: 'last, f.', full_authors: 'last, first') }
       before do
         FactoryGirl.create(:investigator_abstract, investigator: pi, abstract: pub, is_valid: true)
       end
@@ -55,6 +48,7 @@ describe 'Abstracts' do
       it 'shows the user the publications for the current year' do
         visit '/'
         expect(page).to have_content("Publication Listing for #{Time.now.year} (1 publications)")
+        expect(page).to have_content("MeSH cloud from publications for the year #{Time.now.year}")
       end
     end
   end

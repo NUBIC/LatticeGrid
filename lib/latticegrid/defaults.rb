@@ -1,200 +1,199 @@
-  require 'publication_utilities'
-  require 'link_helper'
+require 'publication_utilities'
+require 'link_helper'
 
-  # class methods
-  def LatticeGridHelper.page_title
-    return 'LatticeGrid Publications'
+# class methods
+def LatticeGridHelper.page_title
+  'LatticeGrid Publications'
+end
+
+def LatticeGridHelper.header_title
+  'LatticeGrid Publications and Abstracts Site'
+end
+
+def LatticeGridHelper.direct_preview_title
+  'LatticeGrid Publications'
+end
+
+# does CCSG access require authentication?
+def LatticeGridHelper.require_authentication?
+  false
+end
+
+# support editing investigator profiles? Implies that authentication is supported!
+def LatticeGridHelper.allow_profile_edits?
+  false
+end
+
+# allowed membership types
+def LatticeGridHelper.allowed_membership_types
+  ['Member']
+end
+
+def LatticeGridHelper.include_org_type(org)
+  (org.type == 'Program')
+end
+
+def LatticeGridHelper.include_summary_by_member?
+  true
+end
+
+def LatticeGridHelper.include_research_summary_by_organization?
+  false
+end
+
+# for cancer centers to 'deselect' publications from inclusion in the CCSG report
+def LatticeGridHelper.show_cancer_related_checkbox?
+  false
+end
+
+# show research description
+def LatticeGridHelper.show_research_description?
+  true
+end
+
+def LatticeGridHelper.menu_head_abbreviation
+  'Lurie Cancer Center'
+end
+
+def LatticeGridHelper.logs_after
+  '10/1/2011'
+end
+
+def LatticeGridHelper.high_impact_issns
+  []
+end
+
+def LatticeGridHelper.GetDefaultSchool
+  'Feinberg'
+end
+
+def LatticeGridHelper.CachePages
+  true
+end
+
+def LatticeGridHelper.google_analytics
+  ''
+end
+
+def LatticeGridHelper.curl_host
+  my_env = Rails.env
+  my_env = 'home' if public_path =~ /Users/
+  case
+    when my_env == 'home' then 'localhost:3000'
+    when my_env == 'development' then 'rails-staging2.nubic.northwestern.edu'
+    when my_env == 'staging' then 'rails-staging2.nubic.northwestern.edu'
+    when my_env == 'production' then 'latticegrid.cancer.northwestern.edu'
+    else 'rails-dev.bioinformatics.northwestern.edu/cancer'
   end
+end
 
-  def LatticeGridHelper.header_title
-    return 'LatticeGrid Publications and Abstracts Site'
+def LatticeGridHelper.curl_protocol
+  my_env = Rails.env
+  my_env = 'home' if public_path =~ /Users/
+  case
+    when my_env == 'home' then 'http'
+    when my_env == 'development' then 'https'
+    when my_env == 'staging' then 'https'
+    when my_env == 'production' then 'https'
+    else 'http'
   end
+end
 
-  def LatticeGridHelper.direct_preview_title
-     'LatticeGrid Publications'
-  end
+def LatticeGridHelper.year_array
+  return @@year_array if defined?(@@year_array)
+  starting_year = Time.now.year
+  @@year_array = (starting_year-9 .. starting_year).to_a
+  @@year_array.reverse!
+  @@year_array
+end
 
-  # does CCSG access require authentication?
-  def LatticeGridHelper.require_authentication?
-    return false
-  end
+def LatticeGridHelper.email_subject
+  'Contact from the LatticeGrid Publications site'
+end
 
-  # support editing investigator profiles? Implies that authentication is supported!
-  def LatticeGridHelper.allow_profile_edits?
-    return false
-  end
+def LatticeGridHelper.home_url
+  'http://www.cancer.northwestern.edu'
+  'http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid'
+end
 
-  # allowed membership types
-  def LatticeGridHelper.allowed_membership_types
-    return ['Member']
-  end
+def LatticeGridHelper.organization_name
+  'institution'
+end
 
-  def LatticeGridHelper.include_org_type(org)
-    (org.type == 'Program')
-  end
+def latticegrid_high_impact_description
+  '<p>Researchers at our institution publish thousands of articles in peer-reviewed journals every year.  The following recommended reading showcases a selection of their recent work.</p>'
+end
 
-  def LatticeGridHelper.include_summary_by_member?
-    return true
-  end
+def LatticeGridHelper.cleanup_campus(thePI)
+ #clean up the campus data
+ thePI.campus = thePI.campus =~ /CH|Chicago/ ? 'Chicago' : thePI.campus
+ thePI.campus = thePI.campus =~ /EV|Evanston/ ? 'Evanston' : thePI.campus
+ thePI.campus = thePI.campus =~ /CMH|Children/ ? 'CMH' : thePI.campus
+ thePI
+end
 
-  def LatticeGridHelper.include_research_summary_by_organization?
-    return false
-  end
+def LatticeGridHelper.do_ajax?
+ (is_admin? && Rails.env != 'production') ? false : true
+ true
+end
 
-  # for cancer centers to 'deselect' publications from inclusion in the CCSG report
-  def LatticeGridHelper.show_cancer_related_checkbox?
-    return false
-  end
+def LatticeGridHelper.do_ldap?
+ (is_admin? && Rails.env != 'production') ? false : true
+ true
+end
 
-   # show research description
-   def LatticeGridHelper.show_research_description?
-     return true
+def LatticeGridHelper.ldap_perform_search?
+ true
+end
+
+def LatticeGridHelper.ldap_host
+ "directory.northwestern.edu"
+end
+
+def LatticeGridHelper.ldap_treebase
+ "ou=People, dc=northwestern,dc=edu"
+end
+
+def LatticeGridHelper.include_awards?
+ false
+end
+
+def LatticeGridHelper.include_studies?
+ false
+end
+
+def LatticeGridHelper.allowed_ips
+ # childrens: 199.125.
+ # nmff: 209.107.
+ # nmh: 165.20.
+ # enh: 204.26
+ # ric: 69.216
+ [':1','127.0.0.*','165.124.*','129.105.*','199.125.*','209.107.*','165.20.*','204.26.*','69.216.*']
+end
+
+def LatticeGridHelper.setInvestigatorClass(citation, investigator, isMember=false)
+  if isMember
+    if IsLastAuthor(citation,investigator) then "member_last_author"
+    elsif IsFirstAuthor(citation,investigator) then "member_first_author"
+    else
+     "member_author"
    end
-
-   def LatticeGridHelper.menu_head_abbreviation
-     "Lurie Cancer Center"
-   end
-
-   def LatticeGridHelper.logs_after
-     "10/1/2011"
-   end
-
-   def LatticeGridHelper.high_impact_issns
-     []
-   end
-
-   def LatticeGridHelper.GetDefaultSchool()
-     "Feinberg"
-   end
-
-   def LatticeGridHelper.CachePages()
-     true
-   end
-
-   def LatticeGridHelper.google_analytics
-     ""
-   end
-
-   def LatticeGridHelper.curl_host
-    my_env = Rails.env
-    my_env = 'home' if public_path =~ /Users/
-    case
-      when my_env == 'home' then 'localhost:3000'
-      when my_env == 'development' then 'rails-staging2.nubic.northwestern.edu'
-      when my_env == 'staging' then 'rails-staging2.nubic.northwestern.edu'
-      when my_env == 'production' then 'latticegrid.cancer.northwestern.edu'
-      else 'rails-dev.bioinformatics.northwestern.edu/cancer'
-    end
-   end
-
-   def LatticeGridHelper.curl_protocol
-    my_env = Rails.env
-    my_env = 'home' if public_path =~ /Users/
-    case
-      when my_env == 'home' then 'http'
-      when my_env == 'development' then 'https'
-      when my_env == 'staging' then 'https'
-      when my_env == 'production' then 'https'
-      else 'http'
-    end
-   end
-
-  def LatticeGridHelper.year_array
-    return @@year_array if defined?(@@year_array)
-    starting_year=Time.now.year
-    @@year_array = (starting_year-9 .. starting_year).to_a
-    @@year_array.reverse!
-    return @@year_array
-  end
-
-  def LatticeGridHelper.email_subject
-    "Contact from the LatticeGrid Publications site"
-  end
-
-  def LatticeGridHelper.home_url
-    "http://www.cancer.northwestern.edu"
-    "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid"
-  end
-
-  def LatticeGridHelper.organization_name
-    "institution"
-  end
-
-  def latticegrid_high_impact_description
-    '<p>Researchers at our institution publish thousands of articles in peer-reviewed journals every year.  The following recommended reading showcases a selection of their recent work.</p>'
-  end
-
-   def LatticeGridHelper.cleanup_campus(thePI)
-     #clean up the campus data
-     thePI.campus = (thePI.campus =~ /CH|Chicago/) ? 'Chicago' : thePI.campus
-     thePI.campus = (thePI.campus =~ /EV|Evanston/) ? 'Evanston' : thePI.campus
-     thePI.campus = (thePI.campus =~ /CMH|Children/) ? 'CMH' : thePI.campus
-     thePI
-   end
-
-   def LatticeGridHelper.do_ajax?
-     (is_admin? and Rails.env != 'production') ? false : true
-     true
-   end
-
-   def LatticeGridHelper.do_ldap?
-     (is_admin? and Rails.env != 'production') ? false : true
-     true
-   end
-
-
-   def LatticeGridHelper.ldap_perform_search?
-     true
-   end
-
-   def LatticeGridHelper.ldap_host
-     "directory.northwestern.edu"
-   end
-
-   def LatticeGridHelper.ldap_treebase
-     "ou=People, dc=northwestern,dc=edu"
-   end
-
-   def LatticeGridHelper.include_awards?
-     false
-   end
-
-   def LatticeGridHelper.include_studies?
-     false
-   end
-
-   def LatticeGridHelper.allowed_ips
-     # childrens: 199.125.
-     # nmff: 209.107.
-     # nmh: 165.20.
-     # enh: 204.26
-     # ric: 69.216
-     [':1','127.0.0.*','165.124.*','129.105.*','199.125.*','209.107.*','165.20.*','204.26.*','69.216.*']
-   end
-
- def LatticeGridHelper.setInvestigatorClass(citation, investigator, isMember=false)
-   if isMember
-     if IsLastAuthor(citation,investigator) then "member_last_author"
-     elsif IsFirstAuthor(citation,investigator) then "member_first_author"
-     else
-       "member_author"
-     end
+ else
+   if IsLastAuthor(citation,investigator) then "last_author"
+   elsif IsFirstAuthor(citation,investigator) then "first_author"
    else
-     if IsLastAuthor(citation,investigator) then "last_author"
-     elsif IsFirstAuthor(citation,investigator) then "first_author"
-     else
-       "author"
-     end
+     "author"
    end
  end
+end
 
- def LatticeGridHelper.member_types_map
-   {
-     'Member' => Member,
-     'Associate' => AssociateMember,
-     'Full' => Member
-   }
-  end
+def LatticeGridHelper.member_types_map
+ {
+   'Member' => Member,
+   'Associate' => AssociateMember,
+   'Full' => Member
+ }
+end
 
 # LatticeGrid prefs:
 # turn on lots of output
@@ -372,7 +371,6 @@ end
   end
 
   def latticegrid_menu_script
-    Rails.logger.info("~~~ latticegrid_menu_script default #{@head_node.inspect}")
     " <div id='side_nav_menu' class='ddsmoothmenu-v'>
         <ul>
           <li><a href='#'>Publications by year</a>
@@ -401,50 +399,47 @@ end
     </li>"
   end
 
-   def build_menu(nodes, org_type=nil, &block)
-    Rails.logger.info("~~~ build_menu default #{nodes.inspect}")
-    out="<ul>"
-    for unit in nodes
-      if org_type.nil? or unit.kind_of?(org_type)
-        out+="<li>"
-        out+=link_to( truncate(unit.name.gsub(/\'/, ""),:length=>80), yield(unit.id))
-        out+=build_menu(unit.children, nil, &block) if ! unit.leaf?
-        out+="</li>"
+  def build_menu(nodes, org_type = nil, &block)
+    out = '<ul>'
+    nodes.each do |unit|
+      if org_type.nil? || unit.kind_of?(org_type)
+        out += '<li>'
+        out += link_to(truncate(unit.name.gsub(/\'/, ''), length: 80), yield(unit.id))
+        out += build_menu(unit.children, nil, &block) unless unit.leaf?
+        out += '</li>'
       end
     end
-    out+="</ul>"
+    out += '</ul>'
     out
   end
 
   def build_year_menu
-    out="<ul>"
-    for the_year in LatticeGridHelper.year_array()
-      if  controller.action_name.match('year_list') != nil && the_year.to_s == @year
-        out+="<li class='current'>"
+    out = '<ul>'
+    LatticeGridHelper.year_array.each do |the_year|
+      if !controller.action_name.match('year_list').nil? && the_year.to_s == @year
+        out += "<li class='current'>"
       else
-        out+="<li>"
+        out += '<li>'
       end
-      out+=link_to( the_year, abstracts_by_year_url(:id => the_year, :page=> 1))
-      out+="</li>"
+      out += link_to(the_year, abstracts_by_year_url(id: the_year, page: 1))
+      out += '</li>'
     end
-    out+="</ul>"
+    out += '</ul>'
     out
   end
 
   def is_admin?
     begin
       return true unless LatticeGridHelper.require_authentication?
-      if [ 'wakibbe', 'admin', 'tvo743', 'jkk366', 'jhl197', 'ddc830', 'mar352', 'vvs359', 'pfr957' ].include?(current_user.username.to_s)  then
-        return true
-      end
+      return true if %w(wakibbe admin tvo743 jkk366 jhl197 ddc830 mar352 vvs359 pfr957).include?(current_user.username.to_s)
     rescue
       begin
-        logger.error "is_admin? threw an error on include?(current_user.username.to_s) "
+        logger.error "is_admin? threw an error on include?(current_user.username.to_s) [#{current_user.username}]"
       rescue
-        puts "is_admin? threw an error on include?(current_user.username.to_s) "
+        puts "is_admin? threw an error on include?(current_user.username.to_s) [#{current_user.username}]"
       end
     end
-    return false
+    false
   end
 
 

@@ -4,31 +4,25 @@ require 'config'
 require 'graphviz_config'
 #require 'pathname'
 
-# rake cache:clear 
+# rake cache:clear
 
 # curl -s http://latticegrid.cancer.northwestern.edu/abstracts/list/2010/1 -o index.html
 
 namespace :cache do
   task :clear => :environment do
-    block_timing("cache:clear") {
-    if File.directory?(public_path) then
-        directories= %w{graphs abstracts investigators programs orgs member_nodes org_nodes copublications graphviz mesh cytoscape member_cytoscape_data org_cytoscape_data all_org_cytoscape_data org_org_cytoscape_data investigators_search profiles investigators_search_all awards}
-      directories.each do |name|
-        clear_directory(name)
-      end
-      files = %w{programs.html admin.html orgs.html ccsg.html mesh.html mesh.json mesh.xml js.html xml.html json.html investigators_search.html test.html investigators_search_all.html high_impact.html cytoscape_d3_investigator_edge_data.js}
-      files.each do |name|
-        name="#{name}"
-        clear_file(name)
+    block_timing("cache:clear") do
+      if File.directory?(public_path) then
+        directories = %w{graphs abstracts investigators programs orgs member_nodes org_nodes copublications graphviz mesh cytoscape member_cytoscape_data org_cytoscape_data all_org_cytoscape_data org_org_cytoscape_data investigators_search profiles investigators_search_all awards}
+        directories.each { |name| clear_directory(name) }
+        files = %w{programs.html admin.html orgs.html ccsg.html mesh.html mesh.json mesh.xml js.html xml.html json.html investigators_search.html test.html investigators_search_all.html high_impact.html cytoscape_d3_investigator_edge_data.js}
+        files.each { |name| clear_file(name.to_s) }
       end
     end
-    }
   end
 
   task :setup_url_for => :environment do
-    include ActionController::UrlWriter
+    include ActionDispatch::Routing::UrlFor
     # just hard coding for now
-
     default_url_options[:host] = LatticeGridHelper.curl_host
     default_url_options[:protocol] = LatticeGridHelper.curl_protocol
   end
@@ -50,7 +44,7 @@ namespace :cache do
       puts "rats. The command '#{my_command}' failed to execute"
     end
   end
-  
+
   def run_json_curl(the_url)
     my_command = "curl -H 'Accept: application/json' -s -k #{the_url} -o #{root_path}/json.html"
     puts my_command
@@ -78,13 +72,14 @@ namespace :cache do
     total_entries = abstracts.total_entries
     total_pages   = abstracts.total_pages
     (1..total_pages).to_a.each do |abstract_page|
-      run_curl abstracts_by_year_url(:id => year, :page => abstract_page) 
+      run_curl abstracts_by_year_url(:id => year, :page => abstract_page)
       #run_curl url_for :controller => 'abstracts', :action => 'year_list', :id => year, :page => abstract_page
     end
   end
 
   def abstracts
-    year_array = LatticeGridHelper.year_array()
+    include Rails.application.routes.url_helpers
+    year_array = LatticeGridHelper.year_array
     run_curl tag_cloud_abstracts_url
     year_array.each do |year|
       do_abstracts_for_year(year.to_s)
@@ -138,17 +133,17 @@ namespace :cache do
 
   def investigator_graphs
     @AllInvestigators.each do |inv|
-      run_curl show_member_graph_url( inv.username)  
+      run_curl show_member_graph_url( inv.username)
       #url_for :controller => 'graphs', :action => 'show_member', :id => inv.username
       #run_curl url_for :controller => 'graphs', :action => 'member_nodes', :id => inv.username
       run_curl member_nodes_url(inv.username)
-    
+
     end
   end
 
   def investigator_awards
     @AllInvestigators.each do |inv|
- #     run_curl awards_cytoscape_url( inv.username)  
+ #     run_curl awards_cytoscape_url( inv.username)
       run_curl investigator_award_url(inv.username)
      end
   end
@@ -156,13 +151,13 @@ namespace :cache do
   def awards
     run_curl listing_awards_url
     @AllAwards.each do |award|
-      run_curl award_url( award.id)  
+      run_curl award_url( award.id)
      end
   end
 
   def investigator_studies
     @AllInvestigators.each do |inv|
-#      run_curl studies_cytoscape_url( inv.username)  
+#      run_curl studies_cytoscape_url( inv.username)
       run_curl investigator_study_url(inv.username)
      end
   end
@@ -171,7 +166,7 @@ namespace :cache do
     run_curl listing_studies_url
     @AllStudies=Study.all
     @AllStudies.each do |study|
-      run_curl study_url( study.id)  
+      run_curl study_url( study.id)
      end
   end
 
@@ -198,14 +193,14 @@ namespace :cache do
       params[:id] =  inv.username
       params[:analysis] = "member"
       params[:stringency] = "1"
-      run_curl build_graphviz_restfulpath(params, params[:format]) 
+      run_curl build_graphviz_restfulpath(params, params[:format])
       params[:stringency] = "2"
-      run_curl build_graphviz_restfulpath(params, params[:format]) 
+      run_curl build_graphviz_restfulpath(params, params[:format])
       params[:stringency] = "3"
-      run_curl build_graphviz_restfulpath(params, params[:format]) 
+      run_curl build_graphviz_restfulpath(params, params[:format])
       params[:analysis] = "member_mesh"
       params[:stringency] = "2000"
-      run_curl build_graphviz_restfulpath(params, params[:format]) 
+      run_curl build_graphviz_restfulpath(params, params[:format])
     end
   end
 
@@ -226,17 +221,17 @@ namespace :cache do
       params[:id] =  org.id
       params[:analysis] = "org"
       params[:stringency] = "1"
-      run_curl build_graphviz_restfulpath(params, params[:format]) 
+      run_curl build_graphviz_restfulpath(params, params[:format])
       params[:stringency] = "2"
-      run_curl build_graphviz_restfulpath(params, params[:format]) 
+      run_curl build_graphviz_restfulpath(params, params[:format])
       params[:stringency] = "3"
-      run_curl build_graphviz_restfulpath(params, params[:format]) 
+      run_curl build_graphviz_restfulpath(params, params[:format])
       params[:analysis] = "org_org"
       params[:stringency] = "1"
-      run_curl build_graphviz_restfulpath(params, params[:format]) 
+      run_curl build_graphviz_restfulpath(params, params[:format])
       params[:analysis] = "org_mesh"
       params[:stringency] = "2000"
-      run_curl build_graphviz_restfulpath(params, params[:format]) 
+      run_curl build_graphviz_restfulpath(params, params[:format])
     end
   end
 
@@ -247,7 +242,7 @@ namespace :cache do
     else
       taskname = ENV["taskname"]
       block_timing("cache:populate taskname=#{taskname}") {
-      case 
+      case
         when taskname == 'abstracts' then abstracts
         when taskname == 'investigators' then investigators
         when taskname == 'awards' then awards
@@ -262,7 +257,7 @@ namespace :cache do
         when taskname == 'studies' then studies
         when taskname == 'investigator_cytoscape' then investigator_cytoscape
         else puts "sorry - unknown caching task #{taskname}."
-      end    
+      end
       }
     end
   end

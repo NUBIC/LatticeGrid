@@ -1,18 +1,22 @@
+# -*- coding: utf-8 -*-
+##
+# Controller to show publications/abstracts
 class AbstractsController < ApplicationController
 
-  caches_page( :show, :high_impact, :high_impact_by_month, :year_list, :full_year_list, :current, :tag_cloud, :endnote, :tagged_abstracts, :full_tagged_abstracts, :tag_cloud_by_year)  if LatticeGridHelper.CachePages()
+  caches_page(:show, :high_impact, :high_impact_by_month, :year_list, :full_year_list, :current) if LatticeGridHelper.CachePages
+  caches_page(:tag_cloud, :endnote, :tagged_abstracts, :full_tagged_abstracts, :tag_cloud_by_year) if LatticeGridHelper.CachePages
 
   include AbstractsHelper
   include ApplicationHelper
   include ProfilesHelper
-  include MeshHelper  #for the do_mesh_search method
+  include MeshHelper  # for the do_mesh_search method
 
   require 'publication_utilities'
-  require 'pubmed_utilities'  #loads including 'pubmed_config'  'bio' (bioruby) and
+  require 'pubmed_utilities' # loads including 'pubmed_config' 'bio' (bioruby) and
 
   def index
     year = handle_year
-    redirect_to abstracts_by_year_url(:id => year, :page => '1')
+    redirect_to abstracts_by_year_url(id: year, page: '1')
   end
 
   def current
@@ -20,9 +24,10 @@ class AbstractsController < ApplicationController
   end
 
   def journal_list
-    params[:page]||=1
+    params[:page] ||= 1
     pre_list(1)
-    if @redirect then
+    if @redirect
+      # FIXME: redirect_to params does not work in Rails 3
       redirect_to params
     else
       journal = Journal.find(params[:id])
@@ -31,7 +36,7 @@ class AbstractsController < ApplicationController
       @include_mesh = false
       @include_graph_link = false
       @show_paginator = false
-      @include_investigators=true
+      @include_investigators = true
       @include_pubmed_id = true
     end
   end
@@ -39,20 +44,20 @@ class AbstractsController < ApplicationController
   def year_list
     year = handle_year(params[:id])
     pre_list(year)
-    if @redirect then
+    if @redirect
       # FIXME: redirect_to params does not work in Rails 3
       redirect_to params
     else
       @abstracts = Abstract.display_data(year, params[:page])
       list_heading(year)
-      @do_pagination = "1"
+      @do_pagination = '1'
     end
   end
 
   def full_year_list
     year = handle_year(params[:id])
-    if params[:id].nil? then
-      redirect_to abstracts_by_year_url(:id => year, :page => '1')
+    if params[:id].nil?
+      redirect_to abstracts_by_year_url(id: year, page: '1')
     elsif !params[:page].nil? then
       params.delete(:page)
       # FIXME: redirect_to params does not work in Rails 3
@@ -61,49 +66,47 @@ class AbstractsController < ApplicationController
       @redirect = false
       @abstracts = Abstract.display_all_data(year)
       list_heading(year)
-      @do_pagination = "0"
-      render :action => 'year_list'
+      @do_pagination = '0'
+      render action: 'year_list'
     end
   end
 
   def tag_cloud_by_year
     year = handle_year(params[:id])
-    @tags = Abstract.tag_counts(:limit => 150, :order => "count desc",
-                                :conditions => [ "abstracts.year in (:year)", { :year=>year } ])
+    @tags = Abstract.tag_counts(limit: 150, order: 'count desc',
+                                conditions: ['abstracts.year in (:year)', { year: year }])
     respond_to do |format|
-      format.html { render :template => "shared/tag_cloud", :locals => { :tags => @tags} }
-      format.js  { render  :partial => "shared/tag_cloud", :locals => { :tags => @tags } }
+      format.html { render template: 'shared/tag_cloud', locals: { tags: @tags } }
+      format.js { render  partial: 'shared/tag_cloud', locals: { tags: @tags } }
     end
   end
 
   def tag_cloud
     tag_limit = 300
     @heading = "MeSH Top #{tag_limit} Terms Tag Cloud Incidence for All Abstracts"
-    @tags = Abstract.tag_counts(:limit => tag_limit, :order => "count desc")
+    @tags = Abstract.tag_counts(limit: tag_limit, order: 'count desc')
   end
 
-  def tagged_abstracts #abstracts tagged with this tag
-    page = nil
-    if params[:page].nil? then
-      page = '1'
-    end
-    if params[:id].nil? then
-      year = handle_year()
-      redirect_to abstracts_by_year_url(:id => year, :page => '1')
-    elsif page then
+  # abstracts tagged with this tag
+  def tagged_abstracts
+    page = params[:page].nil? ? '1' : nil
+    if params[:id].nil?
+      year = handle_year
+      redirect_to abstracts_by_year_url(id: year, page: '1')
+    elsif page
       redirect_to "/abstracts/#{params[:id]}/tagged_abstracts/?page=#{page}"
     else
-      @do_pagination = "1"
+      @do_pagination = '1'
       params[:id] = URI.unescape(params[:id])
       mesh_terms = MeshHelper.do_mesh_search(params[:id])
-      mesh_names = mesh_terms.collect(&:name)
+      mesh_names = mesh_terms.map(&:name)
 
       @abstracts = Abstract._paginate_tagged_with(mesh_names,
-                                                  :order => 'year DESC, authors ASC',
-                                                  :page => params[:page],
-                                                  :per_page => 20)
-     tag_heading(params[:id],@abstracts)
-     render :action => 'tag'
+                                                  order: 'year DESC, authors ASC',
+                                                  page: params[:page],
+                                                  per_page: 20)
+     tag_heading(params[:id], @abstracts)
+     render action: 'tag'
     end
   end
 
