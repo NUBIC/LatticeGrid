@@ -1,0 +1,18 @@
+.welcome_row {
+  float: left;
+  width: 100%;
+}
+
+.welcome_column {
+  float: left;
+  width: 30%;
+  margin: 1em 0.25em;
+  padding: 0.25em;
+  font-size: 2em;
+}
+
+.welcome_search {
+  font-size: 2em;
+  margin: 1em 0.25em;
+  padding: 0.25em;
+}

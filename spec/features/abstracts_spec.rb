@@ -4,23 +4,21 @@ require 'spec_helper'
 describe 'Abstracts' do
 
   ##
-  # The index page at public/index.html through javascript
-  # replaces the window.location in effect redirecting the
-  # user to /abstracts/current which in turn redirects the
+  # The /abstracts/current path redirects the
   # user to the abstracts_by_year_url - /abstracts/:year/year_list/:page
   # after handling the determination of the year.
   # @see AbstractsController#handle_year
   describe 'visiting the home page', js: true do
 
     it 'gives context about the publications' do
-      visit '/'
+      visit '/abstracts/current'
       expect(page).to have_content('LatticeGrid Publications and Abstracts Site')
       expect(page).to have_content("Publication Listing for #{Time.now.year}")
     end
 
     describe 'without any publications' do
       it 'shows the user that there are no publications' do
-        visit '/'
+        visit '/abstracts/current'
         expect(page).to have_content("Publication Listing for #{Time.now.year} (0 publications)")
         expect(page).to have_content('Sorry, no publications are available!')
       end
@@ -32,7 +30,6 @@ describe 'Abstracts' do
     # @see AbstractsController#year_list
     # @see Abstract.display_data
     describe 'with publication(s)' do
-
       ##
       # Create Abstract record(s) that will return data from
       # the query in Abstract.display_data.
@@ -46,7 +43,7 @@ describe 'Abstracts' do
       end
 
       it 'shows the user the publications for the current year' do
-        visit '/'
+        visit '/abstracts/current'
         expect(page).to have_content("Publication Listing for #{Time.now.year} (1 publications)")
         expect(page).to have_content("MeSH cloud from publications for the year #{Time.now.year}")
       end

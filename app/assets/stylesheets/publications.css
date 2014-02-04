@@ -427,16 +427,15 @@ div.notice {
   padding-left: 50px;
   height: 8px;
   margin: 0px;
-    color: #fff;
-    font-size: 11px;
-    background-color: #709fc7;
+  color: #fff;
+  font-size: 11px;
+  background-color: #709fc7;
 }
 
 #content {
-  padding: 5px;
-  padding-left: 15px;
-  padding-right: 5px;
-  overflow:hidden;
+  padding: 5px 5px 5px 15px;
+  overflow: hidden;
+  min-height: 10em;
 }
 
 #splash_screen p {
@@ -499,10 +498,12 @@ div.notice {
 }
 
 #last_load_date {
-  float: right;
-  margin-top: -15px;
+  float: left;
   margin-right: 10px;
-  padding: 3px;
+  margin-top: -15px;
+  padding: 1em;
+  text-align: right;
+  width: 1130px;
 }
 
 #abstract, #import, #mesh {

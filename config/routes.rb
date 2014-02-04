@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 LatticeGrid::Application.routes.draw do
 
-  root to: 'abstracts#current'
+  root to: 'welcome#index'
   match 'investigators/:id/collaborators.js' => 'investigators#collaborators', as: :collaborators_investigator, via: :get
   match 'investigators/:id/barchart.js' => 'investigators#barchart', as: :barchart_investigator, via: :get
   match 'cytoscape/:id/d3_investigator_wordle_data.js' => 'cytoscape#d3_investigator_wordle_data', as: :d3_investigator_wordle_data, via: :get
