@@ -135,6 +135,10 @@ def LatticeGridHelper.do_ldap?
   false
 end
 
+def edit_profile_link
+  ""
+end
+
 def latticegrid_menu_script
   
 "<div id='side_nav_menu' class='ddsmoothmenu-v'>

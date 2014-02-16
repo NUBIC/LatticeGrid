@@ -351,7 +351,11 @@ has_many :investigator_appointments,
   def sort_name
      [[last_name, first_name].join(', '), middle_name].join(' ')
   end
-
+  
+  def organization_title
+    (home_department.blank?) ? home_department_name : home_department.name 
+  end
+  
   def self.all_abstracts_for_investigators(pis)
     abstract_ids = pis.collect{|x| x.abstracts.only_valid}.flatten.sort{|x,y| x.id <=> y.id}.uniq
   end

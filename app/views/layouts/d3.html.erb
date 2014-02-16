@@ -1,8 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-
+<!DOCTYPE html>
   <head>
+	<meta charset="utf-8">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %> Diagram</title>
 	<% @javascripts ||= [ 'prototype', 'ddsmoothmenu', 'jquery.min', 'jquery.sparkline.min', 'd3/d3.js', 'd3/d3.layout.js', 'd3/package.js', 'd3/d3.layout.cloud.js', 'd3/jsonp.js', 'd3/highlight.min.js' ] %>
@@ -58,18 +56,6 @@
 		</div> <!-- end of content -->
 	</div> <!-- end of maincontent -->
 </div> <!-- end of main -->
-<script type="text/javascript" language="JavaScript">
-var html = d3.select("svg")
-        .attr("title", "test2")
-        .attr("version", 1.1)
-        .attr("xmlns", "http://www.w3.org/2000/svg")
-        .node().parentNode.innerHTML;
-d3.select("body").append("div")
-        .attr("id", "download")
-        .html("Right-click on this preview and choose Save as<br />Left-Click to dismiss<br />")
-        .append("img")
-        .attr("src", "data:image/svg+xml;base64,"+ btoa(html));
-</script>
 	
 </body>
 </html>

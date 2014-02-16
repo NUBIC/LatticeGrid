@@ -1,0 +1,142 @@
+After downloading CentOS 6.0 minimal
+
+yum update
+
+yum install -y git
+yum install -y ruby
+yum install -y gcc g++ make automake autoconf curl-devel openssl-devel zlib-devel httpd-devel
+yum install -y gcc-c++ patch readline readline-devel zlib zlib-devel libyaml-devel libffi-devel bzip2 libtool bison glibc
+yum install -y ruby-rdoc ruby-devel
+yum install -y tcl-devel libpng-devel libjpeg-devel ghostscript-devel bzip2-devel freetype-devel libtiff-devel
+yum install -y curl-devel httpd-devel
+yum install -y ImageMagick ImageMagick-devel
+yum install -y graphviz.i686 graphviz-devel.i686 
+yum install -y httpd
+yum install -y policycoreutils-python
+
+#set Apache to run on startup
+chkconfig httpd on 
+
+# install latest postgres
+# add 'exclude=postgresql*' to the base and update sections of /etc/yum.repos.d/CentOS-Base.repo 
+
+vi /etc/yum.repos.d/CentOS-Base.repo
+
+# get the latest postgres rpm
+
+curl -O http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-centos93-9.3-1.noarch.rpm
+rpm -ivh pgdg*
+yum list postgres*
+yum install postgresql93-server postgresql-devel postgresql-libs
+
+service postgresql-9.3 initdb
+chkconfig postgresql-9.3 on
+service postgresql-9.3 start
+
+# should be running happily
+# add this line to pg_hba.conf so you can connect to it on the local machine without a password, if you so desire
+local  all    latticegrid   trust
+
+# will need to restart postgresql:
+service postgresql-9.3 restart
+
+
+# use 'su - postgres' to login under postgres
+# run psql and then create the 'latticegrid' postgres user
+
+CREATE USER latticegrid with createdb;
+ALTER USER latticegrid with superuser;
+ALTER USER latticegrid with login;
+
+# need to create some configuration files for the database and ldap
+
+cd /etc
+mkdir nubic
+cd nubic
+vi aker-local.yml  # put the ldap config entry here
+
+mkdir db
+cd db
+vi local_postgresql.yml # put the latticegrid postgres connect strings here
+
+
+# may need to do some fussing with network config. Possibly need to get the MAC address to agree with the host
+
+vi /etc/sysconfig/network-scripts/ifcfg-eth0 
+chkconfig network on
+service network restart
+
+# now move on to rails!
+yum install rubygems
+gem update
+gem update --system
+
+# need to update to Rails 4 !!
+
+gem install rails -v 2.3.18
+gem install bundler
+
+
+
+#install PrinceXML
+cd ~
+curl -O http://www.princexml.com/download/prince-9.0-4.centos60.x86_64.rpm
+rpm -ivh prince-9.0-4.centos60.x86_64.rpm 
+
+# may need these dependencies resolved
+
+curl -O ftp://ftp.pbone.net/mirror/ftp5.gwdg.de/pub/opensuse/repositories/home:/IBBoard:/server/CentOS_CentOS-6/x86_64/giflib-4.1.6-5.1.x86_64.rpm
+rpm -ivh giflib
+
+
+# now get latticegrid from github
+
+git clone https://github.com/NUBIC/LatticeGrid.git
+
+mv LatticeGrid latticegrid
+cd latticegrid
+
+gem install pg -- --with-pg-config="/usr/pgsql-9.3/bin/pg_config" 
+
+bundle update rake
+bundle install
+
+# now install passenger
+
+gem install passenger 
+
+
+#The next step is to configure Apache to expect incoming requests by editing its configuration file:
+
+vi /etc/httpd/conf/httpd.conf 
+
+# In the editor, near the bottom, locate and uncomment the line containing: NameVirtualHost *:80
+
+service httpd restart
+
+# compile passenger for apache2
+passenger-install-apache2-module  
+
+#Note that this script will not install the module really. It will compile module’s binary and place it under
+#gem’s path. The path will be printed on screen and it needs to be copy-pasted into Apache’s config file
+#(/etc/httpd/conf/httpd.conf) manually.
+
+#The output will be similar to this one:
+
+LoadModule passenger_module /usr/local/rvm/gems/ruby-1.9.3-p484/gems/passenger-4.0.37/buildout/apache2/mod_passenger.so
+ <IfModule mod_passenger.c>
+   PassengerRoot /usr/local/rvm/gems/ruby-1.9.3-p484/gems/passenger-4.0.37
+   PassengerDefaultRuby /usr/local/rvm/gems/ruby-1.9.3-p484/wrappers/ruby
+ </IfModule>
+
+#you will need to grant SELinux permissions:
+
+chcon -R -h -t httpd_sys_content_t /usr/local/rvm/gems/ruby-1.9.3-p484/gems/passenger-4.0.37
+
+chcon -R -h -t httpd_sys_content_t /var/www/html/latticegrid
+
+chcon -R -h -t httpd_sys_content_t /tmp
+
+chcon -R -h -t httpd_sys_content_t /usr/local/rvm/gems/ruby-1.9.3-p484/gems/passenger-4.0.37/buildout/agents/PassengerWatchdog
+
+# some more issues reported here http://stackoverflow.com/questions/19400980/selinux-permission-denied-to-phusion-passenger-for-redmine

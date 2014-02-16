@@ -1,0 +1,246 @@
+<style>
+div.nodeinfo {   
+position: absolute;           
+text-align: left;           
+width: 400px;                  
+height: auto;                 
+padding: 2px;             
+font: 10pt Arial Narrow,sans-serif;        
+background: lightsteelblue;   
+border: 1px;      
+border-radius: 8px;           
+}
+</style>
+
+<div id="investigator_title_block">
+<%= investigator_bio_heading(@investigator, nil) %>
+</div>
+<h2><%= @title %></h2>
+<div id="dialog" style="font-size: 12px; line-height:15px; font-size: 10pt; margin-right: 10px; margin-left: 5px;font-family: Arial,Helvetica,Geneva,Sans-serif;">
+Degree of separation: 
+<select id="selectlevel" >
+	<option value="1">1</option>
+	<option value="2" selected>2</option>
+	<option value="3">3</option>
+</select>
+&nbsp;  &nbsp;  &nbsp;  &nbsp;
+Graph type: 
+<select id="graphtype" >
+	<option value="tree">tree</option>
+	<option value="force">force</option>
+</select>
+&nbsp;  &nbsp;  &nbsp;  &nbsp;
+<a id="download" href="#">Download SVG</a>
+</div>
+<div id="chart"></div>
+
+<script>
+
+var width = 960,
+    height = 800,
+    root;
+
+var radius = 2.5, radiusLarge = 12.0;
+
+var tree = d3.layout.tree()
+    .size([360, height / 2 -120])
+    .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
+    
+var diagonal = d3.svg.diagonal.radial()
+    .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
+
+var force = d3.layout.force()
+    .size([width, height])
+    .linkDistance(40)
+    .charge(-500);
+
+
+var color =  d3.scale.category20();
+
+var svg = d3.select("#chart").append("svg")
+    .attr("xmlns", "http://www.w3.org/2000/svg")
+    .attr("width", width)
+    .attr("height", height);
+
+    
+    // add styles here so it is visible in the SVG file. 
+var styles = svg.append("defs")
+      .append("style")
+      	.attr("type", "text/css")
+      	.text(".node circle {fill: #fff;  stroke: steelblue; stroke-width: 1.5px; } .node, .nodeText { font: 14px Arial Narrow, Arial,sans-serif;} .link {fill: none; stroke: #D0F5A9; stroke-width: 1.5px; }");
+
+var svglinks = svg.append("g");
+
+var div = d3.select("body").append("div")   
+ .attr("class", "nodeinfo")               
+ .style("opacity", 0);
+
+var node_size = function(d) { return Math.max(Math.sqrt(d.size) / 2 || 4.5, 2); };
+
+// listeners to look for change in degrees of separation or graph type
+jQuery("#selectlevel").on('change', function() {
+  DoUpdate(jQuery("#selectlevel").val(), jQuery("#graphtype").val());
+});
+
+jQuery("#graphtype").on('change', function() {
+  DoUpdate(jQuery("#selectlevel").val(), jQuery("#graphtype").val());
+});
+
+
+function DoUpdate(depth, graphtype){
+	<%  json_path_arr=image_path(@json_callback).split('?').first.split('/') -%>
+	var json_append = '<%= json_path_arr.pop -%>';	
+	var json_root = '<%= json_path_arr.join('/') -%>';
+	var json_url = json_root + '/' + depth + '/';
+	json_append = json_append.replace("graph", graphtype);
+	json_url +=json_append;
+	d3.json(json_url, function(error, root) {
+	  update(root, graphtype);  
+	});
+}
+
+// Toggle children on click.
+function click(d) {
+  var url = "<%= image_path('../cytoscape/').split('?').first -%>"+d.username+"/investigator_tree";
+  document.location = url;
+  //document.load();
+}
+
+function hideToolTip(){
+  div.style("opacity", 0);
+    
+  div.style("left", -1000 + "px")     
+    .style("top", -1000 + "px");
+}
+
+function showTooltip(d){
+  div.style("opacity", .9);
+    
+  var str = "<b>" + d.name + "</b><br/>";
+  str += d.organization + "<br/>";
+  str += "Number of RAS publications: " + d.publications + "<br/>";
+  str += "Summary: " + d.summary + "<br/>";
+  div.html(str)
+    .style("left", (d3.event.pageX + 15) + "px")     
+    .style("top", 50 + "px");
+}
+
+function update(root, graphtype){
+
+  svg.selectAll(".link").remove();
+  svg.selectAll(".node").remove();
+  svglinks.selectAll(".link").remove();
+  svg.attr("transform", null);
+
+  if(graphtype.search(/tree/ig) >= 0) {
+	  svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+	  var nodes = tree.nodes(root),
+		  links = tree.links(nodes);
+
+	  svglinks.selectAll(".link").remove();
+
+	  var link = svglinks.selectAll(".link")
+      .data(links, function(d) { return d.target.id; });
+      
+      var link_enter = link.enter().append("path")
+       			 .attr("class", "link")
+   			     .attr("d", diagonal);
+
+//	  svg.selectAll("path")
+//	       .data(tree.links(nodes))
+//         .enter().append("path")
+//            .attr("d", d3.svg.diagonal());
+    
+//	  var link_enter = link.enter().append("path")
+//		  .attr("class", "link")
+//		  .attr("d", diagonal);
+  
+	  var node = svg.selectAll(".node")
+		.data(nodes, function(d) { return d.id; });
+	
+  	  node.selectAll("text").remove();
+    
+	  var node_enter = node.enter().append("g")
+		  .attr("class", "node");
+
+		  
+	 node_enter.append("text")
+      .attr("class","nodeText")
+      .attr("dy", ".31em")
+      .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
+      .attr("transform", function(d) { return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)"; })
+      .text(function(d) { return d.name });
+
+    node.transition()
+      .duration(1000)
+      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+
+  } else {
+	  force
+		  .nodes(root.nodes)
+		  .links(root.links)
+		  .start();
+	  var link = svg.selectAll(".link")
+		  .data(root.links);
+
+	  var node = svg.selectAll(".node")
+		  .data(root.nodes);
+		  
+	  var link_enter = link.enter().append("line")
+		  .attr("class", "link")
+		  .attr("x1", function(d) { return d.source.x; })
+		  .attr("y1", function(d) { return d.source.y; })
+		  .attr("x2", function(d) { return d.target.x; })
+		  .attr("y2", function(d) { return d.target.y; });
+
+	  var node_enter = node.enter().append("g")
+		  .attr("class", "node")
+		  .call(force.drag);
+
+	  node_enter.append("text")
+		  .attr("class", "nodeText")
+		  .attr("dx", 12)
+		  .attr("dy", ".35em")
+		  .text(function(d) { return d.name });
+
+	  force.on("tick", function() {
+		link.attr("x1", function(d) { return d.source.x; })
+			.attr("y1", function(d) { return d.source.y; })
+			.attr("x2", function(d) { return d.target.x; })
+			.attr("y2", function(d) { return d.target.y; });
+	    node.attr("cx", function(d) { return d.x; })
+		    .attr("cy", function(d) { return d.y; });
+		node_enter.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+	  });
+  }
+     
+  node.exit().remove();  
+  link.exit().remove();  
+
+
+
+  node_enter.append("circle")
+	  .attr("r", node_size)
+	  .on("click", click)
+	  .on("mouseover", function(d) {  
+		d3.select(this).attr("r", radiusLarge);
+		showTooltip(d);
+		})
+	  .on("mouseout", function(d) {
+		  d3.select(this).attr("r",  node_size);
+		  hideToolTip();
+		});
+  
+
+}
+
+DoUpdate(jQuery("#selectlevel").val(), jQuery("#graphtype").val());
+
+d3.select("#download").on("click", function(){
+  d3.select(this)
+	.attr("href", 'data:application/octet-stream;base64,' + btoa(d3.select("#chart").html()))
+	.attr("download", "investigator_graph.svg") 
+})
+
+
+</script>
