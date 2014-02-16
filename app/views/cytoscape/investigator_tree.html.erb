@@ -60,8 +60,12 @@ var color =  d3.scale.category20();
 var svg = d3.select("#chart").append("svg")
     .attr("xmlns", "http://www.w3.org/2000/svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+  .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
+
+var svglinks = svg.append("g");
     
     // add styles here so it is visible in the SVG file. 
 var styles = svg.append("defs")
@@ -69,7 +73,6 @@ var styles = svg.append("defs")
       	.attr("type", "text/css")
       	.text(".node circle {fill: #fff;  stroke: steelblue; stroke-width: 1.5px; } .node, .nodeText { font: 14px Arial Narrow, Arial,sans-serif;} .link {fill: none; stroke: #D0F5A9; stroke-width: 1.5px; }");
 
-var svglinks = svg.append("g");
 
 var div = d3.select("body").append("div")   
  .attr("class", "nodeinfo")               
