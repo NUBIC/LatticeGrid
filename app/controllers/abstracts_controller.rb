@@ -204,39 +204,39 @@ class AbstractsController < ApplicationController
   end
 
   def search
-    if !@keywords.keywords.blank? then
+    if @keywords.keywords.blank?
+      logger.error 'search did not have a defined keyword'
+      year_list  # includes a render
+    else
       respond_to do |format|
-        format.js {
+        format.js do
           params[:limit] ||= 30
            @abstracts = Abstract.display_tsearch_no_pagination(@keywords.keywords, @keywords.search_field, params[:limit])
-           render :layout=> false, :json=> {:data => @abstracts.as_json()}
-        }
-        format.html {
-          @do_pagination="1"
+           render layout: false, json: { data: @abstracts.as_json }
+        end
+        format.html do
+          @do_pagination = '1'
           @abstracts = Abstract.display_tsearch(@keywords, @do_pagination, params[:page])
           if @do_pagination != '0'
-            total_entries=@abstracts.total_entries
+            total_entries = @abstracts.total_entries
           else
-            total_entries=@abstracts.length
+            total_entries = @abstracts.length
           end
-          @heading = "There were #{total_entries} matches to search term <i>"+ @keywords.keywords.downcase + "</i>"
-          @include_mesh=false
-          @speed_display=true
-          render :action => 'year_list'
-        }
+          @heading = "There were #{total_entries} matches to search term <i>#{@keywords.keywords.downcase}</i>".html_safe
+          @include_mesh = false
+          @speed_display = true
+          render action: 'year_list'
+        end
       end
-    else
-      logger.error "search did not have a defined keyword"
-      year_list  # includes a render
     end
   end
 
   def show
-    if params[:id].include?("search") then
-      redirect_to :action => 'search'
-    elsif params[:id].nil? || params[:id].include?("tag") then
-      year = handle_year()
-      redirect_to abstracts_by_year_url(:id => year, :page => '1')
+    if params[:id].include?('search')
+      redirect_to action: 'search'
+    elsif params[:id].nil? || params[:id].include?('tag')
+      year = handle_year
+      redirect_to abstracts_by_year_url(id: year, page: '1')
     else
       @publication = Abstract.include_invalid(params[:id])
     end
@@ -251,30 +251,30 @@ class AbstractsController < ApplicationController
     end
     before_abstract_save(@publication)
     @publication.save!
-    render :text => ""
+    render text: ''
   end
 
   def set_is_cancer
     @publication = Abstract.include_invalid(params[:id])
-    if @publication.is_cancer.blank? or ! @publication.is_cancer
+    if @publication.is_cancer.blank? || !@publication.is_cancer
       @publication.is_cancer = true
     else
       @publication.is_cancer = false
     end
     @publication.save!
-    render :text => ""
+    render text: ''
   end
 
   def set_investigator_abstract_end_date
     @investigatorabstract = InvestigatorAbstract.find(params[:id])
-    if @investigatorabstract.is_valid then
+    if @investigatorabstract.is_valid
       @investigatorabstract.is_valid = false
     else
       @investigatorabstract.is_valid = true
     end
     before_abstract_save(@investigatorabstract)
     @investigatorabstract.save!
-    render :text => ""
+    render text: ''
   end
 
   def endnote
@@ -285,34 +285,33 @@ class AbstractsController < ApplicationController
   end
 
   def add_pubmed_ids
-    #should be an ajax call
+    # should be an ajax call
     @pubmed_ids = params[:pubmed_ids]
-    @pubmed_ids = @pubmed_ids.gsub(/\, ?/,' ').split unless @pubmed_ids.blank?
-    @abstracts = Abstract.where("pubmed in (:pubmed_ids)", { :pubmed_ids=>@pubmed_ids }).all
+    @pubmed_ids = @pubmed_ids.gsub(/\, ?/, ' ').split unless @pubmed_ids.blank?
+    @abstracts = Abstract.where('pubmed in (:pubmed_ids)', { pubmed_ids: @pubmed_ids }).to_a
   end
 
-  #called as xhr
-
+  # called as xhr
   def update_pubmed_id
-    is_new=false
-    if ! params[:pubmed_id].blank?
+    is_new = false
+    if !params[:pubmed_id].blank?
       abstract = Abstract.where("pubmed = :pubmed_id", { :pubmed_id => params[:pubmed_id].split.first }).first
       if abstract.blank?
-        is_new=true
+        is_new = true
         publications = FetchPublicationData(params[:pubmed_id].split)
         InsertPubmedRecords(publications)
         abstract = Abstract.where("pubmed = :pubmed_id", { :pubmed_id => params[:pubmed_id].split.first }).first
       end
       if !abstract.blank?
         investigator_ids = MatchInvestigatorsInCitation(abstract)
-        old_investigator_ids = abstract.investigators.collect(&:id).sort.uniq
+        old_investigator_ids = abstract.investigators.map(&:id).sort.uniq
         all_investigator_ids = (investigator_ids | old_investigator_ids).sort.uniq
-        new_ids = all_investigator_ids.delete_if{ |id| old_investigator_ids.include?(id) }.compact
-        #sped this up by only processing the intersection
-        if !(new_ids == [] ) then
+        new_ids = all_investigator_ids.delete_if { |id| old_investigator_ids.include?(id) }.compact
+        # sped this up by only processing the intersection
+        if !(new_ids == [])
           new_ids.each do |investigator_id|
             investigator = Investigator.find(investigator_id)
-            unless investigator.blank? or investigator.id.blank?
+            unless investigator.blank? || investigator.id.blank?
               InsertInvestigatorPublication(abstract.id,
                                             investigator.id,
                                             (abstract.publication_date || abstract.electronic_publication_date || abstract.deposited_date),
@@ -321,20 +320,20 @@ class AbstractsController < ApplicationController
                                             true)
             end
           end
-          abstract.reload()
+          abstract.reload
         end
       end
     end
     # Is this an XmlHttpRequest request?
     if request.xhr?
       if abstract.blank?
-        render :text => "Could not find PubMedID #{params[:pubmed_id].to_s}"
+        render text: "Could not find PubMedID #{params[:pubmed_id].to_s}"
       else
-        render :partial => 'update_pubmed_id', :locals => { :abstract=>abstract, :is_new => is_new }
+        render partial: 'update_pubmed_id', locals: { abstract: abstract, is_new: is_new }
       end
     else
       # No? Or no data? Then render an action.
-      redirect_to :action => :add_abstracts
+      redirect_to action: :add_abstracts
     end
   end
 
@@ -342,14 +341,14 @@ class AbstractsController < ApplicationController
   private
 
   def pre_list(id)
-    @redirect=false
-    if params[:page].nil? then
-      params[:page] = "1"
-      @redirect=true
+    @redirect = false
+    if params[:page].nil?
+      params[:page] = '1'
+      @redirect = true
     end
-    if params[:id].nil? || params[:id].include?("tag") then
-      params[:id]= id
-      @redirect=true
+    if params[:id].nil? || params[:id].include?('tag')
+      params[:id] = id
+      @redirect = true
     end
   end
 
@@ -364,8 +363,8 @@ class AbstractsController < ApplicationController
   end
 
   def tag_heading(tag_name, abstracts)
-    @tags = Abstract.tag_counts(:limit => 150, :order => "count desc",
-                  :conditions => ["abstracts.id in (:abstract_ids)", {:abstract_ids=>@abstracts.collect{|x| x.id}}])
+    @tags = Abstract.tag_counts(limit: 150, order: 'count desc',
+                                conditions: ['abstracts.id in (:abstract_ids)', { abstract_ids: @abstracts.map { |x| x.id } }])
     total_entries = total_length(abstracts)
     @heading = "Publication Listing for the MeSH term <i>#{tag_name}</i>. Found #{total_entries} abstracts"
   end

@@ -54,7 +54,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_organizations
-    @head_node = OrganizationalUnit.head_node(LatticeGridHelper.menu_head_abbreviation())
+    @head_node = OrganizationalUnit.head_node(LatticeGridHelper.menu_head_abbreviation)
   end
 
   def handle_start_and_end_date
