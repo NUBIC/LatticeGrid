@@ -28,7 +28,7 @@ p {
 .leftnav_heading {
 	font-size : 9pt;
 	font-weight : bold;
-	color : 4a3a23;
+	color : #4a3a23;
 }
 .Normal {
 	font-family : Verdana;
@@ -38,7 +38,7 @@ p {
 .Normal_Brown {
 	font-family : Verdana;
 	font-size : 8pt;
-	color : 4A3A23;
+	color : #4a3a23;
 }
 a.footer {
 	text-decoration : underline;
@@ -47,18 +47,18 @@ a.Normal {
 	color : bf8e39;
 }
 a.Normal:visited {
-	color : 9c4e30;
+	color : #9c4e30;
 }
 
 .breadcrumb {
-	color : 4a3a23;
+	color : #4a3a23;
 	font-size : 8pt;
 	font-family : Verdana, Arial, sans-serif;
 }
 .dhtml-sub {
 	font-family : Verdana,Arial,sans-serif;
 	font-size : 8pt;
-	color : 4a3a23;
+	color : #4a3a23;
 }
 .dhtml_heading {
 	font-family : Verdana, Arial, sans-serif;

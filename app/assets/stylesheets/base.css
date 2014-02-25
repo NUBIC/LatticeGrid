@@ -13,7 +13,6 @@ a {
     font-size:0.9em;
 }
 
-
 #container {
     width: 1020px;
     margin:0;
@@ -28,13 +27,14 @@ a {
     background-color: cornsilk;
     font-size:1.3em;
 }
+
 #container a {
     font-size:2em;
     color:darkgreen;
 }
 
-#left-container, 
-#right-container, 
+#left-container,
+#right-container,
 #center-container {
     height:600px;
     position:absolute;
@@ -56,7 +56,7 @@ a {
     background-image:url('../images/col2.png');
     background-position:center right;
     border-left:1px solid #ddd;
-    
+
 }
 
 #right-container {

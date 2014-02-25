@@ -325,14 +325,14 @@ div.notice {
 
 /* --- main --- */
 #main {
-  border: 1px #1c1079 solid;
+  border: 2px #520063 solid;
   border-radius: 25px;
   box-shadow: 10px 10px 5px #777;
   margin-left: auto;
   margin-right: auto;
   padding: 0 0 1em 0;
   width: 1180px;
-  height:auto;
+  height: auto;
   vertical-align: top;
   background-color: #FFFFFF;
 }
