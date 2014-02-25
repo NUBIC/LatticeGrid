@@ -39,7 +39,7 @@
         <%= image_tag 'loading.gif', :id => 'spinner', :style => "display:none; float:right;" %>
       </div>
       <div id='title'>
-        <%= link_to(image_tag('latticegrid.png', size: '65x93'), 'http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid') -%>
+        <%= link_to(image_tag('latticegrid.png', size: '65x93'), root_path) -%>
         <%= link_to(LatticeGridHelper.header_title, current_abstracts_url, id: 'title_link') -%>
       </div>
       <%= render 'shared/search' %>

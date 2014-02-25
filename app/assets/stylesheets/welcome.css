@@ -1,6 +1,7 @@
 .welcome_row {
   float: left;
   width: 100%;
+  min-height: 20em;
 }
 
 .welcome_column {
