@@ -20,11 +20,10 @@
     <%= render 'shared/menu_scripts', :menu_nodes => @menu_nodes %>
     <link rel="shortcut icon" href='<%= image_tag("#{lattice_grid_instance}/favicon.ico") -%>' />
     <% if @javascripts.join =~ /jquery/i %>
-    <script type="text/javascript" language="JavaScript">
-      jQuery.noConflict();
-      var $j = jQuery;
-      // Use jQuery via jQuery(...)
-    </script>
+      <script type="text/javascript" language="JavaScript">
+        jQuery.noConflict();
+        var $j = jQuery; // Use jQuery via jQuery(...)
+      </script>
     <% end %>
     <%= LatticeGridHelper.google_analytics.html_safe -%>
   </head>

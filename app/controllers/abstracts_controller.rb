@@ -105,8 +105,8 @@ class AbstractsController < ApplicationController
                                                   order: 'year DESC, authors ASC',
                                                   page: params[:page],
                                                   per_page: 20)
-     tag_heading(params[:id], @abstracts)
-     render action: 'tag'
+      tag_heading(params[:id], @abstracts)
+      render action: 'tag'
     end
   end
 

@@ -129,6 +129,7 @@ class InvestigatorsController < ApplicationController
       redirect_to year_list_abstracts_url
     elsif !params[:page].nil?
       params.delete(:page)
+      # FIXME: redirect_to params does not work in Rails 3
       redirect_to params
     else
       handle_member_name # converts params[:id] to params[:investigator_id] and sets @investigator
@@ -223,6 +224,7 @@ class InvestigatorsController < ApplicationController
       redirect_to year_list_abstracts_url
     elsif params[:page].nil?
       params[:page] = '1'
+      # FIXME: redirect_to params does not work in Rails 3
       redirect_to params
     else
       handle_member_name # sets @investigator
@@ -240,6 +242,7 @@ class InvestigatorsController < ApplicationController
       redirect_to year_list_abstracts_url
     elsif params[:page].nil?
       params[:page] = '1'
+      # FIXME: redirect_to params does not work in Rails 3
       redirect_to params
     else
       handle_member_name # sets @investigator
