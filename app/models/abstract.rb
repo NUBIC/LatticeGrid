@@ -476,8 +476,8 @@ class Abstract < ActiveRecord::Base
     .first
   end
 
-  def self.display_tsearch(keywords, paginate=1, page=1, limit=nil)
-    if paginate != '0' then
+  def self.display_tsearch(keywords, paginate = 1, page = 1, limit = nil)
+    if paginate != '0'
       abstracts = display_tsearch_paginated(keywords.keywords, keywords.search_field, page, limit)
     else
       abstracts = display_tsearch_no_pagination(keywords.keywords, keywords.search_field, limit)
@@ -495,7 +495,7 @@ class Abstract < ActiveRecord::Base
     elsif search_field.include?("Summary")
       lc_keywords = terms.sub(/\*/, '%')
       lc_keywords = "%"+lc_keywords+"%"
-      abstracts = paginate(:page => page,
+      abstracts = Abstract.paginate(:page => page,
            :joins => [:investigators],
            :per_page => 20,
            :order => "year DESC, authors ASC",
@@ -506,14 +506,14 @@ class Abstract < ActiveRecord::Base
     else
       abstract_ids = Abstract.find_by_tsearch(terms, {:select => 'ID'})
     end
-    if defined?(abstract_ids) and !abstract_ids.nil? then
+    if defined?(abstract_ids) and !abstract_ids.nil?
       abstracts = Abstract.paginate(:page => page,
         :include => [:investigators],
         :per_page => 20,
-        :limit => limit,
-        :order => "year DESC, authors ASC",
+        :limit => limit || 10000,
+        :order => 'year DESC, authors ASC',
         :conditions => ["abstracts.id IN (:abstract_ids) and investigator_abstracts.is_valid = true",
-           {:abstract_ids => abstract_ids.collect(&:id)} ])
+           {:abstract_ids => abstract_ids.map(&:id)} ])
     end
     abstracts
   end

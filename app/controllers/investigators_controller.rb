@@ -404,25 +404,7 @@ class InvestigatorsController < ApplicationController
     render json: result.as_json
   end
 
-  def investigators_search
-    params[:id] = params[:keywords] if params[:id].blank? && !params[:keywords].blank?
-
-    if params[:id].blank?
-      logger.error 'search did not have a defined keyword'
-      year_list  # includes a render
-    else
-      @investigators = Investigator.investigators_tsearch(params[:id])
-      if @investigators.length == 1
-        Rails.logger.info "~~~ investigators_search found investigator #{@investigators[0].inspect}"
-        redirect_to show_investigator_path(id: @investigators[0].username, page: 1)
-      else
-        @heading = "There were #{@investigators.length} matches to search term <i>#{params[:id].downcase}</i>".html_safe
-        @include_mesh = false
-        render action: :index, layout: 'searchable'
-      end
-    end
-  end
-
+  # this is /investigators_search_all
   def search
     params[:id] = params[:keywords] if params[:id].blank? && !params[:keywords].blank?
 
@@ -434,6 +416,25 @@ class InvestigatorsController < ApplicationController
       @heading = "There were #{@investigators.length} matches to search term <i>#{params[:id].downcase}</i>".html_safe
       @include_mesh = false
       render action: :index, layout: 'searchable'
+    end
+  end
+
+  # this is /investigators_search
+  def investigators_search
+    params[:id] = params[:keywords] if params[:id].blank? && !params[:keywords].blank?
+
+    if params[:id].blank?
+      logger.error 'search did not have a defined keyword'
+      year_list  # includes a render
+    else
+      @investigators = Investigator.investigators_tsearch(params[:id])
+      if @investigators.length == 1
+        redirect_to show_investigator_path(id: @investigators[0].username, page: 1)
+      else
+        @heading = "There were #{@investigators.length} matches to search term <i>#{params[:id].downcase}</i>".html_safe
+        @include_mesh = false
+        render action: :index, layout: 'searchable'
+      end
     end
   end
 

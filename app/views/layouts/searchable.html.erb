@@ -2,40 +2,48 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-	<head>
-		<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	  <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
-	  <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
-		<%= javascript_include_tag 'prototype' %>
-		<!-- CSS Files -->
-		<% @stylesheets ||= [ "publications", "latticegrid/#{lattice_grid_instance}" ] %>
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
+    <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
+    <%= javascript_include_tag 'prototype' %>
+    <!-- CSS Files -->
+    <% @stylesheets ||= [ "publications", "latticegrid/#{lattice_grid_instance}" ] %>
     <% @stylesheets.each do |ss| %>
       <%= stylesheet_link_tag ss %>
     <% end %>
-		<link rel="shortcut icon" href='<%= image_path("favicon.ico") -%>' />
-	  <%= LatticeGridHelper.google_analytics.html_safe -%>
-	</head>
-	<body>
-
-	<div id="main" class="autoclear">
-		<div id="banner"><a href="<%= LatticeGridHelper.home_url %>" ><%= image_tag "#{lattice_grid_instance}/pageheader.jpg", options={:alt=>LatticeGridHelper.header_title} %></a></div>
-		<div id="results" class="notice"><%= flash[:notice] %> 	<%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %> </div>
-		<div id="title"><%= LatticeGridHelper.header_title -%></div>
-		<%= render "shared/search" %>
-		<div id="side">
-			<div id="sideinfo" style="margin-top:15px;margin-bottom:75px;">
-				<%= link_to("Publications", current_abstracts_url, :style=>"color:indigo;font-size:20pt;") %>
-			</div> <!-- end of sideinfo -->
-			<%= render 'shared/nubic_branding' %>
-			<p></p>
-		</div> <!-- end of side -->
-		<div id="maincontent">
-			<div id="niceline">
-			</div>
-			<div id="content">
-			<%= yield  %>
-			</div> <!-- end of content -->
-		</div> <!-- end of maincontent -->
-	</div> <!-- end of main -->
-	</body>
+    <link rel="shortcut icon" href='<%= image_path("favicon.ico") -%>' />
+    <%= LatticeGridHelper.google_analytics.html_safe -%>
+  </head>
+  <body>
+    <%= render 'shared/debug_section' %>
+    <div id="main" class="autoclear">
+      <div id="results" class="notice">
+        <%= flash[:notice] %>
+        <div id="errors">
+          <%= flash[:errors] %>
+        </div>
+        <%= image_tag 'loading.gif', :id => 'spinner', :style => "display:none; float:right;" %>
+      </div>
+      <div id='title'>
+        <%= link_to(image_tag('latticegrid.png', size: '65x93'), root_path) -%>
+        <%= link_to(LatticeGridHelper.header_title, current_abstracts_url, id: 'title_link') -%>
+      </div>
+      <%= render "shared/search" %>
+      <div id="side">
+        <div id="sideinfo" style="margin-top:15px;margin-bottom:75px;">
+          <%= link_to("Publications", current_abstracts_url, :style=>"color:indigo;font-size:20pt;") %>
+        </div> <!-- end of sideinfo -->
+        <%= render 'shared/nubic_branding' %>
+        <p></p>
+      </div> <!-- end of side -->
+      <div id="maincontent">
+        <div id="niceline">
+        </div>
+        <div id="content">
+        <%= yield  %>
+        </div> <!-- end of content -->
+      </div> <!-- end of maincontent -->
+    </div> <!-- end of main -->
+  </body>
 </html>

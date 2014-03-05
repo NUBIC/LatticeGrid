@@ -216,12 +216,9 @@ class AbstractsController < ApplicationController
         end
         format.html do
           @do_pagination = '1'
-          @abstracts = Abstract.display_tsearch(@keywords, @do_pagination, params[:page])
-          if @do_pagination != '0'
-            total_entries = @abstracts.total_entries
-          else
-            total_entries = @abstracts.length
-          end
+          page = params[:page] || 1
+          @abstracts = Abstract.display_tsearch(@keywords, @do_pagination, page)
+          total_entries = @abstracts.total_entries
           @heading = "There were #{total_entries} matches to search term <i>#{@keywords.keywords.downcase}</i>".html_safe
           @include_mesh = false
           @speed_display = true

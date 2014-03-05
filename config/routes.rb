@@ -295,6 +295,8 @@ LatticeGrid::Application.routes.draw do
   match 'cytoscape/:start_date/:end_date/chord_by_date' => 'cytoscape#chord_by_date', as: :chord_by_date
   match 'investigators_search/:id' => 'investigators#investigators_search', as: :investigators_search
   match 'investigators_search_all/:id' => 'investigators#search', as: :investigators_search_all
+  # this will handle the main search - replacing 'investigators#investigators_search', 'investigators#search', & 'abstracts#search'
+  match 'welcome/search' => 'welcome#search', via: :get
   match 'direct_search/:id' => 'investigators#direct_search', as: :direct_search, :format => 'xml'
   match 'proxy_googlechart/:id' => 'sparklines#proxy_googlechart', as: :proxy_googlechart
   match 'cytoscape/:id/:depth' => 'cytoscape#show', as: :cytoscape_member

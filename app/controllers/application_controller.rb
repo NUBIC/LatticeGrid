@@ -95,43 +95,37 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  ##
+  # Simple struct to handle search parameters
   class Keywords
-    def initialize (keywords,search_field,search_exact)
+    attr_reader :keywords, :search_field, :search_exact
+    def initialize(keywords, search_field, search_exact)
       @keywords = keywords
       @search_field = search_field
       @search_exact = search_exact
     end
-    def keywords
-      @keywords
-    end
-    def search_field
-      @search_field
-    end
-    def search_exact
-      @search_exact
-    end
   end
 
-  def define_keywords (the_keywords='', search_field='All', search_exact='0')
-    if params[:keywords].blank? then
-      the_keywords = cookies[:the_keywords] if !cookies[:the_keywords].blank?
+  def define_keywords(the_keywords = '', search_field = 'All', search_exact = '0')
+    if params[:keywords].blank?
+      the_keywords = cookies[:the_keywords] unless cookies[:the_keywords].blank?
     else
       the_keywords = params[:keywords]
       cookies[:the_keywords] = the_keywords
     end
-    if !params[:search_field].blank? then
+    if !params[:search_field].blank?
       search_field = params[:search_field]
       cookies[:search_field] = search_field
     else
-      search_field = cookies[:search_field] if !cookies[:search_field].blank?
+      search_field = cookies[:search_field] unless cookies[:search_field].blank?
     end
-    if !params[:search_exact].blank? then
+    if !params[:search_exact].blank?
       search_exact = params[:search_exact]
       cookies[:search_exact] = search_exact
     else
-      search_exact = cookies[:search_exact] if !cookies[:search_exact].blank?
+      search_exact = cookies[:search_exact] unless cookies[:search_exact].blank?
     end
-    @keywords = Keywords.new(the_keywords,search_field,search_exact)
+    @keywords = Keywords.new(the_keywords, search_field, search_exact)
   end
 
 end

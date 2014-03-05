@@ -2,6 +2,19 @@ module InvestigatorsHelper
   # require 'ldap_utilities' # specific ldap methods
   require 'config' # heading configuration options
 
+  def search_options
+    [
+      ['Investigator', 'Investigator'],
+      ['All By Investigator', 'AllByInvestigator'],
+      ['Title Or Abstract', 'TitleOrAbstract'],
+      ['Journal', 'Journal'],
+      ['Faculty Summary', 'FacultySummary'],
+      ['Keywords', 'Keywords'],
+      ['MeSH', 'MeSH'],
+      ['All', 'All']
+    ]
+  end
+
   def handle_member_name(merge_ldap=true)
     return if params[:id].blank?
     if !params[:format].blank? and (params[:format] !~ /js|json|xml|pdf|xls|doc/) then #reassemble the username
