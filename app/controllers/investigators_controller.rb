@@ -389,7 +389,6 @@ class InvestigatorsController < ApplicationController
 
   #:title => :get, :bio=>:get, :email=>:get, :affiliations=>:get
 
-
   # Differs from above because the Investigator is found by username instead of id
   # Then it will send a json response to the requester
   def tag_cloud_list

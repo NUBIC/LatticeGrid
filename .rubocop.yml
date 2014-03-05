@@ -3,7 +3,7 @@ ClassLength:
 LineLength:
   Max: 175
 MethodLength:
-  Max: 20
+  Max: 35
 AllCops:
   Includes:
     - Rakefile

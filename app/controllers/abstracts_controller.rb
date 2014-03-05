@@ -111,95 +111,99 @@ class AbstractsController < ApplicationController
   end
 
   def full_tagged_abstracts
-    @do_pagination = "0"
+    @do_pagination = '0'
     params[:id] = URI.unescape(params[:id])
     mesh_terms = MeshHelper.do_mesh_search(params[:id])
-    mesh_names = mesh_terms.collect(&:name)
-    @abstracts = Abstract.find_tagged_with(mesh_names, :order => 'year DESC, authors ASC')
-    tag_heading(mesh_names.join(", "),@abstracts)
-    render :action => 'tag'
+    mesh_names = mesh_terms.map(&:name)
+    @abstracts = Abstract.find_tagged_with(mesh_names, order: 'year DESC, authors ASC')
+    tag_heading(mesh_names.join(', '), @abstracts)
+    render action: 'tag'
   end
 
 
   def impact_factor
-    params[:year]||=""
-    params[:sortby]||="article_influence_score desc"
+    params[:year] ||= ''
+    params[:sortby] ||= 'article_influence_score desc'
     @journals = Journal.journal_publications(params[:year], params[:sortby])
     @missing_journals = Abstract.missing_impact_factors(params[:year])
     @high_impact_pubs = Journal.high_impact_publications(params[:year])
     @all_pubs = Abstract.annual_data(params[:year])
 
     respond_to do |format|
-      format.html { render :layout => 'printable' }
-      format.xml  { render :xml => @all_pubs }
-      format.xls  {
-        send_data(render(:template => 'abstracts/impact_factor.html', :layout => "excel"),
-          :filename => "impact_factor_for_year_#{params[:year]}.xls",
-          :type => 'application/vnd.ms-excel',
-          :disposition => 'attachment') }
-      format.doc  {
-        send_data(render(:template => 'abstracts/impact_factor.html', :layout => "excel"),
-          :filename => "impact_factor_for_year_#{params[:year]}.doc",
-          :type => 'application/msword',
-          :disposition => 'attachment') }
+      format.html { render layout: 'printable' }
+      format.xml  { render xml: @all_pubs }
+      format.xls  do
+        send_data(
+          render(template: 'abstracts/impact_factor.html', layout: 'excel'),
+          filename: "impact_factor_for_year_#{params[:year]}.xls",
+          type: 'application/vnd.ms-excel',
+          disposition: 'attachment'
+        )
+      end
+      format.doc do
+        send_data(
+          render(template: 'abstracts/impact_factor.html', layout: 'excel'),
+          filename: "impact_factor_for_year_#{params[:year]}.doc",
+          type: 'application/msword',
+          disposition: 'attachment')
+      end
       format.pdf do
-         render(:pdf => "High Impact publications for " + params[:year],
-            :stylesheets => ["pdf"],
-            :template => "abstracts/impact_factor.html",
-            :layout => "pdf")
+        render(pdf: "High Impact publications for #{params[:year]}",
+               stylesheets: ['pdf'],
+               template: 'abstracts/impact_factor.html',
+               layout => 'pdf')
       end
     end
   end
 
   def high_impact
-    @high_impact = Journal.preferred_high_impact()
-    @high_impact = Journal.high_impact() if @high_impact.blank?
+    @high_impact = Journal.preferred_high_impact
+    @high_impact = Journal.high_impact if @high_impact.blank?
     respond_to do |format|
-      format.html {render :layout => 'printable'}
+      format.html { render layout: 'printable' }
       format.pdf do
         @pdf = 1
-        render(:pdf => "High Impact journals",
-            :stylesheets => ["pdf"],
-            :template => "abstracts/high_impact.html",
-            :layout => "pdf")
+        render(pdf: 'High Impact journals',
+               stylesheets => ['pdf'],
+               template => 'abstracts/high_impact.html',
+               layout => 'pdf')
       end
     end
   end
 
   def high_impact_by_month
-    @high_impact_issns = Journal.preferred_high_impact_issns()
-    @high_impact_issns = Journal.high_impact_issns() if @high_impact_issns.blank?
+    @high_impact_issns = Journal.preferred_high_impact_issns
+    @high_impact_issns = Journal.high_impact_issns if @high_impact_issns.blank?
     @abstracts = Abstract.recents_by_issns(@high_impact_issns.map(&:issn))
     respond_to do |format|
-      format.html {render :layout => 'high_impact'}
+      format.html { render layout: 'high_impact' }
       format.pdf do
-        render( :pdf => "Recent high impact by month",
-            :stylesheets => ["high_impact"],
-            :template => "abstracts/high_impact_by_month.html",
-            :layout => "high_impact")
+        render(pdf: 'Recent high impact by month',
+               stylesheets: ['high_impact'],
+               template: 'abstracts/high_impact_by_month.html',
+               layout: 'high_impact')
       end
     end
   end
 
   def feed
     # this will be the name of the feed displayed on the feed reader
-    @title = "LatticeGrid Recent Publications"
+    @title = 'LatticeGrid Recent Publications'
 
     # this will be our Feed's update timestamp
     @updated = session[:last_load_date]
 
     params[:limit] ||= 100
-    if !@keywords.keywords.blank? then
+    if @keywords.keywords.blank?
+      @abstracts = Abstract.all.order('year desc, publication_date desc, authors ASC').limit(params[:limit])
+    else
       # the new publications
       @abstracts = Abstract.display_tsearch_no_pagination(@keywords.keywords, @keywords.search_field, params[:limit])
-    else
-      @abstracts = Abstract.all(:order=>'year desc, publication_date desc, authors ASC', :limit=>params[:limit])
     end
     respond_to do |format|
-      format.atom { render :layout => false }
-
+      format.atom { render layout: false }
       # we want the RSS feed to redirect permanently to the ATOM feed
-      format.rss { redirect_to feed_path(:format => :atom), :status => :moved_permanently }
+      format.rss { redirect_to feed_path(format: :atom), status: :moved_permanently }
     end
   end
 
@@ -291,24 +295,24 @@ class AbstractsController < ApplicationController
   # called as xhr
   def update_pubmed_id
     is_new = false
-    if !params[:pubmed_id].blank?
-      abstract = Abstract.where("pubmed = :pubmed_id", { :pubmed_id => params[:pubmed_id].split.first }).first
+    unless params[:pubmed_id].blank?
+      abstract = Abstract.where('pubmed = :pubmed_id', { pubmed_id: params[:pubmed_id].split.first }).first
       if abstract.blank?
         is_new = true
         publications = FetchPublicationData(params[:pubmed_id].split)
         InsertPubmedRecords(publications)
-        abstract = Abstract.where("pubmed = :pubmed_id", { :pubmed_id => params[:pubmed_id].split.first }).first
+        abstract = Abstract.where('pubmed = :pubmed_id', { pubmed_id: params[:pubmed_id].split.first }).first
       end
-      if !abstract.blank?
+      unless abstract.blank?
         investigator_ids = MatchInvestigatorsInCitation(abstract)
         old_investigator_ids = abstract.investigators.map(&:id).sort.uniq
         all_investigator_ids = (investigator_ids | old_investigator_ids).sort.uniq
         new_ids = all_investigator_ids.delete_if { |id| old_investigator_ids.include?(id) }.compact
         # sped this up by only processing the intersection
-        if !(new_ids == [])
+        unless new_ids == []
           new_ids.each do |investigator_id|
             investigator = Investigator.find(investigator_id)
-            unless investigator.blank? || investigator.id.blank?
+            if !investigator.blank? || !investigator.id.blank?
               InsertInvestigatorPublication(abstract.id,
                                             investigator.id,
                                             (abstract.publication_date || abstract.electronic_publication_date || abstract.deposited_date),
@@ -334,9 +338,6 @@ class AbstractsController < ApplicationController
     end
   end
 
-
-  private
-
   def pre_list(id)
     @redirect = false
     if params[:page].nil?
@@ -348,16 +349,19 @@ class AbstractsController < ApplicationController
       @redirect = true
     end
   end
+  private :pre_list
 
   def journal_heading(journal_name)
     total_entries = total_length(@abstracts)
     @heading = "Publication Listing for <i>#{journal_name}</i>  (#{total_entries} publications)"
   end
+  private :journal_heading
 
   def list_heading(tag)
     total_entries = total_length(@abstracts)
     @heading = "Publication Listing for #{tag} (#{total_entries} publications)"
   end
+  private :list_heading
 
   def tag_heading(tag_name, abstracts)
     @tags = Abstract.tag_counts(limit: 150, order: 'count desc',
@@ -365,4 +369,5 @@ class AbstractsController < ApplicationController
     total_entries = total_length(abstracts)
     @heading = "Publication Listing for the MeSH term <i>#{tag_name}</i>. Found #{total_entries} abstracts"
   end
+  private :tag_heading
 end
