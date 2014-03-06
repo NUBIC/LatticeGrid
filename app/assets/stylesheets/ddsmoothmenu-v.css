@@ -30,7 +30,6 @@ background: #520063; /*background of menu items (default state)*/
 color: white;
 }
 
-
 .ddsmoothmenu-v ul li a.selected{ /*CSS class that's dynamically added to the currently active menu items' LI A element*/
 background: #414141;
 color: white;
@@ -45,7 +44,7 @@ color: white;
 .ddsmoothmenu-v ul li ul{
 position: absolute;
 width: 170px; /*Sub Menu Items width */
-top: 0;
+top: 0 !important;
 padding: 1px;
 font-weight: normal;
 visibility: hidden;
@@ -55,7 +54,6 @@ visibility: hidden;
 padding: 1px;
 font-weight: normal;
 }
-
 
 .ddsmoothmenu-v ul li ul li.current, .ddsmoothmenu-v ul li ul li.current a {
 	background-color: #520063;
@@ -72,3 +70,5 @@ font-weight: normal;
   font-weight: bold;
   font-size: 1.25em;
 }
+
+

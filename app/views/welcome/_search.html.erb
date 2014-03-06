@@ -1,0 +1,64 @@
+<div class='welcome_search'>
+  <div class='search_header'>
+    Other ways to search
+  </div>
+  <div id='side_nav_menu' class='ddsmoothmenu-v'>
+    <!-- menus are initialized in shared/menu_scripts.html.erb -->
+    <div id='publications_menu'>
+      <ul>
+        <li class='menu_header'>
+          Publications
+        </li>
+        <li>
+          <a href='#'>by Year</a>
+          <%= build_year_menu.html_safe %>
+        </li>
+        <li>
+          <a href='#'>by Department</a>
+          <%= build_menu(sorted_head_node_children(@head_node), Department) { |id| org_path(id) }.html_safe %>
+        </li>
+        <li>
+          <a href='#'>by Center</a>
+          <%= build_menu(sorted_head_node_children(@head_node), Center) { |id| org_path(id) }.html_safe %>
+        </li>
+      </ul>
+    </div>
+    <div id='departments_menu'>
+      <ul>
+        <li class='menu_header'>
+          Departments
+        </li>
+        <li>
+          <a href='#'>Faculty</a>
+          <%= build_menu(sorted_head_node_children(@head_node), Department) { |id| show_investigators_org_path(id) }.html_safe %>
+        </li>
+        <li>
+          <a href='#'>Graphs</a>
+          <%= build_menu(sorted_head_node_children(@head_node), Department) { |id| show_org_graph_path(id) }.html_safe %>
+        </li>
+        <li>
+          <%= link_to('Overview', departments_orgs_path, :title => 'Display an overview of all departments') %>
+        </li>
+      </ul>
+    </div>
+    <div id='centers_menu'>
+      <ul>
+        <li class='menu_header'>
+          Centers
+        </li>
+        <li>
+          <a href='#'>Members</a>
+          <%= build_menu(sorted_head_node_children(@head_node), Center) { |id| show_investigators_org_path(id) }.html_safe %>
+        </li>
+        <li>
+          <a href='#'>Graphs</a>
+          <%= build_menu(sorted_head_node_children(@head_node), Center) { |id| show_org_graph_path(id) }.html_safe %>
+        </li>
+        <li>
+          <%= link_to('Overview', centers_orgs_path, :title => 'Display an overview for all centers') %>
+        </li>
+      </ul>
+    </div>
+    <br style='clear: left' />
+  </div>
+</div>

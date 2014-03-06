@@ -4,6 +4,10 @@
   min-height: 20em;
 }
 
+.welcome_row2 {
+  min-height: 120em;
+}
+
 .welcome_column {
   float: left;
   width: 30%;
@@ -13,7 +17,22 @@
 }
 
 .welcome_search {
-  font-size: 2em;
   margin: 1em 0.25em;
   padding: 0.25em;
+}
+
+.welcome_search .search_header {
+  font-size: 2em;
+}
+
+#centers_menu ul li ul li {
+  width: 20em;
+}
+
+#departments_menu ul li ul li {
+  width: 17em;
+}
+
+#publications_menu ul li ul li {
+  width: 17em;
 }

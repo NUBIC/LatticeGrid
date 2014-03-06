@@ -891,7 +891,7 @@ background: silver;
 }
 
 .toplevelshadow{ /*shadow opacity. Doesn't work in IE*/
-opacity: 0.8;
+  display: none;
 }
 
 .ddsmoothmenu ul li.currentyear, .ddsmoothmenu ul li ul li.currentyear {

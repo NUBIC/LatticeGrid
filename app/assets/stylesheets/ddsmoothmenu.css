@@ -96,6 +96,7 @@ right: 5px;
 
 /* ######### CSS for shadow added to sub menus  ######### */
 
+/*
 .ddshadow{
 position: absolute;
 left: 0;
@@ -105,9 +106,10 @@ height: 0;
 background: silver;
 }
 
-.toplevelshadow{ /*shadow opacity. Doesn't work in IE*/
+.toplevelshadow{ /*shadow opacity. Doesn't work in IE
 opacity: 0.8;
 }
+*/
 
 .ddsmoothmenu ul li.currentyear, .ddsmoothmenu ul li ul li.currentyear {
 	background-color: #520063;
