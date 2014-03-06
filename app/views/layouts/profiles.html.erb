@@ -17,7 +17,7 @@
     <% @stylesheets.each do |ss| %>
       <%= stylesheet_link_tag ss %>
     <% end %>
-  	<link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
+  	<link rel="shortcut icon" href='<%= "/assets/#{lattice_grid_instance}/favicon.ico" -%>' />
     <% if @javascripts.join =~ /jquery/i %>
       <script type="text/javascript" language="JavaScript">
         jQuery.noConflict();

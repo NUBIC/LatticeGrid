@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
+#
+# Controller for OrganizationalUnit model
 class OrgsController < ApplicationController
-  caches_page(:show, :index, :departments, :centers, :programs, :show_investigators, :stats, :full_show, :tag_cloud, :short_tag_cloud, :barchart) if LatticeGridHelper.CachePages()
+  caches_page(:show, :index, :departments, :centers, :programs, :show_investigators, :stats, :full_show, :tag_cloud, :short_tag_cloud, :barchart) if LatticeGridHelper.CachePages
 
   skip_before_filter  :find_last_load_date, :only => [:barchart]
   skip_before_filter  :handle_year, :only => [:barchart]

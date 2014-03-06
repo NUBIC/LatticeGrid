@@ -418,16 +418,33 @@ div.notice {
 }
 
 #search {
-  padding: 3px;
-  padding-left: 115px;
-  margin: 0px;
+  padding: 1.5em 1em 2em 8em;
+  margin: 0;
   color: #fff;
-  font-size: 12px;
-  background-color: #339;
+  font-size: 14px;
+  background-color: #520063;
 }
-#search a { padding: 4px; padding-top: 2px; color: white; text-decoration:none; }
-#search a:hover { background-color: #709fc7; }
 
+#search a {
+  padding: 4px;
+  padding-top: 2px;
+  color: white;
+  text-decoration:none;
+}
+
+#search a:hover {
+  background-color: #709fc7;
+}
+
+#search input,
+#search select {
+  font-size: 1.25em;
+}
+
+#search #search_instructions {
+  font-size: 12px;
+  font-style: italic;
+}
 
 #niceline {
   padding-left: 50px;

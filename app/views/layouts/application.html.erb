@@ -18,7 +18,7 @@
     <% end %>
 
     <%= render 'shared/menu_scripts', :menu_nodes => @menu_nodes %>
-    <link rel="shortcut icon" href='<%= image_tag("#{lattice_grid_instance}/favicon.ico") -%>' />
+    <link rel="shortcut icon" href='<%= "/assets/#{lattice_grid_instance}/favicon.ico" -%>' />
     <% if @javascripts.join =~ /jquery/i %>
       <script type="text/javascript" language="JavaScript">
         jQuery.noConflict();

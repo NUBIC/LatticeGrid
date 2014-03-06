@@ -292,7 +292,7 @@ class CytoscapeController < ApplicationController
   # !!!!!
   def investigator_edge_bundling
     @title = 'Hierarchical Edge Bundle Diagram by program and investigator'
-    @json_callback = '../cytoscape_d3_investigator_edge_data.js'
+    @json_callback = d3_investigator_edge_data_path # '../cytoscape/d3_investigator_edge_data.js'
     respond_to do |format|
       format.html { render layout: 'd3' }
       format.json { render layout: false, text: '' }
