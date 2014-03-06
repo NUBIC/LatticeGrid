@@ -7,7 +7,7 @@ font: bold 12px Verdana;
 
 border-bottom: 1px solid #ccc;
 }
- 
+
 .ddsmoothmenu-v ul li{
 position: relative;
 }
@@ -26,13 +26,13 @@ border-right: 1px solid #778;
 }
 
 .ddsmoothmenu-v ul li a:link, .ddsmoothmenu-v ul li a:visited, .ddsmoothmenu-v ul li a:active{
-background: #339; /*background of menu items (default state)*/
+background: #520063; /*background of menu items (default state)*/
 color: white;
 }
 
 
 .ddsmoothmenu-v ul li a.selected{ /*CSS class that's dynamically added to the currently active menu items' LI A element*/
-background: #414141; 
+background: #414141;
 color: white;
 }
 
@@ -58,10 +58,17 @@ font-weight: normal;
 
 
 .ddsmoothmenu-v ul li ul li.current, .ddsmoothmenu-v ul li ul li.current a {
-	background-color: #339;
+	background-color: #520063;
 }
- 
+
 /* Holly Hack for IE \*/
 * html .ddsmoothmenu-v ul li { float: left; height: 1%; }
 * html .ddsmoothmenu-v ul li a { height: 1%; }
 /* End */
+
+.menu_header {
+  background-color: white;
+  color: #414141;
+  font-weight: bold;
+  font-size: 1.25em;
+}

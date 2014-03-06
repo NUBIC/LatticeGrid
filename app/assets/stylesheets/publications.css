@@ -277,15 +277,16 @@ td.list-title-right {
 
 /* --- HEADER --- */
 #banner {
-  padding-left: 1em;
-  margin-left:auto;
-  margin-right:auto;
-  width:1180px;
-  height:120px;
-  vertical-align:bottom;
+  padding-left: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 1180px;
+  height: 120px;
+  vertical-align: bottom;
   text-align: center;
-  font-size:12px;
+  font-size: 12px;
   display: block;
+  margin-bottom: 2.75em;
 }
 
 #banner a span {
@@ -402,13 +403,18 @@ div.notice {
 #title a {
   padding: 5px;
   color: #226;
-  text-decoration:none;
+  text-decoration: none;
   background: none;
   vertical-align: top;
 }
 
 #title a:hover {
   text-decoration: underline;
+}
+
+#title a#title_link {
+  display: inline-block;
+  margin-top: 1em;
 }
 
 #search {

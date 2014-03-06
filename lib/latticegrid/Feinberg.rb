@@ -37,7 +37,8 @@ module LatticeGridHelper
   end
 
   def self.google_analytics
-    "<script type='text/javascript'>
+    qa = %Q(
+    <script type='text/javascript'>
 
        var _gaq = _gaq || [];
        _gaq.push(['_setAccount', 'UA-30096153-1']);
@@ -49,7 +50,9 @@ module LatticeGridHelper
          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
        })();
 
-    </script>"
+    </script>
+    )
+    qa
   end
 
   def self.home_url
@@ -101,75 +104,117 @@ def latticegrid_high_impact_description
   <p>Researchers in the ' + LatticeGridHelper.organization_name + ' publish thousands of articles in peer-reviewed journals every year.  The following recommended reading showcases a selection of their recent work.</p>'
 end
 
-def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bold=false, investigators_in_unit=[], speed_display=false, simple_links=false)
-  #  out = publication.authors
-  out = (mark_members_bold) ? highlightMemberInvestigator(publication, speed_display, simple_links, investigators_in_unit) : highlightInvestigator(publication, speed_display, simple_links)
-  out << ". " unless out.blank?
+def format_citation(publication, link_abstract_to_pubmed = false, mark_members_bold = false, investigators_in_unit = [], speed_display = false, simple_links = false)
+  if mark_members_bold
+    out = highlightMemberInvestigator(publication, speed_display, simple_links, investigators_in_unit)
+  else
+    out = highlightInvestigator(publication, speed_display, simple_links)
+  end
+  out << '. ' unless out.blank?
   if link_abstract_to_pubmed
-    out << link_to( publication.title, "http://www.ncbi.nlm.nih.gov/pubmed/"+publication.pubmed, :target => '_blank', :title=>'PubMed ID')
+    out << link_to(publication.title, "http://www.ncbi.nlm.nih.gov/pubmed/#{publication.pubmed}", :target => '_blank', :title => 'PubMed ID')
   else
-    out << link_to( publication.title, abstract_url(publication))
+    out << link_to(publication.title, abstract_url(publication))
   end
-  out << " "
+  out << ' '
   out << publication.journal_abbreviation
-  out << ", "
+  out << ', '
   if publication.pages.length > 0
-    out << "<i>"+h(publication.volume) +"</i>:"+ h(publication.pages)
+    out << "<i>#{h(publication.volume)}</i>:#{h(publication.pages)}"
   else
-    out << "<i>In process</i>"
+    out << '<i>In process</i>'
   end
-  out << ", #{publication.year}. " + [quicklink_to_pubmed(publication.pubmed), quicklink_to_pubmedcentral(publication.pubmedcentral), quicklink_to_doi(publication.doi)].compact.join("; ")
+  quicklinks = [
+    quicklink_to_pubmed(publication.pubmed),
+    quicklink_to_pubmedcentral(publication.pubmedcentral),
+    quicklink_to_doi(publication.doi)
+  ]
+  out << ", #{publication.year}. " + quicklinks.compact.join('; ')
 end
 
 def highlightInvestigator(citation, speed_display=false, simple_links=false, authors=nil,memberArray=nil)
   if authors.blank?
     authors = citation.authors
   end
-  authors = authors.gsub(", "," ")
-  authors = authors.gsub(/\. ?/,"")
+  authors = authors.gsub(', ', ' ')
+  authors = authors.gsub(/\. ?/, '')
   citation.investigators.each do |investigator|
     re = Regexp.new('('+investigator.last_name.downcase+' '+investigator.first_name.at(0).downcase+'[^,\n]*)', Regexp::IGNORECASE)
     isMember = (!memberArray.blank? and memberArray.include?(investigator.id))
-    authors.gsub!(re){|author_match| link_to_investigator(citation, investigator, author_match.gsub(" ","| "), isMember, speed_display, simple_links)}
+    authors.gsub!(re){|author_match| link_to_investigator(citation, investigator, author_match.gsub(' ','| '), isMember, speed_display, simple_links)}
   end
-  authors = authors.gsub("|","")
-  authors = authors.gsub("\n",", ")
+  authors = authors.gsub('|', '')
+  authors = authors.gsub("\n", ', ')
   authors
 end
 
 def edit_profile_link
-  link_to("Edit your FSM profile", "https://fsmweb.northwestern.edu/facultylogin/", :title=>"Login with your NetID and NetID password to change your profile and publication record")
+  link_to('Edit your FSM profile',
+          'https://fsmweb.northwestern.edu/facultylogin/',
+          :title => 'Login with your NetID and NetID password to change your profile and publication record')
 end
 
 def latticegrid_menu_script
-"<div id='side_nav_menu' class='ddsmoothmenu-v'>
-<ul>
-  <li><a href='#'>Publications by year</a>
-    #{build_year_menu}
-  </li>
-  <li><a href='#'>Publications by department</a>
-    #{build_menu(@head_node.children, Department) {|id| org_path(id)}}
-  </li>
-  <li><a href='#'>Faculty by department</a>
-    #{build_menu(@head_node.children, Department) {|id| show_investigators_org_path(id)}}
-  </li>
-  <li><a href='#'>Graphs by department</a>
-    #{build_menu(@head_node.children, Department) {|id| show_org_graph_path(id)}}
-  </li>
-  <li><a href='#'>Center publications</a>
-    #{build_menu(@head_node.children, Center) {|id| org_path(id)}}
-  </li>
-  <li><a href='#'>Center members</a>
-    #{build_menu(@head_node.children, Center) {|id| show_investigators_org_path(id)}}
-  </li>
-  <li><a href='#'>Center graphs</a>
-    #{build_menu(@head_node.children, Center) {|id| show_org_graph_path(id)}}
-  </li>
-  <li>#{link_to( 'High Impact', high_impact_by_month_abstracts_path, :title=>'Recent high-impact publications')} </li>
-  <li>#{link_to( 'MeSH tag cloud', tag_cloud_abstracts_path, :title=>'Display MeSH tag cloud for all publications')} </li>
-  <li>#{link_to( 'Department Overview', departments_orgs_path, :title => 'Display an overview of all departments')} </li>
-  <li>#{link_to( 'Center Overview', centers_orgs_path, :title => 'Display an overview for all centers')}</li>
-</ul>
-<br style='clear: left' />
-</div>"
+  menu = %Q(
+    <div id='side_nav_menu' class='ddsmoothmenu-v'>
+      <ul>
+        <li class='menu_header'>
+          Publications
+        </li>
+        <li>
+          <a href='#'>by Year</a>
+          #{build_year_menu}
+        </li>
+        <li>
+          <a href='#'>by Department</a>
+          #{build_menu(sorted_head_node_children(@head_node), Department) { |id| org_path(id) }}
+        </li>
+        <li>
+          <a href='#'>by Center</a>
+          #{build_menu(sorted_head_node_children(@head_node), Center) { |id| org_path(id) }}
+        </li>
+        <li>
+          #{link_to('High Impact', high_impact_by_month_abstracts_path, :title => 'Recent high-impact publications')}
+        </li>
+        <li>
+          #{link_to('MeSH tag cloud', tag_cloud_abstracts_path, :title => 'Display MeSH tag cloud for all publications')}
+        </li>
+        <li class='menu_header'>
+          Departments
+        </li>
+        <li>
+          <a href='#'>Faculty</a>
+          #{build_menu(sorted_head_node_children(@head_node), Department) { |id| show_investigators_org_path(id) }}
+        </li>
+        <li>
+          <a href='#'>Graphs</a>
+          #{build_menu(sorted_head_node_children(@head_node), Department) { |id| show_org_graph_path(id) }}
+        </li>
+        <li>
+          #{link_to('Overview', departments_orgs_path, :title => 'Display an overview of all departments')}
+        </li>
+        <li class='menu_header'>
+          Centers
+        </li>
+        <li>
+          <a href='#'>Members</a>
+          #{build_menu(sorted_head_node_children(@head_node), Center) { |id| show_investigators_org_path(id) }}
+        </li>
+        <li>
+          <a href='#'>Graphs</a>
+          #{build_menu(sorted_head_node_children(@head_node), Center) { |id| show_org_graph_path(id) }}
+        </li>
+        <li>
+          #{link_to('Overview', centers_orgs_path, :title => 'Display an overview for all centers')}
+        </li>
+      </ul>
+      <br style='clear: left' />
+    </div>
+  )
+  menu
 end
+
+def sorted_head_node_children(head_node)
+  head_node.children.sort { |x,y| x.name <=> y.name }
+end
+

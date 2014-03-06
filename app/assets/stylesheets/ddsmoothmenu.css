@@ -38,7 +38,7 @@ color: white;
 }
 
 .ddsmoothmenu ul li a.selected{ /*CSS class that's dynamically added to the currently active menu items' LI A element*/
-background: black; 
+background: black;
 color: white;
 }
 
@@ -46,7 +46,7 @@ color: white;
 background: black; /*background of menu items during onmouseover (hover state)*/
 color: white;
 }
-	
+
 /*1st sub level menu*/
 .ddsmoothmenu ul li ul{
 position: absolute;
@@ -110,5 +110,12 @@ opacity: 0.8;
 }
 
 .ddsmoothmenu ul li.currentyear, .ddsmoothmenu ul li ul li.currentyear {
-	background-color: #339;
+	background-color: #520063;
+}
+
+/* Non-ddsmoothmenu styles */
+.menu_header {
+  background-color: white;
+  color: #520063;
+  font-weight: bold;
 }

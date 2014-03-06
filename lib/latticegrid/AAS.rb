@@ -113,16 +113,24 @@ def LatticeGridHelper.do_ldap?
 end
 
 def latticegrid_menu_script
-
-"<div id='side_nav_menu' class='ddsmoothmenu-v'>
-<ul>
-	<li><a href='#'>Publications by year</a>
-		#{build_year_menu}
-	</li>
- 	<li>#{link_to( 'High Impact', high_impact_by_month_abstracts_path, :title=>'Recent high-impact publications')} </li>
-	<li>#{link_to( 'MeSH tag cloud', tag_cloud_abstracts_path, :title=>'Display MeSH tag cloud for all publications')} </li>
-	<li>#{link_to( 'Institution Overview', departments_orgs_path, :title => 'Display an overview of all institutions')} </li>
-</ul>
-<br style='clear: left' />
-</div>"
+  menu = %Q(
+  <div id='side_nav_menu' class='ddsmoothmenu-v'>
+    <ul>
+      <li>
+        <a href='#'>Publications by year</a>
+        #{build_year_menu}
+      </li>
+      <li>
+        #{link_to('High Impact', high_impact_by_month_abstracts_path, :title => 'Recent high-impact publications')}
+      </li>
+      <li>
+        #{link_to('MeSH tag cloud', tag_cloud_abstracts_path, :title => 'Display MeSH tag cloud for all publications')}
+      </li>
+      <li>
+        #{link_to('Institution Overview', departments_orgs_path, :title => 'Display an overview of all institutions')}
+      </li>
+    </ul>
+    <br style='clear: left' />
+  </div>)
+  menu
 end

@@ -1,11 +1,11 @@
 <% if action_name != 'index' && controller_name != 'welcome' %>
-  <script type="text/javascript">
+  <script type = 'text/javascript'>
     ddsmoothmenu.init({
-      mainmenuid: "side_nav_menu",  // Menu DIV id
+      mainmenuid: 'side_nav_menu',  // Menu DIV id
       orientation: 'v',             // Horizontal or vertical menu: Set to "h" or "v"
       classname: 'ddsmoothmenu-v',  // class added to menu's outer DIV
-      // customtheme: ["#804000", "#482400"],
-      contentsource: "markup"       // "markup" or ["container_id", "path_to_menu_file"]
+      contentsource: 'markup',      // "markup" or ["container_id", "path_to_menu_file"]
+      // customtheme: ["#804000", "#482400"]
     })
   </script>
 <% end %>

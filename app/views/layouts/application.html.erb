@@ -12,7 +12,7 @@
       <%= javascript_include_tag js %>
     <% end %>
     <!-- CSS Files -->
-    <% @stylesheets ||= [ "publications", "latticegrid/#{lattice_grid_instance}", "welcome" ] %>
+    <% @stylesheets ||= [ "publications", "latticegrid/#{lattice_grid_instance}", "welcome", 'ddsmoothmenu', 'ddsmoothmenu-v' ] %>
     <% @stylesheets.each do |ss| %>
       <%= stylesheet_link_tag ss %>
     <% end %>

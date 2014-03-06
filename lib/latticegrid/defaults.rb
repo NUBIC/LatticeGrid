@@ -350,53 +350,78 @@ end
     authors
   end
 
-  def highlightInvestigator(citation, speed_display=false, simple_links=false, authors=nil,memberArray=nil)
-    if authors.blank?
-      authors = citation.authors
-    end
-    #authors = authors.gsub(", "," ")
-    #authors = authors.gsub(/\. ?/,"")
+  def highlightInvestigator(citation, speed_display = false, simple_links = false, authors = nil, memberArray = nil)
+    authors = citation.authors if authors.blank?
     citation.investigators.each do |investigator|
-      re = Regexp.new('('+investigator.last_name.downcase+', '+investigator.first_name.at(0).downcase+'[^;\n]*)', Regexp::IGNORECASE)
-      isMember = (!memberArray.blank? and memberArray.include?(investigator.id))
-      authors.gsub!(re) { |author_match| link_to_investigator(citation, investigator, author_match.gsub(" ","| "), isMember, speed_display, simple_links) }
+      re = Regexp.new('(' + investigator.last_name.downcase + ', ' + investigator.first_name.at(0).downcase + '[^;\n]*)', Regexp::IGNORECASE)
+      isMember = (!memberArray.blank? && memberArray.include?(investigator.id))
+      authors.gsub!(re) do |author_match|
+        link_to_investigator(citation, investigator, author_match.gsub(' ', '| '), isMember, speed_display, simple_links)
+      end
     end
-    authors = authors.gsub("|","")
-    authors = authors.gsub("\n","; ")
+    authors = authors.gsub('|', '')
+    authors = authors.gsub("\n", '; ')
     authors
   end
 
   def edit_profile_link
-    link_to("Edit profile", profiles_path, :title=>"Login with your NetID and NetID password to change your profile")
+    link_to('Edit profile',
+            profiles_path,
+            :title => 'Login with your NetID and NetID password to change your profile')
   end
 
   def latticegrid_menu_script
-    " <div id='side_nav_menu' class='ddsmoothmenu-v'>
+    menu = %Q(
+      <div id='side_nav_menu' class='ddsmoothmenu-v'>
         <ul>
-          <li><a href='#'>Publications by year</a>
+          <li>
+            <a href='#'>Publications by year</a>
             #{build_year_menu}
-          </li>" + latticegrid_menu_script_head_node_children(@head_node) +
-         "<li>#{link_to( 'High Impact', high_impact_by_month_abstracts_path, :title=>'Recent high-impact publications')} </li>
-          <li>#{link_to( 'MeSH tag cloud', tag_cloud_abstracts_path, :title=>'Display MeSH tag cloud for all publications')} </li>
-          <li>#{link_to( 'Bundle Graph', investigator_edge_bundling_cytoscape_index_path, :title=>'Display Hierarchical Edge Bundle graph for all investigators')} </li>
-          <li>#{link_to( 'Chord Graph', chord_cytoscape_index_path, :title=>'Display Chord graph for all investigators')} </li>
-          <li>#{link_to( 'Overview', programs_orgs_path, :title => 'Display an overview for all programs')}</li>
+          </li>
+          #{latticegrid_menu_script_head_node_children(@head_node)}
+          <li>
+            #{link_to('High Impact', high_impact_by_month_abstracts_path, :title => 'Recent high-impact publications')}
+          </li>
+          <li>
+            #{link_to('MeSH tag cloud', tag_cloud_abstracts_path, :title => 'Display MeSH tag cloud for all publications')}
+          </li>
+          <li>
+            #{link_to('Bundle Graph', investigator_edge_bundling_cytoscape_index_path, :title => 'Display Hierarchical Edge Bundle graph for all investigators')}
+          </li>
+          <li>
+            #{link_to('Chord Graph', chord_cytoscape_index_path, :title => 'Display Chord graph for all investigators')}
+          </li>
+          <li>
+            #{link_to('Overview', programs_orgs_path, :title => 'Display an overview for all programs')}
+          </li>
         </ul>
         <br style='clear: left' />
-      </div>"
+      </div>
+    )
+    menu
   end
 
   def latticegrid_menu_script_head_node_children(head_node)
-    return "" unless head_node.try(:children)
-   "<li><a href='#'>Publications by program</a>
-      #{build_menu(head_node.children.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation}, Program) {|id| org_path(id)} }
-    </li>
-    <li><a href='#'>Faculty by program</a>
-      #{build_menu(head_node.children.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation}, Program) {|id| show_investigators_org_path(id)} }
-    </li>
-    <li><a href='#'>Graphs by program</a>
-      #{build_menu(head_node.children.sort{|x,y| x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation}, Program) {|id| show_org_graph_path(id)} }
-    </li>"
+    return '' unless head_node.try(:children)
+    menu = %Q(
+      <li>
+        <a href='#'>Publications by program</a>
+        #{build_menu(sorted_head_node_children(head_node), Program) { |id| org_path(id) }}
+      </li>
+      <li>
+        <a href='#'>Faculty by program</a>
+        #{build_menu(sorted_head_node_children(head_node), Program) { |id| show_investigators_org_path(id) }}
+      </li>
+      <li>
+        <a href='#'>Graphs by program</a>
+        #{build_menu(sorted_head_node_children(head_node), Program) { |id| show_org_graph_path(id) }}
+      </li>
+    )
+    menu
+  end
+
+  def sorted_head_node_children(head_node)
+    head_node.children.sort { |x,y| x.sort_order.to_s.rjust(3,'0') + ' ' + x.abbreviation <=> y.sort_order.to_s.rjust(3,'0') + ' ' + y.abbreviation }
   end
 
   def build_menu(nodes, org_type = nil, &block)
