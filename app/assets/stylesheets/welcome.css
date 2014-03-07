@@ -16,6 +16,14 @@
   font-size: 2em;
 }
 
+.welcome_column ul {
+  margin-left: 3em !important;
+}
+
+.welcome_column ul ul {
+  margin-left: 0 !important;
+}
+
 .welcome_search {
   margin: 1em 0.25em;
   padding: 0.25em;

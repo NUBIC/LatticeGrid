@@ -8,7 +8,7 @@
     <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
     <%= javascript_include_tag 'prototype' %>
     <!-- CSS Files -->
-    <% @stylesheets ||= [ "publications", "latticegrid/#{lattice_grid_instance}" ] %>
+    <% @stylesheets ||= [ "publications", "latticegrid/#{lattice_grid_instance}", 'ddsmoothmenu', 'ddsmoothmenu-v' ] %>
     <% @stylesheets.each do |ss| %>
       <%= stylesheet_link_tag ss %>
     <% end %>
@@ -38,8 +38,6 @@
         <p></p>
       </div> <!-- end of side -->
       <div id="maincontent">
-        <div id="niceline">
-        </div>
         <div id="content">
         <%= yield  %>
         </div> <!-- end of content -->

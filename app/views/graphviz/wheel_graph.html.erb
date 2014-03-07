@@ -16,7 +16,6 @@
 			   lineWidth: 3
 			},
 
-
 			url: '<%= image_path("../graphviz/#{params[:id]}/#{@wheel_json_data}") %>',
 				onItemClick: function(item, event) {
 				  // changed by Karthik Singh, July 2011
@@ -40,11 +39,13 @@
 </script>
 
 <div id="investigator_title_block">
-<% all_abstracts = @all_abstracts || nil -%>
-<%= investigator_bio_heading(@investigator, all_abstracts).html_safe %>
+  <% all_abstracts = @all_abstracts || nil -%>
+  <%= investigator_bio_heading(@investigator, all_abstracts, nil, false).html_safe %>
 </div>
 <div id="title">
 	<h2><%= @title || "Wheel graph showing the co-publications between faculty" -%></h2>
 </div>
 
-<div id="canvas" style="height:1000px;margin-left:40px; display:block;"><strong>Loading, please wait...</strong></div>
+<div id="canvas" style="height:1000px;margin-left:40px; display:block;">
+	<strong>Loading, please wait...</strong>
+</div>

@@ -1,6 +1,6 @@
 class GraphvizController < ApplicationController
 
-  caches_page( :show_member, :show_member_mesh, :show_org, :show_org_mesh, :investigator_wheel, :investigator_wheel_data, :org_wheel, :org_wheel_data) if LatticeGridHelper.CachePages()
+  caches_page(:show_member, :show_member_mesh, :show_org, :show_org_mesh, :investigator_wheel, :investigator_wheel_data, :org_wheel, :org_wheel_data) if LatticeGridHelper.CachePages
 
   require 'graphviz_config'
   require 'csv_generator'
@@ -14,16 +14,16 @@ class GraphvizController < ApplicationController
   include MeshHelper # for do_mesh_search
 
   def show_member
-    @javascripts_add = ['prototype', 'scriptaculous', 'effects']
+    @javascripts_add = %w(prototype scriptaculous effects)
     @investigator = Investigator.find_by_username(params[:id])
-    params[:analysis] = "member"
+    params[:analysis] = 'member'
     show_core
   end
 
   def show_member_awards
-    @javascripts_add = ['prototype', 'scriptaculous', 'effects']
+    @javascripts_add = %w(prototype scriptaculous effects)
     @investigator = Investigator.find_by_username(params[:id])
-    params[:analysis] = "member_awards"
+    params[:analysis] = 'member_awards'
     show_core
   end
 
@@ -33,7 +33,7 @@ class GraphvizController < ApplicationController
     @title = "Wheel graph showing the co-publications for #{@investigator.name}"
     @wheel_json_data = 'investigator_wheel_data.js'
     @wheel_action = 'investigator_wheel'
-    render :layout => 'wheel_graph', :action => 'wheel_graph'
+    render layout: 'wheel_graph', action: 'wheel_graph'
   end
 
   def investigator_wheel_data
@@ -41,12 +41,12 @@ class GraphvizController < ApplicationController
     the_array = []
     if @investigator
       co_authors = @investigator.co_authors
-      the_array << wheel_graph_hash(@investigator, co_authors.collect(&:colleague_id))
+      the_array << wheel_graph_hash(@investigator, co_authors.map(&:colleague_id))
       co_authors.each do |co_author|
-        the_array << wheel_graph_hash(co_author.colleague, co_authors.collect(&:colleague_id) << @investigator.id)
+        the_array << wheel_graph_hash(co_author.colleague, co_authors.map(&:colleague_id) << @investigator.id) if co_author.colleague
       end
     end
-    render :json => the_array.as_json
+    render json: the_array.as_json
   end
 
   def org_wheel
@@ -112,7 +112,7 @@ class GraphvizController < ApplicationController
     render :layout => false
   end
 
-  #send_graphviz/:id/:analysis/:distance/:stringency/:program.:format'
+  # send_graphviz/:id/:analysis/:distance/:stringency/:program.:format'
   def send_graphviz_image
     handle_graphviz_setup
     @file_name = "public/#{@graph_path}#{params[:program]}.#{@output_format}"
@@ -121,9 +121,9 @@ class GraphvizController < ApplicationController
   end
 
   def wheel_graph_hash(user, allowed_connections)
-    co_authors=user.co_authors
+    co_authors = user.co_authors
     connections = co_authors.collect do |pair|
-      if allowed_connections.include?(pair.colleague_id)
+      if allowed_connections.include?(pair.colleague_id) && !pair.colleague.nil?
         [pair.colleague.username, pair.publication_cnt]
       end
     end.compact
@@ -138,25 +138,25 @@ class GraphvizController < ApplicationController
 
   def handle_graphviz_setup
     # in 'graphviz_config'
-    params[:program] ||= "neato"
+    params[:program] ||= 'neato'
     params[:start_date] ||= (session[:last_load_date] - 5.years).to_date.to_s(:justdate)
     params[:end_date] ||= session[:last_load_date].to_s(:justdate)
     set_graphviz_defaults(params)
     # in the helper
-    handle_graphviz_request()
-    handle_graph_file()
+    handle_graphviz_request
+    handle_graph_file
   end
   private :handle_graphviz_setup
 
   def show_core
-    params[:program] ||= "neato"
+    params[:program] ||= 'neato'
     params[:start_date] ||= (session[:last_load_date] - 5.years).to_date.to_s(:justdate)
     params[:end_date] ||= session[:last_load_date].to_s(:justdate)
     set_graphviz_defaults(params)
 
     params[:format] =  nil
-    if !params[:id].blank? then
-       respond_to do |format|
+    if !params[:id].blank?
+      respond_to do |format|
         format.html { render }
       end
     else

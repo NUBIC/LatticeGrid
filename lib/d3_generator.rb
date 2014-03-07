@@ -62,7 +62,7 @@ def add_investigator_to_graph(investigator,coauthor_ids, graph)
   name = investigator.last_name
   graph << d3_investigator_graph(investigator, coauthor_ids, name)
   investigator.colleague_coauthors.each do |colleague|
-    graph << d3_investigator_graph(colleague, coauthor_ids, name)
+    graph << d3_investigator_graph(colleague, coauthor_ids, name) if colleague
   end
   return graph
 end

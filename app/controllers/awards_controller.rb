@@ -59,7 +59,7 @@ class AwardsController < ApplicationController
 
   def investigator
     @javascripts_add = ['jquery-ui.min']
-    @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]
+    @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui', 'ddsmoothmenu', 'ddsmoothmenu-v' ]
     if params[:id].nil? then
       redirect_to( current_abstracts_url)
     else
@@ -99,7 +99,7 @@ class AwardsController < ApplicationController
         redirect_to( current_abstracts_url)
       else
         @javascripts_add = ['jquery.min', 'jquery.tablesorter.min', 'jquery.fixheadertable.min', 'jquery-ui.min']
-        @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]
+        @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui', 'ddsmoothmenu', 'ddsmoothmenu-v' ]
         @awards = Proposal.recents_by_type(params[:funding_types], params[:start_date], params[:end_date])
         previous = nil
         @css =  "#main {width:1900px;}"
@@ -146,7 +146,7 @@ class AwardsController < ApplicationController
         redirect_to( current_abstracts_url)
       else
         @javascripts_add = ['jquery.min', 'jquery.tablesorter.min', 'jquery.fixheadertable.min', 'jquery-ui.min']
-        @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]
+        @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui', 'ddsmoothmenu', 'ddsmoothmenu-v' ]
 
         @faculty = Investigator.find_investigators_in_list(params[:investigator_ids]).sort{|x,y| x.last_name+' '+x.first_name <=> y.last_name+' '+y.first_name}
         @investigators_in_unit = @faculty.map(&:id).sort.uniq
@@ -188,7 +188,7 @@ class AwardsController < ApplicationController
 
   def org
     @javascripts_add = ['jquery-ui.min']
-    @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui' ]
+    @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui', 'ddsmoothmenu', 'ddsmoothmenu-v' ]
     if params[:id].nil? then
       redirect_to( current_abstracts_url)
     else

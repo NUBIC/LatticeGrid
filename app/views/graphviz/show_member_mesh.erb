@@ -1,11 +1,19 @@
 <h1>MeSH-fingerprint network diagram for <%= @investigator.name %></h1>
 
 <div id="investigator_title_block">
-	<% all_abstracts = @all_abstracts || nil -%>
-	<%= investigator_bio_heading(@investigator, all_abstracts).html_safe %>
+  <% all_abstracts = @all_abstracts || nil -%>
+  <%= investigator_bio_heading(@investigator, all_abstracts).html_safe %>
 </div>
 
-<%= render( :partial => "graphviz_template" ) %>
+<%= render 'graphviz_template' %>
 
-<p>This graph shows the network diagram for faculty members based on MeSH term similarity between publications. Stringency is a unit-less score based on the number of MeSH terms shared between publications associated with the graphed individuals. Distance allows you to set the number of 'degrees of separation' between the faculty member and the rest of the organization. Only 1st and 2nd degrees of separation are currently supported. There are five different graphing options supported - neato, dot, circo, twopi and fdp. Please experiment with them. Finally, you can select the type of output generated. SVG is the default (an xml vector-based, open web image interface). png (another open image format) and pdf images can also be generated and will be either saved to your local disk or displayed in your browser, depending on how you have configured your browser. </p>
-
+<p>
+  This graph shows the network diagram for faculty members based on MeSH term similarity between publications.
+  Stringency is a unit-less score based on the number of MeSH terms shared between publications associated with the graphed individuals.
+  Distance allows you to set the number of 'degrees of separation' between the faculty member and the rest of the organization.
+  Only 1st and 2nd degrees of separation are currently supported. There are five different graphing options supported - neato, dot, circo, twopi and fdp.
+  Please experiment with them.
+  Finally, you can select the type of output generated. SVG is the default (an xml vector-based, open web image interface).
+  png (another open image format) and pdf images can also be generated and will be either saved to your local disk or displayed in your browser,
+  depending on how you have configured your browser.
+</p>

@@ -62,7 +62,6 @@ class CytoscapeController < ApplicationController
     @title ||= 'Publications Collaborations'
     @org = find_unit_by_id_or_name(params[:id])
     @dataurl = org_cytoscape_data_url(params[:id], params[:depth], params[:include_publications], params[:include_awards], params[:include_studies])
-
     show
   end
 
@@ -85,7 +84,6 @@ class CytoscapeController < ApplicationController
     handle_data_params
     @title = "All inter-unit collaborations from #{params[:start_date]} to #{params[:end_date]}"
     @dataurl = all_org_cytoscape_data_url(params[:include_publications], params[:include_awards], params[:include_studies], params[:start_date], params[:end_date])
-
     show
   end
 
@@ -97,10 +95,8 @@ class CytoscapeController < ApplicationController
     handle_data_params
     @title = "All inter-unit collaborations from #{params[:start_date]} to #{params[:end_date]}"
     @dataurl = all_org_cytoscape_data_url(params[:include_publications], params[:include_awards], params[:include_studies], params[:start_date], params[:end_date])
-
     show
   end
-
 
   def awards
     params[:include_publications] ||= '0'
@@ -151,7 +147,7 @@ class CytoscapeController < ApplicationController
 
   def jit
     @javascripts = %w(jit example2 FusionCharts ddsmoothmenu jquery.min)
-    @stylesheets = ['publications', "latticegrid/#{lattice_grid_instance}", 'base', 'ForceDirected']
+    @stylesheets = ['publications', "latticegrid/#{lattice_grid_instance}", 'base', 'ForceDirected', 'ddsmoothmenu', 'ddsmoothmenu-v']
     investigator = Investigator.find_by_username(params[:id])
     @subtree_hash = adjacencies(investigator)
   end
