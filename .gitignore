@@ -28,6 +28,7 @@ doc/notes/
 
 # Ignore cached files
 public/cache
+public/graphviz/*
 
 # Ignore coverage
 coverage
