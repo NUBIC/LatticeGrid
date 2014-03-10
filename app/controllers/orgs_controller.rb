@@ -132,23 +132,23 @@ class OrgsController < ApplicationController
 
   def color_scheme(color_number)
     case color_number
-      when 0..2 then "maroon"
-      when 3..4 then "firebrick"
-      when 5..6 then "darkturquoise"
-      when 7..8 then "slategray"
-      when 9 then "powderblue"
-      else "goldenrod"
+    when 0..2 then "maroon"
+    when 3..4 then "firebrick"
+    when 5..6 then "darkturquoise"
+    when 7..8 then "slategray"
+    when 9 then "powderblue"
+    else "goldenrod"
     end
   end
 
   def node_color(pub_units, max_units)
     case (5-(pub_units/(max_units/5))).to_i
-      when 0 then "tomato"
-      when 1 then "coral"
-      when 2 then "thistle"
-      when 3 then "cyan"
-      when 4 then "powderblue"
-      else "lightgray"
+    when 0 then "tomato"
+    when 1 then "coral"
+    when 2 then "thistle"
+    when 3 then "cyan"
+    when 4 then "powderblue"
+    else "lightgray"
     end
   end
 
@@ -247,21 +247,21 @@ class OrgsController < ApplicationController
   end
 
   def show_investigators
-    if params[:id].nil? then
+    if params[:id].nil?
       redirect_to index_orgs_url
     else
       @unit = find_unit_by_id_or_name(params[:id])
       @heading = "Faculty Listing for '#{@unit.name}'"
 
       respond_to do |format|
-        format.html # show.html.erb
-        format.xml  { render :xml => @unit }
+        format.html # show_investigators.html.erb
+        format.xml  { render xml: @unit }
         format.pdf do
           @pdf = true
-           render :pdf => "Show Investigators for " + @unit.name,
-                  :stylesheets => ["pdf"],
-                  :template => "orgs/show_investigators.html.erb",
-                  :layout => "pdf"
+          render pdf: "Show Investigators for #{@unit.name}",
+                 stylesheets: ['pdf'],
+                 template: 'orgs/show_investigators.html.erb',
+                 layout: 'pdf'
         end
       end
     end
@@ -271,18 +271,18 @@ class OrgsController < ApplicationController
   # GET /orgs/1.xml
   def show
     redirect = false
-    if params[:page].nil? then
-      params[:page] = "1"
+    if params[:page].nil?
+      params[:page] = '1'
       redirect = true
     end
-    if params[:id].nil? then
+    if params[:id].nil?
       redirect_to index_orgs_url
     elsif redirect then
       # FIXME: redirect_to params does not work in Rails 3
       redirect_to params
     else
       @unit = find_unit_by_id_or_name(params[:id])
-      @do_pagination = "1"
+      @do_pagination = '1'
       @abstracts = @unit.abstract_data( params[:page] )
       @all_abstracts = @unit.get_minimal_all_data
       @heading = "Publications (total of #{@abstracts.total_entries})"
@@ -304,9 +304,9 @@ class OrgsController < ApplicationController
       redirect_to params
     else
       @unit = find_unit_by_id_or_name(params[:id])
-      @do_pagination = "0"
-      @abstracts = @unit.display_year_data( @year )
-      @all_abstracts = @unit.get_minimal_all_data( )
+      @do_pagination = '0'
+      @abstracts = @unit.display_year_data(@year)
+      @all_abstracts = @unit.get_minimal_all_data
       @heading = "Publications during #{@year} (total of #{@abstracts.length})"
       render :action => 'show'
     end
@@ -326,7 +326,7 @@ class OrgsController < ApplicationController
   def period_stats
     handle_start_and_end_date
     @heading = "Publication Statistics by Program from #{params[:start_date]} to #{params[:end_date]} "
-    @units = build_stats_array()
+    @units = build_stats_array
     render :layout => 'printable', :action => 'stats'
   end
 
@@ -337,7 +337,7 @@ class OrgsController < ApplicationController
     params[:end_date] = Date.tomorrow
     handle_start_and_end_date
     @heading = "Publication Statistics by Program for the past five years"
-    @units = build_stats_array()
+    @units = build_stats_array
     render :layout => 'printable'
   end
 
@@ -393,7 +393,7 @@ class OrgsController < ApplicationController
 
     @abstracts = Abstract.all_ccsg_publications_by_date(@investigators_in_unit, params[:start_date], params[:end_date], @exclude_letters, @limit_to_first_last, @impact_factor )
 
-    @do_pagination = "0"
+    @do_pagination = '0'
     @heading = "#{@abstracts.length} publications. Publication Listing"
     @heading = @heading + " excluding letters" if @exclude_letters
     @heading = @heading + " with at least an impact factor of #{@impact_factor}" unless @impact_factor.blank?
@@ -451,7 +451,7 @@ class OrgsController < ApplicationController
     else
       @abstracts = Abstract.investigator_publications_by_date( @faculty, params[:start_date], params[:end_date])
     end
-    @do_pagination = "0"
+    @do_pagination = '0'
     @heading = "#{@abstracts.length} publications. Selected publications  "
     @heading = @heading + " from #{@start_date} " if !params[:start_date].blank?
     @heading = @heading + " to #{@end_date}" if !params[:end_date].blank?

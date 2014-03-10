@@ -1,5 +1,5 @@
-<% include_mesh=true if include_mesh.nil? %>
-<% include_mesh=false if params[:format] == "pdf" %>
+<% include_mesh = true if include_mesh.nil? %>
+<% include_mesh = false if params[:format] == "pdf" %>
 <p style="float:right; margin-right:20px; margin-top:12px;">
   <%= link_to_unless(params[:format] == "pdf", "Download as pdf", show_investigators_org_url(@unit.id,"pdf")) %>
 </p>
@@ -55,13 +55,9 @@ Click on the investigator to find all publications attributed to that investigat
   <h3>
     <%= "MeSH cloud from publications in <i>#{@unit.name}</i>".html_safe %>
   </h3>
-  <div id="tag_cloud"></div>
+  <div id="tag_cloud"> </div>
   <script type="text/javascript" language="javascript">
-    <%= remote_function(:url => tag_cloud_org_path( @unit.id ),
-                        :method => :get,
-                        :before => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')" )
-    %>
+    <%= remote_function(:url => tag_cloud_org_path(@unit.id), :method => :get) %>
   </script>
   <br/>
 <% end -%>
