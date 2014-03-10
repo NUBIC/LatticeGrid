@@ -13,7 +13,7 @@
   width: 30%;
   margin: 1em 0.25em;
   padding: 0.25em;
-  font-size: 2em;
+  font-size: 1.5em;
 }
 
 .welcome_column .welcome_image {
@@ -34,7 +34,7 @@
 }
 
 .welcome_search .search_header {
-  font-size: 2em;
+  font-size: 1.5em;
 }
 
 #centers_menu ul li ul li {
