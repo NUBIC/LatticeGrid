@@ -30,7 +30,7 @@ class InvestigatorsController < ApplicationController
   def list_all
     @investigators = Investigator.includes([:home_department, :appointments]).order('last_name, first_name').to_a
     respond_to do |format|
-      format.html { render layout: 'printable'}
+      format.html { render layout: 'printable' }
       format.xml { render xml: @units }
       format.pdf do
         @pdf = true
@@ -41,14 +41,16 @@ class InvestigatorsController < ApplicationController
       end
       format.xls do
         @pdf = true
-        send_data(render(template: 'investigators/list_all.html', layout: 'excel'),
+        data = render_to_string(template: 'investigators/list_all.html', layout: 'excel')
+        send_data(data,
                   filename: "Investigator_Listing_#{Date.today.to_s}.xls",
                   type: 'application/vnd.ms-excel',
                   disposition: 'attachment')
       end
       format.doc do
         @pdf = true
-        send_data(render(template: 'investigators/list_all.html', layout: 'excel'),
+        data = render_to_string(template: 'investigators/list_all.html', layout: 'excel')
+        send_data(data,
                   filename: "Investigator_Listing_#{Date.today.to_s}.doc",
                   type: 'application/msword',
                   disposition: 'attachment')
@@ -75,7 +77,8 @@ class InvestigatorsController < ApplicationController
         end
         format.xls do
           @pdf = true
-          send_data(render(template: 'investigators/list_all.html', layout: 'excel'),
+          data = render_to_string(template: 'investigators/list_all.html', layout: 'excel')
+          send_data(data,
                     filename: 'Investigator Listing.xls',
                     type: 'application/vnd.ms-excel',
                     disposition: 'attachment')
@@ -83,7 +86,8 @@ class InvestigatorsController < ApplicationController
         end
         format.doc do
           @pdf = true
-          send_data(render(template: 'investigators/list_all.html', layout: 'excel'),
+          data = render_to_string(template: 'investigators/list_all.html', layout: 'excel')
+          send_data(data,
                     filename: 'Investigator Listing.doc',
                     type: 'application/msword',
                     disposition: 'attachment')
@@ -96,7 +100,7 @@ class InvestigatorsController < ApplicationController
     @javascripts_add = ['jquery.min', 'jquery.tablesorter.min', 'jquery.fixheadertable.min']
     @investigators = Investigator.where('total_publications > 2').order('total_publications desc').limit(3000).to_a
     respond_to do |format|
-      format.html { render layout: 'printable'}
+      format.html { render layout: 'printable' }
       format.xml { render xml: @investigators }
       format.pdf do
         @pdf = true
@@ -165,7 +169,6 @@ class InvestigatorsController < ApplicationController
       format.json { render layout: false, json: @abstracts.as_json }
       format.xml  { render layout: false, xml: @abstracts.to_xml }
     end
-
   end
 
   def abstract_count
@@ -197,7 +200,6 @@ class InvestigatorsController < ApplicationController
         render layout: false, xml: data.to_xml
       end
     end
-
   end
 
   def show_colleagues
@@ -458,5 +460,4 @@ class InvestigatorsController < ApplicationController
     render layout: false, template: 'investigators/direct_search.xml'  # direct_search.xml.builder
     logger.error "direct_search completed with #{params[:id]}"
   end
-
 end

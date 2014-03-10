@@ -336,7 +336,7 @@ class OrgsController < ApplicationController
     params[:start_date] = 5.years.ago
     params[:end_date] = Date.tomorrow
     handle_start_and_end_date
-    @heading = "Publication Statistics by Program for the past five years"
+    @heading = 'Publication Statistics by Program for the past five years'
     @units = build_stats_array
     render :layout => 'printable'
   end
@@ -363,18 +363,18 @@ class OrgsController < ApplicationController
 
   def list
     handle_start_and_end_date
-    @heading = "Publication Listing by Org "
-    @heading = @heading + " for #{@year} " if params[:start_date].blank?
-    @heading = @heading + " from #{@start_date} " if !params[:start_date].blank?
-    @heading = @heading + " to #{@end_date}" if !params[:end_date].blank?
-    render :layout => 'printable'
+    @heading = 'Publication Listing by Org '
+    @heading = "#{@heading} for #{@year} " if params[:start_date].blank?
+    @heading = "#{@heading} from #{@start_date} " unless params[:start_date].blank?
+    @heading = "#{@heading} to #{@end_date}" unless params[:end_date].blank?
+    render layout: 'printable'
   end
 
   def list_abstracts_during_period_rjs
     handle_start_and_end_date
     @unit = OrganizationalUnit.find(params[:id])
     @faculty = @unit.get_faculty_by_types(params[:affiliation_types])
-    @exclude_letters = ! params[:exclude_letters].blank?
+    @exclude_letters = !params[:exclude_letters].blank?
     @faculty_affiliation_types = params[:affiliation_types]
     faculty_ids = @faculty.map(&:id)
     @abstracts = Abstract.all_ccsg_publications_by_date(faculty_ids, params[:start_date], params[:end_date], @exclude_letters)
@@ -386,20 +386,20 @@ class OrgsController < ApplicationController
     @unit = OrganizationalUnit.find(params[:id])
     @faculty_affiliation_types = params[:affiliation_types]
     @faculty = @unit.get_faculty_by_types(params[:affiliation_types])
-    @exclude_letters = ! params[:exclude_letters].blank?
-    @limit_to_first_last = ! params[:limit_to_first_last].blank?
+    @exclude_letters = !params[:exclude_letters].blank?
+    @limit_to_first_last = !params[:limit_to_first_last].blank?
     @impact_factor = params[:impact_factor]
     @investigators_in_unit = @faculty.map(&:id)
 
-    @abstracts = Abstract.all_ccsg_publications_by_date(@investigators_in_unit, params[:start_date], params[:end_date], @exclude_letters, @limit_to_first_last, @impact_factor )
+    @abstracts = Abstract.all_ccsg_publications_by_date(@investigators_in_unit, params[:start_date], params[:end_date], @exclude_letters, @limit_to_first_last, @impact_factor)
 
     @do_pagination = '0'
     @heading = "#{@abstracts.length} publications. Publication Listing"
-    @heading = @heading + " excluding letters" if @exclude_letters
-    @heading = @heading + " with at least an impact factor of #{@impact_factor}" unless @impact_factor.blank?
-    @heading = @heading + " from #{@start_date} " if !params[:start_date].blank?
-    @heading = @heading + " to #{@end_date}" if !params[:end_date].blank?
-    @heading = @heading + " limited to first and last authors who are part of #{@unit.name}" if @limit_to_first_last
+    @heading = "#{@heading} excluding letters" if @exclude_letters
+    @heading = "#{@heading} with at least an impact factor of #{@impact_factor}" unless @impact_factor.blank?
+    @heading = "#{@heading} from #{@start_date} " unless params[:start_date].blank?
+    @heading = "#{@heading} to #{@end_date}" unless params[:end_date].blank?
+    @heading = "#{@heading} limited to first and last authors who are part of #{@unit.name}" if @limit_to_first_last
     @include_mesh = false
     @include_graph_link = false
     @show_paginator = false
@@ -411,28 +411,30 @@ class OrgsController < ApplicationController
     @simple_links = true
 
     respond_to do |format|
-      format.html { render :layout => 'printable', :controller=> :orgs, :action => :show } # show.html.erb
-      format.xml  { render :xml => @abstracts }
+      format.html { render layout: 'printable', controller: :orgs, action: :show } # show.html.erb
+      format.xml  { render xml: @abstracts }
       format.pdf do
         @pdf = true
-        render :pdf => "Abstracts for " + @unit.name,
-               :stylesheets => ["pdf"],
-               :template => "orgs/show.html.erb",
-               :layout => "pdf"
+        render pdf: "Abstracts for #{@unit.name}",
+               stylesheets: ['pdf'],
+               template: 'orgs/show.html.erb',
+               layout: 'pdf'
       end
       format.xls do
         @pdf = true
-        send_data(render(:template => 'orgs/show.html', :layout => "excel"),
-          :filename => "Abstracts for #{@unit.name}.xls",
-          :type => 'application/vnd.ms-excel',
-          :disposition => 'attachment')
+        data = render_to_string(template: 'orgs/show.html', layout: 'excel')
+        send_data(data,
+                  filename: "Abstracts for #{@unit.name}.xls",
+                  type: 'application/vnd.ms-excel',
+                  disposition: 'attachment')
       end
       format.doc do
         @pdf = true
-        send_data(render(:template => 'orgs/show.html', :layout => "excel"),
-                  :filename => "Abstracts for #{@unit.name}.doc",
-                  :type => 'application/msword',
-                  :disposition => 'attachment')
+        data = render_to_string(template: 'orgs/show.html', layout: 'excel')
+        send_data(data,
+                  filename: "Abstracts for #{@unit.name}.doc",
+                  type: 'application/msword',
+                  disposition: 'attachment')
       end
     end
   end
@@ -470,24 +472,26 @@ class OrgsController < ApplicationController
       format.xml  { render :xml => @abstracts }
       format.pdf do
         @pdf = true
-         render :pdf => "Abstracts for " + @unit.name,
-                :stylesheets => ["pdf"],
-                :template => "orgs/show.html.erb",
-                :layout => "pdf"
+         render pdf: "Abstracts for #{@unit.name}",
+                stylesheets: ['pdf'],
+                template: 'orgs/show.html.erb',
+                layout => 'pdf'
       end
       format.xls do
         @pdf = true
-        send_data(render(:template => 'orgs/show.html', :layout => "excel"),
-                 :filename => "Abstracts for #{@unit.name}.xls",
-                 :type => 'application/vnd.ms-excel',
-                 :disposition => 'attachment')
+        data = render_to_string(template: 'orgs/show.html', layout: 'excel')
+        send_data(data,
+                  filename: "Abstracts for #{@unit.name}.xls",
+                  type: 'application/vnd.ms-excel',
+                  disposition: 'attachment')
       end
       format.doc do
         @pdf = true
-        send_data(render(:template => 'orgs/show.html', :layout => "excel"),
-                  :filename => "Abstracts for #{@unit.name}.doc",
-                  :type => 'application/msword',
-                  :disposition => 'attachment')
+        data = render_to_string(template: 'orgs/show.html', layout: 'excel')
+        send_data(data,
+                  filename: "Abstracts for #{@unit.name}.doc",
+                  type: 'application/msword',
+                  disposition: 'attachment')
       end
     end
   end
@@ -495,12 +499,12 @@ class OrgsController < ApplicationController
   def build_stats_array
     @exclude_letters = ! params[:exclude_letters].blank?
     @units = @head_node.children.sort do |x,y|
-      x.sort_order.to_s.rjust(3,'0')+' '+x.abbreviation <=> y.sort_order.to_s.rjust(3,'0')+' '+y.abbreviation
+      x.sort_order.to_s.rjust(3,'0') + ' ' + x.abbreviation <=> y.sort_order.to_s.rjust(3,'0') + ' ' + y.abbreviation
     end
     @faculty_affiliation_types = params[:affiliation_types]
     @units.each do |unit|
       if @faculty_affiliation_types.blank?
-        unit["All"] = build_unit_stats(unit, nil)
+        unit['All'] = build_unit_stats(unit, nil)
       else
         @faculty_affiliation_types.each do |affilliation_type|
           unit[affilliation_type] = build_unit_stats(unit, affilliation_type)
