@@ -16,6 +16,10 @@
   font-size: 2em;
 }
 
+.welcome_column .welcome_image {
+  margin-top: 1em;
+}
+
 .welcome_column ul {
   margin-left: 3em !important;
 }
