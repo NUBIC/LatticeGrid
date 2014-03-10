@@ -188,53 +188,52 @@ class AwardsController < ApplicationController
 
   def org
     @javascripts_add = ['jquery-ui.min']
-    @stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui', 'ddsmoothmenu', 'ddsmoothmenu-v' ]
-    if params[:id].nil? then
-      redirect_to( current_abstracts_url)
+    @stylesheets = ['publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui', 'ddsmoothmenu', 'ddsmoothmenu-v']
+    if params[:id].nil?
+      redirect_to current_abstracts_url
     else
       @unit = find_unit_by_id_or_name(params[:id])
       @investigators = @unit.all_primary_or_member_faculty
       @investigator_ids = @investigators.map(&:id)
       @awards = Proposal.belonging_to_pi_ids(@investigator_ids)
       previous = nil
-      @awards_total = @awards.map{ |a|
-        val = (previous.blank? or previous != a.id ) ? a.total_amount : 0
+      @awards_total = @awards.map do |a|
+        val = (previous.blank? || previous != a.id) ? a.total_amount : 0
         previous = a.id
-        val}.inject(0){|sum, element| sum+element}
+        val
+      end.inject(0) { |sum, element| sum + element }
       respond_to do |format|
-      format.html { render }
-      format.xml  { render :xml => @investigator.proposals }
-      format.xls  {
-        @pdf = 1
-        send_data(render(:template => 'awards/org.html', :layout => "excel"),
-          :filename => "award_listing_for_#{@unit.name}.xls",
-          :type => 'application/vnd.ms-excel',
-          :disposition => 'attachment')
-      }
-      format.doc  {
-        @pdf = 1
-        send_data(render(:template => 'awards/org.html', :layout => "excel"),
-          :filename => "award_listing_for_#{@unit.name}.doc",
-          :type => 'application/msword',
-          :disposition => 'attachment')
-      }
-      format.pdf do
-        @pdf = 1
-        render( :pdf => "Award listing for " + @unit.name,
-           :stylesheets => ["pdf"],
-           :template => "awards/org.html",
-           :layout => "pdf")
-      end
+        format.html { render }
+        format.xml  { render xml: @investigator.proposals }
+        format.xls do
+          @pdf = 1
+          award_data = render_to_string(template: 'awards/org.html', layout: 'excel')
+          send_data(award_data,
+                    filename: "award_listing_for_#{@unit.name}.xls",
+                    type: 'application/vnd.ms-excel',
+                    disposition: 'attachment')
+        end
+        format.doc do
+          @pdf = 1
+          award_data = render_to_string(template: 'awards/org.html', layout: 'excel')
+          send_data(award_data,
+                    filename: "award_listing_for_#{@unit.name}.doc",
+                    type: 'application/msword',
+                    disposition: 'attachment')
+        end
+        format.pdf do
+          @pdf = 1
+          render(pdf: "Award listing for #{@unit.name}",
+                 stylesheets: ['pdf'],
+                 template: 'awards/org.html',
+                 layout: 'pdf')
+        end
       end
     end
   end
-
-  private
 
   def check_allowed
-    unless allowed_ip(get_client_ip()) then
-      redirect_to disallowed_awards_url
-    end
+    redirect_to disallowed_awards_url unless allowed_ip(get_client_ip)
   end
-
+  private :check_allowed
 end
