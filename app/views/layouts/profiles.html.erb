@@ -5,15 +5,14 @@
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %></title>
     <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
-
   	<!-- javascript files -->
-  	<% @javascripts ||= [ 'application', 'prototype', 'jquery.min', 'jquery.sparkline.min' ] %>
+  	<% @javascripts ||= ['application', 'prototype', 'jquery.min', 'jquery.sparkline.min', 'ddsmoothmenu2'] %>
   	<% @javascripts += @javascripts_add if defined?(@javascripts_add) %>
     <% @javascripts.each do |js| %>
       <%= javascript_include_tag js %>
     <% end %>
   	<!-- CSS Files -->
-  	<% @stylesheets ||= [ 'publications', "latticegrid/#{lattice_grid_instance}", 'ddsmoothmenu', 'ddsmoothmenu-v' ] %>
+  	<% @stylesheets ||= ['publications', "latticegrid/#{lattice_grid_instance}", 'ddsmoothmenu', 'ddsmoothmenu-v'] %>
     <% @stylesheets.each do |ss| %>
       <%= stylesheet_link_tag ss %>
     <% end %>

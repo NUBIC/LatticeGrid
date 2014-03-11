@@ -438,6 +438,7 @@ module LatticeGridHelper
   end
 
   def build_menu(nodes, org_type = nil, &block)
+    Rails.logger.info("\n\n~~~ build_menu [#{org_type}] nodes = #{nodes.map(&:name).inspect}\n\n")
     out = '<ul>'
     nodes.each do |unit|
       if org_type.nil? || unit.kind_of?(org_type)

@@ -11,7 +11,7 @@
     <% end %>
     <link rel="shortcut icon" href='<%= "/assets/#{lattice_grid_instance}/favicon.ico" -%>' />
     <!-- CSS Files -->
-    <% @stylesheets ||= [ 'd3/bundle', 'ddsmoothmenu', 'ddsmoothmenu-v' ] %>
+    <% @stylesheets ||= ['d3/bundle', 'ddsmoothmenu', 'ddsmoothmenu-v'] %>
     <% @stylesheets.each do |ss| %>
       <%= stylesheet_link_tag ss %>
     <% end %>

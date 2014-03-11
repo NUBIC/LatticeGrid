@@ -484,6 +484,16 @@ input:-moz-placeholder {
   background-color: #709fc7;
 }
 
+#nav_links {
+  display: block;
+}
+
+#nav_links a,
+#nav_links .this_page {
+  display: inline-block;
+  margin-right: -1em;
+}
+
 #content {
   padding: 5px 5px 5px 15px;
   overflow: hidden;

@@ -21,11 +21,7 @@
   </h3>
   <div id="tag_cloud"></div>
   <script type="text/javascript" language="JavaScript">
-    <%= remote_function(:url => tag_cloud_by_year_abstract_url(@year),
-                        :method => :get,
-                        :before => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')")
-    %>
+    <%= remote_function(:url => tag_cloud_by_year_abstract_url(@year), :method => :get) %>
   </script>
   <br/>
 <% end %>
