@@ -1,18 +1,20 @@
 <div id="search">
   <%= form_tag('/welcome/search', { :method => :get, :id => 'search_form2' }) do %>
     <span id='search_text'>
-      <%= text_field_tag(:keywords, params[:keywords], :size => 45) %>
+      <%= text_field_tag(:keywords, params[:keywords],
+                         :size => 45,
+                         :placeholder => 'Examples: Michael Abecassis, vitamin D, glioma.') %>
     </span>
     <span id='search_select'>
-      <%= select_tag("search_field", options_for_select(search_options, params[:search_field]), { :class => "dropdown" }) -%>
+      <%= select_tag("search_field",
+                     options_for_select(search_options, params[:search_field]),
+                     { :class => "dropdown" }) -%>
     </span>
     <span id='search_submit'>
       <%= submit_tag 'Search', :disable_with => 'Searching...' %>
     </span>
   <% end %>
   <div id='search_instructions'>
-    Examples: Michael Abecassis, vitamin D, glioma.
-    <br />
     Use '*' as a wildcard.
   </div>
 </div>
