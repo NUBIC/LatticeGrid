@@ -29,7 +29,7 @@ module LatticeGridHelper
   end
 
   def self.header_title
-    'Cancer Center Member Publications and Abstracts Site'
+    "Cancer Center Member Publications and Abstracts Site<div id='subtitle'>An open source publications/collaboration assessment tool</div>"
   end
 
   def self.menu_head_abbreviation

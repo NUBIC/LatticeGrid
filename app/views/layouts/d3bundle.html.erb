@@ -36,7 +36,7 @@
         <%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %>
       </div>
       <div id="title">
-        <%= link_to( LatticeGridHelper.header_title, current_abstracts_url) -%>
+        <%= link_to( LatticeGridHelper.header_title.html_safe, current_abstracts_url) -%>
       </div>
       <div id="search">
         <% if LatticeGridHelper.allow_profile_edits? %>

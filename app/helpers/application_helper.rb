@@ -65,6 +65,21 @@ module ApplicationHelper
     is_admin?
   end
 
+  # Copying from LatticeGridHelper lib/lattice_grid/defaults.rb
+  def is_admin?
+    begin
+      return true unless LatticeGridHelper.require_authentication?
+      return true if %w(wakibbe admin tvo743 jkk366 jhl197 ddc830 mar352 vvs359 pfr957).include?(current_user.username.to_s)
+    rescue
+      begin
+        logger.error "is_admin? threw an error on include?(current_user.username.to_s) [#{current_user.username}]"
+      rescue
+        puts "is_admin? threw an error on include?(current_user.username.to_s) [#{current_user.username}]"
+      end
+    end
+    false
+  end
+
   def allowed_ip(this_ip)
     # from config.rb in project lib directory
     LatticeGridHelper.allowed_ips.each do |ip|

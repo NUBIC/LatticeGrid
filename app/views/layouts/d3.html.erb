@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %> Diagram</title>
-     <% @javascripts ||= ['prototype', 'ddsmoothmenu2', 'jquery.min', 'jquery.sparkline.min',
+     <% @javascripts ||= ['prototype', 'jquery-1.8.3', 'jquery.sparkline.min', 'ddsmoothmenu2',
                           'd3/d3.js', 'd3/d3.layout.js', 'd3/package.js', 'd3/d3.layout.cloud.js',
                           'd3/jsonp.js', 'd3/highlight.min.js'] %>
     <% @javascripts += @javascripts_add if defined?(@javascripts_add) %>
@@ -42,7 +42,7 @@
       </div>
       <div id='title'>
         <%= link_to(image_tag('latticegrid.png', size: '65x93'), root_path) -%>
-        <%= link_to(LatticeGridHelper.header_title, current_abstracts_url, id: 'title_link') -%>
+        <%= link_to(LatticeGridHelper.header_title.html_safe, current_abstracts_url, id: 'title_link') -%>
       </div>
       <%= render 'shared/search' %>
       <%= render 'shared/side' %>
@@ -61,9 +61,6 @@
 
     <script type="text/javascript" language="JavaScript">
       var html = d3.select("svg")
-                  .attr("title", "test2")
-                  .attr("version", 1.1)
-                  .attr("xmlns", "http://www.w3.org/2000/svg")
                   .node().parentNode.innerHTML;
                 d3.select("body").append("div")
                   .attr("id", "download")

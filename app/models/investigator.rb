@@ -343,11 +343,11 @@ class Investigator < ActiveRecord::Base
   end
 
   def colleague_coauthors
-    co_authors.collect{ |ca| ca.colleague }
+    co_authors.map { |ca| ca.colleague }
   end
 
   def direct_coauthors
-    coauthor_ids = abstracts.collect{ |x| x.investigator_abstracts.remove_invalid.collect(&:investigator_id) }.flatten.uniq
+    coauthor_ids = abstracts.map { |x| x.investigator_abstracts.remove_invalid.map(&:investigator_id) }.flatten.uniq
     coauthor_ids.delete(id)
     Investigator.find_all_by_id(coauthor_ids)
   end
@@ -357,11 +357,15 @@ class Investigator < ActiveRecord::Base
   end
 
   def full_name
-     (degrees.blank?) ? [first_name, middle_name, last_name].join(' ') : [[first_name, middle_name, last_name].join(' '), degrees].join(', ')
+    degrees.blank? ? [first_name, middle_name, last_name].join(' ') : [[first_name, middle_name, last_name].join(' '), degrees].join(', ')
+  end
+
+  def display_name
+    last_name + ', ' + (investigator.first_name || '') + ' ' + (investigator.middle_name || '')
   end
 
   def sort_name
-     [[last_name, first_name].join(', '), middle_name].join(' ')
+    [[last_name, first_name].join(', '), middle_name].join(' ')
   end
 
   def self.all_abstracts_for_investigators(pis)

@@ -20,6 +20,13 @@
     <style type="text/css">
       <%= @css if defined?(@css) %>
     </style>
+    <link rel="shortcut icon" href='<%= "/assets/#{lattice_grid_instance}/favicon.ico" -%>' />
+    <% if @javascripts.join =~ /jquery/i %>
+      <script type="text/javascript" language="JavaScript">
+        jQuery.noConflict();
+        var $j = jQuery; // Use jQuery via jQuery(...)
+      </script>
+    <% end %>
     <%= LatticeGridHelper.google_analytics.html_safe -%>
   </head>
   <body>

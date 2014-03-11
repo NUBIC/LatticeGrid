@@ -142,57 +142,57 @@ module LatticeGridHelper
   end
 
   def self.do_ajax?
-   (is_admin? && Rails.env != 'production') ? false : true
-   true
+    (is_admin? && Rails.env != 'production') ? false : true
+    true
   end
 
   def self.do_ldap?
-   (is_admin? && Rails.env != 'production') ? false : true
-   true
+    (is_admin? && Rails.env != 'production') ? false : true
+    true
   end
 
   def self.ldap_perform_search?
-   true
+    true
   end
 
   def self.ldap_host
-   'directory.northwestern.edu'
+    'directory.northwestern.edu'
   end
 
   def self.ldap_treebase
-   'ou=People, dc=northwestern,dc=edu'
+    'ou=People, dc=northwestern,dc=edu'
   end
 
   def self.include_awards?
-   false
+    false
   end
 
   def self.include_studies?
-   false
+    false
   end
 
   def self.allowed_ips
-   # childrens: 199.125.
-   # nmff: 209.107.
-   # nmh: 165.20.
-   # enh: 204.26
-   # ric: 69.216
-   [':1','127.0.0.*','165.124.*','129.105.*','199.125.*','209.107.*','165.20.*','204.26.*','69.216.*']
+    # childrens: 199.125.
+    # nmff: 209.107.
+    # nmh: 165.20.
+    # enh: 204.26
+    # ric: 69.216
+    [':1','127.0.0.*','165.124.*','129.105.*','199.125.*','209.107.*','165.20.*','204.26.*','69.216.*']
   end
 
-  def self.setInvestigatorClass(citation, investigator, isMember=false)
+  def self.setInvestigatorClass(citation, investigator, isMember = false)
     if isMember
-      if IsLastAuthor(citation,investigator)
+      if IsLastAuthor(citation, investigator)
         'member_last_author'
-      elsif IsFirstAuthor(citation,investigator)
+      elsif IsFirstAuthor(citation, investigator)
         'member_first_author'
       else
         'member_author'
-     end
+      end
     else
-      if IsLastAuthor(citation,investigator)
+      if IsLastAuthor(citation, investigator)
         'last_author'
-      elsif IsFirstAuthor(citation,investigator)
+      elsif IsFirstAuthor(citation, investigator)
         'first_author'
       else
         'author'
@@ -316,7 +316,6 @@ module LatticeGridHelper
   def self.second_degree_other_fill_color
     '#CCF5CC'
   end
-
 
   # must be instance methods, not class methods
 
@@ -480,4 +479,5 @@ module LatticeGridHelper
     end
     false
   end
+
 end

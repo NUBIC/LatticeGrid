@@ -42,7 +42,7 @@
       </div>
       <div id="title">
         <%= link_to( "LatticeGrid", "http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid") %>
-        <%= LatticeGridHelper.header_title -%>
+        <%= LatticeGridHelper.header_title.html_safe -%>
       </div>
       <div id="niceline"></div>
       <%= yield  %>

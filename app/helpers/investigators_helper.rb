@@ -107,40 +107,40 @@ module InvestigatorsHelper
 
   def nav_heading
     out = "<span id='nav_links'>"
-    out += "Visualizations: "
+    out += 'Visualizations: '
     if !(controller.action_name == 'show_member' && controller.controller_name == 'graphs')
-      out += link_to('Radial1', show_member_graph_url(params[:id]) )
+      out += link_to('Radial1', show_member_graph_url(params[:id]))
     else
       out += "<span class='disabled'>Radial1</span>"
     end
     out += ' &nbsp;  &nbsp; '
     if !(controller.action_name == 'show' && controller.controller_name == 'cytoscape')
-      out += link_to( "Radial2", cytoscape_url(params[:id]))
+      out += link_to('Radial2', cytoscape_url(params[:id]))
     else
       out += "<span class='disabled'>Radial2</span>"
     end
     out += ' &nbsp;  &nbsp; '
     if !(controller.action_name == 'show_member' && controller.controller_name == 'graphviz')
-      out += link_to( "Spring", show_member_graphviz_url(params[:id]) )
+      out += link_to('Spring', show_member_graphviz_url(params[:id]))
     else
       out += "<span class='disabled'>Spring</span>"
     end
     out += ' &nbsp;  &nbsp; '
     if !(controller.action_name == 'investigator_wheel' && controller.controller_name == 'graphviz')
-      out += link_to( "Wheel", investigator_wheel_graphviz_url(params[:id]))
+      out += link_to('Wheel', investigator_wheel_graphviz_url(params[:id]))
     else
       out += "<span class='disabled'>Wheel</span>"
     end
     out += ' &nbsp;  &nbsp; '
     if !(controller.action_name == 'investigator_chord' && controller.controller_name == 'cytoscape')
-      out += link_to("Chord", investigator_chord_cytoscape_url(params[:id]))
+      out += link_to('Chord', investigator_chord_cytoscape_url(params[:id]))
     else
       out += "<span class='disabled'>Chord</span>"
     end
     out += ' &nbsp;  &nbsp; '
     if defined?(LatticeGridHelper.include_awards?) && LatticeGridHelper.include_awards?
       if !(controller.action_name == 'awards' && controller.controller_name == 'cytoscape')
-        out += link_to('Awards', awards_cytoscape_url(params[:id]) )
+        out += link_to('Awards', awards_cytoscape_url(params[:id]))
       else
         out += "<span class='disabled'>Awards</span>"
       end
@@ -148,13 +148,14 @@ module InvestigatorsHelper
     end
     if defined?(LatticeGridHelper.include_studies?) && LatticeGridHelper.include_studies?
       if !(controller.action_name == 'studies' && controller.controller_name == 'cytoscape')
-        out += link_to('Studies', studies_cytoscape_url(params[:id]) )
+        out += link_to('Studies', studies_cytoscape_url(params[:id]))
       else
         out += "<span class='disabled'>Studies</span>"
       end
       out += ' &nbsp;  &nbsp; '
     end
-    out+"</span>"
+    out += '</span>'
+    out
   end
 
   def nav_heading2
@@ -166,19 +167,19 @@ module InvestigatorsHelper
       else
         out += link_to('Graph of all data', show_all_cytoscape_url(params[:id]))
       end
-      out += ' &nbsp;  &nbsp; '
+      out += ' &nbsp;  &nbsp;<br/>'
       out += 'Reports: '
     end
     if defined?(LatticeGridHelper.include_awards?) && LatticeGridHelper.include_awards?
-      if (controller.action_name == 'investigator' && controller.controller_name == 'awards')
+      if controller.action_name == 'investigator' && controller.controller_name == 'awards'
         out += "<span class='disabled'>Awards</span>"
       else
-        out += link_to( "Awards", investigator_award_url(params[:id]) )
+        out += link_to('Awards', investigator_award_url(params[:id]))
       end
       out += ' &nbsp;  &nbsp; '
     end
     if defined?(LatticeGridHelper.include_studies?) && LatticeGridHelper.include_studies?
-      if (controller.action_name == 'investigator' && controller.controller_name == 'studies')
+      if controller.action_name == 'investigator' && controller.controller_name == 'studies'
         out += "<span class='disabled'>Studies</span>"
       else
         out += link_to('Studies', investigator_study_url(params[:id]))
@@ -186,9 +187,10 @@ module InvestigatorsHelper
       out += ' &nbsp;  &nbsp; '
     end
 
-    unless (controller.action_name == 'show_member_mesh' && controller.controller_name == 'graphviz')
+    unless controller.action_name == 'show_member_mesh' && controller.controller_name == 'graphviz'
+      out += '<br/>'
       out += ' MeSH: '
-      out += link_to('similarities graph', show_member_mesh_graphviz_url(params[:id]))
+      out += link_to('Similarities graph', show_member_mesh_graphviz_url(params[:id]))
       out += ' &nbsp;  &nbsp; '
     end
     out += '</span>'
@@ -223,7 +225,7 @@ module InvestigatorsHelper
       out += remote_function(url: barchart_investigator_path(investigator.username), method: :get)
       out += '</script>'
     end
-    out += "<br/>#{nav_heading}<br/>#{nav_heading2}"
+    out += "#{nav_heading}#{nav_heading2}"
     out += '</td></tr></table>'
     out
   end

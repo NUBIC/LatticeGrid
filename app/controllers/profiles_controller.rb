@@ -5,9 +5,9 @@
 class ProfilesController < ApplicationController
 
   caches_page(:show, :show_pubs) if LatticeGridHelper.CachePages
-  caches_action(:list_summaries)  if LatticeGridHelper.CachePages
+  caches_action(:list_summaries) if LatticeGridHelper.CachePages
   before_filter :check_login
-  after_filter  :log_request, except: [:login, :welcome, :splash, :show_pubs, :edit, :edit_pubs, :ccsg]
+  after_filter :log_request, except: [:login, :welcome, :splash, :show_pubs, :edit, :edit_pubs, :ccsg]
   after_filter :check_login
 
   require 'cache_utilities'
@@ -28,8 +28,8 @@ class ProfilesController < ApplicationController
   # verify :method => :post, :only => [ :search ], :redirect_to => :current_abstracts_url
 
   def index
-    @username = is_admin? ? params[:id] : current_user_model.username
-    @pronoun  = is_admin? ? '' : ' Your '
+    @username = require_admin ? params[:id] : current_user_model.username
+    @pronoun  = require_admin ? '' : ' Your '
     @username = current_user_model.username if @username.blank?
     if is_admin?
       @investigators = Investigator.by_name.to_a
@@ -55,7 +55,7 @@ class ProfilesController < ApplicationController
       @center = Center.first
       @orgs = nil
       unless @center.blank?
-        @orgs = @center.descendants.sort do |x,y|
+        @orgs = @center.descendants.sort do |x, y|
           x.sort_order.to_s.rjust(3, '0') + ' ' + x.abbreviation <=> y.sort_order.to_s.rjust(3, '0') + ' ' + y.abbreviation
         end
       end
@@ -70,7 +70,7 @@ class ProfilesController < ApplicationController
       @center = Center.first
       @orgs = nil
       unless @center.blank?
-        @orgs = @center.descendants.sort do |x,y|
+        @orgs = @center.descendants.sort do |x, y|
           x.sort_order.to_s.rjust(3, '0') + ' ' + x.abbreviation <=> y.sort_order.to_s.rjust(3, '0') + ' ' + y.abbreviation
         end
       end

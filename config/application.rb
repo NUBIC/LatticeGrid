@@ -59,9 +59,12 @@ module LatticeGrid
 
   def LatticeGrid.the_instance
     if Rails.env == 'development'
+      # commented out instance values to test
+      # in development mode
+      #
       # 'defaults'
-      'Feinberg'
-      # 'RHLCCC'
+      # 'Feinberg'
+      'RHLCCC'
     else
       case "#{File.expand_path(Rails.root)}"
       when /fsm/i

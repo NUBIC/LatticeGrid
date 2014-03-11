@@ -34,7 +34,7 @@
       </div>
       <div id='title'>
         <%= link_to(image_tag('latticegrid.png', size: '65x93'), root_path) -%>
-        <%= link_to(LatticeGridHelper.header_title, current_abstracts_url, id: 'title_link') -%>
+        <%= link_to(LatticeGridHelper.header_title.html_safe, current_abstracts_url, id: 'title_link') -%>
       </div>
       <%= render 'shared/search' %>
       <%= render 'shared/side' %>
