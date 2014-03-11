@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
+##
+# LatticeGridHelper module overrides for
+# Feinberg School of Medicine (Feinberg)
 module LatticeGridHelper
 
   def self.menu_head_abbreviation
@@ -29,7 +34,7 @@ module LatticeGridHelper
   end
 
   def self.header_title
-    'Feinberg Publications and Abstracts Site'
+    "Feinberg Publications and Abstracts Site<div id='subtitle'>An open source publications/collaboration assessment tool</div>"
   end
 
   def self.direct_preview_title

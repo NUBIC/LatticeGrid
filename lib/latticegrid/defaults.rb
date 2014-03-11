@@ -1,344 +1,357 @@
+# -*- coding: utf-8 -*-
+
 require 'publication_utilities'
 require 'link_helper'
 
-# class methods
-def LatticeGridHelper.page_title
-  'LatticeGrid Publications'
-end
-
-def LatticeGridHelper.header_title
-  'LatticeGrid Publications and Abstracts Site'
-end
-
-def LatticeGridHelper.direct_preview_title
-  'LatticeGrid Publications'
-end
-
-# does CCSG access require authentication?
-def LatticeGridHelper.require_authentication?
-  false
-end
-
-# support editing investigator profiles? Implies that authentication is supported!
-def LatticeGridHelper.allow_profile_edits?
-  false
-end
-
-# allowed membership types
-def LatticeGridHelper.allowed_membership_types
-  ['Member']
-end
-
-def LatticeGridHelper.include_org_type(org)
-  (org.type == 'Program')
-end
-
-def LatticeGridHelper.include_summary_by_member?
-  true
-end
-
-def LatticeGridHelper.include_research_summary_by_organization?
-  false
-end
-
-# for cancer centers to 'deselect' publications from inclusion in the CCSG report
-def LatticeGridHelper.show_cancer_related_checkbox?
-  false
-end
-
-# show research description
-def LatticeGridHelper.show_research_description?
-  true
-end
-
-def LatticeGridHelper.menu_head_abbreviation
-  'Lurie Cancer Center'
-end
-
-def LatticeGridHelper.logs_after
-  '10/1/2011'
-end
-
-def LatticeGridHelper.high_impact_issns
-  []
-end
-
-def LatticeGridHelper.get_default_school
-  'Feinberg'
-end
-
-def LatticeGridHelper.CachePages
-  true
-end
-
-def LatticeGridHelper.google_analytics
-  ''
-end
-
-def LatticeGridHelper.curl_host
-  my_env = Rails.env
-  my_env = 'home' if public_path =~ /Users/
-  case
-    when my_env == 'home' then 'localhost:3000'
-    when my_env == 'development' then 'rails-staging2.nubic.northwestern.edu'
-    when my_env == 'staging' then 'rails-staging2.nubic.northwestern.edu'
-    when my_env == 'production' then 'latticegrid.cancer.northwestern.edu'
-    else 'rails-dev.bioinformatics.northwestern.edu/cancer'
+##
+# LatticeGridHelper module default values for all
+# LatticeGrid instances. Values can be overridden in files
+# located in the #{Rails.root}/lib/latticegrid/ directory which
+# are named the same as the LatticeGrid.the_instance value in
+# #{Rails.root}/config/application.rb
+module LatticeGridHelper
+  # class methods
+  def self.page_title
+    'LatticeGrid Publications'
   end
-end
 
-def LatticeGridHelper.curl_protocol
-  my_env = Rails.env
-  my_env = 'home' if public_path =~ /Users/
-  case
-    when my_env == 'home' then 'http'
-    when my_env == 'development' then 'https'
-    when my_env == 'staging' then 'https'
-    when my_env == 'production' then 'https'
-    else 'http'
+  def self.header_title
+    "LatticeGrid Publications and Abstracts Site<div id='subtitle'>An open source publications/collaboration assessment tool</div>"
   end
-end
 
-def LatticeGridHelper.year_array
-  return @@year_array if defined?(@@year_array)
-  starting_year = Time.now.year
-  @@year_array = (starting_year-9 .. starting_year).to_a
-  @@year_array.reverse!
-  @@year_array
-end
+  def self.direct_preview_title
+    'LatticeGrid Publications'
+  end
 
-def LatticeGridHelper.email_subject
-  'Contact from the LatticeGrid Publications site'
-end
+  # does CCSG access require authentication?
+  def self.require_authentication?
+    false
+  end
 
-def LatticeGridHelper.home_url
-  'http://www.cancer.northwestern.edu'
-  'http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid'
-end
+  # support editing investigator profiles? Implies that authentication is supported!
+  def self.allow_profile_edits?
+    false
+  end
 
-def LatticeGridHelper.organization_name
-  'institution'
-end
+  # allowed membership types
+  def self.allowed_membership_types
+    ['Member']
+  end
 
-def latticegrid_high_impact_description
-  '<p>Researchers at our institution publish thousands of articles in peer-reviewed journals every year.  The following recommended reading showcases a selection of their recent work.</p>'
-end
+  def self.include_org_type(org)
+    org.type == 'Program'
+  end
 
-def LatticeGridHelper.cleanup_campus(thePI)
- #clean up the campus data
- thePI.campus = thePI.campus =~ /CH|Chicago/ ? 'Chicago' : thePI.campus
- thePI.campus = thePI.campus =~ /EV|Evanston/ ? 'Evanston' : thePI.campus
- thePI.campus = thePI.campus =~ /CMH|Children/ ? 'CMH' : thePI.campus
- thePI
-end
+  def self.include_summary_by_member?
+    true
+  end
 
-def LatticeGridHelper.do_ajax?
- (is_admin? && Rails.env != 'production') ? false : true
- true
-end
+  def self.include_research_summary_by_organization?
+    false
+  end
 
-def LatticeGridHelper.do_ldap?
- (is_admin? && Rails.env != 'production') ? false : true
- true
-end
+  # for cancer centers to 'deselect' publications from inclusion in the CCSG report
+  def self.show_cancer_related_checkbox?
+    false
+  end
 
-def LatticeGridHelper.ldap_perform_search?
- true
-end
+  # show research description
+  def self.show_research_description?
+    true
+  end
 
-def LatticeGridHelper.ldap_host
- "directory.northwestern.edu"
-end
+  def self.menu_head_abbreviation
+    'Lurie Cancer Center'
+  end
 
-def LatticeGridHelper.ldap_treebase
- "ou=People, dc=northwestern,dc=edu"
-end
+  def self.logs_after
+    '10/1/2011'
+  end
 
-def LatticeGridHelper.include_awards?
- false
-end
+  def self.high_impact_issns
+    []
+  end
 
-def LatticeGridHelper.include_studies?
- false
-end
+  def self.get_default_school
+    'Feinberg'
+  end
 
-def LatticeGridHelper.allowed_ips
- # childrens: 199.125.
- # nmff: 209.107.
- # nmh: 165.20.
- # enh: 204.26
- # ric: 69.216
- [':1','127.0.0.*','165.124.*','129.105.*','199.125.*','209.107.*','165.20.*','204.26.*','69.216.*']
-end
+  def self.CachePages
+    true
+  end
 
-def LatticeGridHelper.setInvestigatorClass(citation, investigator, isMember=false)
-  if isMember
-    if IsLastAuthor(citation,investigator) then "member_last_author"
-    elsif IsFirstAuthor(citation,investigator) then "member_first_author"
+  def self.google_analytics
+    ''
+  end
+
+  def self.curl_host
+    my_env = Rails.env
+    my_env = 'home' if public_path =~ /Users/
+    case
+      when my_env == 'home' then 'localhost:3000'
+      when my_env == 'development' then 'rails-staging2.nubic.northwestern.edu'
+      when my_env == 'staging' then 'rails-staging2.nubic.northwestern.edu'
+      when my_env == 'production' then 'latticegrid.cancer.northwestern.edu'
+      else 'rails-dev.bioinformatics.northwestern.edu/cancer'
+    end
+  end
+
+  def self.curl_protocol
+    my_env = Rails.env
+    my_env = 'home' if public_path =~ /Users/
+    case
+      when my_env == 'home' then 'http'
+      when my_env == 'development' then 'https'
+      when my_env == 'staging' then 'https'
+      when my_env == 'production' then 'https'
+      else 'http'
+    end
+  end
+
+  def self.year_array
+    return @@year_array if defined?(@@year_array)
+    starting_year = Time.now.year
+    @@year_array = (starting_year-9 .. starting_year).to_a
+    @@year_array.reverse!
+    @@year_array
+  end
+
+  def self.email_subject
+    'Contact from the LatticeGrid Publications site'
+  end
+
+  def self.home_url
+    'http://www.cancer.northwestern.edu'
+    'http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid'
+  end
+
+  def self.organization_name
+    'institution'
+  end
+
+  def latticegrid_high_impact_description
+    '<p>Researchers at our institution publish thousands of articles in peer-reviewed journals every year.  The following recommended reading showcases a selection of their recent work.</p>'
+  end
+
+  def self.cleanup_campus(thePI)
+   #clean up the campus data
+   thePI.campus = thePI.campus =~ /CH|Chicago/ ? 'Chicago' : thePI.campus
+   thePI.campus = thePI.campus =~ /EV|Evanston/ ? 'Evanston' : thePI.campus
+   thePI.campus = thePI.campus =~ /CMH|Children/ ? 'CMH' : thePI.campus
+   thePI
+  end
+
+  def self.do_ajax?
+   (is_admin? && Rails.env != 'production') ? false : true
+   true
+  end
+
+  def self.do_ldap?
+   (is_admin? && Rails.env != 'production') ? false : true
+   true
+  end
+
+  def self.ldap_perform_search?
+   true
+  end
+
+  def self.ldap_host
+   'directory.northwestern.edu'
+  end
+
+  def self.ldap_treebase
+   'ou=People, dc=northwestern,dc=edu'
+  end
+
+  def self.include_awards?
+   false
+  end
+
+  def self.include_studies?
+   false
+  end
+
+  def self.allowed_ips
+   # childrens: 199.125.
+   # nmff: 209.107.
+   # nmh: 165.20.
+   # enh: 204.26
+   # ric: 69.216
+   [':1','127.0.0.*','165.124.*','129.105.*','199.125.*','209.107.*','165.20.*','204.26.*','69.216.*']
+  end
+
+  def self.setInvestigatorClass(citation, investigator, isMember=false)
+    if isMember
+      if IsLastAuthor(citation,investigator)
+        'member_last_author'
+      elsif IsFirstAuthor(citation,investigator)
+        'member_first_author'
+      else
+        'member_author'
+     end
     else
-     "member_author"
-   end
- else
-   if IsLastAuthor(citation,investigator) then "last_author"
-   elsif IsFirstAuthor(citation,investigator) then "first_author"
-   else
-     "author"
-   end
- end
-end
-
-def LatticeGridHelper.member_types_map
- {
-   'Member' => Member,
-   'Associate' => AssociateMember,
-   'Full' => Member
- }
-end
-
-# LatticeGrid prefs:
-# turn on lots of output
-def LatticeGridHelper.debug?
-  false
-end
-
-# try multiple searches if a search returns too many or too few publications
-def LatticeGridHelper.smart_filters?
-  true
-end
-
-def LatticeGridHelper.mark_full_name_searches_as_valid?
-  false
-end
-
-# print timing and completion information
-def LatticeGridHelper.verbose?
-  true
-end
-
-# limit searches to include the institutional_limit_search_string
-def LatticeGridHelper.global_limit_pubmed_search_to_institution?
-  true
-end
-
-# use full first name in PubMed searches
-def LatticeGridHelper.global_pubmed_search_full_first_name?
-  true
-end
-
-def LatticeGridHelper.build_institution_search_string_from_department?
-  false
-end
-
-def LatticeGridHelper.affilation_name
-  "Department"
-end
-
-# build LatticeGridHelper.institutional_limit_search_string to identify all the publications at your institution
-
-def LatticeGridHelper.institutional_limit_search_string
-  '( "Northwestern University"[affil] OR "Feinberg School"[affil] OR "Robert H. Lurie Comprehensive Cancer Center"[affil] OR "Northwestern Healthcare"[affil] OR "Children''s Memorial"[affil] OR "Northwestern Memorial"[affil] OR "Northwestern Medical"[affil])'
-end
-
-# these names will always be limited to the institutional search only even if LatticeGridHelper.global_limit_pubmed_search_to_institution?` is false
-def LatticeGridHelper.last_names_to_limit
-  ["Brown","Chen","Das","Khan","Li","Liu","Lu","Lee","Shen","Smith","Tu","Wang","Xia","Yang","Zhou"]
-end
-
-# these are for messages regarding the expected number of publications
-def LatticeGridHelper.expected_min_pubs_per_year
-  1
-end
-
-def LatticeGridHelper.expected_max_pubs_per_year
-  30
-end
-
-# you shouldn't need to change these ...
-def LatticeGridHelper.all_years
-  10
-end
-
-def LatticeGridHelper.default_number_years
-  1
-end
-
-def LatticeGridHelper.default_fill_color
-  '#A28BA9'
-end
-
-def LatticeGridHelper.white_fill_color
-  '#FFFFFF'
-end
-
-def LatticeGridHelper.root_fill_color
-  '#FFAD33'
-end
-
-def LatticeGridHelper.root_other_fill_color
-  '#E8A820'
-end
-
-# pale gold
-def LatticeGridHelper.first_degree_fill_color
-  '#FFE0C2'
-end
-
-# pale violet grey - E6E0E8
-# pale avacado greeen
-def LatticeGridHelper.first_degree_other_fill_color
-  '#CAD4B8'
-end
-
-# pale gold - FFE9BF
-def LatticeGridHelper.second_degree_fill_color
-  '#FFFFCC'
-end
-
-# pale blue green
-def LatticeGridHelper.second_degree_other_fill_color
-  '#A3DADA'
-end
-
-# super pale green
-def LatticeGridHelper.second_degree_other_fill_color
-  '#CCF5CC'
-end
-
-
-# must be instance methods, not class methods
-
-# profile example summaries
-def profile_example_summaries()
-  ""
-end
-
-# citation style
-def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bold=false, investigators_in_unit=[], speed_display=false, simple_links=false)
-  #  out = publication.authors
-  out = (mark_members_bold) ? highlightMemberInvestigator(publication, speed_display, simple_links, investigators_in_unit) : highlightInvestigator(publication, speed_display, simple_links)
-  out << " "
-  if link_abstract_to_pubmed
-    out << link_to( publication.title, "http://www.ncbi.nlm.nih.gov/pubmed/"+publication.pubmed, :target => '_blank', :title=>'PubMed ID')
-  else
-    out << link_to( publication.title, abstract_url(publication))
+      if IsLastAuthor(citation,investigator)
+        'last_author'
+      elsif IsFirstAuthor(citation,investigator)
+        'first_author'
+      else
+        'author'
+      end
+    end
   end
-  out << "<i>#{publication.journal_abbreviation}</i> "
-  out << " (#{publication.year}) "
-  if publication.pages.length > 0
-    out << h(publication.volume) +":"+ h(publication.pages)+". "
-  else
-    out << "<i>In process.</i> "
-  end
-  out << [quicklink_to_pubmed(publication.pubmed), quicklink_to_pubmedcentral(publication.pubmedcentral), quicklink_to_doi(publication.doi)].compact.join("; ")
-end
 
-def link_to_investigator(citation, investigator, name=nil, isMember=false, speed_display=false, simple_links=false, class_name=nil)
-  name=investigator.last_name if name.blank?
-  link_to(name,
-          show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
-          :class => ((class_name.blank?) ? (speed_display) ? 'author' : LatticeGridHelper.setInvestigatorClass(citation, investigator, isMember) : class_name),
-          :title => (simple_links ? "Go to #{investigator.full_name}: #{investigator.total_publications} pubs" : "Go to #{investigator.full_name}: #{investigator.total_publications} pubs, " + (investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators") )
-end
+  def self.member_types_map
+   {
+     'Member' => Member,
+     'Associate' => AssociateMember,
+     'Full' => Member
+   }
+  end
+
+  # LatticeGrid prefs:
+  # turn on lots of output
+  def self.debug?
+    false
+  end
+
+  # try multiple searches if a search returns too many or too few publications
+  def self.smart_filters?
+    true
+  end
+
+  def self.mark_full_name_searches_as_valid?
+    false
+  end
+
+  # print timing and completion information
+  def self.verbose?
+    true
+  end
+
+  # limit searches to include the institutional_limit_search_string
+  def self.global_limit_pubmed_search_to_institution?
+    true
+  end
+
+  # use full first name in PubMed searches
+  def self.global_pubmed_search_full_first_name?
+    true
+  end
+
+  def self.build_institution_search_string_from_department?
+    false
+  end
+
+  def self.affilation_name
+    'Department'
+  end
+
+  # build self.institutional_limit_search_string to identify all the publications at your institution
+
+  def self.institutional_limit_search_string
+    '( "Northwestern University"[affil] OR "Feinberg School"[affil] OR "Robert H. Lurie Comprehensive Cancer Center"[affil] OR "Northwestern Healthcare"[affil] OR "Children''s Memorial"[affil] OR "Northwestern Memorial"[affil] OR "Northwestern Medical"[affil])'
+  end
+
+  # these names will always be limited to the institutional search only even if LatticeGridHelper.global_limit_pubmed_search_to_institution?` is false
+  def self.last_names_to_limit
+    %w(Brown Chen Das Khan Li Liu Lu Lee Shen Smith Tu Wang Xia Yang Zhou)
+  end
+
+  # these are for messages regarding the expected number of publications
+  def self.expected_min_pubs_per_year
+    1
+  end
+
+  def self.expected_max_pubs_per_year
+    30
+  end
+
+  # you shouldn't need to change these ...
+  def self.all_years
+    10
+  end
+
+  def self.default_number_years
+    1
+  end
+
+  def self.default_fill_color
+    '#A28BA9'
+  end
+
+  def self.white_fill_color
+    '#FFFFFF'
+  end
+
+  def self.root_fill_color
+    '#FFAD33'
+  end
+
+  def self.root_other_fill_color
+    '#E8A820'
+  end
+
+  # pale gold
+  def self.first_degree_fill_color
+    '#FFE0C2'
+  end
+
+  # pale violet grey - E6E0E8
+  # pale avacado greeen
+  def self.first_degree_other_fill_color
+    '#CAD4B8'
+  end
+
+  # pale gold - FFE9BF
+  def self.second_degree_fill_color
+    '#FFFFCC'
+  end
+
+  # pale blue green
+  def self.second_degree_other_fill_color
+    '#A3DADA'
+  end
+
+  # super pale green
+  def self.second_degree_other_fill_color
+    '#CCF5CC'
+  end
+
+
+  # must be instance methods, not class methods
+
+  # profile example summaries
+  def profile_example_summaries
+    ''
+  end
+
+  # citation style
+  def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bold=false, investigators_in_unit=[], speed_display=false, simple_links=false)
+    #  out = publication.authors
+    out = (mark_members_bold) ? highlightMemberInvestigator(publication, speed_display, simple_links, investigators_in_unit) : highlightInvestigator(publication, speed_display, simple_links)
+    out << " "
+    if link_abstract_to_pubmed
+      out << link_to( publication.title, "http://www.ncbi.nlm.nih.gov/pubmed/"+publication.pubmed, :target => '_blank', :title=>'PubMed ID')
+    else
+      out << link_to( publication.title, abstract_url(publication))
+    end
+    out << "<i>#{publication.journal_abbreviation}</i> "
+    out << " (#{publication.year}) "
+    if publication.pages.length > 0
+      out << h(publication.volume) +":"+ h(publication.pages)+". "
+    else
+      out << "<i>In process.</i> "
+    end
+    out << [quicklink_to_pubmed(publication.pubmed), quicklink_to_pubmedcentral(publication.pubmedcentral), quicklink_to_doi(publication.doi)].compact.join("; ")
+  end
+
+  def link_to_investigator(citation, investigator, name=nil, isMember=false, speed_display=false, simple_links=false, class_name=nil)
+    name=investigator.last_name if name.blank?
+    link_to(name,
+            show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
+            :class => ((class_name.blank?) ? (speed_display) ? 'author' : LatticeGridHelper.setInvestigatorClass(citation, investigator, isMember) : class_name),
+            :title => (simple_links ? "Go to #{investigator.full_name}: #{investigator.total_publications} pubs" : "Go to #{investigator.full_name}: #{investigator.total_publications} pubs, " + (investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators") )
+  end
 
   # investigator highlighting
   def highlightMemberInvestigator(citation, speed_display=false, simple_links=false, memberArray=nil)
@@ -466,5 +479,4 @@ end
     end
     false
   end
-
-
+end
