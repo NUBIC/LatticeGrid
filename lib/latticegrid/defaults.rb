@@ -87,23 +87,27 @@ module LatticeGridHelper
   def self.curl_host
     my_env = Rails.env
     my_env = 'home' if public_path =~ /Users/
-    case
-      when my_env == 'home' then 'localhost:3000'
-      when my_env == 'development' then 'rails-staging2.nubic.northwestern.edu'
-      when my_env == 'staging' then 'rails-staging2.nubic.northwestern.edu'
-      when my_env == 'production' then 'latticegrid.cancer.northwestern.edu'
-      else 'rails-dev.bioinformatics.northwestern.edu/cancer'
+    case my_env
+      when 'home'
+        'localhost:3000'
+      when 'development', 'staging'
+        'rails-staging2.nubic.northwestern.edu'
+      when 'production'
+        'latticegrid.cancer.northwestern.edu'
+      else
+        'rails-dev.bioinformatics.northwestern.edu/cancer'
+      end
     end
   end
 
   def self.curl_protocol
     my_env = Rails.env
     my_env = 'home' if public_path =~ /Users/
-    case
-      when my_env == 'home' then 'http'
-      when my_env == 'development' then 'https'
-      when my_env == 'staging' then 'https'
-      when my_env == 'production' then 'https'
+    case my_env
+      when 'home'
+        'http'
+      when 'development', 'staging', 'production'
+        'https'
       else 'http'
     end
   end
@@ -121,7 +125,7 @@ module LatticeGridHelper
   end
 
   def self.home_url
-    'http://www.cancer.northwestern.edu'
+    # 'http://www.cancer.northwestern.edu'
     'http://wiki.bioinformatics.northwestern.edu/index.php/LatticeGrid'
   end
 
@@ -130,24 +134,25 @@ module LatticeGridHelper
   end
 
   def latticegrid_high_impact_description
-    '<p>Researchers at our institution publish thousands of articles in peer-reviewed journals every year.  The following recommended reading showcases a selection of their recent work.</p>'
+    '<p>Researchers at our institution publish thousands of articles in peer-reviewed journals every year.  ' +
+    'The following recommended reading showcases a selection of their recent work.</p>'
   end
 
-  def self.cleanup_campus(thePI)
-   #clean up the campus data
-   thePI.campus = thePI.campus =~ /CH|Chicago/ ? 'Chicago' : thePI.campus
-   thePI.campus = thePI.campus =~ /EV|Evanston/ ? 'Evanston' : thePI.campus
-   thePI.campus = thePI.campus =~ /CMH|Children/ ? 'CMH' : thePI.campus
-   thePI
+  def self.cleanup_campus(pi)
+   # clean up the campus data
+   pi.campus = pi.campus =~ /CH|Chicago/ ? 'Chicago' : pi.campus
+   pi.campus = pi.campus =~ /EV|Evanston/ ? 'Evanston' : pi.campus
+   pi.campus = pi.campus =~ /CMH|Children/ ? 'CMH' : pi.campus
+   pi
   end
 
   def self.do_ajax?
-    (is_admin? && Rails.env != 'production') ? false : true
+    # (is_admin? && Rails.env != 'production') ? false : true
     true
   end
 
   def self.do_ldap?
-    (is_admin? && Rails.env != 'production') ? false : true
+    # (is_admin? && Rails.env != 'production') ? false : true
     true
   end
 
@@ -180,19 +185,19 @@ module LatticeGridHelper
     [':1','127.0.0.*','165.124.*','129.105.*','199.125.*','209.107.*','165.20.*','204.26.*','69.216.*']
   end
 
-  def self.setInvestigatorClass(citation, investigator, isMember = false)
-    if isMember
-      if IsLastAuthor(citation, investigator)
+  def self.set_investigator_class(citation, investigator, is_member = false)
+    if is_member
+      if is_last_author?(citation, investigator)
         'member_last_author'
-      elsif IsFirstAuthor(citation, investigator)
+      elsif is_first_author?(citation, investigator)
         'member_first_author'
       else
         'member_author'
       end
     else
-      if IsLastAuthor(citation, investigator)
+      if is_last_author?(citation, investigator)
         'last_author'
-      elsif IsFirstAuthor(citation, investigator)
+      elsif is_first_author?(citation, investigator)
         'first_author'
       else
         'author'
@@ -348,7 +353,7 @@ module LatticeGridHelper
     name=investigator.last_name if name.blank?
     link_to(name,
             show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
-            :class => ((class_name.blank?) ? (speed_display) ? 'author' : LatticeGridHelper.setInvestigatorClass(citation, investigator, isMember) : class_name),
+            :class => ((class_name.blank?) ? (speed_display) ? 'author' : LatticeGridHelper.set_investigator_class(citation, investigator, isMember) : class_name),
             :title => (simple_links ? "Go to #{investigator.full_name}: #{investigator.total_publications} pubs" : "Go to #{investigator.full_name}: #{investigator.total_publications} pubs, " + (investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators") )
   end
 

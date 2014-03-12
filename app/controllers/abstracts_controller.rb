@@ -315,8 +315,8 @@ class AbstractsController < ApplicationController
               InsertInvestigatorPublication(abstract.id,
                                             investigator.id,
                                             (abstract.publication_date || abstract.electronic_publication_date || abstract.deposited_date),
-                                            IsFirstAuthor(abstract, investigator),
-                                            IsLastAuthor(abstract, investigator),
+                                            is_first_author?(abstract, investigator),
+                                            is_last_author?(abstract, investigator),
                                             true)
             end
           end
