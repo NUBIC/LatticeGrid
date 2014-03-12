@@ -88,15 +88,14 @@ module LatticeGridHelper
     my_env = Rails.env
     my_env = 'home' if public_path =~ /Users/
     case my_env
-      when 'home'
-        'localhost:3000'
-      when 'development', 'staging'
-        'rails-staging2.nubic.northwestern.edu'
-      when 'production'
-        'latticegrid.cancer.northwestern.edu'
-      else
-        'rails-dev.bioinformatics.northwestern.edu/cancer'
-      end
+    when 'home'
+      'localhost:3000'
+    when 'development', 'staging'
+      'rails-staging2.nubic.northwestern.edu'
+    when 'production'
+      'latticegrid.cancer.northwestern.edu'
+    else
+      'rails-dev.bioinformatics.northwestern.edu/cancer'
     end
   end
 
@@ -104,11 +103,12 @@ module LatticeGridHelper
     my_env = Rails.env
     my_env = 'home' if public_path =~ /Users/
     case my_env
-      when 'home'
-        'http'
-      when 'development', 'staging', 'production'
-        'https'
-      else 'http'
+    when 'home'
+      'http'
+    when 'development', 'staging', 'production'
+      'https'
+    else
+      'http'
     end
   end
 
@@ -332,12 +332,16 @@ module LatticeGridHelper
   # citation style
   def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bold=false, investigators_in_unit=[], speed_display=false, simple_links=false)
     #  out = publication.authors
-    out = (mark_members_bold) ? highlightMemberInvestigator(publication, speed_display, simple_links, investigators_in_unit) : highlightInvestigator(publication, speed_display, simple_links)
-    out << " "
-    if link_abstract_to_pubmed
-      out << link_to( publication.title, "http://www.ncbi.nlm.nih.gov/pubmed/"+publication.pubmed, :target => '_blank', :title=>'PubMed ID')
+    if mark_members_bold
+      out = highlight_member_investigator(publication, speed_display, simple_links, investigators_in_unit)
     else
-      out << link_to( publication.title, abstract_url(publication))
+      out = highlight_investigator(publication, speed_display, simple_links)
+    end
+    out << ' '
+    if link_abstract_to_pubmed
+      out << link_to(publication.title, "http://www.ncbi.nlm.nih.gov/pubmed/#{publication.pubmed}", target: '_blank', title: 'PubMed ID')
+    else
+      out << link_to(publication.title, abstract_url(publication))
     end
     out << "<i>#{publication.journal_abbreviation}</i> "
     out << " (#{publication.year}) "
@@ -349,31 +353,53 @@ module LatticeGridHelper
     out << [quicklink_to_pubmed(publication.pubmed), quicklink_to_pubmedcentral(publication.pubmedcentral), quicklink_to_doi(publication.doi)].compact.join("; ")
   end
 
-  def link_to_investigator(citation, investigator, name=nil, isMember=false, speed_display=false, simple_links=false, class_name=nil)
-    name=investigator.last_name if name.blank?
+  def link_to_investigator(citation, investigator, name = nil, is_member = false, speed_display = false, simple_links = false, class_name = nil)
+    name = investigator.last_name if name.blank?
     link_to(name,
-            show_investigator_url(:id=>investigator.username, :page=>1), # can't use this form for usernames including non-ascii characters
-            :class => ((class_name.blank?) ? (speed_display) ? 'author' : LatticeGridHelper.set_investigator_class(citation, investigator, isMember) : class_name),
-            :title => (simple_links ? "Go to #{investigator.full_name}: #{investigator.total_publications} pubs" : "Go to #{investigator.full_name}: #{investigator.total_publications} pubs, " + (investigator.num_intraunit_collaborators+investigator.num_extraunit_collaborators).to_s+" collaborators") )
+            show_investigator_url(id: investigator.username, page: 1), # can't use this form for usernames including non-ascii characters
+            class: investigator_class(class_name, speed_display, citation, investigator, is_member),
+            title: investigator_title(simple_links, investigator))
+  end
+
+  def investigator_class(class_name, speed_display, citation, investigator, is_member)
+    result = class_name
+    if result.blank?
+      if speed_display
+        result = 'author'
+      else
+        result = LatticeGridHelper.set_investigator_class(citation, investigator, is_member)
+      end
+    end
+    result
+  end
+
+  def investigator_title(simple_links, investigator)
+    if simple_links
+      "Go to #{investigator.full_name}: #{investigator.total_publications} pubs"
+    else
+      "Go to #{investigator.full_name}: #{investigator.total_publications} pubs, " +
+      (investigator.num_intraunit_collaborators + investigator.num_extraunit_collaborators).to_s +
+      ' collaborators'
+    end
   end
 
   # investigator highlighting
-  def highlightMemberInvestigator(citation, speed_display=false, simple_links=false, memberArray=nil)
-    if memberArray.blank?
-      authors = highlightInvestigator(citation, speed_display, simple_links)
+  def highlight_member_investigator(citation, speed_display = false, simple_links = false, member_array = nil)
+    if member_array.blank?
+      authors = highlight_investigator(citation, speed_display, simple_links)
     else
-      authors = highlightInvestigator(citation, speed_display, simple_links, citation.authors, memberArray)
+      authors = highlight_investigator(citation, speed_display, simple_links, citation.authors, member_array)
     end
     authors
   end
 
-  def highlightInvestigator(citation, speed_display = false, simple_links = false, authors = nil, memberArray = nil)
+  def highlight_investigator(citation, speed_display = false, simple_links = false, authors = nil, member_array = nil)
     authors = citation.authors if authors.blank?
     citation.investigators.each do |investigator|
       re = Regexp.new('(' + investigator.last_name.downcase + ', ' + investigator.first_name.at(0).downcase + '[^;\n]*)', Regexp::IGNORECASE)
-      isMember = (!memberArray.blank? && memberArray.include?(investigator.id))
+      is_member = (!member_array.blank? && member_array.include?(investigator.id))
       authors.gsub!(re) do |author_match|
-        link_to_investigator(citation, investigator, author_match.gsub(' ', '| '), isMember, speed_display, simple_links)
+        link_to_investigator(citation, investigator, author_match.gsub(' ', '| '), is_member, speed_display, simple_links)
       end
     end
     authors = authors.gsub('|', '')

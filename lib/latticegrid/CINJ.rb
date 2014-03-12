@@ -110,7 +110,7 @@ end
 
 def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bold=false, investigators_in_unit=[], speed_display=false, simple_links=false)
   #  out = publication.authors
-    out = (mark_members_bold) ? highlightMemberInvestigator(publication, speed_display, simple_links, investigators_in_unit) : highlightInvestigator(publication, speed_display, simple_links)
+    out = (mark_members_bold) ? highlight_member_investigator(publication, speed_display, simple_links, investigators_in_unit) : highlight_investigator(publication, speed_display, simple_links)
     out << ". "
     if link_abstract_to_pubmed
   	out << link_to( publication.title, "http://www.ncbi.nlm.nih.gov/pubmed/"+publication.pubmed, :target => '_blank', :title=>'PubMed ID')
@@ -128,7 +128,7 @@ def format_citation(publication, link_abstract_to_pubmed=false, mark_members_bol
   out << ", #{publication.year}."
 end
 
-def highlightInvestigator(citation, speed_display=false, simple_links=false, authors=nil,memberArray=nil)
+def highlight_investigator(citation, speed_display=false, simple_links=false, authors=nil,memberArray=nil)
   if authors.blank?
     authors = citation.authors
   end

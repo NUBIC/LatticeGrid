@@ -50,5 +50,11 @@ describe 'Abstracts' do
     end
   end
 
+  # GET /abstracts/high_impact_by_month
+
+  # GET /abstracts/tag_cloud
+
+  # GET /abstracts/:mesh_term/tagged_abstracts
+
 end
 

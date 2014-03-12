@@ -11,68 +11,62 @@
 <% heading = "Publications " if heading.blank? %>
 
 <% if investigator %>
-	<table class="borderless">
-		<tr valign="top">
-			<td width="800px">
-				<%= render :partial => "investigators/investigator_bio.html",
-				      :locals => {
-				      	:investigator => investigator,
-				      	:all_abstracts => all_abstracts
-				      }
-				 %>
-				 <% if !abstracts.blank? %>
-				  <%= render :partial => "shared/abstract_listing.html",
-				        :locals => {
-				        	:abstracts => abstracts,
-				        	:do_pagination => do_pagination,
-				        	:heading => heading,
-				        	:show_paginator => show_paginator,
-				        	:include_investigators => include_investigators,
-				        	:include_pubmed_id => include_pubmed_id,
-				        	:include_collab_marker => include_collab_marker
-				        }
+  <table class="borderless">
+    <tr valign="top">
+      <td width="800px">
+        <%= render :partial => 'investigators/investigator_bio',
+                   :locals => {
+                     :investigator => investigator,
+                     :all_abstracts => all_abstracts
+                   }
+         %>
+         <% if !abstracts.blank? %>
+          <%= render :partial => 'shared/abstract_listing',
+                     :locals => {
+                       :abstracts => abstracts,
+                       :do_pagination => do_pagination,
+                       :heading => heading,
+                       :show_paginator => show_paginator,
+                       :include_investigators => include_investigators,
+                       :include_pubmed_id => include_pubmed_id,
+                       :include_collab_marker => include_collab_marker
+                     }
           %>
         <% end -%>
-        <% if include_all_mesh %>
-					<%= render :partial => "shared/all_tags.html", :locals => { :investigator => investigator } %>
-				<% end -%>
-			</td>
-			<td>
-				<% if investigator.co_authors.length > 0 %>
-					<h3>
-						Co-Authors (<%= investigator.co_authors.length -%>):
-					</h3>
-					<div id="collaborators">
-						<%= link_to_coauthors(investigator.co_authors, "<br/>").html_safe %>
-					</div>
-				<% end -%>
-				<% similar_investigators=investigator.similar_investigators %>
-				<% if similar_investigators.length > 0 %>
-					<h3>
-						Similar Investigators (<%= similar_investigators.length -%>):
-					</h3>
-					<div id="investigator_note" class="note">
-						Investigators you have not published with but by MeSH terms have significant overlap with your research
-					</div>
-					<div id="similar_investigators">
-						<%= link_to_similar_investigators(similar_investigators, "<br/>").html_safe %>
-					</div>
-				<% end %>
-				<% if include_mesh %>
-					<h3>
-						Keywords (MeSH):
-					</h3>
-					<div id="tag_cloud_side"></div>
-					<script type='text/javascript' language="javascript">
-						<%= remote_function(:url => tag_cloud_side_investigator_path(investigator.username),
-							                  :method => :get,
-							                  :before => "Element.show('spinner')",
-					                      :complete => "Element.hide('spinner')" )
-						%>
-					</script>
-				<% end %>
-				<br/>
-			</td>
-		</tr>
-	</table>
+        <%= render :partial => 'shared/all_tags', :locals => { :investigator => investigator } if include_all_mesh %>
+      </td>
+      <td>
+        <% if investigator.co_authors.length > 0 %>
+          <h3>
+            Co-Authors (<%= investigator.co_authors.length -%>):
+          </h3>
+          <div id="collaborators">
+            <%= link_to_coauthors(investigator.co_authors, "<br/>").html_safe %>
+          </div>
+        <% end -%>
+        <% similar_investigators=investigator.similar_investigators %>
+        <% if similar_investigators.length > 0 %>
+          <h3>
+            Similar Investigators (<%= similar_investigators.length -%>):
+          </h3>
+          <div id="investigator_note" class="note">
+            Investigators you have not published with but by MeSH terms have significant overlap with your research
+          </div>
+          <div id="similar_investigators">
+            <%= link_to_similar_investigators(similar_investigators, "<br/>").html_safe %>
+          </div>
+        <% end %>
+        <% if include_mesh %>
+          <h3>
+            Keywords (MeSH):
+          </h3>
+          <div id="tag_cloud_side"></div>
+          <script type='text/javascript' language="javascript">
+            <%= remote_function(:url => tag_cloud_side_investigator_path(investigator.username), :method => :get) %>
+          </script>
+        <% end %>
+        <br/>
+      </td>
+    </tr>
+  </table>
 <% end %>

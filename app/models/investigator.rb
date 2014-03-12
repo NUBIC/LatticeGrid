@@ -361,7 +361,14 @@ class Investigator < ActiveRecord::Base
   end
 
   def display_name
-    last_name + ', ' + (investigator.first_name || '') + ' ' + (investigator.middle_name || '')
+    last_name + ', ' + (first_name || '') + ' ' + (middle_name || '')
+  end
+
+  def display_name_with_degrees
+    (first_name || '') + ' ' +
+    (middle_name || '') + ' ' +
+    last_name + ', ' +
+    (degrees || '')
   end
 
   def sort_name
@@ -369,7 +376,7 @@ class Investigator < ActiveRecord::Base
   end
 
   def self.all_abstracts_for_investigators(pis)
-    abstract_ids = pis.collect{|x| x.abstracts.only_valid}.flatten.sort{|x,y| x.id <=> y.id}.uniq
+    pis.map { |x| x.abstracts.only_valid }.flatten.sort { |x, y| x.id <=> y.id }.uniq
   end
 
   def self.publication_count_for_investigators(pis)

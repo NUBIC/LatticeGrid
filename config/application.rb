@@ -57,14 +57,14 @@ module LatticeGrid
     config.active_record.schema_format = :sql
   end
 
-  def LatticeGrid.the_instance
+  def self.the_instance
     if Rails.env == 'development'
       # commented out instance values to test
       # in development mode
       #
       # 'defaults'
-      # 'Feinberg'
-      'RHLCCC'
+      'Feinberg'
+      # 'RHLCCC'
     else
       case "#{File.expand_path(Rails.root)}"
       when /fsm/i
@@ -107,16 +107,11 @@ require 'taggable_information'
 
 def lattice_grid_instance
   # LatticeGrid is defined above
-  if defined?(@@lattice_grid_instance) && !@@lattice_grid_instance.blank?
-    return @@lattice_grid_instance
-  end
-  @@lattice_grid_instance = 'defaults'
+  return @@lattice_grid_instance if defined?(@@lattice_grid_instance) && !@@lattice_grid_instance.blank?
 
+  @@lattice_grid_instance = 'defaults'
   # determine which lattice grid instance using logic above
   the_instance = LatticeGrid.the_instance
-  if defined?(LatticeGrid) and !LatticeGrid.blank? and !the_instance.blank?
-    @@lattice_grid_instance = the_instance
-  end
+  @@lattice_grid_instance = the_instance if defined?(LatticeGrid) && !LatticeGrid.blank? && !the_instance.blank?
   @@lattice_grid_instance
 end
-

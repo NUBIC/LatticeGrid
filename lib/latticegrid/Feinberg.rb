@@ -111,9 +111,9 @@ module LatticeGridHelper
 
   def format_citation(publication, link_abstract_to_pubmed = false, mark_members_bold = false, investigators_in_unit = [], speed_display = false, simple_links = false)
     if mark_members_bold
-      out = highlightMemberInvestigator(publication, speed_display, simple_links, investigators_in_unit)
+      out = highlight_member_investigator(publication, speed_display, simple_links, investigators_in_unit)
     else
-      out = highlightInvestigator(publication, speed_display, simple_links)
+      out = highlight_investigator(publication, speed_display, simple_links)
     end
     out << '. ' unless out.blank?
     if link_abstract_to_pubmed
@@ -137,13 +137,13 @@ module LatticeGridHelper
     out << ", #{publication.year}. " + quicklinks.compact.join('; ')
   end
 
-  def highlightInvestigator(citation, speed_display = false, simple_links = false, authors = nil, memberArray = nil)
+  def highlight_investigator(citation, speed_display = false, simple_links = false, authors = nil, member_array = nil)
     authors = citation.authors if authors.blank?
     authors = authors.gsub(', ', ' ')
     authors = authors.gsub(/\. ?/, '')
     citation.investigators.each do |investigator|
       re = Regexp.new('(' + investigator.last_name.downcase + ' ' + investigator.first_name.at(0).downcase + '[^, \n]*)', Regexp::IGNORECASE)
-      is_member = !memberArray.blank? && memberArray.include?(investigator.id)
+      is_member = !member_array.blank? && member_array.include?(investigator.id)
       authors.gsub!(re) do |author_match|
         link_to_investigator(citation, investigator, author_match.gsub(' ', '| '), is_member, speed_display, simple_links)
       end
@@ -179,10 +179,10 @@ module LatticeGridHelper
             #{build_menu(sorted_head_node_children(@head_node), Center) { |id| org_path(id) }}
           </li>
           <li>
-            #{link_to('High Impact', high_impact_by_month_abstracts_path, :title => 'Recent high-impact publications')}
+            #{link_to('High Impact', high_impact_by_month_abstracts_path, title: 'Recent high-impact publications')}
           </li>
           <li>
-            #{link_to('MeSH tag cloud', tag_cloud_abstracts_path, :title => 'Display MeSH tag cloud for all publications')}
+            #{link_to('MeSH tag cloud', tag_cloud_abstracts_path, title: 'Display MeSH tag cloud for all publications')}
           </li>
           <li class='menu_header'>
             Departments
@@ -196,7 +196,7 @@ module LatticeGridHelper
             #{build_menu(sorted_head_node_children(@head_node), Department) { |id| show_org_graph_path(id) }}
           </li>
           <li>
-            #{link_to('Overview', departments_orgs_path, :title => 'Display an overview of all departments')}
+            #{link_to('Overview', departments_orgs_path, title: 'Display an overview of all departments')}
           </li>
           <li class='menu_header'>
             Centers

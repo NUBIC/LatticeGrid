@@ -209,7 +209,7 @@ module ApplicationHelper
 
 
   def link_to_primary_department(investigator)
-    unless investigator.home_department_id.nil?
+    unless investigator.home_department.blank?
       return link_to(investigator.home_department.name,
                      show_investigators_org_url(investigator.home_department_id),
                      title: "Show investigators in #{investigator.home_department.name}")

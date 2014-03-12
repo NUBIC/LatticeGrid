@@ -2,9 +2,9 @@
 <div id="publication">
 	<div id="authors">
 	<% if @publication.has_full %>
-		<%= highlightInvestigator(@publication, false, false, @publication.full_authors).html_safe %>
+		<%= highlight_investigator(@publication, false, false, @publication.full_authors).html_safe %>
 	<% else %>
-		<%= highlightInvestigator(@publication).html_safe %>
+		<%= highlight_investigator(@publication).html_safe %>
 	<% end %>
 	</div>
 	<div id="title">

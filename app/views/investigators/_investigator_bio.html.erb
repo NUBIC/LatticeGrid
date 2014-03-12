@@ -8,7 +8,7 @@
 			<tr>
 				<td>
 					<table>
-						<%= handle_tr_format("Academic&nbsp;Title",investigator.title).html_safe %>
+						<%= handle_tr_format("Academic&nbsp;Title", investigator.title).html_safe %>
 						<%= handle_tr_format(LatticeGridHelper.affilation_name, link_to_primary_department(investigator)).html_safe %>
 						<%= handle_tr_format("Other&nbsp;Appointments", link_to_units(investigator.joints+investigator.secondaries)).html_safe %>
 						<%= handle_tr_format("Affiliations",link_to_units(investigator.any_members)).html_safe %>

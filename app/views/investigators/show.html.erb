@@ -18,7 +18,7 @@
 <% @heading = "Publications (#{@total_entries})" if @heading.blank? %>
 
 <% if @investigator %>
-  <%= render :partial => "investigators/show_investigator.html",
+  <%= render :partial => 'investigators/show_investigator',
         :locals => {
           :investigator => @investigator,
           :include_mesh => @include_mesh,
