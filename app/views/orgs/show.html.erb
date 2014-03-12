@@ -47,7 +47,7 @@
   </p>
 <% end %>
 
-<%= render :partial => "shared/abstract_listing.html",
+<%= render :partial => "shared/abstract_listing",
       :locals => {
         :abstracts => @abstracts,
         :do_pagination => @do_pagination,
@@ -69,11 +69,7 @@
   </h2>
   <div id="tag_cloud"></div>
   <script type="text/javascript" language="javascript">
-    <%= remote_function(:url => tag_cloud_org_path(@unit.id),
-                        :method => :get,
-                        :before => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')" )
-    %>
+    <%= remote_function(:url => tag_cloud_org_path(@unit.id), :method => :get) %>
   </script>
 <% end %>
 <br/>

@@ -7,7 +7,7 @@ describe 'Organizational Units' do
     let!(:center) { FactoryGirl.create(:center) }
     let!(:department) { FactoryGirl.create(:department) }
 
-    # GET orgs/:organizational_unit_id/show_investigators
+    # GET /orgs/:organizational_unit_id/show_investigators
     describe 'visiting the organizational unit show investigators page' do
       it 'renders the page' do
         visit "/orgs/#{department.id}/show_investigators"
@@ -16,7 +16,7 @@ describe 'Organizational Units' do
       end
     end
 
-    # GET orgs/:organizational_unit_id/show/1
+    # GET /orgs/:organizational_unit_id/show/1
     describe 'visiting the organizational unit show page' do
       it 'renders the page' do
         visit "/orgs/#{department.id}/show/1"
