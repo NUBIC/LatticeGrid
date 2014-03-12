@@ -1,5 +1,5 @@
 class CopublicationsController < ApplicationController
-  caches_page(:investigator_colleagues, :tag_cloud_side, :tag_cloud) if LatticeGridHelper.CachePages
+  caches_page(:investigator_colleagues, :tag_cloud_side, :tag_cloud) if LatticeGridHelper.cache_pages?
 
   include ApplicationHelper
 

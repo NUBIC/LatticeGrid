@@ -4,9 +4,9 @@
 # Controller to show Investigators
 class InvestigatorsController < ApplicationController
 
-  caches_page(:show, :full_show, :list_all, :listing) if LatticeGridHelper.CachePages
-  caches_page(:tag_cloud_side, :tag_cloud, :show_all_tags, :publications, :tag_cloud_list) if LatticeGridHelper.CachePages
-  caches_page(:abstract_count, :preview, :search, :bio, :barchart, :collaborators, :home_department) if LatticeGridHelper.CachePages
+  caches_page(:show, :full_show, :list_all, :listing) if LatticeGridHelper.cache_pages?
+  caches_page(:tag_cloud_side, :tag_cloud, :show_all_tags, :publications, :tag_cloud_list) if LatticeGridHelper.cache_pages?
+  caches_page(:abstract_count, :preview, :search, :bio, :barchart, :collaborators, :home_department) if LatticeGridHelper.cache_pages?
 
   helper :all
 

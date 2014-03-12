@@ -76,7 +76,7 @@ module LatticeGridHelper
     'Feinberg'
   end
 
-  def self.CachePages
+  def self.cache_pages?
     true
   end
 
@@ -379,7 +379,7 @@ module LatticeGridHelper
   def edit_profile_link
     link_to('Edit profile',
             profiles_path,
-            :title => 'Login with your NetID and NetID password to change your profile')
+            title: 'Login with your NetID and NetID password to change your profile')
   end
 
   def latticegrid_menu_script
@@ -392,19 +392,19 @@ module LatticeGridHelper
           </li>
           #{latticegrid_menu_script_head_node_children(@head_node)}
           <li>
-            #{link_to('High Impact', high_impact_by_month_abstracts_path, :title => 'Recent high-impact publications')}
+            #{link_to('High Impact', high_impact_by_month_abstracts_path, title: 'Recent high-impact publications')}
           </li>
           <li>
-            #{link_to('MeSH tag cloud', tag_cloud_abstracts_path, :title => 'Display MeSH tag cloud for all publications')}
+            #{link_to('MeSH tag cloud', tag_cloud_abstracts_path, title: 'Display MeSH tag cloud for all publications')}
           </li>
           <li>
-            #{link_to('Bundle Graph', investigator_edge_bundling_cytoscape_index_path, :title => 'Display Hierarchical Edge Bundle graph for all investigators')}
+            #{link_to('Bundle Graph', investigator_edge_bundling_cytoscape_index_path, title: 'Display Hierarchical Edge Bundle graph for all investigators')}
           </li>
           <li>
-            #{link_to('Chord Graph', chord_cytoscape_index_path, :title => 'Display Chord graph for all investigators')}
+            #{link_to('Chord Graph', chord_cytoscape_index_path, title: 'Display Chord graph for all investigators')}
           </li>
           <li>
-            #{link_to('Overview', programs_orgs_path, :title => 'Display an overview for all programs')}
+            #{link_to('Overview', programs_orgs_path, title: 'Display an overview for all programs')}
           </li>
         </ul>
         <br style='clear: left' />
@@ -433,11 +433,12 @@ module LatticeGridHelper
   end
 
   def sorted_head_node_children(head_node)
-    head_node.children.sort { |x,y| x.sort_order.to_s.rjust(3,'0') + ' ' + x.abbreviation <=> y.sort_order.to_s.rjust(3,'0') + ' ' + y.abbreviation }
+    head_node.children.sort do |x, y|
+      x.sort_order.to_s.rjust(3, '0') + ' ' + x.abbreviation <=> y.sort_order.to_s.rjust(3, '0') + ' ' + y.abbreviation
+    end
   end
 
   def build_menu(nodes, org_type = nil, &block)
-    Rails.logger.info("\n\n~~~ build_menu [#{org_type}] nodes = #{nodes.map(&:name).inspect}\n\n")
     out = '<ul>'
     nodes.each do |unit|
       if org_type.nil? || unit.kind_of?(org_type)

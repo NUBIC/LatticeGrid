@@ -4,8 +4,8 @@
 # Controller for people to update their profile
 class ProfilesController < ApplicationController
 
-  caches_page(:show, :show_pubs) if LatticeGridHelper.CachePages
-  caches_action(:list_summaries) if LatticeGridHelper.CachePages
+  caches_page(:show, :show_pubs) if LatticeGridHelper.cache_pages?
+  caches_action(:list_summaries) if LatticeGridHelper.cache_pages?
   before_filter :check_login
   after_filter :log_request, except: [:login, :welcome, :splash, :show_pubs, :edit, :edit_pubs, :ccsg]
   after_filter :check_login

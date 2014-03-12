@@ -5,13 +5,13 @@
 class CytoscapeController < ApplicationController
   before_filter :check_allowed, only: [:awards, :studies, :show_all]
 
-  caches_page :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :org_org_cytoscape_data if LatticeGridHelper.CachePages
-  caches_page :member_protovis_data, :disallowed, :d3_data, :d3_date_data, :investigator_edge_bundling if LatticeGridHelper.CachePages
-  caches_page :d3_investigator_edge_data, :investigator_wordle, :d3_investigator_wordle_data, :simularity_wordle if LatticeGridHelper.CachePages
-  caches_page :d3_investigators_wordle_data, :d3_investigator_chord_data, :show_all_orgs, :all_org_cytoscape_data if LatticeGridHelper.CachePages
-  caches_page :d3_program_investigators_chord_data, :d3_all_investigators_chord_data if LatticeGridHelper.CachePages
+  caches_page :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :org_org_cytoscape_data if LatticeGridHelper.cache_pages?
+  caches_page :member_protovis_data, :disallowed, :d3_data, :d3_date_data, :investigator_edge_bundling if LatticeGridHelper.cache_pages?
+  caches_page :d3_investigator_edge_data, :investigator_wordle, :d3_investigator_wordle_data, :simularity_wordle if LatticeGridHelper.cache_pages?
+  caches_page :d3_investigators_wordle_data, :d3_investigator_chord_data, :show_all_orgs, :all_org_cytoscape_data if LatticeGridHelper.cache_pages?
+  caches_page :d3_program_investigators_chord_data, :d3_all_investigators_chord_data if LatticeGridHelper.cache_pages?
 
-  caches_action :listing, :investigator, :awards, :studies if LatticeGridHelper.CachePages
+  caches_action :listing, :investigator, :awards, :studies if LatticeGridHelper.cache_pages?
 
   require 'cytoscape_config'
   require 'cytoscape_generator'

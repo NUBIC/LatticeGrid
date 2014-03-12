@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+
 ##
 # Controller to show publications/abstracts
 class AbstractsController < ApplicationController
 
-  caches_page(:show, :high_impact, :high_impact_by_month, :year_list, :full_year_list, :current) if LatticeGridHelper.CachePages
-  caches_page(:tag_cloud, :endnote, :tagged_abstracts, :full_tagged_abstracts, :tag_cloud_by_year) if LatticeGridHelper.CachePages
+  caches_page(:show, :high_impact, :high_impact_by_month, :year_list, :full_year_list, :current) if LatticeGridHelper.cache_pages?
+  caches_page(:tag_cloud, :endnote, :tagged_abstracts, :full_tagged_abstracts, :tag_cloud_by_year) if LatticeGridHelper.cache_pages?
 
   include AbstractsHelper
   include ApplicationHelper
@@ -120,7 +121,6 @@ class AbstractsController < ApplicationController
     render action: 'tag'
   end
 
-
   def impact_factor
     params[:year] ||= ''
     params[:sortby] ||= 'article_influence_score desc'
@@ -137,8 +137,7 @@ class AbstractsController < ApplicationController
           render(template: 'abstracts/impact_factor.html', layout: 'excel'),
           filename: "impact_factor_for_year_#{params[:year]}.xls",
           type: 'application/vnd.ms-excel',
-          disposition: 'attachment'
-        )
+          disposition: 'attachment')
       end
       format.doc do
         send_data(

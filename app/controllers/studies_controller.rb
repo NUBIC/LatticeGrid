@@ -12,7 +12,7 @@ class StudiesController < ApplicationController
   require 'format_helper'
 
   before_filter :check_allowed, except: [:disallowed]
-  caches_action(:listing, :investigator, :show, :org) if LatticeGridHelper.CachePages
+  caches_action(:listing, :investigator, :show, :org) if LatticeGridHelper.cache_pages?
 
   def show
     if params[:id].nil?

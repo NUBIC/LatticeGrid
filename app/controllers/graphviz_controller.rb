@@ -1,6 +1,6 @@
 class GraphvizController < ApplicationController
 
-  caches_page(:show_member, :show_member_mesh, :show_org, :show_org_mesh, :investigator_wheel, :investigator_wheel_data, :org_wheel, :org_wheel_data) if LatticeGridHelper.CachePages
+  caches_page(:show_member, :show_member_mesh, :show_org, :show_org_mesh, :investigator_wheel, :investigator_wheel_data, :org_wheel, :org_wheel_data) if LatticeGridHelper.cache_pages?
 
   require 'graphviz_config'
   require 'csv_generator'
