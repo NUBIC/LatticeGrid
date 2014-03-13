@@ -71,40 +71,42 @@
 <script>
   jQuery(document).ready(function() {
     jQuery("#split_allocations_definition").dialog({
-    autoOpen: false,
-    buttons: {
-      "Ok": function() {
-        jQuery(this).dialog("close");
+      autoOpen: false,
+      buttons: {
+        "Ok": function() {
+          jQuery(this).dialog("close");
+        },
+        "Cancel": function() {
+          jQuery(this).dialog("close");
+        }
       },
-      "Cancel": function() {
-        jQuery(this).dialog("close");
-      }
-    },
-    hide: 'slide',
-    modal: true,
-    show: 'slide' });
+      hide: 'slide',
+      modal: true,
+      show: 'slide'
+    });
     jQuery(".split_allocations").click(function() {
        jQuery("#split_allocations_definition").dialog("open");
-    return false;
-     })
+      return false;
+    })
     jQuery("#roles_definitions").dialog({
-    autoOpen: false,
-    width: 1000,
-    buttons: {
-      "Ok": function() {
-        jQuery(this).dialog("close");
+      autoOpen: false,
+      width: 1000,
+      buttons: {
+        "Ok": function() {
+          jQuery(this).dialog("close");
+        },
+        "Cancel": function() {
+          jQuery(this).dialog("close");
+        }
       },
-      "Cancel": function() {
-        jQuery(this).dialog("close");
-      }
-    },
-    hide: 'slide',
-    modal: true,
-    show: 'slide' });
+      hide: 'slide',
+      modal: true,
+      show: 'slide'
+    });
     jQuery(".roles").click(function() {
-       jQuery("#roles_definitions").dialog("open");
-    return false;
-     })
+      jQuery("#roles_definitions").dialog("open");
+      return false;
+    });
   });
 </script>
 
@@ -152,7 +154,9 @@
         #
       </td>
       <td class="list-title-left">
-        <span class="roles">Role <%= image_tag("information.png") %></span>
+        <span class="roles">
+          Role <%= image_tag("information.png") %>
+        </span>
       </td>
       <td class="list-title-left">
         Effort
@@ -180,7 +184,7 @@
    <% for pi_award in @pi_awards %>
     <tr class="<%= cycle('even', 'odd') %>">
       <td class="list-left">
-        <% cnt+=1 %>
+        <% cnt += 1 %>
         <%= cnt %>
       </td>
       <td class="list-left">
@@ -190,7 +194,7 @@
         <%= pi_award.percent_effort %> %
       </td>
       <td class="list-left">
-        <%= link_to( pi_award.proposal.title, award_url(pi_award.proposal_id)) %>
+        <%= link_to(pi_award.proposal.title, award_url(pi_award.proposal_id)) %>
       </td>
       <td class="list-left">
         <%= pi_award.proposal.sponsor_name %>
@@ -208,7 +212,7 @@
         <%=  pi_award.proposal.investigator_proposals.count %>
       </td>
       <td class="list-left">
-        <%=  pi_award.proposal.investigators.collect{|pi| link_to_investigator_awards(pi, pi.name)}.join(", ") %>
+        <%= pi_award.proposal.investigators.map { |pi| link_to_investigator_awards(pi, pi.name) }.join(', ').html_safe %>
       </td>
     </tr>
     <% end %>

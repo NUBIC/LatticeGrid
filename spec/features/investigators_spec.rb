@@ -9,7 +9,6 @@ describe 'Investigators' do
 
     # GET /investigators/:username/show/1
     describe 'visiting the investigator page', js: true do
-
       it 'renders the page' do
         visit "/investigators/#{pi.username}/show/1"
 

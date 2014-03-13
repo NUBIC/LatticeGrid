@@ -274,11 +274,11 @@ def CreateNewProposalFromData(data_row)
     j.sponsor_type_name = ''
   end
   # clean out the non-ASCII characters
-  j.original_sponsor_name = CleanNonUTFtext(j.original_sponsor_name)
-  j.sponsor_name = CleanNonUTFtext(j.sponsor_name)
+  j.original_sponsor_name = TextUtilities.clean_non_utf_text(j.original_sponsor_name)
+  j.sponsor_name = TextUtilities.clean_non_utf_text(j.sponsor_name)
   award_title = data_row['Proposal Title'] || data_row['PROPOSAL_TITLE'] || data_row['proposal_title']
   j.title = truncate_words(award_title, 220) unless award_title.blank?
-  j.title = CleanNonUTFtext(j.title)
+  j.title = TextUtilities.clean_non_utf_text(j.title)
 
   project_start_date = data_row['Project Award Start Date'] || data_row['PROJECT_BEGIN_DATE']
   project_end_date = data_row['Project Award End Date'] || data_row['PROJECT_END_DATE']
