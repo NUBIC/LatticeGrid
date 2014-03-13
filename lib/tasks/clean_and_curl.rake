@@ -234,7 +234,7 @@ namespace :cache do
     end
   end
 
-  task :populate => [:setup_url_for,:getInvestigators, :getAllOrganizations, :getTags, :getAwards] do
+  task :populate => [:setup_url_for,:get_investigators, :getAllOrganizations, :getTags, :getAwards] do
     tasknames = %w{abstracts investigators orgs investigator_graphs org_graphs investigator_graphviz org_graphviz mesh investigator_awards awards investigator_studies studies investigator_cytoscape}
     if ENV["taskname"].nil?
       puts "sorry. You need to call 'rake cache:populate taskname=task' where task is one of #{tasknames.join(', ')}"

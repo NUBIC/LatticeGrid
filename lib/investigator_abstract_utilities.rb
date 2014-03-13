@@ -26,8 +26,8 @@ def CreateAbstractsFromArrayHash(data)
   puts "Total number of  pubmed ids: #{pubmed_ids.length}" if LatticeGridHelper.verbose?
   pubmed_ids = pubmed_ids.sort.uniq
   puts "unique pubmed ids: #{pubmed_ids.length}" if LatticeGridHelper.verbose?
-  puts "FetchPublicationData" if LatticeGridHelper.verbose?
-  publications = FetchPublicationData(pubmed_ids)
+  puts "fetch_publication_data" if LatticeGridHelper.verbose?
+  publications = fetch_publication_data(pubmed_ids)
   puts "InsertPubmedRecords #{publications.length}" if LatticeGridHelper.verbose?
   InsertPubmedRecords(publications)
   return pubmed_ids

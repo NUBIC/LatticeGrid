@@ -3,19 +3,19 @@
 
 # you are now ready to start loading database
 
-# load data using the insertAbstracts rake task
-rake insertAbstracts
-rake RAILS_ENV=production insertAbstracts
+# load data using the insert_abstracts rake task
+rake insert_abstracts
+rake RAILS_ENV=production insert_abstracts
 
 #insert all abstracts (10 years)
 # find abstracts: number of publications found for 10 years: 21064 in 180 seconds (staging)
 #pulled the abstracts in about 500 seconds (staging)
-# total of task insertAbstracts ran in 1820.23571395874 seconds
+# total of task insert_abstracts ran in 1820.23571395874 seconds
 rake insertAllAbstracts
 rake RAILS_ENV=production insertAllAbstracts
 
 #update member associations based on loaded publications
-# for FSM, this takes about 4 hours (2100 investigators, 15,000 abstracts, 46,000 investigator_abstract records 
+# for FSM, this takes about 4 hours (2100 investigators, 15,000 abstracts, 46,000 investigator_abstract records
 # after rebuild, to about 200 minutes (3.3 hours)
 rake associateAbstractsWithInvestigators
 rake RAILS_ENV=production associateAbstractsWithInvestigators
@@ -43,7 +43,7 @@ rake updateOrganizationAbstractInformation
 rake RAILS_ENV=production updateOrganizationAbstractInformation
 
 #all the expected tasks are run using this build command
-# runs these tasks: :insertAbstracts, :updateAbstractInvestigators, :buildCoauthors, :updateInvestigatorInformation, :updateOrganizationAbstractInformation
+# runs these tasks: :insert_abstracts, :updateAbstractInvestigators, :buildCoauthors, :updateInvestigatorInformation, :updateOrganizationAbstractInformation
 rake nightlyBuild
 rake RAILS_ENV=production nightlyBuild
 
@@ -88,7 +88,7 @@ vacuumdb -fz latticegrid_development -U latticegrid
 # to run as the rails user in production
 vacuumdb -fz latticegrid_production -U latticegrid
 # vacuum the remote db
-vacuumdb -fz latticegrid_production -U latticegrid -h pdev 
+vacuumdb -fz latticegrid_production -U latticegrid -h pdev
 
 # logging in to psql
 psql latticegrid_development -U latticegrid

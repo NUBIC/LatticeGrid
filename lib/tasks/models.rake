@@ -8,7 +8,7 @@ task :setAllYears => :environment do
   @publication_years = LatticeGridHelper.all_years
 end
 
-task :getInvestigators => :environment do
+task :get_investigators => :environment do
   # load all investigators
   begin
     @all_investigators = Investigator.includes(['abstracts']).order('id').to_a

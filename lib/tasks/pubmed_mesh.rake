@@ -31,7 +31,7 @@ task :tagAbstractsWithMeshTerms => [:getAbstracts] do
   puts "count of all abstract MeSH tags is #{abstract_tag_count}" if LatticeGridHelper.verbose?
 end
 
-task :tagInvestigatorsWithMeshTerms => [:getInvestigators] do
+task :tagInvestigatorsWithMeshTerms => [:get_investigators] do
   # tag all investigators with associated MeSH terms from all abstracts
   # about 15 minutes laptop, 20 minutes staging with 2100 investigators and 46000 abstracts
   # for RHLCCC about 10 minutes with 7800 abstracts and 280 investigators
@@ -48,7 +48,7 @@ task :tagInvestigatorsWithMeshTerms => [:getInvestigators] do
   puts "count of all investigator MeSH tags is #{investigator_tag_count}" if LatticeGridHelper.verbose?
 end
 
-task :tagInvestigatorsWithKeywords => [:getInvestigators] do
+task :tagInvestigatorsWithKeywords => [:get_investigators] do
   # tag all investigator with faculty_keywords and faculty_interests
   investigator_tag_count = Tagging.count(:conditions=>"taggable_type='Investigator'")
   puts "count of all investigator tags is #{investigator_tag_count}" if LatticeGridHelper.verbose?
@@ -63,7 +63,7 @@ task :tagInvestigatorsWithKeywords => [:getInvestigators] do
   puts "count of all investigator  tags is #{investigator_tag_count}" if LatticeGridHelper.verbose?
 end
 
-task :calculateTagCounts => [:getTags, :getInvestigators, :getAbstracts] do
+task :calculateTagCounts => [:getTags, :get_investigators, :getAbstracts] do
   #@total_taggings_count=Tagging.find(:all,:conditions=>"taggable_type='Abstract'").length  # get all taggings of abstracts
   @total_publications = Abstract.find(:all).length
   @total_tagged_publications = Abstract.find(:all, :conditions=>"mesh <> ''").length
@@ -93,7 +93,7 @@ end
 # this is the task that will take the information content calculations and build up the InvestigatorColleague model
 # for the medical school with 3700 investigotors, this takes about 24 hours to run.
 # it takes about 6 minutes for the first 10 investigators, depending on number of MeSH terms, total investigators and publications
-task :buildInvestigatorColleaguesMesh => [:getInvestigators, :getMeshTags] do
+task :buildInvestigatorColleaguesMesh => [:get_investigators, :getMeshTags] do
   # load the test data
   block_timing("buildInvestigatorColleaguesMesh") do
     start = Time.now
@@ -162,11 +162,11 @@ task :normalizeInvestigatorColleaguesMesh => :environment do
     # now check if the upper bound is reasonable. if 3000 is about pub_colleagues_count*1.1, 4000 should be about pub_colleagues_count*0.5
     investigator_colleagues_count = InvestigatorColleague.find(:all, :conditions => ['investigator_colleagues.mesh_tags_ic > 4000']).length
 
-    if (investigator_colleagues_count < 0.3 *pub_colleagues_count  or  investigator_colleagues_count > 0.5*pub_colleagues_count)
+    if (investigator_colleagues_count < (0.3 * pub_colleagues_count) || investigator_colleagues_count > (0.5 * pub_colleagues_count))
       cut_point = 3000
       cutoff = find_cutoff(investigator_colleagues_count, pub_colleagues_count*0.4, cut_point+1000)
       # need to reslope the line to go from cut_point to cut_point+1000
-      mesh_ic_multiplier = 1000.0/(cutoff-cut_point)
+      mesh_ic_multiplier = 1000.0 / (cutoff - cut_point)
       puts "Adjusting from 3000 to 4000: cut_point = #{cut_point}; cutoff = #{cutoff}; mesh_ic_multiplier = #{mesh_ic_multiplier}" if LatticeGridHelper.verbose?
       InvestigatorColleague.update_all("mesh_tags_ic = round(#{mesh_ic_multiplier} * (mesh_tags_ic-#{cut_point})) + #{cut_point}", "mesh_tags_ic > #{cut_point}")
     end
@@ -197,8 +197,8 @@ task :normalizeInvestigatorColleaguesMesh => :environment do
    }
 end
 
-task :nightlyBuild => [:insertAbstracts, :updateAbstractInvestigators, :buildCoauthors, :updateInvestigatorInformation, :updateOrganizationAbstractInformation] do
-   puts "task nightlyBuild completed. Includes the tasks :insertAbstracts, :updateAbstractInvestigators, :buildCoauthors, :updateInvestigatorInformation, :updateOrganizationAbstractInformation" if LatticeGridHelper.verbose?
+task :nightlyBuild => [:insert_abstracts, :updateAbstractInvestigators, :buildCoauthors, :updateInvestigatorInformation, :updateOrganizationAbstractInformation] do
+   puts "task nightlyBuild completed. Includes the tasks :insert_abstracts, :updateAbstractInvestigators, :buildCoauthors, :updateInvestigatorInformation, :updateOrganizationAbstractInformation" if LatticeGridHelper.verbose?
 end
 
 task :monthlyBuild => [ :tagAbstractsWithMeshTerms, :tagInvestigatorsWithMeshTerms, :tagInvestigatorsWithKeywords, :attachMeshInformationContent, :buildInvestigatorColleaguesMesh, :normalizeInvestigatorColleaguesMesh] do

@@ -4,7 +4,7 @@ require 'fsm_security_acks'
 
 namespace :reports do
 
-  task :fsm_security_acks => :getInvestigators do
+  task :fsm_security_acks => :get_investigators do
     pi_netids = @all_investigators.map(&:username)
     puts "FSM LatticeGrid PIs = #{pi_netids.length}"
 

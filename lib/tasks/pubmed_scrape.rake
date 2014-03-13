@@ -12,7 +12,7 @@ require 'pubmedext' #my extensions to grab other dates and full author names
 require 'rubygems'
 
 def do_insert_abstracts
-  block_timing("insertAbstracts") do
+  block_timing("insert_abstracts") do
     thisLoad = LoadDate.new(:load_date=> Time.now)
     thisLoad.save
     puts "investigator.mark_pubs_as_valid is #{(@all_investigators[0].mark_pubs_as_valid || limit_pubmed_search_to_institution)}"
@@ -49,30 +49,30 @@ def do_insert_abstracts
 end
 
 def get_pubmed_ids
-  block_timing("getPubmedIDs") do
-    options = BuildSearchOptions(@publication_years)
-    pubsFound = FindPubMedIDs(@all_investigators, options, @publication_years, LatticeGridHelper.debug?, LatticeGridHelper.smart_filters?)
+  block_timing("get_pubmed_ids") do
+    options = build_search_options(@publication_years)
+    pubsFound = find_pubmed_ids(@all_investigators, options, @publication_years, LatticeGridHelper.debug?, LatticeGridHelper.smart_filters?)
     puts "number of publications found for #{@publication_years} years: #{pubsFound}" if LatticeGridHelper.verbose?
   end
 end
 
 def get_pi_abstracts
-  block_timing("getPIAbstracts") { GetPubsForInvestigators(@all_investigators) }
+  block_timing("get_pi_abstracts") { get_pubs_for_investigators(@all_investigators) }
 end
 
-task :getPubmedIDs => :getInvestigators do
+task :get_pubmed_ids_task => :get_investigators do
   get_pubmed_ids
 end
 
-task :getPIAbstracts => :getPubmedIDs do
+task :get_pi_abstracts_task => :get_pubmed_ids_task do
   get_pi_abstracts
 end
 
-task :insertAbstracts => :getPIAbstracts do
+task :insert_abstracts => :get_pi_abstracts_task do
   # load the test data
   do_insert_abstracts
   if LatticeGridHelper.global_limit_pubmed_search_to_institution? == false
-    #repeat with limited to institution and trust the results
+    # repeat with limited to institution and trust the results
     limit_pubmed_search_to_institution(true)
     get_pubmed_ids
     get_pi_abstracts
@@ -80,7 +80,7 @@ task :insertAbstracts => :getPIAbstracts do
   end
 end
 
-task :insertAllAbstracts => [:setAllYears, :insertAbstracts] do
+task :insertAllAbstracts => [:setAllYears, :insert_abstracts] do
   # dependencies do all the work
 end
 
@@ -119,7 +119,7 @@ task :updateAbstractInvestigators => [:associateAbstractsWithInvestigators] do
   end
 end
 
-task :updateInvestigatorInformation => [:getInvestigators] do
+task :updateInvestigatorInformation => [:get_investigators] do
   # load the test data
   block_timing("updateInvestigatorInformation") {
     row_iterator(@all_investigators, 0, 50) {  |investigator|
@@ -128,7 +128,7 @@ task :updateInvestigatorInformation => [:getInvestigators] do
   }
 end
 
-task :buildCoauthors => [:getInvestigators] do
+task :buildCoauthors => [:get_investigators] do
   # insert all the co-publication data for all authors
   block_timing("BuildCoauthors") {
     row_iterator(@all_investigators, 0, 50) { |investigator|
@@ -141,7 +141,7 @@ task :getInstitutionalPubmedIDs => :environment do
   # get all pubmed IDs using the following keywords:
   block_timing("getInstitutionalPubmedIDs") {
     keywords = LatticeGridHelper.institutional_limit_search_string
-    options = BuildSearchOptions(@publication_years,50000)
+    options = build_search_options(@publication_years, 50000)
     @all_entries = Bio::PubMed.esearch(keywords, options) # returns an array of pubmed_ids
     puts "task getInstitutionalPubmedIDs: number of publications found for #{@publication_years} years: #{@all_entries.length}" if LatticeGridHelper.verbose?
   }
@@ -151,7 +151,7 @@ task :getInstitutionalPubmedIDsAbstracts => :getInstitutionalPubmedIDs do
   #get the abstracts
   block_timing("getInstitutionalPubmedIDsAbstracts") {
     puts "looking up #{@all_entries.length} pubs" if LatticeGridHelper.debug?
-    @all_publications = FetchPublicationData(@all_entries) # takes an array of pubmed_ids and returns an array of pubmed records
+    @all_publications = fetch_publication_data(@all_entries) # takes an array of pubmed_ids and returns an array of pubmed records
     puts "task getInstitutionalPubmedIDsAbstracts: number abstracts pulled: #{@all_publications.length}" if LatticeGridHelper.verbose?
   }
 end

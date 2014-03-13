@@ -48,13 +48,13 @@ task :importInvestigatorPubmedIDs => :environment do
   read_file_handler("importInvestigatorPubmedIDs" ) {|filename| ReadInvestigatorPubmedData(filename)}
 end
 
-task :importProgramMembership => :getInvestigators do
+task :importProgramMembership => :get_investigators do
   read_file_handler("importProgramMembership" ) {|filename| ReadProgramMembershipData(filename)}
   prune_investigators_without_programs(@all_investigators)
   prune_program_memberships_not_updated()
 end
 
-task :importInvestigatorDescriptions => :getInvestigators do
+task :importInvestigatorDescriptions => :get_investigators do
   read_file_handler("importInvestigatorDescriptions" ) {|filename| ReadInvestigatorDescriptionData(filename)}
 end
 

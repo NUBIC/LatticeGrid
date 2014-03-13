@@ -495,7 +495,7 @@ namespace :cleanup do
   task :updateAbstractsWithPMCIDs => :getAbstracts do
     # this will update all abstracts with Pubmed Central IDs, if they are available
     block_timing("updateAbstractsWithPMCIDs") do
-      publications=FetchPublicationData(@all_abstracts.collect(&:pubmed))
+      publications = fetch_publication_data(@all_abstracts.collect(&:pubmed))
       row_iterator(publications) { |pubmed_record| updateAbstractWithPMCID(pubmed_record) }
     end
   end

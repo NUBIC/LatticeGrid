@@ -4,13 +4,13 @@ umich_latticegrid:
   database: umich_latticegrid_development
   username: latticegrid
 
-# setup the database. This assumes you are running in development 
+# setup the database. This assumes you are running in development
 rake db:create
 rake db:migrate
 #import the programs
 rake importDepartments file=db/imports/UMich/department_lookup.txt
 rake importOrganizations file=db/imports/UMich/division_lookup_20110809.txt
-# check that all is ok. 
+# check that all is ok.
 rake cleanUpOrganizations
 # see if programs have changed. Following is not necessary unless you are using an existing installation of latticegrid and have removed/changed programs
 rake getAllOrganizationsNotUpdated
@@ -18,15 +18,15 @@ rake purgeUnupdatedOrganizations
 # import the investigators
 rake importInvestigators file=db/imports/UMich/faculty_20110809.txt
 # check that you have the counts you are expecting!
-rake getAllMembers  
-rake getAllInvestigatorsWithoutMembership  
+rake getAllMembers
+rake getAllInvestigatorsWithoutMembership
 
 # now ready to populate
 rake insertAllAbstracts
 
 # run the whole smear
 #all the expected tasks are run using this build command
-# runs these tasks: :insertAbstracts, :updateAbstractInvestigators, :buildCoauthors, :updateInvestigatorInformation, :updateOrganizationAbstractInformation
+# runs these tasks: :insert_abstracts, :updateAbstractInvestigators, :buildCoauthors, :updateInvestigatorInformation, :updateOrganizationAbstractInformation
 rake nightlyBuild
 # once a month (or after a number of nightly builds) run monthlyBuild
 # monthlyBuild runs these tasks:  :tagAbstractsWithMeshTerms, :tagInvestigatorsWithMeshTerms, :attachMeshInformationContent, :buildInvestigatorColleaguesMesh, :normalizeInvestigatorColleaguesMesh

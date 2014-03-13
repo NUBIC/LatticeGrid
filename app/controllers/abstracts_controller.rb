@@ -298,7 +298,7 @@ class AbstractsController < ApplicationController
       abstract = Abstract.where('pubmed = :pubmed_id', { pubmed_id: params[:pubmed_id].split.first }).first
       if abstract.blank?
         is_new = true
-        publications = FetchPublicationData(params[:pubmed_id].split)
+        publications = fetch_publication_data(params[:pubmed_id].split)
         InsertPubmedRecords(publications)
         abstract = Abstract.where('pubmed = :pubmed_id', { pubmed_id: params[:pubmed_id].split.first }).first
       end
