@@ -1,14 +1,17 @@
+# -*- coding: utf-8 -*-
 require 'find'
 require 'date'
 require 'utilities' # was row_iterator and other methods
-#require 'fileutils'
-#require 'bio' #require bioruby!
-require 'publication_utilities' #all the helper methods
-require 'mesh_utilities' #information content utility
-require 'pubmed_config' #look here to change the default time spans
-#require 'pubmedext' #my extensions to grab other dates and full author names
-#require 'tasks/obo_parser'
-#require 'tasks/tree_traversal'
+require 'publication_utilities' # all the helper methods
+require 'mesh_utilities' # information content utility
+require 'pubmed_config' # look here to change the default time spans
+
+# Older requires
+# require 'fileutils'
+# require 'bio' #require bioruby!
+# require 'pubmedext' # my extensions to grab other dates and full author names
+# require 'tasks/obo_parser'
+# require 'tasks/tree_traversal'
 
 require 'rubygems'
 
@@ -16,15 +19,15 @@ task :tagAbstractsWithMeshTerms => [:getAbstracts] do
   # tag all abstracts with associated MeSH terms
   # about 60 minutes with 46000 abstracts
   # for RHLCCC about 20 minutes with 7800 abstracts and more than 8,000 tags. Total of 120K taggings
-  abstract_tag_count = Tagging.count(:conditions=>"taggable_type='Abstract'")
+  abstract_tag_count = Tagging.count(:conditions => "taggable_type='Abstract'")
   puts "count of all abstract MeSH tags is #{abstract_tag_count}" if LatticeGridHelper.verbose?
-  
-  block_timing("tagAbstractsWithMeshTerms") {
-    row_iterator(@AllAbstracts) do |abstract|
+
+  block_timing("tagAbstractsWithMeshTerms") do
+    row_iterator(@all_abstracts) do |abstract|
       TagAbstractWithMeSH(abstract)
     end
-  }
-  abstract_tag_count = Tagging.count(:conditions=>"taggable_type='Abstract'")
+  end
+  abstract_tag_count = Tagging.count(:conditions => "taggable_type='Abstract'")
   puts "count of all abstract MeSH tags is #{abstract_tag_count}" if LatticeGridHelper.verbose?
 end
 
@@ -32,15 +35,15 @@ task :tagInvestigatorsWithMeshTerms => [:getInvestigators] do
   # tag all investigators with associated MeSH terms from all abstracts
   # about 15 minutes laptop, 20 minutes staging with 2100 investigators and 46000 abstracts
   # for RHLCCC about 10 minutes with 7800 abstracts and 280 investigators
-  investigator_tag_count = Tagging.count(:conditions=>"taggable_type='Investigator'")
+  investigator_tag_count = Tagging.count(:conditions => "taggable_type='Investigator'")
   puts "count of all investigator MeSH tags is #{investigator_tag_count}" if LatticeGridHelper.verbose?
   start = Time.now
 
-  block_timing("tagInvestigatorsWithMeshTerms") {
-    row_iterator(@AllInvestigators, 0, 100, start) do |investigator|
+  block_timing("tagInvestigatorsWithMeshTerms") do
+    row_iterator(@all_investigators, 0, 100, start) do |investigator|
       TagInvestigatorWithMeSH(investigator)
     end
-  }
+  end
   investigator_tag_count = Tagging.count(:conditions=>"taggable_type='Investigator'")
   puts "count of all investigator MeSH tags is #{investigator_tag_count}" if LatticeGridHelper.verbose?
 end
@@ -52,7 +55,7 @@ task :tagInvestigatorsWithKeywords => [:getInvestigators] do
   start = Time.now
 
   block_timing("tagInvestigatorsWithKeywords") {
-    row_iterator(@AllInvestigators, 0, 200, start) do |investigator|
+    row_iterator(@all_investigators, 0, 200, start) do |investigator|
       TagInvestigatorWithKeywords(investigator)
     end
   }
@@ -64,8 +67,8 @@ task :calculateTagCounts => [:getTags, :getInvestigators, :getAbstracts] do
   #@total_taggings_count=Tagging.find(:all,:conditions=>"taggable_type='Abstract'").length  # get all taggings of abstracts
   @total_publications = Abstract.find(:all).length
   @total_tagged_publications = Abstract.find(:all, :conditions=>"mesh <> ''").length
-  @total_investigators = @AllInvestigators.length
-  @total_tag_count= @AllTags.length  # same as Abstract.tag_counts.length
+  @total_investigators = @all_investigators.length
+  @total_tag_count = @all_tags.length  # same as Abstract.tag_counts.length
 end
 
 task :attachMeshInformationContent => :environment do
@@ -76,15 +79,15 @@ task :attachMeshInformationContent => :environment do
 
   abstract_tag_counts=Abstract.tag_counts(:order=>"count asc")
   abstract_max_tag_count=Abstract.tag_counts(:limit=>5, :order=>"count desc")[0].count
-  
-  block_timing("attachMeshInformationContent") {
-    row_iterator(investigator_tag_counts, 0, 2000) { |tag_count|
+
+  block_timing("attachMeshInformationContent") do
+    row_iterator(investigator_tag_counts, 0, 2000) do |tag_count|
       SetMeshInformationContent( tag_count, investigator_max_tag_count, 'Investigator' )
-    }
-    row_iterator(abstract_tag_counts, 0, 2000) { |tag_count|
+    end
+    row_iterator(abstract_tag_counts, 0, 2000) do |tag_count|
       SetMeshInformationContent(tag_count, abstract_max_tag_count, 'Abstract' )
-    }
-  }
+    end
+  end
 end
 
 # this is the task that will take the information content calculations and build up the InvestigatorColleague model
@@ -92,21 +95,21 @@ end
 # it takes about 6 minutes for the first 10 investigators, depending on number of MeSH terms, total investigators and publications
 task :buildInvestigatorColleaguesMesh => [:getInvestigators, :getMeshTags] do
   # load the test data
-  block_timing("buildInvestigatorColleaguesMesh") {
+  block_timing("buildInvestigatorColleaguesMesh") do
     start = Time.now
     num_processed = 0
     cnt = 0 # start at zero or if you want to break this into shorter tasks, you could break it differently
     update_only=false
-    last = @AllInvestigators.length-1
+    last = @all_investigators.length-1
     to_process= last-cnt+1
     # this is a 2 (n-1)(n-2) problem. symmetric so it requires only (n-1)(n-2) iterations
     puts "ready to process #{to_process.humanize} investigators relationships starting with row #{cnt} of #{last}" if LatticeGridHelper.verbose?
-    row_iterator(@AllInvestigators[cnt..last], 0, 10, start)  { |investigator|
-      num_processed+=1
+    row_iterator(@all_investigators[cnt..last], 0, 10, start) do |investigator|
+      num_processed += 1
       AnalyzeInvestigatorColleague(investigator, update_only)
-    }
+    end
     puts "processed #{num_processed} investigator relationships" if LatticeGridHelper.verbose?
-  }
+  end
 end
 
 task :normalizeInvestigatorColleaguesMesh => :environment do
@@ -136,17 +139,17 @@ task :normalizeInvestigatorColleaguesMesh => :environment do
       # compressing all the numbers below 6000 is probably fine, so that "mesh_tags_ic = mesh_tags_ic * multiplier " where "mesh_tags_ic <= cutoff"
       # slope is (new top - new bottom) / (top-bottom) so in this case:  (8000/ (10000-cutoff) * (value-cutoff) ) + 2000
       # if 1000 needs to be reassigned as 2000, this also works
-      
+
       # and above the cutoff we do something like this: "mesh_tags_ic = mesh_tags_ic * multiplier " where "mesh_tags_ic > cutoff"
       mesh_ic_multiplier = 2000.0/cutoff
       puts "Adjusting overall slope: cutoff = #{cutoff}; mesh_ic_multiplier = #{mesh_ic_multiplier}" if LatticeGridHelper.verbose?
       #adjustment for the entire set
       InvestigatorColleague.update_all("mesh_tags_ic = round(#{mesh_ic_multiplier} * mesh_tags_ic)")
     end
-      
+
     # now check if the upper bound is reasonable. if 2000 is about pub_colleagues_count*2.3, 3000 should be about pub_colleagues_count*1.1
     investigator_colleagues_count = InvestigatorColleague.find(:all, :conditions => ['investigator_colleagues.mesh_tags_ic > 3000']).length
-    
+
     if (investigator_colleagues_count < 0.65 *pub_colleagues_count  or  investigator_colleagues_count > 0.9*pub_colleagues_count)
       cut_point = 2000
       cutoff = find_cutoff(investigator_colleagues_count, pub_colleagues_count*0.8, cut_point+1000)
@@ -170,7 +173,7 @@ task :normalizeInvestigatorColleaguesMesh => :environment do
 
     # now check if the upper bound is reasonable. if 4000 is about pub_colleagues_count*0.55, 5000 should be about pub_colleagues_count*0.27
     investigator_colleagues_count = InvestigatorColleague.find(:all, :conditions => ['investigator_colleagues.mesh_tags_ic > 5000']).length
-    
+
     if investigator_colleagues_count < 0.15 *pub_colleagues_count
       cut_point = 4000
       cutoff = find_cutoff(investigator_colleagues_count, pub_colleagues_count*0.2, cut_point+1000)

@@ -1,13 +1,13 @@
 
-def CurrentJournals()
+def CurrentJournals
   journals = Abstract.all.collect{|a| a.journal_abbreviation.downcase}.sort.uniq
 end
 
-def JournalsWithMismatchedISSNs()
+def JournalsWithMismatchedISSNs
   journals = Abstract.mismatched_issns
 end
 
-def AllJournalsWithImpact()
+def AllJournalsWithImpact
   journals = Journal.all.collect{|a| a.journal_abbreviation.downcase}.sort.uniq
 end
 
@@ -15,7 +15,7 @@ def CurrentJournalsWithImpactScore(journals)
   journals_w_scores = Journal.journals_with_scores(journals)
 end
 
-def UpdateJournalHighImpactPreferred()
+def UpdateJournalHighImpactPreferred
   pref_issns = LatticeGridHelper.high_impact_issns
   all_high_impact = Journal.high_impact_issns
   current_preferred_issns = Journal.all(:conditions=>"include_as_high_impact = true")
@@ -34,7 +34,7 @@ def UpdateJournalHighImpactPreferred()
   puts "updating!"
   current_preferred_issns = Journal.all(:conditions=>"include_as_high_impact = true")
   puts "Preferred: #{pref_issns.length}; all high impact #{all_high_impact.length}; current_preferred: #{current_preferred_issns.length}."
-  
+
 end
 
 def CreateJournalImpactFromHash(data_row)
@@ -49,7 +49,7 @@ def CreateJournalImpactFromHash(data_row)
   #Cited Half-Life
   #Eigenfactor Score
   #Article Influence Score
-  	
+
   # get smarter to pull out impact factor year. Right now it is encoded in the ISI file in the heading Total_Cites as '{year} Total Cites'
   j = Journal.new
   j.score_year = 2008
@@ -69,7 +69,7 @@ def CreateJournalImpactFromHash(data_row)
   j.total_articles = data_row["{#{j.score_year}} Articles"]
   j.eigenfactor_score = data_row['Eigenfactor Score']
   j.article_influence_score = data_row['Article Influence Score']
-  
+
   if ! j.issn.blank?
     existing_j = Journal.find_by_issn(j.issn)
   end
@@ -108,7 +108,7 @@ def UpdateJournalAbbreviation(data_row)
   end
 end
 
-def UpdateJournalISSNsFromPubmed()
+def UpdateJournalISSNsFromPubmed
   mismatches = Journal.match_by_abbrev
   # two types - ISSN does not match from Pubmed central, ISSN in pubmed entry is unset
   puts "#{mismatches.length} mismatches found"

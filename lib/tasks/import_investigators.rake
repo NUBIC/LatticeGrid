@@ -1,6 +1,7 @@
-require 'pubmed_config' #look here to change the default time spans
-require 'file_utilities' #specific methods
-require 'utilities' #specific methods
+# -*- coding: utf-8 -*-
+require 'pubmed_config'   # look here to change the default time spans
+require 'file_utilities'  # specific methods
+require 'utilities'       # specific methods
 
 require 'rubygems'
 require 'pathname'
@@ -11,7 +12,7 @@ end
 
 task :purgeUnupdatedOrganizations => :getAllOrganizationsNotUpdated do
   block_timing("purgeUnupdatedOrganizations") {
-    deleteUnupdatedOrganizations(@AllOrganizationsNotUpdated)
+    deleteUnupdatedOrganizations(@all_organizationsNotUpdated)
   }
 end
 
@@ -49,7 +50,7 @@ end
 
 task :importProgramMembership => :getInvestigators do
   read_file_handler("importProgramMembership" ) {|filename| ReadProgramMembershipData(filename)}
-  prune_investigators_without_programs(@AllInvestigators)
+  prune_investigators_without_programs(@all_investigators)
   prune_program_memberships_not_updated()
 end
 

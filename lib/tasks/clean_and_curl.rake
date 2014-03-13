@@ -87,7 +87,7 @@ namespace :cache do
   end
 
   def investigators
-    @AllInvestigators.each do |inv|
+    @all_investigators.each do |inv|
       run_curl full_show_investigator_url(:id => inv.username)
       run_ajax_curl tag_cloud_side_investigator_url(:id => inv.username)
       run_ajax_curl tag_cloud_investigator_url(:id => inv.username)
@@ -99,16 +99,16 @@ namespace :cache do
   end
 
   def mesh
-    @AllTags.each do |mesh|
+    @all_tags.each do |mesh|
       run_curl tag_count_mesh_url(:id => mesh.name)
       run_curl tag_count_mesh_url(:id => mesh.id)
       run_json_curl tag_count_mesh_url(:id => mesh.name, :format => 'json')
-      #run_xml_curl  tag_count_mesh_url(:id => mesh.name, :format => 'xml')
+      # run_xml_curl  tag_count_mesh_url(:id => mesh.name, :format => 'xml')
       run_curl investigators_mesh_url(:id => mesh.name)
       run_curl investigators_mesh_url(:id => mesh.id)
       run_json_curl investigators_mesh_url(:id => mesh.name, :format => 'json')
-      #run_xml_curl  investigators_mesh_url(:id => mesh.name, :format => 'xml')
-       #run_curl url_for :controller => 'investigators', :action => 'show', :id => inv.username, :page => 1
+      # run_xml_curl  investigators_mesh_url(:id => mesh.name, :format => 'xml')
+      # run_curl url_for :controller => 'investigators', :action => 'show', :id => inv.username, :page => 1
     end
   end
 
@@ -121,7 +121,7 @@ namespace :cache do
     run_curl departments_orgs_url
     # stats page
     run_curl stats_orgs_url
-    @AllOrganizations.each do |org|
+    @all_organizations.each do |org|
       run_curl show_investigators_org_url(org.id)
       run_curl url_for :controller => 'orgs', :action => 'show', :id => org.id, :page => 1
       run_curl full_show_org_url(:id => org.id)
@@ -132,46 +132,45 @@ namespace :cache do
   end
 
   def investigator_graphs
-    @AllInvestigators.each do |inv|
+    @all_investigators.each do |inv|
       run_curl show_member_graph_url( inv.username)
-      #url_for :controller => 'graphs', :action => 'show_member', :id => inv.username
-      #run_curl url_for :controller => 'graphs', :action => 'member_nodes', :id => inv.username
+      # url_for :controller => 'graphs', :action => 'show_member', :id => inv.username
+      # run_curl url_for :controller => 'graphs', :action => 'member_nodes', :id => inv.username
       run_curl member_nodes_url(inv.username)
-
     end
   end
 
   def investigator_awards
-    @AllInvestigators.each do |inv|
- #     run_curl awards_cytoscape_url( inv.username)
+    @all_investigators.each do |inv|
+      # run_curl awards_cytoscape_url( inv.username)
       run_curl investigator_award_url(inv.username)
      end
   end
 
   def awards
     run_curl listing_awards_url
-    @AllAwards.each do |award|
+    @all_awards.each do |award|
       run_curl award_url( award.id)
-     end
+    end
   end
 
   def investigator_studies
-    @AllInvestigators.each do |inv|
-#      run_curl studies_cytoscape_url( inv.username)
+    @all_investigators.each do |inv|
+      # run_curl studies_cytoscape_url( inv.username)
       run_curl investigator_study_url(inv.username)
-     end
+    end
   end
 
   def studies
     run_curl listing_studies_url
-    @AllStudies=Study.all
-    @AllStudies.each do |study|
+    @all_studies = Study.all
+    @all_studies.each do |study|
       run_curl study_url( study.id)
-     end
+    end
   end
 
   def investigator_cytoscape
-    @AllInvestigators.each do |inv|
+    @all_investigators.each do |inv|
       #study data
       run_ajax_curl member_cytoscape_data_url(:id=>inv.username, :depth=>1, :include_publications=>0, :include_awards=>0, :include_studies=>1)
       #award data
@@ -189,7 +188,7 @@ namespace :cache do
   def investigator_graphviz
     params = set_graphviz_defaults({})
     params[:distance] = "1"
-    @AllInvestigators.each do |inv|
+    @all_investigators.each do |inv|
       params[:id] =  inv.username
       params[:analysis] = "member"
       params[:stringency] = "1"
@@ -205,7 +204,7 @@ namespace :cache do
   end
 
   def org_graphs
-    @AllOrganizations.each do |org|
+    @all_organizations.each do |org|
        #run_curl url_for :controller => 'graphs', :action => 'show_org', :id => prog.id
        run_curl show_org_graph_url(org.id)
        run_curl org_nodes_url(org.id)
@@ -217,7 +216,7 @@ namespace :cache do
     params[:analysis] = "org"
     params = set_graphviz_defaults(params)
     params[:distance] = "1"
-    @AllOrganizations.each do |org|
+    @all_organizations.each do |org|
       params[:id] =  org.id
       params[:analysis] = "org"
       params[:stringency] = "1"
