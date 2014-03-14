@@ -716,7 +716,7 @@ class Investigator < ActiveRecord::Base
   def self.all_tsearch(terms)
     investigators = find_by_tsearch(terms)
     abstract_ids = Abstract.find_by_tsearch(terms, select: 'ID')
-    investigators2 = select("#{tsearch_investigators_columns} count(investigator_abstracts.abstract_id) as the_cnt")
+    investigators2 = select("#{tsearch_investigators_columns}, count(investigator_abstracts.abstract_id) as the_cnt")
                      .joins(:investigator_abstracts)
                      .where('investigator_abstracts.abstract_id IN (:abstract_ids)',
                             { abstract_ids: abstract_ids, investigator_ids: investigators.map(&:id) })
@@ -725,7 +725,7 @@ class Investigator < ActiveRecord::Base
     (investigators + investigators2).uniq
   end
 
-  def tsearch_investigators_columns
+  def self.tsearch_investigators_columns
     'investigators.id, investigators.username, investigators.home_department_id, investigators.last_name, investigators.first_name, investigators.middle_name, ' +
     'investigators.email, investigators.degrees, investigators.suffix, investigators.employee_id, ' +
     'investigators.title, investigators.campus, investigators.appointment_type, ' +
