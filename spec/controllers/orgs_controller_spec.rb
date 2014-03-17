@@ -2,12 +2,8 @@
 require 'spec_helper'
 
 describe OrgsController do
-  before do
-    # OrganizationalUnit.rebuild!
-    FactoryGirl.create(:program, abbreviation: 'head_node', department_id: 666, division_id: 999)
-  end
 
-  let(:head_node) { OrganizationalUnit.head_node('head_node') }
+  let!(:head_node) { FactoryGirl.create(:program, abbreviation: 'head_node', department_id: 666, division_id: 999) }
 
   describe 'GET show' do
     it 'renders template and assigns @abstracts' do
