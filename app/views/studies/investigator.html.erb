@@ -88,7 +88,7 @@
 			<%= pi_study.role  %>
 		</td>
 		<td class="list-left">
-			<%= link_to( pi_study.study.title, study_url(pi_study.study_id)) %>
+			<%= link_to(pi_study.study.title, study_url(pi_study.study_id)) %>
 		</td>
 		<td class="list-left">
 			<%= formatted_date(pi_study.study.approved_date) %>
@@ -103,7 +103,7 @@
 			<%=  pi_study.study.investigator_studies.count %>
 		</td>
 		<td class="list-left">
-			<%=  pi_study.study.investigators.collect{|pi| link_to_investigator_studies(pi, pi.name)}.join(", ") %>
+			<%=  pi_study.study.investigators.map { |pi| link_to_investigator_studies(pi, pi.name) }.join(', ').html_safe %>
 		</td>
 	</tr>
   <% end %>

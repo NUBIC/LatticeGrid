@@ -1,24 +1,22 @@
+# -*- coding: utf-8 -*-
 # -*- ruby -*-
 
-#need to refactor all Match/Find methods
+# need to refactor all Match/Find methods
 def show_regexp(a, re)
   if a =~ re
     "#{$`}<<#{$&}>>#{$'}"
   else
-    "no match"
+    'no match'
   end
 end
 
-def SimpleFindREmatch(str,re)
+def SimpleFindREmatch(str, re)
   return false if str.blank?
-  if str =~ re then
-    return true
-  end
-  return false
+  return true if str =~ re
+  false
 end
 
 # abstract.authors string will look like: "Vorontsov, I. I.\nMinasov, G.\nBrunzelle, J. S.\nShuvalova, L.\nKiryukhina, O.\nCollart, F. R.\nAnderson, W. F."
-
 # abstract.full_authors  string will look like: "Vorontsov, Ivan I\nMinasov, George\nBrunzelle, Joseph S\nShuvalova, Ludmilla\nKiryukhina, Olga\nCollart, Frank R\nAnderson, Wayne F"
 # full_authors string:  "Munoz, Lenka\n Ranaivo, Hantamalala Ralay\n Roy, Saktimayee M\n Hu, Wenhui\n Craft, Jeffrey M\n McNamara, Laurie K\n Chico, Laura Wing\n Van Eldik, LJ\n Watterson, DM"
 # full_authors string for some: "Shumaker, D K\nVann, L R\nGoldberg, M W\nAllen, T D\nWilson, K L" - this really looks like a authors string
@@ -31,7 +29,7 @@ def GetAuthor(string, is_full)
   end
   re.match(string)
   return [$1, $2] if $3.blank?
-  return [$1, $2, $3].compact
+  [$1, $2, $3].compact
 end
 
 def AuthorRE(investigator, is_full)
@@ -43,7 +41,7 @@ def AuthorRE(investigator, is_full)
 end
 
 # used when inserting InvestigatorAbstract record
-def IsFirstAuthor(abstract,investigator)
+def is_first_author?(abstract, investigator)
   puts "searching for first author using PI #{investigator.last_name}, #{investigator.first_name} "  if LatticeGridHelper.debug?
   auth_arry = abstract.author_array
   return true if auth_arry.length == 1
@@ -51,7 +49,7 @@ def IsFirstAuthor(abstract,investigator)
 end
 
 # used when inserting InvestigatorAbstract record
-def IsLastAuthor(abstract,investigator)
+def is_last_author?(abstract, investigator)
   auth_arry = abstract.author_array
   return true if auth_arry.length == 1
   SimpleFindREmatch(auth_arry.last, AuthorRE(investigator,abstract.has_full))
@@ -77,18 +75,18 @@ end
 
 def GetInvestigatorIDfromAuthorRecord(author_rec, author_string="")
   return 0  if author_rec.compact.length < 2
-  if author_rec.length > 2 then
+  if author_rec.length > 2
     # search for last_name, first_name and middle_name
     investigators = Investigator.find(:all,
       :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name  and lower(middle_name) like :middle_name  ",
           {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase+'%', :middle_name => author_rec[2].downcase+'%'}] )
-    if investigators.length == 0 and author_rec[1] != author_rec[1].first then
+    if investigators.length == 0 and author_rec[1] != author_rec[1].first
       # now look for last_name first_initial and middle_initial
       investigators = Investigator.find(:all,
         :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name and lower(middle_name) like :middle_name ",
             {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase+'%', :middle_name => author_rec[2].first.downcase+'%'}] )
     end
-    if investigators.length == 0 then
+    if investigators.length == 0
       # now look for last_name first_initial in entries where the middle name is blank!
       investigators = Investigator.find(:all,
         :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name and (middle_name is NULL or middle_name = '') ",
@@ -99,11 +97,11 @@ def GetInvestigatorIDfromAuthorRecord(author_rec, author_string="")
     investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name  ",
         {:last_name => author_rec[0].downcase, :first_name => author_rec[1].downcase+'%'}] )
     return investigators[0].id if investigators.length == 1
-    if investigators.length == 0 and author_rec[1] != author_rec[1].first then
+    if investigators.length == 0 && author_rec[1] != author_rec[1].first
       investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name and (middle_name is NULL or middle_name = '')",
             {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase+'%'}] )
     end
-    if investigators.length == 0 and author_rec[1] != author_rec[1].first then
+    if investigators.length == 0 && author_rec[1] != author_rec[1].first
       investigators = Investigator.find(:all, :conditions=>["lower(last_name) = :last_name and lower(first_name) like :first_name ",
             {:last_name => author_rec[0].downcase, :first_name => author_rec[1].first.downcase+'%'}] )
     end
@@ -131,14 +129,12 @@ def MatchInvestigatorsInCitation(abstract)
     author_id = GetInvestigatorIDfromAuthorRecord(author_ary, author)
     matched_ids.push(author_id) if author_id > 0
   end
-  return matched_ids
+  matched_ids
 end
 
 # takes an array of PubMed records
 def InsertPubmedRecords(publications)
-  publications.each do |publication|
-    abstract = InsertPublication(publication)
-  end
+  publications.each { |publication| InsertPublication(publication) }
 end
 
 def updateAbstractWithPMCID(pubmed_record)
@@ -146,10 +142,10 @@ def updateAbstractWithPMCID(pubmed_record)
 end
 
 # takes a PubMed record, hashed, as an inputs
-def InsertPublication(publication, update_if_pmc_exists=false)
+def InsertPublication(publication, update_if_pmc_exists = false)
   puts "InsertPublication: this shouldn't happen - publication was nil" if publication.nil?
   raise "InsertPublication: this shouldn't happen - publication was nil" if publication.nil?
-  thePub = nil
+  the_pub = nil
   medline = Bio::MEDLINE.new(publication) # convert retrieved format into the medline format
   reference = medline.reference
   pubmed_central_id = medline.pubmed_central
@@ -159,13 +155,11 @@ def InsertPublication(publication, update_if_pmc_exists=false)
     return nil
   end
   publication_date = check_date(medline.publication_date, medline.electronic_publication_date,  medline.deposited_date, reference.pubmed)
-  thePub = Abstract.find_by_pubmed_include_deleted(reference.pubmed)
-  if thePub.nil? || thePub.id < 1 then
-    thePub = Abstract.find_by_doi_include_deleted(medline.doi)
-  end
+  the_pub = Abstract.find_by_pubmed_include_deleted(reference.pubmed)
+  the_pub = Abstract.find_by_doi_include_deleted(medline.doi) if the_pub.nil? || the_pub.id < 1
   begin
-    if thePub.nil? || thePub.id < 1 then
-      thePub = Abstract.create!(
+    if the_pub.nil? || the_pub.id < 1
+      the_pub = Abstract.create!(
         :endnote_citation => reference.endnote,
         :abstract => reference.abstract,
         :authors => reference.authors.join("\n"),
@@ -189,64 +183,58 @@ def InsertPublication(publication, update_if_pmc_exists=false)
         :pubmed  => reference.pubmed,
         :pubmedcentral  => pubmed_central_id,
         :url     => reference.url,
-        :mesh    => reference.mesh.is_a?(String) ? reference.mesh : reference.mesh.join(";\n")
-      )
+        :mesh    => reference.mesh.is_a?(String) ? reference.mesh : reference.mesh.join(";\n"))
     else
-      if thePub.publication_date != publication_date || thePub.status != medline.status || thePub.publication_status != medline.publication_status || (thePub.pubmedcentral != pubmed_central_id) || thePub.issn != medline.issn || thePub.doi != medline.doi || thePub.year != reference.year then
-          thePub.endnote_citation = reference.endnote
-          thePub.publication_date = publication_date if ! publication_date.blank?
-          thePub.electronic_publication_date = medline.electronic_publication_date if ! medline.electronic_publication_date.blank?
-          thePub.deposited_date = medline.deposited_date
-          thePub.publication_status = medline.publication_status
-          thePub.status  = medline.status
-          thePub.issn    = medline.issn unless medline.issn.blank?
-          thePub.doi     = medline.doi  unless medline.doi.blank?
-          thePub.volume  = reference.volume
-          thePub.issue   = reference.issue
-          thePub.pages   = reference.pages
-          thePub.year    = reference.year
-          thePub.pubmed  = reference.pubmed
-          thePub.pubmedcentral  = pubmed_central_id
-          thePub.url     = reference.url
-          thePub.author_affiliations = medline.affiliations.is_a?(String) ? medline.affiliations : medline.affiliations.join(";\n"),
-          thePub.mesh    = reference.mesh.is_a?(String) ? reference.mesh : reference.mesh.join(";\n")
-          thePub.save!
-        end
-        # HandleMeshTerms(thePub.mesh, thePub.id)
+      if the_pub.publication_date != publication_date || the_pub.status != medline.status || the_pub.publication_status != medline.publication_status || (the_pub.pubmedcentral != pubmed_central_id) || the_pub.issn != medline.issn || the_pub.doi != medline.doi || the_pub.year != reference.year
+        the_pub.endnote_citation = reference.endnote
+        the_pub.publication_date = publication_date unless publication_date.blank?
+        the_pub.electronic_publication_date = medline.electronic_publication_date unless medline.electronic_publication_date.blank?
+        the_pub.deposited_date = medline.deposited_date
+        the_pub.publication_status = medline.publication_status
+        the_pub.status  = medline.status
+        the_pub.issn    = medline.issn unless medline.issn.blank?
+        the_pub.doi     = medline.doi  unless medline.doi.blank?
+        the_pub.volume  = reference.volume
+        the_pub.issue   = reference.issue
+        the_pub.pages   = reference.pages
+        the_pub.year    = reference.year
+        the_pub.pubmed  = reference.pubmed
+        the_pub.pubmedcentral  = pubmed_central_id
+        the_pub.url     = reference.url
+        the_pub.author_affiliations = medline.affiliations.is_a?(String) ? medline.affiliations : medline.affiliations.join(";\n"),
+        the_pub.mesh = reference.mesh.is_a?(String) ? reference.mesh : reference.mesh.join(";\n")
+        the_pub.save!
+      end
+      # HandleMeshTerms(the_pub.mesh, the_pub.id)
     end
   rescue ActiveRecord::RecordInvalid  => exc
-     if thePub.nil? then # something bad happened
-      puts "InsertPublication: unable to find or insert reference with the pubmed id of '#{reference.pubmed}. error message: #{exc.message}"
-      raise "InsertPublication: unable to find or insert reference with the pubmed id of  '#{reference.pubmed}. error message: #{exc.message}"
+    if the_pub.nil? # something bad happened
+      msg = "InsertPublication: unable to find or insert reference with the pubmed id of '#{reference.pubmed}. error message: #{exc.message}"
+      puts msg
+      raise msg
     end
   end
-  thePub
+  the_pub
 end
 
 def UpdateOrganizationAbstract(unit_id, abstract_id)
   puts "UpdateOrganizationAbstract: this shouldn't happen - abstract_id was nil" if abstract_id.blank?
   puts "UpdateOrganizationAbstract: this shouldn't happen - unit_id was nil" if unit_id.blank?
   return if abstract_id.blank? || unit_id.blank?
-  if OrganizationAbstract.find( :first,
-    :conditions => [" abstract_id = :abstract_id AND organizational_unit_id = :unit_id",
-        {:unit_id => unit_id, :abstract_id => abstract_id}]).nil?
-    InsertOrganizationAbstract(unit_id, abstract_id)
-  end
+  org_abstract = OrganizationAbstract.where('abstract_id = ? AND organizational_unit_id = ?', abstract_id, unit_id).first
+  InsertOrganizationAbstract(unit_id, abstract_id) if org_abstract.nil?
 end
 
 def InsertOrganizationAbstract(unit_id, abstract_id)
   begin
-     theOrgPub = OrganizationAbstract.create!(
-       :abstract_id => abstract_id,
-       :organizational_unit_id  => unit_id
-     )
+     pub = OrganizationAbstract.create!(abstract_id: abstract_id, organizational_unit_id: unit_id)
    rescue ActiveRecord::RecordInvalid
-     if theOrgPub.nil? then # something bad happened
+     if pub.nil? # something bad happened
        puts "InsertOrganizationAbstract: unable to either insert or find a reference with the abstract_id '#{abstract_id}' and the unit_id '#{unit_id}'"
        return
      end
     end
-   theOrgPub.id
+   pub.id
 end
 
 # use this as a last minute check for a publication date.
@@ -260,26 +248,26 @@ def check_date(pub_date, edate, created_date, pubmed_id)
   rescue
     today = Date.today
     if pub_date =~ /([0-9]+)-([a-zA-Z]+)-([0-9]+)/
-      day = $1
+      day   = $1
       month = $2
-      year = $3
-      day = 1 unless (day === (1..28))
+      year  = $3
+      day   = 1 unless (day === (1..28))
       month = 'Jan' unless month =~ /jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec/i
-      unless (year === (1800..today.year) )
+      unless (year === (1800..today.year))
         year = edate.to_date.year unless edate.blank?
-        year = created_date.to_date.year if year.blank? and ! created_date.blank?
+        year = created_date.to_date.year if year.blank? and !created_date.blank?
         year = today.year if year.blank?
       end
       puts "check_date ERROR handling: invalid date for #{pubmed_id} was #{pub_date} and is #{day}-#{month}-#{year}"
     else
-      day = '1'
+      day   = '1'
       month = 'Jan'
-      year = edate.to_date.year unless edate.blank?
-       year = created_date.to_date.year if year.blank? and ! created_date.blank?
-       year = today.year if year.blank?
+      year  = edate.to_date.year unless edate.blank?
+      year  = created_date.to_date.year if year.blank? and !created_date.blank?
+      year  = today.year if year.blank?
       puts "check_date ERROR handling: INVALID DATE FORMAT: date for #{pubmed_id} was #{pub_date} and is #{day}-#{month}-#{year}"
     end
     pub_date = "#{day}-#{month}-#{year}"
   end
-  return pub_date
+  pub_date
 end

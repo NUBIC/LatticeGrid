@@ -5,98 +5,112 @@
 <% show_unit_type = true if show_unit_type.nil? %>
 
 
-<table cellpadding="2" cellspacing="0" width="100%" class="borderless"> 
-<tr valign="bottom" colspan="3">
-	<td class="list-title-left">
-		Title
-	</td>
-	<% if show_unit_type %>
-	<td class="list-title-left">
-		Type
-	</td>
-	<% end %>
-	<% if show_primary_faculty %>
-	<td class="list-title-center">
-		Primary<br/>
-	</td>
-	<% end %>
-	<% if show_associated_faculty %>
-	<td class="list-title-center">
-		Joint + Secondary<br/>
-	</td>
-	<% end %>
-	<% if show_members %>
-	<td class="list-title-center">
-		Members<br/>
-	</td>
-	<td class="list-title-center">
-		Member Publications<br/>
-	</td>
-	<% end %>
-	<% if show_associate_members %>
-	<td class="list-title-center">
-		Associate Members<br/>
-	</td>
-	<td class="list-title-center">
-		Associate Member Publications<br/>
-	</td>
-	<% end %>
-	<td class="list-title-center">
-		Total publications<br/>
-	</td>
-	<td class="list-title-left">
-		MeSH terms<br/>
-	</td>
-</tr>
+<table cellpadding="2" cellspacing="0" width="100%" class="borderless">
+  <tr valign="bottom" colspan="3">
+    <td class="list-title-left">
+      Title
+    </td>
+    <% if show_unit_type %>
+      <td class="list-title-left">
+        Type
+      </td>
+    <% end %>
+    <% if show_primary_faculty %>
+      <td class="list-title-center">
+        Primary
+      </td>
+    <% end %>
+    <% if show_associated_faculty %>
+      <td class="list-title-center">
+        Joint + Secondary
+      </td>
+    <% end %>
+    <% if show_members %>
+      <td class="list-title-center">
+        Members
+      </td>
+      <td class="list-title-center">
+        Member Publications
+      </td>
+    <% end %>
+    <% if show_associate_members %>
+      <td class="list-title-center">
+        Associate Members
+      </td>
+      <td class="list-title-center">
+        Associate Member Publications
+      </td>
+    <% end %>
+    <td class="list-title-center">
+      Total publications
+    </td>
+    <td class="list-title-left">
+      MeSH terms
+    </td>
+  </tr>
 
-<% for unit in units %>
-	<tr valign="bottom" colspan="3">
-		<td>
-			<%= link_to( image_tag("base.gif"), show_org_graph_url(unit.id), :title => "Authorship graph ") %> 
-			<%= link_to( image_tag("cluster_icon_16.png"), show_org_graphviz_url(unit.id), :title => "Authorship network diagram ") %> 
-			<%= link_to( image_tag("cluster_icon_16.png"), show_org_mesh_graphviz_url(unit.id), :title => "MeSH similarities network diagram") %> 
-			<%= link_to( unit.name, org_url(unit.id), :title => "List publications by faculty members") %>
-		</td>
-		<% if show_unit_type %>
-		<td>
-			<%= unit.type %>
-		</td>
-		<% end %>
-		<% if show_primary_faculty %>
-		<td class="list-title-center">
-			<%= link_to( (unit.all_primary_faculty).collect(&:id).uniq.length, show_investigators_org_url(unit.id), :title=>"List investigators in unit") %>
-		</td>
-		<% end %>
-		<% if show_associated_faculty %>
-		<td class="list-title-center">
-			<%= link_to( (unit.all_joint_faculty+unit.all_secondary_faculty).collect(&:id).uniq.length, show_investigators_org_url(unit.id), :title=>"List investigators in unit") %>
-		</td>
-		<% end %>
-		<% if show_members %>
-		<td class="list-title-center">
-			<%= link_to( (unit.all_members).collect(&:id).uniq.length, show_investigators_org_url(unit.id), :title=>"List investigators in unit") %>
-		</td>
-		<td class="list-title-center">
-			<%= link_to( Investigator.publication_count_for_investigators(unit.all_members), org_url(unit.id), :title => "List publications by faculty members") %>
-		</td>
-		<% end %>
-		<% if show_associate_members %>
-		<td class="list-title-center">
-			<%= link_to( (unit.all_associate_members).collect(&:id).uniq.length, show_investigators_org_url(unit.id), :title=>"List investigators in unit") %>
-		</td>
-		<td class="list-title-center">
-			<%= link_to( Investigator.publication_count_for_investigators(unit.all_associate_members), org_url(unit.id), :title => "List publications by associate members") %>
-		</td>
-		<% end %>
-		<td class="list-title-center">
-			<%= link_to( unit.all_abstract_ids.length, org_url(unit.id), :title => "List publications by faculty members") %>
-		</td>
-		<td class="list-title-left">
-		<% tag_cloud unit.abstracts.tag_counts(:limit => 6, :order => "count desc" ), %w(tagcloud1 tagcloud2 tagcloud3 tagcloud4) do |tag, css_class| %>
-		   <%= link_to tag.name, tagged_abstracts_abstract_url(URI.escape(tag.name)), :class => css_class, :title => "Total of #{tag.count} tags" %>
-		<% end %>
-		<%= link_to "...more...", org_url(unit.id) %>
-		</td>
-	</tr>
-<% end %>
+  <% for unit in units %>
+    <tr valign="bottom" colspan="3">
+      <td>
+        <%= link_to(image_tag("base.gif"), show_org_graph_url(unit.id), :title => "Authorship graph ") %>
+        <%= link_to(image_tag("cluster_icon_16.png"), show_org_graphviz_url(unit.id), :title => "Authorship network diagram ") %>
+        <%= link_to(image_tag("cluster_icon_16.png"), show_org_mesh_graphviz_url(unit.id), :title => "MeSH similarities network diagram") %>
+        <%= link_to(unit.name, org_url(unit.id), :title => "List publications by faculty members") %>
+      </td>
+      <% if show_unit_type %>
+        <td>
+          <%= unit.type %>
+        </td>
+      <% end %>
+      <% if show_primary_faculty %>
+        <td class="list-title-center">
+          <%= link_to((unit.all_primary_faculty).collect(&:id).uniq.length,
+                      show_investigators_org_url(unit.id),
+                      title: "List investigators in unit") %>
+        </td>
+      <% end %>
+      <% if show_associated_faculty %>
+        <td class="list-title-center">
+          <%= link_to((unit.all_joint_faculty + unit.all_secondary_faculty).map(&:id).uniq.length,
+                      show_investigators_org_url(unit.id),
+                      title: "List investigators in unit") %>
+        </td>
+      <% end %>
+      <% if show_members %>
+        <td class="list-title-center">
+          <%= link_to((unit.all_members).map(&:id).uniq.length,
+                      show_investigators_org_url(unit.id),
+                      title: "List investigators in unit") %>
+        </td>
+        <td class="list-title-center">
+          <%= link_to(Investigator.publication_count_for_investigators(unit.all_members),
+                      org_url(unit.id),
+                      title: "List publications by faculty members") %>
+        </td>
+      <% end %>
+      <% if show_associate_members %>
+        <td class="list-title-center">
+          <%= link_to((unit.all_associate_members).map(&:id).uniq.length,
+                      show_investigators_org_url(unit.id),
+                      title: "List investigators in unit") %>
+        </td>
+        <td class="list-title-center">
+          <%= link_to(Investigator.publication_count_for_investigators(unit.all_associate_members),
+                      org_url(unit.id),
+                      title: "List publications by associate members") %>
+        </td>
+      <% end %>
+      <td class="list-title-center">
+        <%= link_to( unit.all_abstract_ids.length, org_url(unit.id), :title => "List publications by faculty members") %>
+      </td>
+      <td class="list-title-left">
+      <% tag_cloud unit.abstracts.tag_counts(:limit => 6, :order => "count desc" ), %w(tagcloud1 tagcloud2 tagcloud3 tagcloud4) do |tag, css_class| %>
+         <%= link_to tag.name,
+                     tagged_abstracts_abstract_url(URI.escape(tag.name)),
+                     :class => css_class, :title => "Total of #{tag.count} tags" %>
+      <% end %>
+      <%= link_to "...more...", org_url(unit.id) %>
+      </td>
+    </tr>
+  <% end %>
 </table>

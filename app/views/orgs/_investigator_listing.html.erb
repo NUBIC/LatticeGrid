@@ -3,7 +3,7 @@
 		<h2>
 			<%= heading %> <%= "(#{investigators.length})" if !investigators.nil? %>
 		</h2>
-	  <%= sparkline_barchart_setup.html_safe %>
+	  <%= sparkline_barchart_setup.to_s.html_safe %>
 		<table cellpadding="2" cellspacing="0" class="fullsize">
 		  <tr valign="bottom">
 			  <th bgcolor="lightgrey" align="left"  class="list-left">Investigator</th>

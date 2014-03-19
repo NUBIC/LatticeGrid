@@ -10,8 +10,6 @@
 <% @simple_links=false if @simple_links.nil? %>
 <% @speed_display=false if @speed_display.nil? %>
 
-
-
 <%= render :partial => "shared/abstract_listing.html",
 	    :locals => {
         :abstracts => @abstracts,
@@ -29,4 +27,3 @@
         :speed_display => @speed_display
       }
 %>
-

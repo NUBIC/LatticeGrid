@@ -7,7 +7,7 @@ end
 def CreateStudyFromHash(data_row)
   # assumed header values
   # irb_number => irb_study_number
-  
+
   # note if the following change
   # title => title
   # description => abstract
@@ -39,24 +39,24 @@ def CreateStudyFromHash(data_row)
   # imported_at
   # import_errors => had_import_errors
   # import_cache
-    	
+
   s = Study.new
   s.irb_study_number =  data_row['irb_number']
   s.title =  data_row['title']
   s.abstract =  data_row['description']
   # clean out the non-ASCII characters
   begin
-    s.title = CleanNonUTFtext(s.title)
-    s.abstract = CleanNonUTFtext(s.abstract)
+    s.title = TextUtilities.clean_non_utf_text(s.title)
+    s.abstract = TextUtilities.clean_non_utf_text(s.abstract)
   rescue Exception => err
-    puts "CleanNonUTFtext failed for #{data_row.inspect} with error #{err.message}"
+    puts "TextUtilities.clean_non_utf_text failed for #{data_row.inspect} with error #{err.message}"
     puts "s.title is #{s.title.length} and s.abstract is #{s.abstract.length} characters."
   end
   s.enotis_study_id =  data_row['study_id']
   s.research_type =  data_row['research_type']
   s.review_type =  data_row['review_type_requested']
   s.approved_date =  data_row['approved_date']
-  
+
   if s.irb_study_number.blank?
     puts "irb_study_number was blank for this row: #{data_row.inspect}"
     return
@@ -157,7 +157,7 @@ end
 # Biostatistician => [ "Statistician", "statistician", "Statistician", "Statician", "Biostatician", "Biostatisation", "Data Mgmt.", "Analyst"]
 # Faculty => [ "Faculty", "Asst. Professor", "Co-Mentor", "Mentor", "collabor", "Collaborateor", "Collaborator", "collaborator" ]
 # Other => [ "Other", "O.S.P", "Advisory Board Member", "Co-Sponsor", "Program Administrator","Pharmacologist", "Other Professional", "RAP"]
-# Other => [nil, , , "R.D.", "Technician", "medical monitor"] 
+# Other => [nil, , , "R.D.", "Technician", "medical monitor"]
 
 def clean_study_role(role)
   return 'Other' if role.blank?
@@ -209,8 +209,8 @@ end
 
 
 def complain_not_equal(new_rec, old_rec, attr_name, replace=true)
-  return if new_rec.blank? or new_rec[attr_name].blank? 
-  return if new_rec[attr_name] == old_rec[attr_name] 
+  return if new_rec.blank? or new_rec[attr_name].blank?
+  return if new_rec[attr_name] == old_rec[attr_name]
   if  ! old_rec[attr_name].blank? and  (new_rec[attr_name].class.to_s !~ /string/i or new_rec[attr_name].length < 50)
     puts "new #{attr_name} not the same as the old: new #{new_rec[attr_name]}; old: #{old_rec[attr_name]}"
   end

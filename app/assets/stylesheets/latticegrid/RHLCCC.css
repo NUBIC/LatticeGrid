@@ -1,1 +1,6 @@
 /* same as publications.css for now */
+
+#banner {
+  height: 150px;
+  padding-left: 0;
+}

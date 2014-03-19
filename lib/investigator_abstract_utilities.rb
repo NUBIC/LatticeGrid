@@ -6,7 +6,7 @@ def CreateAbstractsFromArrayHash(data)
   # assumed header values
 	 # pmid
 	 # employee_id
-  pubmed_ids = [] 
+  pubmed_ids = []
   existing_pubmed_ids = Abstract.include_deleted.map(&:pubmed)
   puts "Total number of existing pubmed ids: #{existing_pubmed_ids.length}" if LatticeGridHelper.verbose?
   existing_employee_ids = Investigator.all.map(&:employee_id).compact.uniq
@@ -20,14 +20,14 @@ def CreateAbstractsFromArrayHash(data)
     employee_id = data_row["EMPLOYEE_ID"]
     next unless employee_id.blank? or existing_employee_ids.include?(employee_id.to_i)
     next if existing_pubmed_ids.include?(pubmed_id)
-    pubmed_ids << pubmed_id 
+    pubmed_ids << pubmed_id
   end
   puts "Total number of  data rows: #{cnt}" if LatticeGridHelper.verbose?
   puts "Total number of  pubmed ids: #{pubmed_ids.length}" if LatticeGridHelper.verbose?
   pubmed_ids = pubmed_ids.sort.uniq
   puts "unique pubmed ids: #{pubmed_ids.length}" if LatticeGridHelper.verbose?
-  puts "FetchPublicationData" if LatticeGridHelper.verbose?
-  publications = FetchPublicationData(pubmed_ids)
+  puts "fetch_publication_data" if LatticeGridHelper.verbose?
+  publications = fetch_publication_data(pubmed_ids)
   puts "InsertPubmedRecords #{publications.length}" if LatticeGridHelper.verbose?
   InsertPubmedRecords(publications)
   return pubmed_ids
@@ -43,9 +43,9 @@ def CreateInvestigatorAbstractsFromHash(data_row, pubmed_ids_to_process, existin
   return unless pubmed_ids_to_process.blank? or pubmed_ids_to_process.include?(pubmed_id)
   employee_id = data_row["EMPLOYEE_ID"] # || data_row["NETID"] || data_row["USERNAME"]
   if pubmed_id.blank? || employee_id.blank? then
-     puts "pubmed_id or employee_id was blank or missing. datarow="+data_row.inspect 
+     puts "pubmed_id or employee_id was blank or missing. datarow="+data_row.inspect
      return
-  end  
+  end
   unless  existing_pubmed_ids.include?(pubmed_id) then
      puts "Not an existing Abstract. datarow="+data_row.inspect
      return
@@ -64,15 +64,20 @@ def CreateInvestigatorAbstractsFromHash(data_row, pubmed_ids_to_process, existin
       return
   end
   ia = InvestigatorAbstract.find(:first, :conditions=>
-    ['abstract_id = :abstract_id and investigator_id = :investigator_id ', 
+    ['abstract_id = :abstract_id and investigator_id = :investigator_id ',
       {:investigator_id => investigator.id, :abstract_id => abstract.id }])
   if ia.nil?
-    ia = InsertInvestigatorPublication(abstract.id, investigator.id, (abstract.publication_date||abstract.electronic_publication_date||abstract.deposited_date), IsFirstAuthor(abstract,investigator), IsLastAuthor(abstract,investigator), true)
+    ia = InsertInvestigatorPublication(abstract.id,
+                                       investigator.id,
+                                       (abstract.publication_date || abstract.electronic_publication_date || abstract.deposited_date),
+                                       is_first_author?(abstract,investigator),
+                                       is_last_author?(abstract,investigator),
+                                       true)
   else
-    ia.is_valid=true
+    ia.is_valid = true
     ia.save!
   end
-  if not ia.nil? and (ia.last_reviewed_id.blank? or ia.last_reviewed_id == 0 ) then
+  if not ia.nil? and (ia.last_reviewed_id.blank? or ia.last_reviewed_id == 0)
     before_abstract_save(ia, 'importInvestigatorPubmedIDs', investigator.id)
     ia.save!
     before_abstract_save(abstract, 'importInvestigatorPubmedIDs', investigator.id)
@@ -88,5 +93,5 @@ def before_abstract_save(model, ip=nil, id=0)
   model.reviewed_id ||= id
   model.reviewed_ip ||= ip
   model.reviewed_at ||= Time.now
-end   
+end
 

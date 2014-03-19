@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
 class ApplicationController < ActionController::Base
@@ -27,19 +29,13 @@ class ApplicationController < ActionController::Base
   end
 
   class DateRange
+    attr_reader :start_date, :end_date
     def initialize (start_date,end_date)
      @start_date = start_date.to_formatted_s(:justdate)
      @end_date = end_date.to_formatted_s(:justdate)
     end
-    def start_date
-     @start_date
-    end
-    def end_date
-     @end_date
-    end
   end
 
-  private
   def find_last_load_date
     if session[:last_load_date].blank? or session[:last_refresh].blank? or session[:last_refresh] < 1.day.ago then
       latest_record = LoadDate.order('id DESC').first
@@ -52,10 +48,12 @@ class ApplicationController < ActionController::Base
       logger.info("Updated a session last_load_date for ip #{get_client_ip} at #{Time.now}")
     end
   end
+  private :find_last_load_date
 
   def get_organizations
-    @head_node = OrganizationalUnit.head_node(LatticeGridHelper.menu_head_abbreviation())
+    @head_node = OrganizationalUnit.head_node(LatticeGridHelper.menu_head_abbreviation)
   end
+  private :get_organizations
 
   def handle_start_and_end_date
     if ! params[:date_range].blank? then
@@ -84,6 +82,7 @@ class ApplicationController < ActionController::Base
       @end_date = params[:end_date]
     end
   end
+  private :handle_start_and_end_date
 
   def handle_pagination
     @do_pagination = 1
@@ -94,44 +93,40 @@ class ApplicationController < ActionController::Base
       cookies[:do_pagination] = @do_pagination
     end
   end
+  private :handle_pagination
 
+  ##
+  # Simple struct to handle search parameters
   class Keywords
-    def initialize (keywords,search_field,search_exact)
+    attr_reader :keywords, :search_field, :search_exact
+    def initialize(keywords, search_field, search_exact)
       @keywords = keywords
       @search_field = search_field
       @search_exact = search_exact
     end
-    def keywords
-      @keywords
-    end
-    def search_field
-      @search_field
-    end
-    def search_exact
-      @search_exact
-    end
   end
 
-  def define_keywords (the_keywords='', search_field='All', search_exact='0')
-    if params[:keywords].blank? then
-      the_keywords = cookies[:the_keywords] if !cookies[:the_keywords].blank?
+  def define_keywords(the_keywords = '', search_field = 'All', search_exact = '0')
+    if params[:keywords].blank?
+      the_keywords = cookies[:the_keywords] unless cookies[:the_keywords].blank?
     else
       the_keywords = params[:keywords]
       cookies[:the_keywords] = the_keywords
     end
-    if !params[:search_field].blank? then
+    if !params[:search_field].blank?
       search_field = params[:search_field]
       cookies[:search_field] = search_field
     else
-      search_field = cookies[:search_field] if !cookies[:search_field].blank?
+      search_field = cookies[:search_field] unless cookies[:search_field].blank?
     end
-    if !params[:search_exact].blank? then
+    if !params[:search_exact].blank?
       search_exact = params[:search_exact]
       cookies[:search_exact] = search_exact
     else
-      search_exact = cookies[:search_exact] if !cookies[:search_exact].blank?
+      search_exact = cookies[:search_exact] unless cookies[:search_exact].blank?
     end
-    @keywords = Keywords.new(the_keywords,search_field,search_exact)
+    @keywords = Keywords.new(the_keywords, search_field, search_exact)
   end
+  private :define_keywords
 
 end

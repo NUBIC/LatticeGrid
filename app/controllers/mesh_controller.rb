@@ -1,5 +1,5 @@
 class MeshController < ApplicationController
-  caches_page(:index, :search, :investigators, :investigator, :investigator_tags, :tag_count, :investigator_count) if LatticeGridHelper.CachePages()
+  caches_page(:index, :search, :investigators, :investigator, :investigator_tags, :tag_count, :investigator_count) if LatticeGridHelper.cache_pages?
 
   include ApplicationHelper
   include MeshHelper

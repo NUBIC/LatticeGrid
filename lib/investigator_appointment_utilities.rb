@@ -264,7 +264,7 @@ def SetInvestigatorInformation(pi, data_row)
   pi.faculty_research_summary.strip! unless pi.faculty_research_summary.blank?
   pi.faculty_keywords.strip! unless pi.faculty_keywords.blank?
 
-  pi.faculty_research_summary = CleanNonUTFtext(pi.faculty_research_summary)
+  pi.faculty_research_summary = TextUtilities.clean_non_utf_text(pi.faculty_research_summary)
   pi
 end
 

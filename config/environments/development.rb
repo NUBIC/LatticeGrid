@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 LatticeGrid::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
@@ -27,6 +28,9 @@ LatticeGrid::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  # Turn off/on page caching
+  config.action_controller.perform_caching = false
 
   config.aker do
     # The authentication protocol to use for interactive access.

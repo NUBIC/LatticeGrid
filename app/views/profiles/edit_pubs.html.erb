@@ -25,42 +25,32 @@
 </ul>
 
 <script type="text/javascript" language="JavaScript">
-
-$j(function () { // this line makes sure this code runs on page load
-
-	$j("pubmed_addition_form").observe('ajax:before', function(evt, status, data, xhr) {
-		Element.show('spinner');
+	$j(function () { // this line makes sure this code runs on page load
+		$j('.checkall').live('click',function () {
+			var is_checked = this.checked;
+			if (is_checked) {
+				$j('input[type=checkbox]:not(:checked).valid').trigger('click');
+			} else {
+				$j('input:checkbox:checked.valid').trigger('click');
+			}
+		});
+		$j('.checkallcancer').live('click',function () {
+			var is_checked = this.checked;
+			if (is_checked) {
+				$j('input[type=checkbox]:not(:checked).cancer_related').trigger('click');
+			} else {
+				$j('input:checkbox:checked.cancer_related').trigger('click');
+			}
+		});
+		$j('.checkallfaculty').live('click',function () {
+			var is_checked = this.checked;
+			if (is_checked) {
+				$j('input[type=checkbox].valid_faculty').not(':checked').trigger('click');
+			} else {
+				$j('input:checkbox:checked.valid_faculty').trigger('click');
+			}
+		});
 	});
-
-	$j("pubmed_addition_form").observe('ajax:complete', function(evt, status, data, xhr) {
-		Element.hide('spinner');
-	});
-
-	$j('.checkall').live('click',function () {
-		var is_checked = this.checked;
-		if (is_checked) {
-			$j('input[type=checkbox]:not(:checked).valid').trigger('click');
-		} else {
-			$j('input:checkbox:checked.valid').trigger('click');
-		}
-	});
-	$j('.checkallcancer').live('click',function () {
-		var is_checked = this.checked;
-		if (is_checked) {
-			$j('input[type=checkbox]:not(:checked).cancer_related').trigger('click');
-		} else {
-			$j('input:checkbox:checked.cancer_related').trigger('click');
-		}
-	});
-	$j('.checkallfaculty').live('click',function () {
-		var is_checked = this.checked;
-		if (is_checked) {
-			$j('input[type=checkbox].valid_faculty').not(':checked').trigger('click');
-		} else {
-			$j('input:checkbox:checked.valid_faculty').trigger('click');
-		}
-	});
-});
 </script>
 
 <input type="checkbox" class="checkall" value="Yes"> mark all valid<br/>

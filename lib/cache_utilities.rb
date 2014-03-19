@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 def public_path
   "#{File.expand_path(Rails.root)}/public"
 end
@@ -7,11 +8,11 @@ def root_path
 end
 
 def clear_directory(dir_name)
-  name="#{public_path()}/#{dir_name}"
-  if File.directory?(name) then
+  name = "#{public_path}/#{dir_name}"
+  if File.directory?(name)
     begin
-     logger.info "running 'rm -r #{name}'"
-    rescue Exception => error
+      logger.info "running 'rm -r #{name}'"
+    rescue Exception
       puts "running 'rm -r #{name}'"
     end
     system("rm -r #{name}")
@@ -19,11 +20,11 @@ def clear_directory(dir_name)
 end
 
 def clear_file(file_name)
-  name="#{public_path()}/#{file_name}"
-  if File.exist?(name) then
+  name = "#{public_path}/#{file_name}"
+  if File.exist?(name)
     begin
-     logger.info "running 'rm #{name}'"
-    rescue Exception => error
+      logger.info "running 'rm #{name}'"
+    rescue Exception
       puts "running 'rm #{name}'"
     end
     system("rm #{name}")

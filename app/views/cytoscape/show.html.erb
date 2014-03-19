@@ -1,4 +1,4 @@
-<% @include_graph_link=true if @include_graph_link.nil? %>
+<% @include_graph_link = true if @include_graph_link.nil? %>
 <% params[:depth] ||= 1 %>
 <% params[:include_publications] ||= 1 %>
 <% params[:include_awards] ||= 1 %>
@@ -7,243 +7,243 @@
   <link rel="stylesheet" type="text/css" href="stylesheets/cytoscape/demo.ie.css" />
   <![endif]-->
 
-	<script type="text/javascript">
-	// globals
-//	var vis;
-	var cytoscapeGraphURL = "<%= @dataurl -%>";
-	var swfPath = "<%= image_path('../swf/CytoscapeWeb') %>";
-	var flashInstallerPath = "<%= image_path('../swf/playerProductInstall') %>";
-	</script>
+  <script type="text/javascript">
+  // globals
+  // var vis;
+  var cytoscapeGraphURL = "<%= @dataurl -%>";
+  var swfPath = "<%= image_path('../swf/CytoscapeWeb') %>";
+  var flashInstallerPath = "<%= image_path('../swf/playerProductInstall') %>";
+  </script>
 
 <!-- script type="text/javascript" src="javascripts/cytoscape/ga.js" ><!/script -->
 
   <!--[if IE]>
   <![endif]-->
-<div id="page" class="slice">
-	<div id="investigator_title_block">
-	<% if ! @org.blank? %>
-	<h1><%= @org.name %> Collaboration Diagram &nbsp;
-	<% div_id = 'barchart_'+@org.id.to_s %>
-	<span class='<%= div_id %>' id='<%= div_id %>'> ... </span>
-	<%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? -%>
+<div class="slice">
+  <div id="investigator_title_block">
+    <% if ! @org.blank? %>
+      <h1>
+        <%= @org.name %> Collaboration Diagram &nbsp;
+        <% div_id = 'barchart_'+@org.id.to_s %>
+        <span class='<%= div_id %>' id='<%= div_id %>'> ... </span>
+        <%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? -%>
 
- 	<script type='text/javascript' language='javascript'>
-	var request = jQuery.ajax({
-	    url: '<%= barchart_org_path( @org.id ) %>',
-	 	type: 'GET',
-		dataType: 'script'
-	});
- 	</script>
-</h1>
-	<% if @include_graph_link %>
-	<p><%= org_nav_heading.html_safe %></p>
-	<% end %>
-	<% elsif ! @investigator.blank? %>
-	<% all_abstracts = @all_abstracts || nil -%>
-	<% title = @title || nil -%>
-	<%= investigator_bio_heading(@investigator, all_abstracts, title).html_safe %>
-	<% elsif ! @title.blank? %>
-	  <h1><%= @title %></h1>
-	<% end %>
-	</div>
+        <script type='text/javascript' language='javascript'>
+        var request = jQuery.ajax({
+            url: '<%= barchart_org_path( @org.id ) %>',
+          type: 'GET',
+          dataType: 'script'
+        });
+        </script>
+      </h1>
+      <% if @include_graph_link %>
+        <p><%= org_nav_heading.html_safe %></p>
+      <% end %>
+    <% elsif ! @investigator.blank? %>
+      <% all_abstracts = @all_abstracts || nil -%>
+      <% title = @title || nil -%>
+      <%= investigator_bio_heading(@investigator, all_abstracts, title, false).html_safe %>
+    <% elsif ! @title.blank? %>
+      <h1><%= @title %></h1>
+    <% end %>
+  </div>
   <div id="cytoscape_options">
-<p>
-	<input type="checkbox" id="nodeLabelsVisibleCheckbox"> Show Node Labels &nbsp; &nbsp;
-    <input type="checkbox" id="edgeLabelsVisibleCheckbox"> Show Edge Labels &nbsp; &nbsp;
-	<input type="checkbox" id="showAwardEdgeCheckbox" name="showAwardEdgeCheckbox"> Show Award Edges &nbsp; &nbsp;
-	<input type="checkbox" id="showAbstractEdgeCheckbox" name="showAbstractEdgeCheckbox"> Show Abstract Edges &nbsp; &nbsp;
-    <input type="button" id="showAll" value="Show All" name="showAll"> &nbsp; &nbsp;
-    <input type="button" id="saveNetwork" value="Save as PDF" name="SaveNetwork">
-</p>
+    <p>
+      <input type="checkbox" id="nodeLabelsVisibleCheckbox"> Show Node Labels &nbsp; &nbsp;
+      <input type="checkbox" id="edgeLabelsVisibleCheckbox"> Show Edge Labels &nbsp; &nbsp;
+      <input type="checkbox" id="showAwardEdgeCheckbox" name="showAwardEdgeCheckbox"> Show Award Edges &nbsp; &nbsp;
+      <input type="checkbox" id="showAbstractEdgeCheckbox" name="showAbstractEdgeCheckbox"> Show Abstract Edges &nbsp; &nbsp;
+      <input type="button" id="showAll" value="Show All" name="showAll"> &nbsp; &nbsp;
+      <input type="button" id="saveNetwork" value="Save as PDF" name="SaveNetwork">
+    </p>
     <span id="layoutradio">
-	<form id="form1" name="form1">
-  	  <input type="radio" name="layout" value="ForceDirected"> ForceDirected
-	  <input type="radio" name="layout" value="Circle"> Circle
-	  <input type="radio" name="layout" value="Radial"> Radial
-	  <input type="radio" name="layout" value="Tree"> Tree
-	</form>
+      <form id="form1" name="form1">
+        <input type="radio" name="layout" value="ForceDirected"> ForceDirected
+        <input type="radio" name="layout" value="Circle"> Circle
+        <input type="radio" name="layout" value="Radial"> Radial
+        <input type="radio" name="layout" value="Tree"> Tree
+      </form>
     </span>
 
-	<span>
-		&nbsp; &nbsp;
-	    <label for="amount">In common:</label>
-	    <input type="text" id="amount" style="border: 0; color: #f6931f; font-weight: bold; width: 20px" />
-		<div id="slider" style="width: 250px; clear: both; display: inline-block; "></div>
-	</span>
+    <span>
+      &nbsp; &nbsp;
+      <label for="amount">In common:</label>
+      <input type="text" id="amount" style="border: 0; color: #f6931f; font-weight: bold; width: 20px" />
+      <div id="slider" style="width: 250px; clear: both; display: inline-block; "></div>
+    </span>
 
+    <!-- from Karthik Singh, July 2011 -->
+    <% unless @investigator.blank? and @org.blank? %>
+      <form id="tree_depth" name="tree_depth">
+        <select name="jumpmenu" onChange="jumpto(document.tree_depth.jumpmenu.options[document.tree_depth.jumpmenu.options.selectedIndex].value);">
+          <option value="0">Distance...</option>
+          <% if params[:depth].blank? or params[:depth] == "1" %>
+          <option selected  value="0">One</option>
+          <option value='2'>Two</option>
+          <% else %>
+          <option value='1' >One</option>
+          <option selected  value="0">Two</option>
+          <% end %>
+        </select>
+      </form>
+    <% end %>
+  </div>
+  <script language="javascript" type="text/javascript" >
+    <!-- hide
+    var g_awards;
+    var g_awards2;
 
-
-	<!-- from Karthik Singh, July 2011 -->
-	<% unless @investigator.blank? and @org.blank? %>
-	<form id="tree_depth" name="tree_depth">
-		<select name="jumpmenu" onChange="jumpto(document.tree_depth.jumpmenu.options[document.tree_depth.jumpmenu.options.selectedIndex].value);">
-			<option value="0">Distance...</option>
-			<% if params[:depth].blank? or params[:depth] == "1" %>
-			<option selected  value="0">One</option>
-			<option value='2'>Two</option>
-			<% else %>
-			<option value='1' >One</option>
-			<option selected  value="0">Two</option>
-			<% end %>
-		</select>
- 	</form>
-	<% end %>
- </div>
-	<script language="javascript" type="text/javascript" >
-	<!-- hide
-	var g_awards;
-	var g_awards2;
-
-	jQuery("#nodeLabelsVisibleCheckbox").bind('click', function(event){
-		vis.nodeLabelsVisible(!vis.nodeLabelsVisible());
-		setItemCheckStatus("#nodeLabelsVisibleCheckbox",vis.nodeLabelsVisible())
-	});
-	jQuery("#edgeLabelsVisibleCheckbox").bind('click', function(event){
-		vis.edgeLabelsVisible(!vis.edgeLabelsVisible());
-		setItemCheckStatus("#edgeLabelsVisibleCheckbox",vis.edgeLabelsVisible())
-	});
-	jQuery("#showAwardEdgeCheckbox").bind('click', function(event){
-		var show_award = getItemCheckStatus("#showAwardEdgeCheckbox");
-		var show_abstract = getItemCheckStatus("#showAbstractEdgeCheckbox");
-		if (show_award) {show_award=true;}else{show_award=false}
-		if (show_abstract) {show_abstract=true;}else{show_abstract=false}
-
-		vis.filter("edges", function(obj) {
-			var result=true;
-			if (obj.data.element_type == 'Award') {
-				result = show_award;
-			}
-			if (obj.data.element_type == 'Abstract') {
-				result = show_abstract;
-			}
-			return result;
-		}, true);
-	});
-	jQuery("#showAbstractEdgeCheckbox").bind('click', function(event){
-		var show_award = getItemCheckStatus("#showAwardEdgeCheckbox");
-		var show_abstract = getItemCheckStatus("#showAbstractEdgeCheckbox");
-		if (show_award) {show_award=true;}else{show_award=false}
-		if (show_abstract) {show_abstract=true;}else{show_abstract=false}
-		vis.filter("edges", function(obj) {
-			var result=true;
-			if (obj.data.element_type == 'Award') {
-				result = show_award;
-			}
-			if (obj.data.element_type == 'Abstract') {
-				result = show_abstract;
-			}
-			return result;
-		}, true);
-	});
-	jQuery("#showAll").bind('click', function(event){
-		vis.filter("edges", function(obj) {
-			return true;
-		}, true);
-		vis.removeFilter();
-	});
-	jQuery("#saveNetwork").bind('click', function(event){
-		 doExportNetwork();
-	});
-	jQuery("#layoutradio").bind('click', function(event){
-		 jQuery("input[name='layout']").each(
-			function() {
-			  if(jQuery(this).is(':checked')) {
-		        changeCytoscapeLayout(jQuery(this).val());
-			  }
-			}
-		)
-	});
-	jQuery("input[name='layout']").parent().css({border:"1px darkblue solid", padding: "5px"});
-
-	function refreshEdges() {
-        var the_val = jQuery( "#slider" ).slider( "value" );
-		var show_award = getItemCheckStatus("#showAwardEdgeCheckbox");
-		var show_abstract = getItemCheckStatus("#showAbstractEdgeCheckbox");
-		if (show_award) {show_award=true;}else{show_award=false}
-		if (show_abstract) {show_abstract=true;}else{show_abstract=false}
-		vis.filter("edges", function(edge) {
-			var result = (edge.data.weight >= the_val);
-			if (result == false) {
-				return result;
-			};
-			if (edge.data.element_type == 'Award') {
-				result = show_award;
-			};
-			if (edge.data.element_type == 'Abstract') {
-				result = show_abstract;
-			};
-			return result;
-		}, true);
-        jQuery( "#amount" ).val( the_val );
-    }
-    jQuery(function() {
-        jQuery( "#slider" ).slider({
-            orientation: "horizontal",
-            range: "min",
-            min: 0,
-            max: 100,
-            value: 10,
-            step: 2,
-            slide: refreshEdges,
-            change: refreshEdges
-        });
-        jQuery( "#amount" ).val( jQuery( "#slider" ).slider( "value" ) );
+    jQuery("#nodeLabelsVisibleCheckbox").bind('click', function(event){
+      vis.nodeLabelsVisible(!vis.nodeLabelsVisible());
+      setItemCheckStatus("#nodeLabelsVisibleCheckbox",vis.nodeLabelsVisible())
     });
+    jQuery("#edgeLabelsVisibleCheckbox").bind('click', function(event){
+      vis.edgeLabelsVisible(!vis.edgeLabelsVisible());
+      setItemCheckStatus("#edgeLabelsVisibleCheckbox",vis.edgeLabelsVisible())
+    });
+    jQuery("#showAwardEdgeCheckbox").bind('click', function(event){
+      var show_award = getItemCheckStatus("#showAwardEdgeCheckbox");
+      var show_abstract = getItemCheckStatus("#showAbstractEdgeCheckbox");
+      if (show_award) {show_award=true;}else{show_award=false}
+      if (show_abstract) {show_abstract=true;}else{show_abstract=false}
 
-	function changeCytoscapeLayout(layout_name) {
-		vis.layout({name: layout_name, options: LAYOUTS[layout_name]});
-		return true;
-	}
-	function setItemCheckStatus(id,status) {
-		jQuery(id).attr('checked',status);
-		return true;
-	}
-	function getItemCheckStatus(id) {
-		return jQuery(id).attr('checked')
-	}
+      vis.filter("edges", function(obj) {
+        var result=true;
+        if (obj.data.element_type == 'Award') {
+          result = show_award;
+        }
+        if (obj.data.element_type == 'Abstract') {
+          result = show_abstract;
+        }
+        return result;
+      }, true);
+    });
+    jQuery("#showAbstractEdgeCheckbox").bind('click', function(event){
+      var show_award = getItemCheckStatus("#showAwardEdgeCheckbox");
+      var show_abstract = getItemCheckStatus("#showAbstractEdgeCheckbox");
+      if (show_award) {show_award=true;}else{show_award=false}
+      if (show_abstract) {show_abstract=true;}else{show_abstract=false}
+      vis.filter("edges", function(obj) {
+        var result=true;
+        if (obj.data.element_type == 'Award') {
+          result = show_award;
+        }
+        if (obj.data.element_type == 'Abstract') {
+          result = show_abstract;
+        }
+        return result;
+      }, true);
+    });
+    jQuery("#showAll").bind('click', function(event){
+      vis.filter("edges", function(obj) {
+        return true;
+      }, true);
+      vis.removeFilter();
+    });
+    jQuery("#saveNetwork").bind('click', function(event){
+       doExportNetwork();
+    });
+    jQuery("#layoutradio").bind('click', function(event){
+       jQuery("input[name='layout']").each(
+        function() {
+          if(jQuery(this).is(':checked')) {
+              changeCytoscapeLayout(jQuery(this).val());
+          }
+        }
+      )
+    });
+    jQuery("input[name='layout']").parent().css({border:"1px darkblue solid", padding: "5px"});
 
-	function setSelectedLayout(title) {
-		jQuery("input[name='layout']").each(
-			function() {
-			if(jQuery(this).val() == title) {
-				jQuery(this).attr("checked","checked");
-			} else if(jQuery(this).is(':checked')) {
-		         jQuery(this).removeAttr("checked");
-			}
-			}
-		)
-	}
-	function doExportNetwork() {
-         vis.exportNetwork("pdf", "export");
-         return this;
-     }
-	// from Karthik Singh, July 2011
+    function refreshEdges() {
+          var the_val = jQuery( "#slider" ).slider( "value" );
+      var show_award = getItemCheckStatus("#showAwardEdgeCheckbox");
+      var show_abstract = getItemCheckStatus("#showAbstractEdgeCheckbox");
+      if (show_award) {show_award=true;}else{show_award=false}
+      if (show_abstract) {show_abstract=true;}else{show_abstract=false}
+      vis.filter("edges", function(edge) {
+        var result = (edge.data.weight >= the_val);
+        if (result == false) {
+          return result;
+        };
+        if (edge.data.element_type == 'Award') {
+          result = show_award;
+        };
+        if (edge.data.element_type == 'Abstract') {
+          result = show_abstract;
+        };
+        return result;
+      }, true);
+          jQuery( "#amount" ).val( the_val );
+      }
+      jQuery(function() {
+          jQuery( "#slider" ).slider({
+              orientation: "horizontal",
+              range: "min",
+              min: 0,
+              max: 100,
+              value: 10,
+              step: 2,
+              slide: refreshEdges,
+              change: refreshEdges
+          });
+          jQuery( "#amount" ).val( jQuery( "#slider" ).slider( "value" ) );
+      });
 
-	function jumpto(x){
-	  if (document.tree_depth.jumpmenu.value != "null" && document.tree_depth.jumpmenu.value != "0") {
-	    document.location.href = "<%= @base_path_without_depth -%>" + x;
-	  }
-	}
+    function changeCytoscapeLayout(layout_name) {
+      vis.layout({name: layout_name, options: LAYOUTS[layout_name]});
+      return true;
+    }
+    function setItemCheckStatus(id,status) {
+      jQuery(id).attr('checked',status);
+      return true;
+    }
+    function getItemCheckStatus(id) {
+      return jQuery(id).attr('checked')
+    }
 
-	setItemCheckStatus("#showAbstractEdgeCheckbox",true);
-	setItemCheckStatus("#showAwardEdgeCheckbox",true);
+    function setSelectedLayout(title) {
+      jQuery("input[name='layout']").each(
+        function() {
+        if(jQuery(this).val() == title) {
+          jQuery(this).attr("checked","checked");
+        } else if(jQuery(this).is(':checked')) {
+               jQuery(this).removeAttr("checked");
+        }
+        }
+      )
+    }
+    function doExportNetwork() {
+           vis.exportNetwork("pdf", "export");
+           return this;
+       }
+    // from Karthik Singh, July 2011
 
-	// end hide -->
-	</script>
+    function jumpto(x){
+      if (document.tree_depth.jumpmenu.value != "null" && document.tree_depth.jumpmenu.value != "0") {
+        document.location.href = "<%= @base_path_without_depth -%>" + x;
+      }
+    }
 
-	<!-- begin page content -->
-	<div id="content" class="half_and_half">
-		<div id="location"></div>
-		<div id="loader"></div>
-		<div>Please wait while loading content...</div>
-	<!-- end content -->
-	</div>
-<!-- end page -->
-<% if params[:depth] == "2" or controller.action_name.to_s == 'show_all_orgs' %>
-<script type="text/javascript">
-	setSelectedLayout("ForceDirected");
-	changeCytoscapeLayout("ForceDirected");
-</script>
+    setItemCheckStatus("#showAbstractEdgeCheckbox",true);
+    setItemCheckStatus("#showAwardEdgeCheckbox",true);
+
+    // end hide -->
+  </script>
+
+  <!-- begin page content -->
+  <div id="content" class="half_and_half">
+    <div id="location"></div>
+    <div id="loader"></div>
+    <div>Please wait while loading content...</div>
+  </div>
+  <!-- end content -->
+
+<% if params[:depth] == "2" || controller.action_name.to_s == 'show_all_orgs' %>
+  <script type="text/javascript">
+    setSelectedLayout("ForceDirected");
+    changeCytoscapeLayout("ForceDirected");
+  </script>
 <% end %>
 
 </div>
+<!-- end page -->

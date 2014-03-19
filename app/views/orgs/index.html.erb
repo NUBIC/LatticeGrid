@@ -1,11 +1,21 @@
 <h1><%= @heading %></h1>
 
-The following is a list of the number of publications and investigators by unit. Click on the graph image to generate a graph of interactions based on co-publications. Click on the name of the organization to see more information, including publications. Click on the number of members to see a listing of the members. Click on a MeSH term to see a listing of all publications that include that MeSH term.<br/>
+<div>
+  The following is a list of the number of publications and investigators by unit.
+  Click on the graph image to generate a graph of interactions based on co-publications.
+  Click on the name of the organization to see more information, including publications.
+  Click on the number of members to see a listing of the members.
+  Click on a MeSH term to see a listing of all publications that include that MeSH term.
+</div>
 
 <div id="listing">
-  
-<%= render :partial => "shared/org_index_table", :locals => { :show_primary_faculty => @show_primary_faculty, :show_associated_faculty => @show_associated_faculty, :show_members => @show_members, :show_associate_members => @show_associate_members, :show_unit_type => @show_unit_type, :units=>@units} %>
-
-<br/>
-
+  <%= render :partial => "shared/org_index_table",
+             :locals => {
+               :show_primary_faculty => @show_primary_faculty,
+               :show_associated_faculty => @show_associated_faculty,
+               :show_members => @show_members,
+               :show_associate_members => @show_associate_members,
+               :show_unit_type => @show_unit_type,
+               :units => @units} %>
+  <br/>
 </div>

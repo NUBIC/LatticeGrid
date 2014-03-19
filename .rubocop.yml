@@ -1,0 +1,15 @@
+ClassLength:
+  Max: 150
+LineLength:
+  Max: 175
+MethodLength:
+  Max: 35
+AllCops:
+  Includes:
+    - Rakefile
+    - config.ru
+  Excludes:
+    - db/**
+    - config/initializers/**
+    - script/**
+    - vendor/gems/**

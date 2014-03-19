@@ -16,7 +16,7 @@ require 'capybara/rspec'
 require 'capybara/poltergeist'
 
 Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app, js_errors: true, inspector: true)
+  Capybara::Poltergeist::Driver.new(app, js_errors: true, inspector: true, timeout: 90)
 end
 Capybara.javascript_driver = :poltergeist
 

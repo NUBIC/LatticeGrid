@@ -35,7 +35,7 @@ def LatticeGridHelper.menu_head_abbreviation
   "Diller Cancer Center"
 end
 
-def LatticeGridHelper.GetDefaultSchool()
+def LatticeGridHelper.get_default_school
   "UCSF"
 end
 
@@ -45,26 +45,26 @@ end
 
 def LatticeGridHelper.curl_host
 my_env = Rails.env
-my_env = 'home' if public_path =~ /Users/ 
-case 
+my_env = 'home' if public_path =~ /Users/
+case
   when my_env == 'home' then 'localhost:3000'
   when my_env == 'development' then 'rails-staging2.nubic.northwestern.edu'
   when my_env == 'staging' then 'rails-staging2.nubic.northwestern.edu'
   when my_env == 'production' then 'latticegrid.cancer.ucsf.edu'
   else 'latticegrid.cancer.ucsf.edu/'
-end 
+end
 end
 
 def LatticeGridHelper.curl_protocol
 my_env = Rails.env
-my_env = 'home' if public_path =~ /Users/ 
-case 
+my_env = 'home' if public_path =~ /Users/
+case
   when my_env == 'home' then 'http'
   when my_env == 'development' then 'http'
   when my_env == 'staging' then 'http'
   when my_env == 'production' then 'https'
   else 'http'
-end 
+end
 end
 
 def profile_example_summaries()
@@ -84,7 +84,7 @@ def LatticeGridHelper.ldap_host
  "directory.ucsf.edu"
 end
 
-def LatticeGridHelper.ldap_treebase 
+def LatticeGridHelper.ldap_treebase
  "ou=People, dc=ucsf,dc=edu"
 end
 
@@ -101,9 +101,9 @@ def LatticeGridHelper.allowed_ips
  [':1','127.0.*','165.124.*','129.105.*','199.125.*','209.107.*','165.20.*','204.26.*','69.216.*']
 end
 
-# build LatticeGridHelper.institutional_limit_search_string to identify all the publications at your institution 
+# build LatticeGridHelper.institutional_limit_search_string to identify all the publications at your institution
 
-def LatticeGridHelper.institutional_limit_search_string 
+def LatticeGridHelper.institutional_limit_search_string
   '("San Francisco"[affil] OR "Diller"[affil] OR "UCSF"[affil])'
 end
 

@@ -79,8 +79,8 @@ class WordFrequency < ActiveRecord::Base
     unique_words = word_array.uniq if unique_words.blank?
 
     unique_words.each do  |word|
-      unless (FILLER_WORDS.include?(word) or high_frequency_words.include?(word) or word.length < 3 or unique_words.include?(word + "s") )
-        frequency_map << { :word => word, :frequency => word_array.count(word).to_i, :the_type => the_type }
+      unless (FILLER_WORDS.include?(word) || high_frequency_words.include?(word) || word.length < 3 || unique_words.include?(word + 's') )
+        frequency_map << { word: word, frequency: word_array.count(word).to_i, the_type: the_type }
       end
     end
     frequency_map
@@ -96,7 +96,7 @@ class WordFrequency < ActiveRecord::Base
   # investigator.abstract_words is limited to last 5 years. you can use investigator.abstracts.most_recent(25).abstract_words to get a different cut of the data
   def self.investigator_wordle_data(investigator)
     frequency_map = generate_frequency_map(investigator.abstract_words, 'Abstract', high_freq_words)
-    return frequency_map.sort_by{ |word| word[:frequency] }
+    frequency_map.sort_by { |word| word[:frequency] }
   end
 
   def self.investigators_wordle_data(investigators)
@@ -111,20 +111,22 @@ class WordFrequency < ActiveRecord::Base
       end
     end
     frequency_map = generate_frequency_map(all_words, 'Abstract', high_freq_words, shared_words)
-    return frequency_map.sort_by{ |word| word[:frequency] }
+    frequency_map.sort_by { |word| word[:frequency] }
   end
 
   def self.investigators_difference_wordle_data(investigators)
     all_words = investigators[0].abstract_words
     uniq_words = all_words.uniq - investigators[1].unique_abstract_words
     frequency_map = generate_frequency_map(all_words, 'Abstract', high_freq_words, uniq_words)
-    return frequency_map.sort_by{ |word| word[:frequency] }
+    frequency_map.sort_by { |word| word[:frequency] }
   end
 
-  def self.wordle_distribution(words, max_words=300)
-    words = words[0, max_words/2] + words[words.length - max_words/2, max_words/2]
-    words.uniq!
-    return words
+  def self.wordle_distribution(words, max_words = 300)
+    separator = max_words / 2
+    result = words[0, separator]
+    result << words[words.length - separator, separator]
+    result.uniq!
+    result
   end
 
 end

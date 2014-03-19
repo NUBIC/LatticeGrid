@@ -1,0 +1,50 @@
+.welcome_row {
+  float: left;
+  width: 100%;
+  min-height: 20em;
+}
+
+.welcome_row2 {
+  min-height: 120em;
+}
+
+.welcome_column {
+  float: left;
+  width: 30%;
+  margin: 1em 0.25em;
+  padding: 0.25em;
+  font-size: 1.5em;
+}
+
+.welcome_column .welcome_image {
+  margin-top: 1em;
+}
+
+.welcome_column ul {
+  margin-left: 3em !important;
+}
+
+.welcome_column ul ul {
+  margin-left: 0 !important;
+}
+
+.welcome_search {
+  margin: 1em 0.25em;
+  padding: 0.25em;
+}
+
+.welcome_search .search_header {
+  font-size: 1.5em;
+}
+
+#centers_menu ul li ul li {
+  width: 20em;
+}
+
+#departments_menu ul li ul li {
+  width: 17em;
+}
+
+#publications_menu ul li ul li {
+  width: 17em;
+}

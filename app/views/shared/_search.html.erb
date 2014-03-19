@@ -1,18 +1,25 @@
 <div id="search">
-	<span style="float:right;">
-		<%= link_to("atom/rss", feed_abstracts_url(:format => :atom )) %>
-	</span>
-	<% if LatticeGridHelper.allow_profile_edits? %>
-		<span style="float:right;">
-			<%= link_to("login", profiles_url) %>
-		</span>
-	<% end %>
-	<% investigator_path_for_form = image_path('../investigators_search/') %>
-	<% investigator_all_path_for_form = image_path('../investigators_search_all/') %>
-	<% default_path_for_form = abstracts_search_url %>
-	<%= form_tag(investigator_path_for_form, {:method => :get, :id => 'search_form', :onsubmit => "the_value = encodeURIComponent($('keywords').value); if ($('search_field').value.search(/allbyinvestigator/i) != -1)   {$('search_form').action = '#{investigator_all_path_for_form}'+the_value } else if ($('search_field').value.search(/investigator/i) != -1)   {$('search_form').action = '#{investigator_path_for_form}'+the_value } else {$('search_form').action = '#{default_path_for_form}'} " }) do %>
-	  <%= text_field_tag(:keywords, params[:keywords], :size => 20) %> Search
-	  <%= select_tag("search_field",options_for_select(%w{ Investigator AllByInvestigator TitleOrAbstract Journal FacultySummary Keywords MeSH All},params[:search_field]), {:class => "dropdown"}) %>
-	  Enter term and hit return. Use '*' as a wildcard.
-	<% end %>
+  <% if LatticeGridHelper.allow_profile_edits? %>
+    <span style="float:right;">
+      <%= link_to('Login', profiles_url) %>
+    </span>
+  <% end %>
+  <%= form_tag('/welcome/search', { :method => :get, :id => 'search_form2' }) do %>
+    <span id='search_text'>
+      <%= text_field_tag(:keywords, params[:keywords],
+                         :size => 45,
+                         :placeholder => 'Examples: Michael Abecassis, vitamin D, glioma.') %>
+    </span>
+    <span id='search_select'>
+      <%= select_tag("search_field",
+                     options_for_select(search_options, params[:search_field]),
+                     { :class => "dropdown" }) -%>
+    </span>
+    <span id='search_submit'>
+      <%= submit_tag 'Search', :disable_with => 'Searching...' %>
+    </span>
+  <% end %>
+  <div id='search_instructions'>
+    Use '*' as a wildcard.
+  </div>
 </div>

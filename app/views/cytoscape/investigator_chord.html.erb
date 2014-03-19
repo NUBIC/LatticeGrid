@@ -1,153 +1,147 @@
 <div id="investigator_title_block">
-<%= investigator_bio_heading(@investigator, nil).html_safe %>
+  <%= investigator_bio_heading(@investigator).html_safe %>
 </div>
 <h2><%= @title %></h2>
-<p style="line-height:15px; font-size: 10pt; margin-right: 10px;font-family: Arial,Helvetica,Geneva,Sans-serif;">Mouse over the inner ring to highlight the connections between that investigator and other investigators in the chord diagram. </p>
+<p style="line-height:15px; font-size: 10pt; margin-right: 10px;font-family: Arial,Helvetica,Geneva,Sans-serif;">
+  Mouse over the inner ring to highlight the connections between that investigator and other investigators in the chord diagram.
+</p>
 <div id="chart">&nbsp;</div>
 <style>
+  #circle circle {
+    fill: none;
+    pointer-events: all;
+  }
 
-#circle circle {
-  fill: none;
-  pointer-events: all;
-}
+  .group path {
+    fill-opacity: .5;
+  }
 
-.group path {
-  fill-opacity: .5;
-}
+  path.chord {
+    stroke: #000;
+    stroke-width: .25px;
+  }
 
-path.chord {
-  stroke: #000;
-  stroke-width: .25px;
-}
-
-#circle:hover path.fade {
-  display: none;
-}
-
+  #circle:hover path.fade {
+    display: none;
+  }
 </style>
 
 <script type="text/javascript">
+  d3.json('<%= image_path(@json_callback).split('?').first -%>', function(imports) {
+    var indexByName = {},
+        nameByIndex = {},
+        matrix = [],
+        n = 0;
 
-
-d3.json('<%= image_path(@json_callback).split('?').first -%>', function(imports) {
-  var indexByName = {},
-      nameByIndex = {},
-      matrix = [],
-      n = 0;
-
-  // Returns the Flare package name for the given class name.
-  function name(name) {
-    return name;
-  }
-
-  // Compute a unique index for each package name.
-  imports.forEach(function(d) {
-    d = name(d.name);
-    if (!(d in indexByName)) {
-      nameByIndex[n] = d;
-      indexByName[d] = n++;
+    // Returns the Flare package name for the given class name.
+    function name(name) {
+      return name;
     }
-  });
 
-  // Construct a square matrix counting package imports.
-  imports.forEach(function(d) {
-    var source = indexByName[name(d.name)],
-        row = matrix[source];
-    if (!row) {
-     row = matrix[source] = [];
-     for (var i = -1; ++i < n;) row[i] = 0;
-    }
-    d.imports.forEach(function(d) { row[indexByName[name(d)]]++; });
-  });
-
-
-  var chord = d3.layout.chord()
-     .padding(.05)
-     .sortSubgroups(d3.descending)
-     .matrix(matrix);
-
-
- var width = 980,
-     height = 980,
-    outerRadius = (Math.min(width, height)-230) / 2 ,
-    innerRadius = outerRadius - 24;
-
- var fill = d3.scale.category20c();
-
- var svg = d3.select("#chart")
-   .append("svg")
-     .attr("width", width)
-     .attr("height", height)
-   .append("g")
-     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
- svg.append("g")
-   .selectAll("path")
-     .data(chord.groups)
-   .enter().append("path")
-     .style("fill", function(d) { return fill(d.index); })
-     .style("stroke", function(d) { return fill(d.index); })
-     .attr("d", d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
-     .on("mouseover", fade(.1))
-     .on("mouseout", fade(1));
-
- svg.append("g")
-     .attr("class", "chord")
-   .selectAll("path")
-     .data(chord.chords)
-   .enter().append("path")
-     .style("fill", function(d) { return fill(d.target.index); })
-     .attr("d", d3.svg.chord().radius(innerRadius))
-     .style("opacity", 1);
-
- /** Returns an event handler for fading a given chord group. */
- function fade(opacity) {
-   return function(g, i) {
-     svg.selectAll("g.chord path")
-         .filter(function(d) {
-           return d.source.index != i && d.target.index != i;
-         })
-       .transition()
-         .style("opacity", opacity);
-   };
- }
-
-  var group = svg.selectAll("g.group")
-      .data(chord.groups)
-    .enter().append("svg:g")
-      .attr("class", "group");
-
-  group.append("svg:text")
-      .each(function(d) { d.angle = (d.startAngle + d.endAngle) / 2; })
-      .attr("dy", ".35em")
-      .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
-      .attr("transform", function(d) {
-        return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-            + "translate(" + (outerRadius + 6) + ")"
-            + (d.angle > Math.PI ? "rotate(180)" : "");
-      })
-      .text(function(d) { return nameByIndex[d.index]; });
-
-
-    // Add a group per neighborhood.
-    var group = svg.selectAll(".group")
-        .data(chord.groups)
-      .enter().append("g")
-        .attr("class", "group")
-        .on("mouseover", mouseover);
-
-    // Add a mouseover title.
-    group.append("title").text(function(d, i) {
-      return "test mouseove";
+    // Compute a unique index for each package name.
+    imports.forEach(function(d) {
+      d = name(d.name);
+      if (!(d in indexByName)) {
+        nameByIndex[n] = d;
+        indexByName[d] = n++;
+      }
     });
 
-    function mouseover(d, i) {
-      chord.classed("fade", function(p) {
-        return p.source.index != i
-            && p.target.index != i;
+    // Construct a square matrix counting package imports.
+    imports.forEach(function(d) {
+      var source = indexByName[name(d.name)],
+          row = matrix[source];
+      if (!row) {
+       row = matrix[source] = [];
+       for (var i = -1; ++i < n;) row[i] = 0;
+      }
+      d.imports.forEach(function(d) { row[indexByName[name(d)]]++; });
+    });
+
+    var chord = d3.layout.chord()
+       .padding(.05)
+       .sortSubgroups(d3.descending)
+       .matrix(matrix);
+
+   var width = 980,
+       height = 980,
+      outerRadius = (Math.min(width, height)-230) / 2 ,
+      innerRadius = outerRadius - 24;
+
+   var fill = d3.scale.category20c();
+
+   var svg = d3.select("#chart")
+     .append("svg")
+       .attr("width", width)
+       .attr("height", height)
+     .append("g")
+       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+   svg.append("g")
+     .selectAll("path")
+       .data(chord.groups)
+     .enter().append("path")
+       .style("fill", function(d) { return fill(d.index); })
+       .style("stroke", function(d) { return fill(d.index); })
+       .attr("d", d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
+       .on("mouseover", fade(.1))
+       .on("mouseout", fade(1));
+
+   svg.append("g")
+       .attr("class", "chord")
+     .selectAll("path")
+       .data(chord.chords)
+     .enter().append("path")
+       .style("fill", function(d) { return fill(d.target.index); })
+       .attr("d", d3.svg.chord().radius(innerRadius))
+       .style("opacity", 1);
+
+   /** Returns an event handler for fading a given chord group. */
+   function fade(opacity) {
+     return function(g, i) {
+       svg.selectAll("g.chord path")
+           .filter(function(d) {
+             return d.source.index != i && d.target.index != i;
+           })
+         .transition()
+           .style("opacity", opacity);
+     };
+   }
+
+    var group = svg.selectAll("g.group")
+        .data(chord.groups)
+      .enter().append("svg:g")
+        .attr("class", "group");
+
+    group.append("svg:text")
+        .each(function(d) { d.angle = (d.startAngle + d.endAngle) / 2; })
+        .attr("dy", ".35em")
+        .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+        .attr("transform", function(d) {
+          return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+              + "translate(" + (outerRadius + 6) + ")"
+              + (d.angle > Math.PI ? "rotate(180)" : "");
+        })
+        .text(function(d) { return nameByIndex[d.index]; });
+
+      // Add a group per neighborhood.
+      var group = svg.selectAll(".group")
+          .data(chord.groups)
+        .enter().append("g")
+          .attr("class", "group")
+          .on("mouseover", mouseover);
+
+      // Add a mouseover title.
+      group.append("title").text(function(d, i) {
+        return "test mouseove";
       });
-    }
 
-});
+      function mouseover(d, i) {
+        chord.classed("fade", function(p) {
+          return p.source.index != i
+              && p.target.index != i;
+        });
+      }
 
+  });
 </script>

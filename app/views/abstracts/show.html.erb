@@ -1,69 +1,63 @@
 <div id="abstractcontent">
 <div id="publication">
-	<div id="authors">
-	<% if @publication.has_full %>
-		<%= highlightInvestigator(@publication, false, false, @publication.full_authors).html_safe %>
-	<% else %>
-		<%= highlightInvestigator(@publication).html_safe %>
-	<% end %>
-	</div>
-	<div id="title">
-		<%= @publication.title %>
-	</div>
-	<div id="journal">
-	<i><%= @publication.journal %></i>
-	(<%= @publication.year %>)
-	<% if @publication.pages.length > 0 %>
-		<%= h(@publication.volume) %>:<%= h(@publication.pages) %>.
-	<% else %>
-	 <i>In process.</i>
-	<% end %>
-	</div>
-	<div id="abstract">
-		<b>Abstract</b><br/>
-		<%= @publication.abstract %>
-	</div>
-	<div id="mesh">
-		<b>MeSH terms</b><br/>
-		<% @publication.tag_list.each do |tag| %>
-		   <%= link_to tag, tagged_abstracts_abstract_url(URI.escape(tag)), :class => 'nube2' %>
-		<% end %>
-	</div>
-	<div id="import">
-		<b>Note</b><br/>
-		Automated medline import. Electronic deposit: <%= @publication.deposited_date %>.Electronic publication: <%= @publication.electronic_publication_date %>. Publication Date: <%= @publication.publication_date %>. Publication status: <%= @publication.publication_status %>. Status: <%= @publication.status %>. <br/>
-	</div>
-	<div id="pmid">
-		<b>PubMed ID</b><br/>
-		<%= @publication.pubmed %>
-	</div>
-	<div id="pmcid">
-		<b>PubMed Central ID</b><br/>
-		<%= @publication.pubmedcentral.blank? ? "N/A" : @publication.pubmedcentral %>
-	</div>
-	<div id="doi">
-		<b>Digital Object Identifier (DOI)</b><br/>
-		<%= @publication.doi.blank? ? "N/A" : @publication.doi %>
-	</div>
-	<% unless @publication.pubmed.blank? %>
-	<div id="linkout">
-		<%= link_to_pubmed('Go to PubMed entry', @publication) %>
-	</div>
-	<% end %>
-	<% unless @publication.pubmedcentral.blank? %>
-	<div id="linkout">
-		<%= link_to_pubmedcentral('Go to PubMedCentral entry', @publication) %>
-	</div>
-	<% end %>
-	<% unless @publication.doi.blank? %>
-	<div id="linkout">
-		<%= link_to_doi('Go to DOI', @publication) %>
-	</div>
-	<% end %>
+  <div id="authors">
+  <% if @publication.has_full %>
+    <%= highlight_investigator(@publication, false, false, @publication.full_authors).html_safe %>
+  <% else %>
+    <%= highlight_investigator(@publication).html_safe %>
+  <% end %>
+  </div>
+  <div id="title">
+    <%= @publication.title %>
+  </div>
+  <div id="journal">
+    <%= journal_volume_and_pages(@publication, false).html_safe %>
+  </div>
+  <div id="abstract">
+    <b>Abstract</b><br/>
+    <%= @publication.abstract %>
+  </div>
+  <div id="mesh">
+    <b>MeSH terms</b><br/>
+    <% @publication.tag_list.each do |tag| %>
+       <%= link_to tag, tagged_abstracts_abstract_url(URI.escape(tag)), :class => 'nube2' %>
+    <% end %>
+  </div>
+  <div id="import">
+    <b>Note</b><br/>
+    Automated medline import. Electronic deposit: <%= @publication.deposited_date %>.Electronic publication: <%= @publication.electronic_publication_date %>. Publication Date: <%= @publication.publication_date %>. Publication status: <%= @publication.publication_status %>. Status: <%= @publication.status %>. <br/>
+  </div>
+  <div id="pmid">
+    <b>PubMed ID</b><br/>
+    <%= @publication.pubmed %>
+  </div>
+  <div id="pmcid">
+    <b>PubMed Central ID</b><br/>
+    <%= @publication.pubmedcentral.blank? ? "N/A" : @publication.pubmedcentral %>
+  </div>
+  <div id="doi">
+    <b>Digital Object Identifier (DOI)</b><br/>
+    <%= @publication.doi.blank? ? "N/A" : @publication.doi %>
+  </div>
+  <% unless @publication.pubmed.blank? %>
+  <div id="linkout">
+    <%= link_to_pubmed('Go to PubMed entry', @publication) %>
+  </div>
+  <% end %>
+  <% unless @publication.pubmedcentral.blank? %>
+  <div id="linkout">
+    <%= link_to_pubmedcentral('Go to PubMedCentral entry', @publication) %>
+  </div>
+  <% end %>
+  <% unless @publication.doi.blank? %>
+  <div id="linkout">
+    <%= link_to_doi('Go to DOI', @publication) %>
+  </div>
+  <% end %>
 
-	<div id="linkout">
-		<%= link_to('View citation formatted for EndNote', endnote_abstract_url(@publication) ) %>
-	</div>
+  <div id="linkout">
+    <%= link_to('View citation formatted for EndNote', endnote_abstract_url(@publication) ) %>
+  </div>
 </div>
 
 

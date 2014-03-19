@@ -35,4 +35,12 @@ describe InvestigatorColleague do
   it 'can be saved successfully' do
     FactoryGirl.create(:investigator_colleague).should be_persisted
   end
+
+  describe '#publications' do
+    let(:abstract) { FactoryGirl.create(:abstract) }
+    let!(:ic) { FactoryGirl.create(:investigator_colleague, publication_list: "#{abstract.id}") }
+    it 'returns the Abstract records matching the InvestigatorColleague.publication_list' do
+      ic.publications.should eq [abstract]
+    end
+  end
 end

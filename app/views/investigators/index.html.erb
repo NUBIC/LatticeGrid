@@ -1,7 +1,7 @@
 <div id="listing">
 	<h2><%= @heading %></h2>
   <% if @investigators.length > 0 %>
-  <table cellpadding="2" cellspacing="0" class="borderless"> 
+  <table cellpadding="2" cellspacing="0" class="borderless">
 	<% cnt = 0 %>
 	<tr valign="bottom" class="header">
 		<td class="list-title-left">
@@ -17,14 +17,14 @@
   <% for investigator in @investigators %>
 	<tr class="<%= cycle('even', 'odd') %>">
 		<td class="list-left">
-			<% cnt+=1 %>
+			<% cnt += 1 %>
 			<%= cnt %>
 		</td>
 		<td class="list-left">
-			<%= link_to( (investigator.first_name||"")+" "+(investigator.middle_name||"")+" "+investigator.last_name+", "+(investigator.degrees||""), investigator_url(investigator.username))  %>
+			<%= link_to(investigator.display_name_with_degrees, investigator_url(investigator.username))  %>
 		</td>
 		<td class="list-left">
-			<%= link_to_unit(investigator.home_department) if (! investigator.home_department_id.blank?) and (! investigator.home_department.blank?) %>
+			<%= link_to_unit(investigator.home_department) if (!investigator.home_department_id.blank?) && (!investigator.home_department.blank?) %>
 		</td>
 	</tr>
   <% end %>

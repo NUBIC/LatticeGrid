@@ -1,0 +1,9 @@
+<% if controller_name != 'welcome' %>
+  <div id="side">
+    <div id="sideinfo">
+      <%= render 'shared/menus', :menu_nodes => @menu_nodes %>
+    </div> <!-- end of sideinfo -->
+    <%= render 'shared/nubic_branding' %>
+    <p></p>
+  </div>
+<% end %>

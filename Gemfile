@@ -36,6 +36,7 @@ group :development do
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
   gem 'annotate', '~> 2.5.0'
+  gem 'rubocop'
 end
 
 group :test do

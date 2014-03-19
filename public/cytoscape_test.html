@@ -2,23 +2,23 @@
 
 <html>
 <head>
-      
+
   <title>Cytoscape Web &#187; Demo</title>
-  
+
   <link rel="shortcut icon" href="../images/cytoscape/favicon.png" />
   <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
-  
-  
+
+
 <link rel="stylesheet" type="text/css" href="stylesheets/cytoscape/layout.css" />
 <link rel="stylesheet" type="text/css" href="stylesheets/cytoscape/content.css" />
 <!-- link rel="stylesheet" type="text/css" href="stylesheets/cytoscape/jquery-ui-1.7.2.custom.css" / -->
 <link rel="stylesheet" type="text/css" href="stylesheets/cytoscape/demo.css" />
 
-  
+
   <!--[if IE]>
   <link rel="stylesheet" type="text/css" href="stylesheets/cytoscape/demo.ie.css" />
   <![endif]-->
-  
+
 	<script type="text/javascript">
 	// globals
 	var vis;
@@ -47,14 +47,14 @@
 <script type="text/javascript" src="javascripts/cytoscape/cytoscapeweb-file.js"></script>
 <script type="text/javascript" src="javascripts/cytoscape/home.js"></script>
 <!-- script type="text/javascript" src="javascripts/cytoscape/ga.js" ><!/script -->
-  
+
   <!--[if IE]>
   <![endif]-->
 
 </head>
 <body>
-	            
-<div id="page" class="slice">
+
+<div class="slice">
   <div>
 	<input type="checkbox" id="nodeLabelsVisibleCheckbox"> Show Node Labels &nbsp; &nbsp;
     <input type="checkbox" id="edgeLabelsVisibleCheckbox"> Show Edge Labels &nbsp; &nbsp;
@@ -84,7 +84,7 @@
 		)
 	});
 	$("input[name='layout']").parent().css({border:"1px darkblue solid", padding: "5px"});
-	
+
 	function changeCytoscapeLayout(layout_name) {
 		vis.layout({name: layout_name, options: LAYOUTS[layout_name]})
 	}
@@ -103,7 +103,7 @@
 		)
 	}
 	</script>
-  
+
 	<!-- begin page content -->
 	<div id="content" class="half_and_half">
 		<div id="location"></div>
@@ -121,7 +121,7 @@
 	<!-- end content -->
 	</div>
 <!-- end page -->
-</div> 
+</div>
 
 
 </body>

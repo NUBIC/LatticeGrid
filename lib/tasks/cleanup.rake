@@ -1,7 +1,7 @@
 require 'investigator_appointment_utilities'
 
 namespace :cleanup do
-  
+
   task :countries => :environment do
     clean_country("Australia","Australia")
     clean_country("Belgium","Belgium")
@@ -15,23 +15,23 @@ namespace :cleanup do
     clean_country("Brazil","Brazil")
     clean_country("U.S.A.,United States,United States of America,US","United States of America")
     clean_country("Netherlands,The Netherlands","Netherlands")
-    
+
   end
-  
+
   task :email => :environment do
-    Investigator.update_all("email = lower(email)") 
+    Investigator.update_all("email = lower(email)")
   end
 
   task :employee_ids => :environment do
-    pis = Investigator.all(:conditions=>"investigators.employee_id is null") 
+    pis = Investigator.all(:conditions=>"investigators.employee_id is null")
     puts "#{pis.length} investigators have a null employee_id"
     pis.each do |pi|
       puts "#{pi.name}\t#{pi.email}\t#{pi.username}\t#{pi.employee_id}"
     end
   end
-  
+
   task :titles => :environment do
-    pis = Investigator.all(:conditions=>"investigators.title is not null") 
+    pis = Investigator.all(:conditions=>"investigators.title is not null")
     puts "#{pis.length} investigators have a title"
     clean_cnt = 0
     pis.each do |pi|
@@ -39,14 +39,14 @@ namespace :cleanup do
       CleanTitle(pi)
       if pi.title != title
         clean_cnt+=1
-        pi.save! 
+        pi.save!
       end
     end
     puts "#{clean_cnt} investigator titles cleaned"
   end
-  
+
   task :update_titles_and_home_from_ldap => :environment do
-    pis = Investigator.all() 
+    pis = Investigator.all()
     puts "#{pis.length} investigators"
     clean_cnt = 0
     pis.each do |pi|
@@ -55,13 +55,13 @@ namespace :cleanup do
       pi = UpdateHomeDepartmentAndTitle(pi)
       if pi.title != title or pi.home_department_name != home_department_name
         clean_cnt+=1
-        pi.save! 
+        pi.save!
       end
     end
     puts "#{clean_cnt} investigator titles and/or home departments updated"
   end
-  
-  
+
+
   task :insert_employee_ids => :environment do
     username_hash = {'bmd525'=>'1068930',
     'cgo790'=>'1056845',
@@ -402,14 +402,14 @@ namespace :cleanup do
         puts "unable to find username #{username}"
       else
         if pi.employee_id.blank? or pi.employee_id < 1
-          pi.employee_id = username_hash[username] 
+          pi.employee_id = username_hash[username]
           changed+=1
           pi.save!
         end
         if username_hash[username].to_s != pi.employee_id.to_s
           puts "username #{username} with employee_id #{username_hash[username]} does not match existing employee_id: #{pi.employee_id}"
         end
-      end  
+      end
     end
     puts "insert_employee_ids completed. Processed #{username_hash.keys.length} entries. Changed #{changed} investigators"
   end
@@ -422,107 +422,81 @@ namespace :cleanup do
   end
 
   task :countOldMemberships => :environment do
-     block_timing("cleanup:countOldMemberships") {
-        count_program_memberships_not_updated()
-     }
+    block_timing("cleanup:countOldMemberships") { count_program_memberships_not_updated }
   end
 
   task :purgeOldMemberships => :environment do
-     block_timing("cleanup:purgeOldMemberships") {
-        prune_program_memberships_not_updated()
-     }
+    block_timing("cleanup:purgeOldMemberships") { prune_program_memberships_not_updated }
   end
 
   task :countFacultyUpdates => :environment do
-     block_timing("cleanup:countFacultyUpdates") {
-        count_faculty_updates()
-     }
+    block_timing("cleanup:countFacultyUpdates") { count_faculty_updates }
   end
 
   task :purgeUnupdatedFaculty => :environment do
-     block_timing("cleanup:purgeUnupdatedFaculty") {
-        prune_unupdated_faculty()
-     }
+    block_timing("cleanup:purgeUnupdatedFaculty") { prune_unupdated_faculty }
   end
 
   task :cleanInvestigatorsUsername => :environment do
-     block_timing("cleanup:cleanInvestigatorsUsername") {
-       doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%%.%%'"))
-       doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%%(%%'"))
-       doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%%)%%'"))
-       doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%%&%%'"))
-     }
+    block_timing("cleanup:cleanInvestigatorsUsername") do
+      doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%%.%%'"))
+      doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%%(%%'"))
+      doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%%)%%'"))
+      doCleanInvestigators(Investigator.find(:all, :conditions => "username like '%%&%%'"))
+    end
   end
 
   task :purgeNonMembers => :getAllInvestigatorsWithoutMembership do
-     block_timing("cleanup:purgeNonMembers") {
-       purgeInvestigators(@InvestigatorsWithoutMembership)
-     }
+    block_timing("cleanup:purgeNonMembers") { purgeInvestigators(@investigators_without_membership) }
   end
 
   task :delete_purged_investigators => :environment do
-     block_timing("cleanup:delete_purged_investigators") {
-       deletePurgedInvestigators()
-      }
+    block_timing("cleanup:delete_purged_investigators") { deletePurgedInvestigators }
   end
-  
+
   task :reinstate_investigators_with_valid_abstracts => :environment do
-     block_timing("cleanup:reinstate_investigators_with_valid_abstracts") {
-       investigators_to_reinstate = Investigators.deleted_with_valid_abstracts
-       reinstateInvestigators(investigators_to_reinstate)
-      }
+    block_timing("cleanup:reinstate_investigators_with_valid_abstracts") do
+      investigators_to_reinstate = Investigators.deleted_with_valid_abstracts
+      reinstateInvestigators(investigators_to_reinstate)
+    end
   end
 
   task :reinstate_deleted_investigators => :environment do
-     block_timing("cleanup:reinstate_investigators_with_valid_abstracts") {
-       investigators_to_reinstate = Investigator.find_purged
-       puts "found #{investigators_to_reinstate.length} investigators to reinstate"
-       puts investigators_to_reinstate.map(&:username).inspect
-       investigators_to_reinstate = []
-       investigators_to_reinstate = Investigator.find_all_by_username_including_deleted(investigators_to_reinstate)
-       reinstateInvestigators(investigators_to_reinstate)
-      }
+    block_timing("cleanup:reinstate_investigators_with_valid_abstracts") do
+      investigators_to_reinstate = Investigator.find_purged
+      puts "found #{investigators_to_reinstate.length} investigators to reinstate"
+      puts investigators_to_reinstate.map(&:username).inspect
+      investigators_to_reinstate = []
+      investigators_to_reinstate = Investigator.find_all_by_username_including_deleted(investigators_to_reinstate)
+      reinstateInvestigators(investigators_to_reinstate)
+    end
   end
 
   task :find_duplicate_tags => :environment do
-     block_timing("cleanup:find_duplicate_tags") {
-       findDuplicateTags()
-      }
+    block_timing("cleanup:find_duplicate_tags") { findDuplicateTags }
   end
 
   task :resolve_duplicate_tags => :environment do
-     block_timing("cleanup:resolve_duplicate_tags") {
-       resolveDuplicateTags()
-      }
+    block_timing("cleanup:resolve_duplicate_tags") { resolveDuplicateTags }
   end
-  
+
   task :resolve_misformed_tags => :environment do
-     block_timing("cleanup:resolve_misformed_tags") {
-       resolveMisformedTags()
-      }
+    block_timing("cleanup:resolve_misformed_tags") { resolveMisformedTags }
   end
 
   task :findServiceInvestigatorsWithoutActivities => :environment do
-     block_timing("cleanup:findServiceInvestigatorsWithoutActivities") {
-       FindParttimeInvestigatorsWithoutActivities()
-      }
+    block_timing("cleanup:findServiceInvestigatorsWithoutActivities") { FindParttimeInvestigatorsWithoutActivities }
   end
-  
+
   task :purgeServiceInvestigatorsWithoutActivities => :environment do
-     block_timing("cleanup:purgeServiceInvestigatorsWithoutActivities") {
-       PurgeParttimeInvestigatorsWithoutActivities()
-      }
+    block_timing("cleanup:purgeServiceInvestigatorsWithoutActivities") { PurgeParttimeInvestigatorsWithoutActivities }
   end
-  
+
   task :updateAbstractsWithPMCIDs => :getAbstracts do
     # this will update all abstracts with Pubmed Central IDs, if they are available
-    block_timing("updateAbstractsWithPMCIDs") {
-      publications=FetchPublicationData(@AllAbstracts.collect(&:pubmed))
-      row_iterator(publications) {  |pubmed_record|
-        updateAbstractWithPMCID(pubmed_record)
-      }
-    }
+    block_timing("updateAbstractsWithPMCIDs") do
+      publications = fetch_publication_data(@all_abstracts.collect(&:pubmed))
+      row_iterator(publications) { |pubmed_record| updateAbstractWithPMCID(pubmed_record) }
+    end
   end
-
 end
-

@@ -27,13 +27,12 @@ doc/private/
 doc/notes/
 
 # Ignore cached files
-public/abstracts/
-public/cytoscape/
-public/cytoscape*.js
-public/graphviz/
-public/investigators/
-public/orgs/
+public/cache
+public/graphviz/*
 
 # Ignore coverage
 coverage
 coverage/*
+
+lattice_grid.sublime-project
+lattice_grid.sublime-workspace

@@ -1,175 +1,221 @@
 <% @all_abstracts = nil if !defined?(@all_abstracts) %>
 
 <% if !@pi_awards.blank? %>
-<% if !defined?(@pdf) and ! @pdf %>
-<div id="investigator_title_block">
-<%= investigator_bio_heading(@investigator, @all_abstracts).html_safe %>
-</div>
-<span id='data_title' class='h2'>Award data</span>
-<div style="float:right;padding-right:5px;">
-	<%= link_to( "as Word", investigator_award_url(params[:id],'doc'))  %>
-	<%= link_to( "as Excel", investigator_award_url(params[:id],'xls')) %>
-	<%= link_to( "as PDF", investigator_award_url(params[:id],'pdf'))  %>
-</div>
-<% end %>
+  <% if !defined?(@pdf) && !@pdf %>
+    <div id="investigator_title_block">
+      <%= investigator_bio_heading(@investigator, @all_abstracts).html_safe %>
+    </div>
+    <span id='data_title' class='h2'>Award data</span>
+    <div style="float:right;padding-right:5px;">
+      <%= link_to( "as Word", investigator_award_url(params[:id],'doc'))  %>
+      <%= link_to( "as Excel", investigator_award_url(params[:id],'xls')) %>
+      <%= link_to( "as PDF", investigator_award_url(params[:id],'pdf'))  %>
+    </div>
+  <% end %>
 
-<table class="dense">
-	<tr><td class='h3' align='right'>
-		PI awards:
-	</td><td class='h3'
-		 <span id='pi_award_total'>$<%= award_info(@pi_awards,'pd/pi') %></span>
-	</td><td class='h3' align='right'>
-		Current PI awards:
-	</td><td  class='h3'>
-		 <span id='current_pi_award_total'>$<%= current_award_info(@pi_awards,'pd/pi') %></span>
-	</td></tr>
-	<tr><td class='h3' align='right'>
-		<span class="split_allocations" >All awards (split allocations): <%= image_tag("information.png") %></span>
-	</td><td  class='h3'>
-		<span id='split_award_total'>$<%= award_info(@pi_awards,'pd/pi,co-investigator,faculty', true) %></span>
-	</td><td class='h3' align='right'>
-		<span class="split_allocations" >Current awards (split allocations): <%= image_tag("information.png") %></span>
-	</td><td  class='h3'>
-		<span id='current_split_award_total'>$<%= current_award_info(@pi_awards,'pd/pi,co-investigator,faculty', true) %></span>
-	</td></tr>
-	<tr><td class='h3' align='right'>
-		All awards:
-	</td><td  class='h3'>
-		<span id='all_award_total' class='h3'>$<%= award_info(@pi_awards) %></span>
-	</td><td class='h3' align='right'>
-		Current awards:
-	</td><td  class='h3'>
-		<span id='current_all_award_total'>$<%= current_award_info(@pi_awards) %></span>
-	</td></tr>
-</table>
+  <table class="dense">
+    <tr>
+      <td class='h3' align='right'>
+        PI awards:
+      </td>
+      <td class='h3'>
+       <span id='pi_award_total'>$<%= award_info(@pi_awards,'pd/pi') %></span>
+      </td>
+      <td class='h3' align='right'>
+        Current PI awards:
+      </td>
+      <td class='h3'>
+        <span id='current_pi_award_total'>$<%= current_award_info(@pi_awards,'pd/pi') %></span>
+      </td>
+    </tr>
+    <tr>
+      <td class='h3' align='right'>
+        <span class="split_allocations" >All awards (split allocations): <%= image_tag("information.png") %></span>
+      </td>
+      <td class='h3'>
+        <span id='split_award_total'>
+          $<%= award_info(@pi_awards,'pd/pi,co-investigator,faculty', true) %>
+        </span>
+      </td>
+      <td class='h3' align='right'>
+        <span class="split_allocations">
+          Current awards (split allocations): <%= image_tag("information.png") %>
+        </span>
+      </td>
+      <td class='h3'>
+        <span id='current_split_award_total'>
+          $<%= current_award_info(@pi_awards,'pd/pi,co-investigator,faculty', true) %>
+        </span>
+      </td>
+    </tr>
+    <tr>
+      <td class='h3' align='right'>
+        All awards:
+      </td>
+      <td class='h3'>
+        <span id='all_award_total' class='h3'>
+          $<%= award_info(@pi_awards) %>
+        </span>
+      </td>
+      <td class='h3' align='right'>
+        Current awards:
+      </td>
+      <td class='h3'>
+        <span id='current_all_award_total'>
+          $<%= current_award_info(@pi_awards) %>
+        </span>
+      </td>
+    </tr>
+  </table>
 <% end %>
 <script>
   jQuery(document).ready(function() {
     jQuery("#split_allocations_definition").dialog({
-		autoOpen: false,
-		buttons: {
-			"Ok": function() {
-				jQuery(this).dialog("close");
-			},
-			"Cancel": function() {
-				jQuery(this).dialog("close");
-			}
-		},
-		hide: 'slide',
-		modal: true,
-		show: 'slide' });
+      autoOpen: false,
+      buttons: {
+        "Ok": function() {
+          jQuery(this).dialog("close");
+        },
+        "Cancel": function() {
+          jQuery(this).dialog("close");
+        }
+      },
+      hide: 'slide',
+      modal: true,
+      show: 'slide'
+    });
     jQuery(".split_allocations").click(function() {
-	     jQuery("#split_allocations_definition").dialog("open");
-		return false;
-	   })
+       jQuery("#split_allocations_definition").dialog("open");
+      return false;
+    })
     jQuery("#roles_definitions").dialog({
-		autoOpen: false,
-		width: 1000,
-		buttons: {
-			"Ok": function() {
-				jQuery(this).dialog("close");
-			},
-			"Cancel": function() {
-				jQuery(this).dialog("close");
-			}
-		},
-		hide: 'slide',
-		modal: true,
-		show: 'slide' });
+      autoOpen: false,
+      width: 1000,
+      buttons: {
+        "Ok": function() {
+          jQuery(this).dialog("close");
+        },
+        "Cancel": function() {
+          jQuery(this).dialog("close");
+        }
+      },
+      hide: 'slide',
+      modal: true,
+      show: 'slide'
+    });
     jQuery(".roles").click(function() {
-	     jQuery("#roles_definitions").dialog("open");
-		return false;
-	   })
-
+      jQuery("#roles_definitions").dialog("open");
+      return false;
+    });
   });
-
 </script>
 
 <div id="split_allocations_definition" title="Split Allocations Definition">
-	<p><b>Split allocations calculation:</b> The PD/PI, Co-Investigator, Faculty, Fellows, PIs are given equal stake in the award. For instance, for an award with one PI, four investigators, and 2 faculty, each of those listed investigators would get credit for one/seventh of the total award. All awards simply sums the total value of all proposals the faculty member is listed on, regardless of how many other faculty/investigators are on the award.</p>
+  <p>
+    <b>Split allocations calculation:</b>
+    The PD/PI, Co-Investigator, Faculty, Fellows, PIs are given equal stake in the award.
+    For instance, for an award with one PI, four investigators, and 2 faculty, each of those listed investigators
+    would get credit for one/seventh of the total award. All awards simply sums the total value of all proposals
+    the faculty member is listed on, regardless of how many other faculty/investigators are on the award.
+  </p>
 </div>
 
 <div id="roles_definitions" title="Roles Definitions">
-	<p><b>Definitions:</b></p>
-	<div id="note">
-	<p>The <b>PD/PI</b> role in InfoEd is listed as one of: <b>PI/PD</b>, <b>Principal Investigator</b>, <b>Director</b>, <b>Co-Program Director</b>, <b>Co-Director</b>, <b>Investigator</b>, or <b>Contact P. I.</b>  </p>
-	<p>The <b>Co-Investigator</b> role in InfoEd is listed as one of: <b>Co-Investigator</b>, <b>Co-I</b>, or <b>Co-PD/PI</b>. </p>
-	<p>The <b>Fellow</b> role in InfoEd is listed as one of: <b>Fellow</b>, <b>Postdoc</b>, or <b>Post Doctoral</b>. </p>
-	<p>The <b>Faculty</b> role in InfoEd is listed as one of: <b>Faculty</b>, <b>Asst. Professor</b>, <b>Collaborator</b>, <b>Mentor</b>, or <b>Co-Mentor</b>. </p>
-	<p>The <b>Biostatistician</b> role in InfoEd is listed as one of: <b>Biostatistician</b>, <b>Statistician</b>, <b>Analyst</b>, or <b>Data Mgmt</b>.</p>
-
-	<p>The <b>Other</b> role consists of the remaining roles, including <b>Other</b>, <b>O.S.P</b>, <b>Advisory Board Member</b>, <b>Postdoc</b>, or <b>Post Doctoral</b> </p>
-	</div>
+  <p>
+    <b>Definitions:</b>
+  </p>
+  <div id="note">
+    <p>
+      The <b>PD/PI</b> role in InfoEd is listed as one of: <b>PI/PD</b>, <b>Principal Investigator</b>, <b>Director</b>,
+      <b>Co-Program Director</b>, <b>Co-Director</b>, <b>Investigator</b>, or <b>Contact P. I.</b>
+    </p>
+    <p>
+      The <b>Co-Investigator</b> role in InfoEd is listed as one of: <b>Co-Investigator</b>, <b>Co-I</b>, or <b>Co-PD/PI</b>.
+    </p>
+    <p>
+      The <b>Fellow</b> role in InfoEd is listed as one of: <b>Fellow</b>, <b>Postdoc</b>, or <b>Post Doctoral</b>.
+    </p>
+    <p>
+      The <b>Faculty</b> role in InfoEd is listed as one of: <b>Faculty</b>, <b>Asst. Professor</b>, <b>Collaborator</b>, <b>Mentor</b>, or <b>Co-Mentor</b>.
+    </p>
+    <p>
+      The <b>Biostatistician</b> role in InfoEd is listed as one of: <b>Biostatistician</b>, <b>Statistician</b>, <b>Analyst</b>, or <b>Data Mgmt</b>.
+    </p>
+    <p>
+      The <b>Other</b> role consists of the remaining roles, including <b>Other</b>, <b>O.S.P</b>, <b>Advisory Board Member</b>, <b>Postdoc</b>, or <b>Post Doctoral</b>
+    </p>
+  </div>
 </div>
-<%= render( :partial => "shared/award_note.html" ) %>
+<%= render 'shared/award_note.html' %>
 <div id="listing">
   <table cellpadding="2" cellspacing="0" class="borderless">
-	<tr valign="bottom" class="header">
-		<td class="list-title-left">
-			#
-		</td>
-		<td class="list-title-left">
-			<span class="roles">Role <%= image_tag("information.png") %></span>
-		</td>
-		<td class="list-title-left">
-			Effort
-		</td>
-		<td class="list-title-left">
-			Title
-		</td>
-		<td class="list-title-left">
-			Agency
-		</td>
-		<td class="list-title-left">
-			Award period
-		</td>
-		<td class="list-title-left">
-			Project period
-		</td>
-		<td class="list-title-left">
-			Total Amount
-		</td>
-		<td colspan="2" class="list-title-left">
-			Collaborators
-		</td>
-	</tr>
- <% cnt = 0 %>
- <% for pi_award in @pi_awards %>
-	<tr class="<%= cycle('even', 'odd') %>">
-		<td class="list-left">
-			<% cnt+=1 %>
-			<%= cnt %>
-		</td>
-		<td class="list-left">
-			<%= pi_award.role  %>
-		</td>
-		<td class="list-right">
-			<%= pi_award.percent_effort %> %
-		</td>
-		<td class="list-left">
-			<%= link_to( pi_award.proposal.title, award_url(pi_award.proposal_id)) %>
-		</td>
-		<td class="list-left">
-			<%= pi_award.proposal.sponsor_name %>
-		</td>
-		<td class="list-left">
-			<%= formatted_date(pi_award.proposal.award_start_date) + " to " + formatted_date(pi_award.proposal.award_end_date) %>
-		</td>
-		<td class="list-left">
-			<%= formatted_date(pi_award.proposal.project_start_date) + " to " + formatted_date(pi_award.proposal.project_end_date) %>
-		</td>
-		<td class="list-left">
-			<%= number_to_humanized(pi_award.proposal.total_amount) %>
-		</td>
-		<td class="list-left">
-			<%=  pi_award.proposal.investigator_proposals.count %>
-		</td>
-		<td class="list-left">
-			<%=  pi_award.proposal.investigators.collect{|pi| link_to_investigator_awards(pi, pi.name)}.join(", ") %>
-		</td>
-	</tr>
-  <% end %>
+    <tr valign="bottom" class="header">
+      <td class="list-title-left">
+        #
+      </td>
+      <td class="list-title-left">
+        <span class="roles">
+          Role <%= image_tag("information.png") %>
+        </span>
+      </td>
+      <td class="list-title-left">
+        Effort
+      </td>
+      <td class="list-title-left">
+        Title
+      </td>
+      <td class="list-title-left">
+        Agency
+      </td>
+      <td class="list-title-left">
+        Award period
+      </td>
+      <td class="list-title-left">
+        Project period
+      </td>
+      <td class="list-title-left">
+        Total Amount
+      </td>
+      <td colspan="2" class="list-title-left">
+        Collaborators
+      </td>
+    </tr>
+   <% cnt = 0 %>
+   <% for pi_award in @pi_awards %>
+    <tr class="<%= cycle('even', 'odd') %>">
+      <td class="list-left">
+        <% cnt += 1 %>
+        <%= cnt %>
+      </td>
+      <td class="list-left">
+        <%= pi_award.role  %>
+      </td>
+      <td class="list-right">
+        <%= pi_award.percent_effort %> %
+      </td>
+      <td class="list-left">
+        <%= link_to(pi_award.proposal.title, award_url(pi_award.proposal_id)) %>
+      </td>
+      <td class="list-left">
+        <%= pi_award.proposal.sponsor_name %>
+      </td>
+      <td class="list-left">
+        <%= formatted_date(pi_award.proposal.award_start_date) + " to " + formatted_date(pi_award.proposal.award_end_date) %>
+      </td>
+      <td class="list-left">
+        <%= formatted_date(pi_award.proposal.project_start_date) + " to " + formatted_date(pi_award.proposal.project_end_date) %>
+      </td>
+      <td class="list-left">
+        <%= number_to_humanized(pi_award.proposal.total_amount) %>
+      </td>
+      <td class="list-left">
+        <%=  pi_award.proposal.investigator_proposals.count %>
+      </td>
+      <td class="list-left">
+        <%= pi_award.proposal.investigators.map { |pi| link_to_investigator_awards(pi, pi.name) }.join(', ').html_safe %>
+      </td>
+    </tr>
+    <% end %>
   </table>
-
-<br/>
+  <br/>
 </div>

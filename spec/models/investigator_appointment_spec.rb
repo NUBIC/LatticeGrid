@@ -27,6 +27,23 @@ describe InvestigatorAppointment do
   it 'can be instantiated' do
     FactoryGirl.build(:investigator_appointment).should be_an_instance_of(InvestigatorAppointment)
   end
+
+  describe '.has_appointment' do
+    let(:ou) { FactoryGirl.create(:organizational_unit) }
+    let!(:ia) { FactoryGirl.create(:investigator_appointment, organizational_unit: ou) }
+    describe 'when investigator appointment organizational_unit id matches parameter' do
+      it 'returns true' do
+        InvestigatorAppointment.has_appointment(ou.id).should be_true
+      end
+    end
+
+    describe 'when investigator appointment organizational_unit id does not match parameter' do
+      it 'returns false' do
+        InvestigatorAppointment.has_appointment(666).should be_false
+      end
+    end
+  end
+
 end
 
 describe AssociateMember do

@@ -214,8 +214,8 @@ def CreateOrganizationFromHash(data_row)
 end
 
 def GetParentOrg(org)
-  return HandleSchool(LatticeGridHelper.GetDefaultSchool()) if org.type == "Department"
-  return HandleSchool(LatticeGridHelper.GetDefaultSchool()) if org.type == "Center" && (org.division_id.to_s =~ /010$/ || org.division_id.to_s =~ /510$/ )
+  return HandleSchool(LatticeGridHelper.get_default_school) if org.type == "Department"
+  return HandleSchool(LatticeGridHelper.get_default_school) if org.type == "Center" && (org.division_id.to_s =~ /010$/ || org.division_id.to_s =~ /510$/ )
   return nil if org.department_id.blank?
   if org.type == "Program"
     return FindOrg(org.department_id)

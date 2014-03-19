@@ -6,12 +6,13 @@
 		<%= link_to( "as Excel", list_all_investigators_path('xls')) %>
 		<% end %>
 	</div>
-  <table cellpadding="2" cellspacing="0" class="borderless"> 
-	<% cnt = 0 %>
+	<% unless @investigators.blank? %>
+		<div>
+			Displaying all <%= @investigators.size %> investigators.
+		</div>
+	<% end %>
+  <table cellpadding="2" cellspacing="0" class="borderless" id="all_investigators">
 	<tr valign="bottom" class="header">
-		<td class="list-title-left">
-			#
-		</td>
 		<td class="list-title-left">
 			Name
 		</td>
@@ -28,7 +29,7 @@
 			Rank
 		</td>
 		<td class="list-title-left">
-			<%=  LatticeGridHelper.affilation_name  %>
+			<%= LatticeGridHelper.affilation_name  %>
 		</td>
 		<td class="list-title-left">
 			Appointments (joint, secondary, centers)
@@ -49,11 +50,7 @@
   <% for investigator in @investigators %>
 	<tr class="<%= cycle('even', 'odd') %>">
 		<td class="list-left">
-			<% cnt+=1 %>
-			<%= cnt %>
-		</td>
-		<td class="list-left">
-			<%= link_to(investigator.last_name+", "+(investigator.first_name||"")+" "+(investigator.middle_name||""), investigator_url(investigator.username))  %>
+			<%= link_to(investigator.display_name, investigator_url(investigator.username)) %>
 		</td>
 		<td class="list-left">
 			<%= investigator.username %>
@@ -75,19 +72,19 @@
 			<%= (investigator.home_department_name || (investigator.home_department.abbreviation if (! investigator.home_department_id.blank?) and (! investigator.home_department.blank?))) %>
 		</td>
 		<td class="list-left">
-			<%= link_to_units(investigator.investigator_appointments) %>
+			<%= link_to_units(investigator.investigator_appointments).html_safe %>
 		</td>
-		<td class="list-left">
-			<%=  investigator.investigator_abstracts.count %>
+		<td class="list-right">
+			<%= investigator.investigator_abstracts.count %>
 		</td>
-		<td class="list-left">
-			<%=  investigator.abstracts.count %>
+		<td class="list-right">
+			<%= investigator.abstracts.count %>
 		</td>
 		<td class="list-left">
 			<%= link_to "edit", edit_pubs_profile_url(investigator.username) %>
 		</td>
 		<td class="list-left">
-			<%= build_pi_search_string(investigator)  %>
+			<%= build_pi_search_string(investigator) %>
 		</td>
 		<td class="list-left">
 			<%= format_bool_yn(limit_to_institution(investigator)) %>
