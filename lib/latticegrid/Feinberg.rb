@@ -220,7 +220,7 @@ module LatticeGridHelper
   end
 
   def sorted_head_node_children(head_node)
-    head_node.children.sort { |x, y| x.name <=> y.name }
+    head_node.children.sort { |x, y| x.name <=> y.name } unless head_node.blank?
   end
 
 end

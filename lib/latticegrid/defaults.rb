@@ -470,6 +470,7 @@ module LatticeGridHelper
   end
 
   def build_menu(nodes, org_type = nil, &block)
+    return if nodes.blank?
     out = '<ul>'
     nodes.each do |unit|
       if org_type.nil? || unit.kind_of?(org_type)

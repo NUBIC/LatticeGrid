@@ -12,7 +12,16 @@ describe 'Abstracts' do
 
     it 'gives context about the publications' do
       visit '/abstracts/current'
-      expect(page).to have_content('LatticeGrid Publications and Abstracts Site')
+      instance = case lattice_grid_instance
+                 when 'Feinberg'
+                   'Feinberg'
+                 when 'RHLCCC'
+                   'Cancer Center Member'
+                 else
+                   'LatticeGrid'
+                 end
+
+      expect(page).to have_content("#{instance} Publications and Abstracts Site")
       expect(page).to have_content("Publication Listing for #{Time.now.year}")
     end
 
