@@ -170,14 +170,8 @@ module LatticeGridHelper
             <a href='#'>by Year</a>
             #{build_year_menu}
           </li>
-          <li>
-            <a href='#'>by Department</a>
-            #{build_menu(sorted_head_node_children(@head_node), Department) { |id| org_path(id) }}
-          </li>
-          <li>
-            <a href='#'>by Center</a>
-            #{build_menu(sorted_head_node_children(@head_node), Center) { |id| org_path(id) }}
-          </li>
+          #{sub_menu_line_item('XXX by Department', build_menu(sorted_head_node_children(@head_node), Department) { |id| org_path(id) })}
+          #{sub_menu_line_item('by Center', build_menu(sorted_head_node_children(@head_node), Center) { |id| org_path(id) })}
           <li>
             #{link_to('High Impact', high_impact_by_month_abstracts_path, title: 'Recent high-impact publications')}
           </li>
@@ -187,28 +181,16 @@ module LatticeGridHelper
           <li class='menu_header'>
             Departments
           </li>
-          <li>
-            <a href='#'>Faculty</a>
-            #{build_menu(sorted_head_node_children(@head_node), Department) { |id| show_investigators_org_path(id) }}
-          </li>
-          <li>
-            <a href='#'>Graphs</a>
-            #{build_menu(sorted_head_node_children(@head_node), Department) { |id| show_org_graph_path(id) }}
-          </li>
+          #{sub_menu_line_item('Faculty', build_menu(sorted_head_node_children(@head_node), Department) { |id| show_investigators_org_path(id) })}
+          #{sub_menu_line_item('Graphs', build_menu(sorted_head_node_children(@head_node), Department) { |id| show_org_graph_path(id) })}
           <li>
             #{link_to('Overview', departments_orgs_path, title: 'Display an overview of all departments')}
           </li>
           <li class='menu_header'>
             Centers
           </li>
-          <li>
-            <a href='#'>Members</a>
-            #{build_menu(sorted_head_node_children(@head_node), Center) { |id| show_investigators_org_path(id) }}
-          </li>
-          <li>
-            <a href='#'>Graphs</a>
-            #{build_menu(sorted_head_node_children(@head_node), Center) { |id| show_org_graph_path(id) }}
-          </li>
+          #{sub_menu_line_item('Members', build_menu(sorted_head_node_children(@head_node), Center) { |id| show_investigators_org_path(id) })}
+          #{sub_menu_line_item('Graphs', build_menu(sorted_head_node_children(@head_node), Center) { |id| show_org_graph_path(id) })}
           <li>
             #{link_to('Overview', centers_orgs_path, title: 'Display an overview for all centers')}
           </li>

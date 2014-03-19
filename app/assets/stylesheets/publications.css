@@ -363,7 +363,7 @@ div.notice {
   width: 160px;
   height: 790px;
   color: #000;
-  background-color: #709fc7;
+  background-color: inherit;
 }
 
 .float_right {

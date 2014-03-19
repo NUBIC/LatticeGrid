@@ -343,14 +343,21 @@ module LatticeGridHelper
     else
       out << link_to(publication.title, abstract_url(publication))
     end
-    out << "<i>#{publication.journal_abbreviation}</i> "
+    out << journal_volume_and_pages(publication)
+    out << [quicklink_to_pubmed(publication.pubmed), quicklink_to_pubmedcentral(publication.pubmedcentral), quicklink_to_doi(publication.doi)].compact.join('; ')
+  end
+
+  def journal_volume_and_pages(publication, use_abbr = true)
+    abbr = use_abbr ? publication.journal_abbreviation : publication.journal
+    out = ''
+    out << "<i>#{abbr}</i> "
     out << " (#{publication.year}) "
-    if publication.pages.length > 0
-      out << h(publication.volume) +":"+ h(publication.pages)+". "
+    if publication.pages.try(:length).to_i > 0
+      out << "#{h(publication.volume)}:#{h(publication.pages)}. "
     else
-      out << "<i>In process.</i> "
+      out << '<i>In process.</i> '
     end
-    out << [quicklink_to_pubmed(publication.pubmed), quicklink_to_pubmedcentral(publication.pubmedcentral), quicklink_to_doi(publication.doi)].compact.join("; ")
+    out
   end
 
   def link_to_investigator(citation, investigator, name = nil, is_member = false, speed_display = false, simple_links = false, class_name = nil)
@@ -402,8 +409,8 @@ module LatticeGridHelper
         link_to_investigator(citation, investigator, author_match.gsub(' ', '| '), is_member, speed_display, simple_links)
       end
     end
-    authors = authors.gsub('|', '')
-    authors = authors.gsub("\n", '; ')
+    authors = authors.to_s.gsub('|', '')
+    authors = authors.to_s.gsub("\n", '; ')
     authors
   end
 
@@ -446,20 +453,21 @@ module LatticeGridHelper
 
   def latticegrid_menu_script_head_node_children(head_node)
     return '' unless head_node.try(:children)
-    menu = %Q(
-      <li>
-        <a href='#'>Publications by program</a>
-        #{build_menu(sorted_head_node_children(head_node), Program) { |id| org_path(id) }}
-      </li>
-      <li>
-        <a href='#'>Faculty by program</a>
-        #{build_menu(sorted_head_node_children(head_node), Program) { |id| show_investigators_org_path(id) }}
-      </li>
-      <li>
-        <a href='#'>Graphs by program</a>
-        #{build_menu(sorted_head_node_children(head_node), Program) { |id| show_org_graph_path(id) }}
-      </li>
-    )
+
+    pub_menu     = build_menu(sorted_head_node_children(head_node), Program) { |id| org_path(id) }
+    faculty_menu = build_menu(sorted_head_node_children(head_node), Program) { |id| show_investigators_org_path(id) }
+    graph_menu   = build_menu(sorted_head_node_children(head_node), Program) { |id| show_org_graph_path(id) }
+
+    menu = ''
+    menu << sub_menu_line_item('Publications by program', pub_menu)
+    menu << sub_menu_line_item('Faculty by program', faculty_menu)
+    menu << sub_menu_line_item('Graphs by program', graph_menu)
+    menu
+  end
+
+  def sub_menu_line_item(txt, menu)
+    return '' if menu.blank? || menu == '<ul></ul>'
+    menu = "<li><a href='#'>#{txt}</a>#{menu}</li>"
     menu
   end
 
@@ -470,7 +478,7 @@ module LatticeGridHelper
   end
 
   def build_menu(nodes, org_type = nil, &block)
-    return if nodes.blank?
+    return '' if nodes.blank?
     out = '<ul>'
     nodes.each do |unit|
       if org_type.nil? || unit.kind_of?(org_type)

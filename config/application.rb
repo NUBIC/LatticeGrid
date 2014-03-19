@@ -62,8 +62,8 @@ module LatticeGrid
       # commented out instance values to test
       # in development mode
       #
-      # 'defaults'
-      'Feinberg'
+      'defaults'
+      # 'Feinberg'
       # 'RHLCCC'
     else
       case "#{File.expand_path(Rails.root)}"

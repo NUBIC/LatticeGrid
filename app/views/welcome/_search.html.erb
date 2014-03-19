@@ -13,14 +13,20 @@
           <a href='#'>by Year</a>
           <%= build_year_menu.html_safe %>
         </li>
-        <li>
-          <a href='#'>by Department</a>
-          <%= build_menu(sorted_head_node_children(@head_node), Department) { |id| org_path(id) }.html_safe %>
-        </li>
-        <li>
-          <a href='#'>by Center</a>
-          <%= build_menu(sorted_head_node_children(@head_node), Center) { |id| org_path(id) }.html_safe %>
-        </li>
+        <% dept_menu = build_menu(sorted_head_node_children(@head_node), Department) { |id| org_path(id) } %>
+        <% unless dept_menu.blank? %>
+          <li>
+            <a href='#'>by Department</a>
+            <%= dept_menu.html_safe %>
+          </li>
+        <% end %>
+        <% center_menu = build_menu(sorted_head_node_children(@head_node), Center) { |id| org_path(id) } %>
+        <% unless center_menu.blank? %>
+          <li>
+            <a href='#'>by Center</a>
+            <%= center_menu.html_safe %>
+          </li>
+        <% end %>
       </ul>
     </div>
     <div id='departments_menu'>
@@ -28,14 +34,20 @@
         <li class='menu_header'>
           Departments
         </li>
-        <li>
-          <a href='#'>Faculty</a>
-          <%= build_menu(sorted_head_node_children(@head_node), Department) { |id| show_investigators_org_path(id) }.html_safe %>
-        </li>
-        <li>
-          <a href='#'>Graphs</a>
-          <%= build_menu(sorted_head_node_children(@head_node), Department) { |id| show_org_graph_path(id) }.html_safe %>
-        </li>
+        <% dept_faculty_menu = build_menu(sorted_head_node_children(@head_node), Department) { |id| show_investigators_org_path(id) } %>
+        <% unless dept_faculty_menu.blank? %>
+          <li>
+            <a href='#'>Faculty</a>
+            <%= dept_faculty_menu.html_safe %>
+          </li>
+        <% end %>
+        <% dept_graph_menu = build_menu(sorted_head_node_children(@head_node), Department) { |id| show_org_graph_path(id) } %>
+        <% unless dept_graph_menu.blank? %>
+          <li>
+            <a href='#'>Graphs</a>
+            <%= dept_graph_menu.html_safe %>
+          </li>
+        <% end %>
         <li>
           <%= link_to('Overview', departments_orgs_path, :title => 'Display an overview of all departments') %>
         </li>
@@ -46,14 +58,20 @@
         <li class='menu_header'>
           Centers
         </li>
-        <li>
-          <a href='#'>Members</a>
-          <%= build_menu(sorted_head_node_children(@head_node), Center) { |id| show_investigators_org_path(id) }.html_safe %>
-        </li>
-        <li>
-          <a href='#'>Graphs</a>
-          <%= build_menu(sorted_head_node_children(@head_node), Center) { |id| show_org_graph_path(id) }.html_safe %>
-        </li>
+        <% center_faculty_menu = build_menu(sorted_head_node_children(@head_node), Center) { |id| show_investigators_org_path(id) } %>
+        <% unless center_faculty_menu.blank? %>
+          <li>
+            <a href='#'>Members</a>
+            <%= center_faculty_menu.html_safe %>
+          </li>
+        <% end %>
+        <% dept_graph_menu = build_menu(sorted_head_node_children(@head_node), Center) { |id| show_org_graph_path(id) } %>
+        <% unless dept_graph_menu.blank? %>
+          <li>
+            <a href='#'>Graphs</a>
+            <%= dept_graph_menu.html_safe %>
+          </li>
+        <% end %>
         <li>
           <%= link_to('Overview', centers_orgs_path, :title => 'Display an overview for all centers') %>
         </li>
