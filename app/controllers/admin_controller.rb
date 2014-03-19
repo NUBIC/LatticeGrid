@@ -47,7 +47,7 @@ class AdminController < ApplicationController
     handle_investigator_delete(@investigator, params[:delete])
     respond_to do |format|
       params[:investigator].delete(:id)  # id causes an error  - can't mass assign id
-      params[:investigator]['era_comons_name'] = nil if params[:investigator]['era_comons_name'].blank?
+      params[:investigator]['era_commons_name'] = nil if params[:investigator]['era_commons_name'].blank?
       if @investigator.update_attributes(params[:investigator])
         clear_directory("investigators/#{@investigator.username}")
         clear_file("profiles/#{@investigator.username}.html")

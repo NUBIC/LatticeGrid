@@ -21,8 +21,8 @@
     =f.text_field :username
   .section_heading
     .width_80
-      =f.label :era_comons_name, 'eRA Commons Name'
-    =f.text_field :era_comons_name
+      =f.label :era_commons_name, 'eRA Commons Name'
+    =f.text_field :era_commons_name
   .section_heading
     .width_80
       =f.label :employee_id, 'Employee ID'
@@ -59,13 +59,13 @@
   .section_heading
     .width_80
       Program name(s)
-    -f.fields_for :investigator_appointments_form do |f2| 
+    -f.fields_for :investigator_appointments_form do |f2|
       = f2.collection_select 'organizational_unit_ids', programs, :id, :name, {:selected => investigator.any_members.map(&:organizational_unit_id)}, {:size=>"8", :multiple=>true}
       control-click to select multiple programs
   .section_heading
     .width_80
       Program type
-    -f.fields_for :investigator_appointments_form do |f2| 
+    -f.fields_for :investigator_appointments_form do |f2|
       = f2.select :type, LatticeGridHelper.allowed_membership_types, :selected => get_member_type(investigator)
   .section_heading
     .width_80
