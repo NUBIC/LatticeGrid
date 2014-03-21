@@ -1,0 +1,9 @@
+<div class='unauthorized'>
+  We're sorry, but you have attempted to access a restricted resource.
+</div>
+
+<% if LatticeGridHelper.require_authentication? %>
+  <p>
+    Please <%= link_to('Login', profiles_url) %> to access the restricted pages.
+  </p>
+<% end %>

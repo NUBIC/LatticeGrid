@@ -23,7 +23,7 @@ module LatticeGridHelper
     'LatticeGrid Publications'
   end
 
-  # does CCSG access require authentication?
+  # does the application require authentication?
   def self.require_authentication?
     false
   end
