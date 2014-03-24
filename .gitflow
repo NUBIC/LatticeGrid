@@ -3,7 +3,7 @@
   develop = develop
 [gitflow "prefix"]
   feature = feature/
-  release = release/
+  release = releases/
   hotfix = hotfix/
   support = support/
   versiontag =
