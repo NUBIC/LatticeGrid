@@ -379,7 +379,7 @@ class ProfilesController < ApplicationController
   end
 
   def edit_investigators
-    @javascripts_add = ['prototype', 'scriptaculous', 'effects', 'jquery.min']
+    @javascripts_add = ['prototype', 'scriptaculous', 'effects', 'jquery-1.8.3']
     @investigators = Investigator.includes([:home_department, :appointments]).order('last_name, first_name').to_a
     respond_to do |format|
       format.html { render }

@@ -97,7 +97,7 @@ class InvestigatorsController < ApplicationController
   end
 
   def listing
-    @javascripts_add = ['jquery.min', 'jquery.tablesorter.min', 'jquery.fixheadertable.min']
+    @javascripts_add = ['jquery-1.8.3', 'jquery.tablesorter.min', 'jquery.fixheadertable.min']
     @investigators = Investigator.where('total_publications > 2').order('total_publications desc').limit(3000).to_a
     respond_to do |format|
       format.html { render layout: 'printable' }
