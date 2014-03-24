@@ -3,7 +3,7 @@ source 'http://download.bioinformatics.northwestern.edu/gems'
 
 gem 'bundler'
 
-gem 'rails', '3.2.15'
+gem 'rails', '3.2.16'
 
 gem 'rmagick', :require => nil
 gem 'ruby-graphviz'
@@ -22,6 +22,11 @@ gem 'aker'
 gem 'rdoc'
 gem 'bcdatabase'
 gem 'prototype-rails'
+
+# ActionView::Template::Error (Could not find a JavaScript runtime.
+# See https://github.com/sstephenson/execjs for a list of available runtimes.
+gem 'execjs'
+gem 'therubyracer'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2'
