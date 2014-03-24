@@ -1,0 +1,9 @@
+[gitflow "branch"]
+  master = release
+  develop = develop
+[gitflow "prefix"]
+  feature = feature/
+  release = releases/
+  hotfix = hotfix/
+  support = support/
+  versiontag =

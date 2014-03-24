@@ -6,6 +6,9 @@ class WelcomeController < ApplicationController
     @show_side = false
   end
 
+  def unauthorized
+  end
+
   #
   # previous implementation used javascript on the front end to determine the search method to send the request:
   #

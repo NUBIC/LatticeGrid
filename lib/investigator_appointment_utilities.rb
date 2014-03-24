@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 require 'organization_utilities'
 require 'text_utilities'
 require 'config' # cleanup_campus is in config
@@ -5,16 +7,16 @@ require "#{Rails.root}/app/helpers/investigators_helper"
 include InvestigatorsHelper
 
 def to_string(element)
-  return "" if element.blank?
-  return element.to_s().split(13.chr).join(', ')
+  return '' if element.blank?
+  element.to_s.split(13.chr).join(', ')
 end
 
 def DoReadNamesAndSplit(data_row)
-  investigator_string = data_row["name"] || data_row["NAME"]
-  first_name = ""
-  middle_name = ""
-  last_name = ""
-  degrees = ""
+  investigator_string = data_row['name'] || data_row['NAME']
+  first_name = ''
+  middle_name = ''
+  last_name = ''
+  degrees = ''
 
   return if investigator_string.blank?
   investigator_string =~ /([^,]*),(.*)/
@@ -24,7 +26,7 @@ def DoReadNamesAndSplit(data_row)
     name_string = $1.strip
     degrees = $2.strip
   end
-  space_split = name_string.split(" ")
+  space_split = name_string.split(' ')
   if space_split.length == 1
     last_name = space_split[0]
   elsif space_split.length == 2
@@ -43,34 +45,34 @@ end
 
 def GenerateNetIDReport(data_row)
   pi = Investigator.new
-  pi = SetInvestigatorIdentity(pi,data_row)
+  pi = SetInvestigatorIdentity(pi, data_row)
   existing_investigator = IdentifyExistingInvestigator(pi)
-  position = "FSM faculty"
-  if existing_investigator.blank? and ! pi.username.blank?
+  position = 'FSM faculty'
+  if existing_investigator.blank? && !pi.username.blank?
     position = "Not FSM faculty"
-    existing_investigator = Investigator.new(:username=>pi.username)
+    existing_investigator = Investigator.new(:username => pi.username)
   end
 
   existing_investigator = merge_investigator_db_and_ldap(existing_investigator)
 
-  if pi.username.blank? then
-    puts "GenerateNetIDReport: Row did not have a username"
+  if pi.username.blank?
+    puts 'GenerateNetIDReport: Row did not have a username'
     puts data_row.inspect
-  elsif existing_investigator.blank? or existing_investigator.last_name.blank?
+  elsif existing_investigator.blank? || existing_investigator.last_name.blank?
     puts pi.username + "\tblank investigator"
   else
-    if ! existing_investigator.home_department.blank? then
+    if !existing_investigator.home_department.blank?
       department_name = existing_investigator.home_department.name.to_s
       department_abbreviation = existing_investigator.home_department.abbreviation.to_s
-    elsif ! existing_investigator.home_department_name.blank?
+    elsif !existing_investigator.home_department_name.blank?
       department_name = existing_investigator.home_department_name.to_s
       department_abbreviation = department_name.to_s
     elsif ! existing_investigator.home.blank?
       department_name = existing_investigator.home.to_s
       department_abbreviation = department_name.to_s
     else
-      department_name = "not found"
-      department_abbreviation = "not found"
+      department_name = 'not found'
+      department_abbreviation = 'not found'
     end
     puts existing_investigator.username + "\t" + to_string(existing_investigator.first_name) + "\t" + to_string(existing_investigator.middle_name) + "\t" + to_string(existing_investigator.last_name) + "\t" + to_string(existing_investigator.degrees) + "\t" + to_string(existing_investigator.email) + "\t" + to_string(existing_investigator.employee_id) + "\t" + to_string(existing_investigator.title) + "\t" + position + "\t" + department_name + "\t" + to_string(existing_investigator.business_phone) + "\t" + to_string(existing_investigator.address1)
   end
@@ -78,29 +80,29 @@ end
 
 def CreateInvestigatorFromHash(data_row)
   pi = Investigator.new
-  pi = SetInvestigatorIdentity(pi,data_row)
+  pi = SetInvestigatorIdentity(pi, data_row)
   pi = HandleUsername(pi)
-  pi = SetInvestigatorInformation(pi,data_row)
-  pi = SetInvestigatorAddress(pi,data_row)
+  pi = SetInvestigatorInformation(pi, data_row)
+  pi = SetInvestigatorAddress(pi, data_row)
 
   member_type = HandleMemberType(data_row)
 
   pi.email = pi.email.downcase.strip unless pi.email.blank?
 
-  if pi.username.blank? then
+  if pi.username.blank?
     puts "investigator #{pi.first_name} #{pi.last_name} does not have a username"
     puts data_row.inspect
   elsif pi.last_name.blank?
-    puts "investigator does not have a last_name"
+    puts 'investigator does not have a last_name'
     puts data_row.inspect
   else
     existing_pi = Investigator.find_by_username_including_deleted(pi.username)
-    if existing_pi.blank? and ! pi.email.blank? then
+    if existing_pi.blank? && !pi.email.blank?
       existing_pi = Investigator.find_by_email_including_deleted(pi.email)
     end
-    if existing_pi.blank? then
-      if pi.home_department_id.blank? and pi.home_department_name.blank?
-        if LatticeGridHelper.verbose? and HasDepartment(data_row)
+    if existing_pi.blank?
+      if pi.home_department_id.blank? && pi.home_department_name.blank?
+        if LatticeGridHelper.verbose? && HasDepartment(data_row)
           puts "unable to set home_department_id for #{data_row.inspect}"
         end
       end
@@ -108,22 +110,22 @@ def CreateInvestigatorFromHash(data_row)
       pi.save!
     else
       # overwrite existing record ?
-      overwrite=true
-      if existing_pi.employee_id.blank? and ! pi.employee_id.blank?
+      overwrite = true
+      if existing_pi.employee_id.blank? && !pi.employee_id.blank?
         existing_pi.employee_id = pi.employee_id
         puts "Adding employee ID (#{pi.employee_id}) to #{existing_pi.name} (#{existing_pi.username})"
       end
-      if existing_pi.era_comons_name.blank? and ! pi.era_comons_name.blank?
-        existing_pi.era_comons_name = pi.era_comons_name
-        puts "Adding eRA Commons Name (#{pi.era_comons_name}) to #{existing_pi.name} (#{existing_pi.username})"
+      if existing_pi.era_commons_name.blank? && !pi.era_commons_name.blank?
+        existing_pi.era_commons_name = pi.era_commons_name
+        puts "Adding eRA Commons Name (#{pi.era_commons_name}) to #{existing_pi.name} (#{existing_pi.username})"
       end
       if existing_pi.first_name != pi.first_name
         puts "Existing first name and new first name different: existing: #{existing_pi.name}, username: #{existing_pi.username}, email: #{existing_pi.email}; new record: #{pi.name}, username #{pi.username}, email: #{pi.email}"
-        #allow overwrite overwrite=false
+        # allow overwrite overwrite = false
       end
-      if existing_pi.email.blank? and !pi.email.blank?
+      if existing_pi.email.blank? && !pi.email.blank?
         puts "Adding email (#{pi.email}) to #{existing_pi.name} (#{existing_pi.username})"
-      elsif existing_pi.email != pi.email and !pi.email.blank?
+      elsif existing_pi.email != pi.email && !pi.email.blank?
         puts "Existing email is different: existing: #{existing_pi.name}, username: #{existing_pi.username}, email: #{existing_pi.email}; new email: #{pi.email}"
       end
       existing_pi = MergeInvestigatorData(existing_pi, pi, overwrite)
@@ -138,9 +140,9 @@ def CreateInvestigatorFromHash(data_row)
       existing_pi.save!
       pi = existing_pi
     end
-    unless data_row['program'].blank? then
+    unless data_row['program'].blank?
       theProgram = CreateProgramFromName(data_row['program'].strip)
-      if theProgram.blank? then
+      if theProgram.blank?
         throw "unable to match program #{data_row['program']} for user #{pi.username}"
       end
       # replace this logic with a STI model of 'member??'
@@ -159,8 +161,8 @@ def CreateInvestigatorFromHash(data_row)
       end
     else
       puts 'no program datarow' if LatticeGridHelper.debug?
-	  end
-	end
+    end
+  end
 end
 
 def HandleMemberType(data)
@@ -173,17 +175,17 @@ def HandleMemberType(data)
 end
 
 def HandleUsername(pi)
-  if pi.username.blank? and !pi.last_name.blank? and !pi.first_name.blank?
-    pi.username=pi.last_name+pi.first_name
+  if pi.username.blank? && !pi.last_name.blank? && !pi.first_name.blank?
+    pi.username = pi.last_name + pi.first_name
   end
-  if pi.username.blank? and !pi.email.blank?
+  if pi.username.blank? && !pi.email.blank?
     pi.username = pi.email
-    pi.username = pi.username.gsub(/[\.]+/,'_')
+    pi.username = pi.username.gsub(/[\.]+/, '_')
   end
   unless pi.username.blank?
     pi.username = pi.username.split('.')[0]
     pi.username = pi.username.split('(')[0]
-    pi.username = pi.username.gsub(/[' \t]+/,'')
+    pi.username = pi.username.gsub(/[' \t]+/, '')
     pi.username = pi.username.downcase
   end
   pi
@@ -204,22 +206,22 @@ def SetInvestigatorIdentity(pi, data_row)
   pi.middle_name = data_row['MI'] || data_row['MIDDLE_NAME'] || data_row['mi'] || data_row['middle_name']
   pi.last_name = data_row['LAST_NAME'] || data_row['last_name']
   pi.email = data_row['EMAIL'] || data_row['email']
-  pi.era_comons_name = data_row['ERA_COMMONS_ID'] || data_row['ERA_COMMONS_NAME']  || data_row['era_comons_name'] || data_row['era_comons_id']
+  pi.era_commons_name = data_row['ERA_COMMONS_ID'] || data_row['ERA_COMMONS_NAME']  || data_row['era_comons_name'] || data_row['era_comons_id']
 
   pi.username.downcase.strip! unless pi.username.blank?
-  pi.first_name = pi.first_name.gsub(/\./,' ').strip unless pi.first_name.blank?
-  pi.middle_name = pi.middle_name.gsub(/\./,' ').strip unless pi.middle_name.blank?
-  pi.last_name = pi.last_name.gsub(/\./,' ').strip unless pi.last_name.blank?
+  pi.first_name = pi.first_name.gsub(/\./, ' ').strip unless pi.first_name.blank?
+  pi.middle_name = pi.middle_name.gsub(/\./, ' ').strip unless pi.middle_name.blank?
+  pi.last_name = pi.last_name.gsub(/\./, ' ').strip unless pi.last_name.blank?
   pi.email.downcase.strip! unless pi.email.blank?
   pi.employee_id.to_s.strip! unless pi.employee_id.blank?
   pi.employee_id.to_s.downcase! unless pi.employee_id.blank?
-  pi.era_comons_name.upcase.strip! unless pi.era_comons_name.blank?
+  pi.era_commons_name.upcase.strip! unless pi.era_commons_name.blank?
 
   if pi.last_name.blank? && !data_row['NAME'].blank?
-      pi=HandleName(pi,data_row['NAME'])
+      pi=HandleName(pi, data_row['NAME'])
   end
   if pi.last_name.blank? && !data_row['name'].blank?
-      pi=HandleName(pi,data_row['name'])
+      pi=HandleName(pi, data_row['name'])
   end
   pi
 end
@@ -245,7 +247,7 @@ def SetInvestigatorInformation(pi, data_row)
   pi.appointment_track = data_row['CAREER_TRACK'] || data_row['career_track'] # research, clinician, clinician for CS, Clinician-Investigator
   pi.appointment_basis = data_row['BASIS'] || data_row['basis']
   pi.degrees = data_row['DEGREE'] || data_row['degree'] || data_row['DEGREES'] || data_row['degrees']
-  pi.degrees = pi.degrees.gsub(/\//,",") unless pi.degrees.blank?
+  pi.degrees = pi.degrees.gsub(/\//, ',') unless pi.degrees.blank?
   pi.pubmed_search_name = data_row['pubmed_search_name']
   pi.pubmed_limit_to_institution = data_row['pubmed_limit_to_institution'] unless data_row['pubmed_limit_to_institution'].blank?
   pi.faculty_interests = data_row['interest'] || data_row['INTEREST'] || data_row['faculty_interest'] || data_row['FACULTY_INTEREST']
@@ -268,7 +270,7 @@ def SetInvestigatorInformation(pi, data_row)
   pi
 end
 
-def SetInvestigatorAddress(pi,data_row)
+def SetInvestigatorAddress(pi, data_row)
   # assumed header values
   # campus
   # office_phone || business_phone
@@ -332,22 +334,20 @@ end
 
 def BuildAddressField(pi)
   mailcode = nil
-  city_state_zip = [[pi.city,pi.state].join(', '), pi.postal_code].join(" ").gsub(/^, +/,'')
+  city_state_zip = [[pi.city,pi.state].join(', '), pi.postal_code].join(' ').gsub(/^, +/, '')
   mailcode = "campus mailcode: #{pi.mailcode}" unless pi.mailcode.blank?
-  pi.address1 = [mailcode, pi.address1, pi.address2, city_state_zip,pi.country].join("$")
-  pi.address1 = pi.address1.gsub(/ *\$+[, ]*\$+/,"$").gsub(/\$$/,'')
+  pi.address1 = [mailcode, pi.address1, pi.address2, city_state_zip,pi.country].join('$')
+  pi.address1 = pi.address1.gsub(/ *\$+[, ]*\$+/, '$').gsub(/\$$/, '')
   pi.address1 = nil if pi.address1.blank?
   pi
 end
 
 def HandleName(pi, name)
   return pi if name.blank?
-  pre, degrees = name.split(",")
+  pre, degrees = name.split(',')
   pi.degrees = degrees
-  names = pre.split(" ")
-  if ['I','II','III','Jr','Sr'].include?(names.last)
-    pi.suffix = names.pop
-  end
+  names = pre.split(' ')
+  pi.suffix = names.pop if %w(I II III Jr Sr).include?(names.last)
   if names.length < 2 || names.length > 3
     puts "investigator name is not valid - #{names}"
     puts pi.inspect
@@ -361,17 +361,13 @@ def HandleName(pi, name)
     pi.middle_name = names[1]
     pi.last_name   = names[2]
   end
-  return pi
+  pi
 end
 
 def DoOverwrite(dest, source, overwrite)
-  if overwrite and !source.blank?
-    return source
-  end
-  if ! overwrite and dest.blank?
-    return source
-  end
-  return dest
+  return source if overwrite && !source.blank?
+  return source if !overwrite && dest.blank?
+  dest
 end
 
 def MergeInvestigatorData(dest_pi, source_pi, overwrite)
@@ -415,18 +411,18 @@ end
 def FindInvestigatorsWithBasisWithoutActivities(basis)
   pis = Investigator.has_basis_without_connections(basis)
   puts "Found #{pis.length} investigators tagged as #{basis} without activities" if LatticeGridHelper.verbose?
-  return pis
+  pis
 end
 
-def FindParttimeInvestigatorsWithoutActivities()
-  basis_array = ["UNPD","CS","PT-L","PT-G"]
+def FindParttimeInvestigatorsWithoutActivities
+  basis_array = %w(UNPD CS PT-L PT-G)
   basis_array.each do |basis|
     pis = FindInvestigatorsWithBasisWithoutActivities(basis)
   end
 end
 
-def PurgeParttimeInvestigatorsWithoutActivities()
-  basis_array = ["UNPD","CS","PT-L","PT-G"]
+def PurgeParttimeInvestigatorsWithoutActivities
+  basis_array = %w(UNPD CS PT-L PT-G)
   basis_array.each do |basis|
     pis = FindInvestigatorsWithBasisWithoutActivities(basis)
     purgeInvestigators(pis)
@@ -445,9 +441,9 @@ def MergeInvestigatorDescriptionsFromHash(data_row)
   # keywords
   # will disambiguate investigator based on netid, employee_id, email or (first_name + last_name), in that order
   investigator = Investigator.new
-  investigator = SetInvestigatorIdentity(investigator,data_row)
+  investigator = SetInvestigatorIdentity(investigator, data_row)
   investigator = HandleUsername(investigator)
-  investigator = SetInvestigatorInformation(investigator,data_row)
+  investigator = SetInvestigatorInformation(investigator, data_row)
   existing_investigator = IdentifyExistingInvestigator(investigator)
   unless existing_investigator.blank?
     puts "merging data: #{existing_investigator.name}; #{existing_investigator.username}." if LatticeGridHelper.debug?
@@ -456,10 +452,10 @@ def MergeInvestigatorDescriptionsFromHash(data_row)
     #      existing_investigator.faculty_research_summary += investigator.faculty_research_summary
     #    end
     # merge multiple research interests, assuming they are single items
-    if (!existing_investigator.faculty_interests.blank? and !investigator.faculty_interests.blank?)
+    if (!existing_investigator.faculty_interests.blank? && !investigator.faculty_interests.blank?)
       investigator.faculty_interests.strip!
-      if (! existing_investigator.faculty_interests.split(',').collect{|interest| interest.strip }.include?(investigator.faculty_interests))
-        existing_investigator.faculty_interests = [existing_investigator.faculty_interests,investigator.faculty_interests].join(", ")
+      if (!existing_investigator.faculty_interests.split(',').collect { |interest| interest.strip }.include?(investigator.faculty_interests))
+        existing_investigator.faculty_interests = [existing_investigator.faculty_interests, investigator.faculty_interests].join(", ")
         investigator.faculty_interests = existing_investigator.faculty_interests
         puts "merging faculty interests: #{investigator.faculty_interests}" if LatticeGridHelper.verbose?
       else
@@ -475,25 +471,25 @@ end
 
 def CreateAppointment(data_row, type)
   # assumed header values
-	 # division_id
-	 # employee_id
-  division_id = data_row["DIVISION_ID"]
-  employee_id = data_row["EMPLOYEE_ID"]
-  username = data_row["USERNAME"]
-  if division_id.blank? || (employee_id.blank? and username.blank?) then
-     puts "Division_id or employee_id was blank or missing. datarow="+data_row.inspect
+   # division_id
+   # employee_id
+  division_id = data_row['DIVISION_ID']
+  employee_id = data_row['EMPLOYEE_ID']
+  username = data_row['USERNAME']
+  if division_id.blank? || (employee_id.blank? && username.blank?)
+     puts "Division_id or employee_id was blank or missing. datarow=#{data_row.inspect}"
      return
   end
   appt = InvestigatorAppointment.new
   division = OrganizationalUnit.find_by_division_id(division_id)
   investigator = Investigator.find_by_employee_id(employee_id) unless employee_id.blank?
-  investigator = Investigator.find_by_username(username.downcase) if investigator.blank? and not username.blank?
-  if  division.blank? then
-     puts "Could not find Organization. datarow="+data_row.inspect
+  investigator = Investigator.find_by_username(username.downcase) if investigator.blank? && !username.blank?
+  if division.blank?
+     puts "Could not find Organization. datarow=#{data_row.inspect}"
      return
   end
   if investigator.blank? then
-      puts "Could not find Investigator. datarow="+data_row.inspect
+      puts "Could not find Investigator. datarow=#{data_row.inspect}"
       return
   end
   appt.type = type
@@ -502,24 +498,22 @@ def CreateAppointment(data_row, type)
   exists = InvestigatorAppointment.find(:first, :conditions=>
     ['organizational_unit_id = :unit_id and investigator_id = :investigator_id and type = :type',
       {:investigator_id => appt.investigator_id, :unit_id => appt.organizational_unit_id, :type => appt.type }])
-  if exists.nil?
-    appt.save!
-  end
+  appt.save! if exists.nil?
 end
 
 def CreateJointAppointmentsFromHash(data_row)
-  CreateAppointment(data_row, "Joint")
+  CreateAppointment(data_row, 'Joint')
 end
 
 def CreateSecondaryAppointmentsFromHash(data_row)
-     CreateAppointment(data_row, "Secondary")
+  CreateAppointment(data_row, 'Secondary')
 end
 
 def CreateCenterMembershipsFromHash(data_row)
-     CreateAppointment(data_row, "Member")
+     CreateAppointment(data_row, 'Member')
 end
 
-def CreateProgramMembershipsFromHash(data_row, type='Member')
+def CreateProgramMembershipsFromHash(data_row, type = 'Member')
   # assumed header values
   # Program
   # AppointmentType
@@ -532,9 +526,9 @@ def CreateProgramMembershipsFromHash(data_row, type='Member')
   unit_abbreviation = data_row["Program"] || data_row["program"] || data_row["PROGRAM"]
   email = data_row["email"] || data_row["EMAIL"]
   username = data_row["username"] || data_row["USERNAME"] || data_row["netid"] || data_row["NETID"]
-  if unit_abbreviation.blank? || (last_name.blank? and email.blank?) then
-     puts "unit_abbreviation or email was blank or missing. datarow="+data_row.inspect
-     return
+  if unit_abbreviation.blank? || (last_name.blank? and email.blank?)
+    puts "unit_abbreviation or email was blank or missing. datarow=#{data_row.inspect}"
+    return
   end
   username.strip! unless username.blank?
   last_name.strip! unless last_name.blank?
@@ -543,45 +537,41 @@ def CreateProgramMembershipsFromHash(data_row, type='Member')
   unit_abbreviation.strip! unless unit_abbreviation.blank?
   appt = InvestigatorAppointment.new
   program = OrganizationalUnit.find_by_abbreviation(unit_abbreviation)
-  investigator=nil
+  investigator = nil
   investigators = Investigator.find_all_by_username(username) unless username.blank?
-  investigators = Investigator.find_all_by_email(email) if investigators.blank? or investigators.length != 1
+  investigators = Investigator.find_all_by_email(email) if investigators.blank? || investigators.length != 1
   if investigators.length == 1
     investigator = investigators[0]
   else
     investigator = Investigator.first(
         :conditions => ["lower(last_name) = :last_name AND lower(first_name) like :first_name",
            {:last_name => last_name.downcase, :first_name => "#{first_name.split(" ").first.downcase}%"}])
-    if investigator.blank? then
+    if investigator.blank?
       more_pis = Investigator.find(:all,
         :conditions => ["lower(email) = :email",
            {:email => email}])
-      if more_pis.length == 1
-        investigator = more_pis[0]
-      end
+      investigator = more_pis[0] if more_pis.length == 1
     end
-    if investigator.blank? then
+    if investigator.blank?
       more_pis = Investigator.all(
         :conditions => ["lower(last_name) = :last_name AND lower(first_name) like :first_name",
            {:last_name => last_name.split(",").first.downcase, :first_name => "#{first_name.split(" ").first.downcase}%"}])
-      if more_pis.length == 1
-        investigator = more_pis[0]
-      end
+      investigator = more_pis[0] if more_pis.length == 1
     end
   end
-  if  program.blank? then
-     puts "Could not find Organization. datarow="+data_row.inspect
-     return
+  if  program.blank?
+    puts "Could not find Organization. datarow=#{data_row.inspect}"
+    return
   end
-  if investigator.blank? then
-      puts "Could not find Investigator. datarow="+data_row.inspect
-      puts "(found multiple investigators with last name #{last_name})" if investigators.length > 1
-      return
+  if investigator.blank?
+    puts "Could not find Investigator. datarow=#{data_row.inspect}"
+    puts "(found multiple investigators with last name #{last_name})" if investigators.length > 1
+    return
   end
   appt.type = type
   appt.organizational_unit_id = program.id
   appt.investigator_id = investigator.id
-  exists = InvestigatorAppointment.find(:first, :conditions=>
+  exists = InvestigatorAppointment.find(:first, :conditions =>
     ['organizational_unit_id = :unit_id and investigator_id = :investigator_id and type = :type',
       {:investigator_id => appt.investigator_id, :unit_id => appt.organizational_unit_id, :type => appt.type }])
   if exists.nil?
@@ -593,7 +583,7 @@ def CreateProgramMembershipsFromHash(data_row, type='Member')
     exists.end_date = nil
     exists.save!
   end
- end
+end
 
 def prune_investigators_without_programs(investigators)
   investigators.each do |investigator|
@@ -606,9 +596,9 @@ def prune_investigators_without_programs(investigators)
   end
 end
 
-def count_program_memberships_not_updated()
+def count_program_memberships_not_updated
   memberships = InvestigatorAppointment.all
-  cnt=0
+  cnt = 0
   memberships.each do |membership|
     # membership.updated_at < 1.hour.ago means update was more than an hour ago!
     if (membership.updated_at < 1.day.ago or membership.investigator.nil? or membership.organizational_unit.nil?) and (membership.end_date.nil? or membership.end_date > Date.tomorrow)
@@ -619,10 +609,10 @@ def count_program_memberships_not_updated()
     end
   end
   puts "Total unupdated membership entries: #{cnt}"
- end
+end
 
 
-def prune_program_memberships_not_updated()
+def prune_program_memberships_not_updated
   memberships = InvestigatorAppointment.all
   memberships.each do |membership|
     # membership.updated_at < 1.hour.ago means update was more than an hour ago!
@@ -642,8 +632,8 @@ def doCleanInvestigators(investigators)
     begin
       pi.username = pi.username.split('.')[0]
       pi.username = pi.username.split('(')[0]
-      pi.username = pi.username.split(')').join("")
-      pi.username = pi.username.split('&').join("")
+      pi.username = pi.username.split(')').join('')
+      pi.username = pi.username.split('&').join('')
       pi.username.gsub!(/[' \t]+/,'')
       pi.save!
     rescue
@@ -653,7 +643,7 @@ def doCleanInvestigators(investigators)
 end
 
 def CleanTitle(pi)
-  return if pi.blank? or pi.title.blank?
+  return if pi.blank? || pi.title.blank?
   title = pi.title
   title = title.sub(/Sr /, "Senior ")
   title = title.sub(/Emer$/, "Emeritus")
@@ -682,9 +672,9 @@ def UpdateHomeDepartmentAndTitle(pi)
       elsif pi_data.blank?
           logger.warn("Entry not found. GetLDAPentry returned null using netid #{pi.username}.")
       else
-        ldap_rec=CleanPIfromLDAP(pi_data)
+        ldap_rec = CleanPIfromLDAP(pi_data)
         investigator = Investigator.new(:username=>pi.username)
-        investigator=MergePIrecords(investigator,ldap_rec)
+        investigator = MergePIrecords(investigator,ldap_rec)
       end
     rescue Exception => error
       if pi_data.nil?
@@ -700,22 +690,20 @@ def UpdateHomeDepartmentAndTitle(pi)
     investigator.home = nil
     puts "department was not found for #{pi.name}"
   end
-  if pi.home_department_name == 'People'
-    pi.home_department_name = nil
-  end
+  pi.home_department_name = nil if pi.home_department_name == 'People'
   # manual check because ldap is returning a different set of array indices for title and department. bah
-  if investigator.username == "ralamb" or investigator.username == "cho741" then
-    investigator.home = "Molecular Biosciences; Judd A. and Marjorie Weinberg College of Arts and Sciences"
+  if investigator.username == "ralamb" || investigator.username == "cho741"
+    investigator.home = 'Molecular Biosciences; Judd A. and Marjorie Weinberg College of Arts and Sciences'
   end
-  if not investigator.title.blank? and (pi.title.blank? or pi.title.strip != investigator.title.strip )
+  if !investigator.title.blank? && (pi.title.blank? || pi.title.strip != investigator.title.strip )
     puts "Title change for pi #{pi.name}. Old: #{pi.title}. New: #{investigator.title}"
     pi.title = investigator.title
   end
-  if not investigator.home.blank? and (pi.home_department_name.blank? or pi.home_department_name.strip != investigator.home.strip )
+  if !investigator.home.blank? && (pi.home_department_name.blank? || pi.home_department_name.strip != investigator.home.strip )
     puts "home department change for pi #{pi.name}. Old: #{pi.home_department_name}; New: #{investigator.home};"
     pi.home_department_name = investigator.home
   end
-  return pi
+  pi
 end
 
 def purgeInvestigators(investigators_to_purge)
@@ -727,17 +715,17 @@ def purgeInvestigators(investigators_to_purge)
   end
 end
 
-def deletePurgedInvestigators()
+def deletePurgedInvestigators
   purged_investigators = Investigator.find_purged
   puts "deleting #{purged_investigators.length} investigators"
   purged_investigators.each do |pi|
     puts "deleting purged investigator  #{pi.name} username #{pi.username}" if LatticeGridHelper.verbose?
-    pi.investigator_abstracts.map{|m| m.delete}
-    pi.all_investigator_appointments.map{|m| m.delete}
-    pi.investigator_proposals.map{|m| m.delete}
-    pi.investigator_studies.map{|m| m.delete}
-    pi.investigator_colleagues.map{|m| m.delete}
-    pi.colleague_investigators.map{|m| m.delete}
+    pi.investigator_abstracts.map { |m| m.delete }
+    pi.all_investigator_appointments.map { |m| m.delete }
+    pi.investigator_proposals.map { |m| m.delete }
+    pi.investigator_studies.map { |m| m.delete }
+    pi.investigator_colleagues.map { |m| m.delete }
+    pi.colleague_investigators.map { |m| m.delete }
     Investigator.delete_deleted(pi.id)
   end
 end
@@ -753,20 +741,19 @@ def reinstateInvestigators(pis)
 end
 
 
-def count_faculty_updates()
-  updated = Investigator.find_updated().length
-  not_updated_array = Investigator.find_not_updated()
+def count_faculty_updates
+  updated = Investigator.find_updated.length
+  not_updated_array = Investigator.find_not_updated
   puts "#{updated} faculty updated. #{not_updated_array.length} faculty were not updated."
   not_updated_array.each do |inv|
     puts "#{inv.username}\t#{inv.full_name}\t#{inv.appointment_type}\t#{inv.appointment_track}\t#{inv.appointment_basis}"
   end
 end
 
-def prune_unupdated_faculty()
-  updated = Investigator.find_updated().length
-  not_updated = Investigator.find_not_updated()
+def prune_unupdated_faculty
+  updated = Investigator.find_updated.length
+  not_updated = Investigator.find_not_updated
   puts "#{updated} faculty updated. #{not_updated.length} faculty were not updated."
   purgeInvestigators(not_updated)
   puts "#{not_updated.length} faculty were marked as removed."
-
 end

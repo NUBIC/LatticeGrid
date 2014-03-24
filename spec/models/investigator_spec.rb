@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20140319212053
 #
 # Table name: investigators
 #
@@ -25,7 +25,7 @@
 #  email                                       :string(255)
 #  employee_id                                 :integer
 #  end_date                                    :date
-#  era_comons_name                             :string(255)
+#  era_commons_name                            :string(255)
 #  faculty_interests                           :text
 #  faculty_keywords                            :text
 #  faculty_research_summary                    :text

@@ -73,6 +73,10 @@ module ApplicationHelper
     rescue
       begin
         logger.error "is_admin? threw an error on include?(current_user.username.to_s) [#{current_user.username}]"
+        return false
+      rescue NoMethodError => nme
+        logger.error("ApplicationHelper#is_admin? - #{nme.message}")
+        return false
       rescue
         puts "is_admin? threw an error on include?(current_user.username.to_s) [#{current_user.username}]"
       end

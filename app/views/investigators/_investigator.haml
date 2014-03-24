@@ -4,15 +4,15 @@
   %td
     = link_to 'edit', edit_admin_url(investigator.username)
   %td
-    = link_to investigator.sort_name, investigator_url(investigator.username) 
+    = link_to investigator.sort_name, investigator_url(investigator.username)
   %td
     = mail_to investigator.email, investigator.email
   %td
     = investigator.any_members.map{|ia| ia.organizational_unit.name + " ("+ ia.type.to_s + ")" }.join(", ")
   %td
-    = link_to investigator.username, investigator_url(investigator.username) 
+    = link_to investigator.username, investigator_url(investigator.username)
   %td
-    = investigator.era_comons_name
+    = investigator.era_commons_name
   %td
     = formatted_date investigator.created_at
   %td

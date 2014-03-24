@@ -570,6 +570,14 @@ input:-moz-placeholder {
   padding: 3px;
 }
 
+#version {
+  float: left;
+  text-align: right;
+  width: 1130px;
+  color: lightgray;
+  padding: 0.5em 1em 0 1em;
+}
+
 #last_load_date {
   float: left;
   margin-right: 10px;
