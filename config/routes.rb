@@ -297,6 +297,7 @@ LatticeGrid::Application.routes.draw do
   match 'investigators_search_all/:id' => 'investigators#search', as: :investigators_search_all
   # this will handle the main search - replacing 'investigators#investigators_search', 'investigators#search', & 'abstracts#search'
   match 'welcome/search' => 'welcome#search', via: :get
+  match 'welcome/unauthorized' => 'welcome#unauthorized', via: :get
   match 'direct_search/:id' => 'investigators#direct_search', as: :direct_search, :format => 'xml'
   match 'proxy_googlechart/:id' => 'sparklines#proxy_googlechart', as: :proxy_googlechart
   match 'cytoscape/:id/:depth' => 'cytoscape#show', as: :cytoscape_member

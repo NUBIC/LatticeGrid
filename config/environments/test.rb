@@ -40,6 +40,11 @@ LatticeGrid::Application.configure do
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
 
+  config.aker do
+    login_config = File.join(Rails.root, %w(config logins development.yml))
+    authority Aker::Authorities::Static.from_file(login_config)
+  end
+
   # set the lattice_grid_instance for this env
   lattice_grid_instance
 end
