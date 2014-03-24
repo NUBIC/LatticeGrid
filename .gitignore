@@ -36,3 +36,6 @@ coverage/*
 
 lattice_grid.sublime-project
 lattice_grid.sublime-workspace
+
+/app/assets/old_javascripts/
+/app/assets/old_javascripts/*

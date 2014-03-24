@@ -1,12 +1,12 @@
-<%= javascript_include_tag 'cytoscape/json2.min', 'AC_OETags.min', 'cytoscape/cytoscapeweb.min' %> 
- 
+<%= javascript_include_tag 'cytoscape/json2.min', 'AC_OETags', 'cytoscape/cytoscapeweb' %>
+
 <% params[:id] = 'str' if params[:id].blank? %>
 
 <script type="text/javascript">
     window.onload=function() {
         // id of Cytoscape Web container div
         var div_id = "cytoscapeweb";
-        
+
         // network data could alternatively be grabbed via ajax
         // NOTE: - the attributes on nodes and edges
         //       - it also has directed edges, which will automatically display edge arrows
@@ -49,29 +49,29 @@
           </graph>\
         </graphml>\
         ';
- 
+
   function rand_color() {
       function rand_channel() {
           return Math.round( Math.random() * 255 );
       }
-      
+
       function hex_string(num) {
           var ret = num.toString(16);
-          
+
           if (ret.length < 2) {
               return "0" + ret;
           } else {
               return ret;
           }
       }
-      
+
       var r = rand_channel();
       var g = rand_channel();
       var b = rand_channel();
-      
-      return "#" + hex_string(r) + hex_string(g) + hex_string(b); 
+
+      return "#" + hex_string(r) + hex_string(g) + hex_string(b);
   }
-  
+
   // visual style we will use
   var visual_style = {
       global: {
@@ -103,7 +103,7 @@
       }
   };
 
-   
+
    // initialization options
    var options = {
        // where you have the Cytoscape Web SWF
@@ -111,10 +111,10 @@
        // where you have the Flash installer SWF
        flashInstallerPath: "<%= image_path('../flash/playerProductInstall') -%>"
    };
-   
+
    // init and draw
    var vis = new org.cytoscapeweb.Visualization(div_id, options);
-            
+
     vis.ready(function() {
         // set the style programmatically
         document.getElementById("color").onclick = function(){
@@ -126,20 +126,20 @@
     var draw_options = {
         // your data goes here
         network: xml,
-        
+
         // show edge labels too
         edgeLabelsVisible: true,
-        
+
         // let's try another layout
         layout: "ForceDirected",
-        
+
         // set the style at initialisation
         visualStyle: visual_style,
-        
+
         // hide pan zoom
-        panZoomControlVisible: false 
+        panZoomControlVisible: false
     };
-    
+
     vis.draw(draw_options);
 };
 </script>
@@ -157,7 +157,7 @@
 <div id="cytoscapeweb">
     Cytoscape Web will replace the contents of this div with your graph.
 </div>
-  
+
 <div id="note">
     <span class="link" id="color">Color me surprised</span>
 </div>

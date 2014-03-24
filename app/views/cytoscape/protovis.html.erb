@@ -1,76 +1,73 @@
 <html>
   <head>
     <title>Force-Directed Layout</title>
-	<%= javascript_include_tag 'protovis-r3.2', 'jquery.min' %> 
+    <%= javascript_include_tag 'protovis-r3.2', 'jquery-1.8.3' %>
     <style type="text/css">
-		body { margin: 0;}
+      body { margin: 0;}
     </style>
   </head>
   <body>
     <script type="text/javascript+protovis">
-  	var dataURL = "<%= member_protovis_data_url(params[:id]) %>";
-	var JSONdata = $.ajax({ type: "GET", url: dataURL, async: false }).responseText;
-	var member_protovis_data = JSON.parse(JSONdata);
-    var parsedData = JSON.parse(JSONdata);
+      var dataURL = "<%= member_protovis_data_url(params[:id]) %>";
+      var JSONdata = $.ajax({ type: "GET", url: dataURL, async: false }).responseText;
+      var member_protovis_data = JSON.parse(JSONdata);
+      var parsedData = JSON.parse(JSONdata);
 
-var w = document.body.clientWidth,
-    h = document.body.clientHeight,
-    colors = pv.Colors.category19();
+      var w = document.body.clientWidth,
+          h = document.body.clientHeight,
+          colors = pv.Colors.category19();
 
-  var vis = new pv.Panel()
-      .canvas('your-div-id')
-      .width(w)
-      .height(h)
-      .fillStyle("white")
-      .event("mousedown", pv.Behavior.pan())
-      .event("mousewheel", pv.Behavior.zoom());
+      var vis = new pv.Panel()
+          .canvas('your-div-id')
+          .width(w)
+          .height(h)
+          .fillStyle("white")
+          .event("mousedown", pv.Behavior.pan())
+          .event("mousewheel", pv.Behavior.zoom());
 
-  var nodeScale = Math.max(2, ((w * h) / member_protovis_data.nodes.length) * 0.033);
- 
-	var force = vis.add(pv.Layout.Force)
-	    .nodes(member_protovis_data.nodes)
-	//    .iterations(200)
-//	    .springLength(100)
-	    .chargeConstant(-100)
-//	    .springConstant(.2)
-//	    .chargeTheta(1.0)
-	    .dragConstant(0.03)
-	    .springLength(Math.max(50, Math.pow(nodeScale, 0.75)))
-	    .links(member_protovis_data.links);
+      var nodeScale = Math.max(2, ((w * h) / member_protovis_data.nodes.length) * 0.033);
 
+      var force = vis.add(pv.Layout.Force)
+          .nodes(member_protovis_data.nodes)
+          // .iterations(200)
+          // .springLength(100)
+          .chargeConstant(-100)
+          // .springConstant(.2)
+          // .chargeTheta(1.0)
+          .dragConstant(0.03)
+          .springLength(Math.max(50, Math.pow(nodeScale, 0.75)))
+          .links(member_protovis_data.links);
 
-
-force.link.add(pv.Line)
-    .lineWidth(function(d,p) (parseInt(2+p.linkValue)))
-//   .springConstant(function(d,p) (Math.max(nodeScale * .5, Math.sqrt(p.linkValue, 0.75))) )
-    .fillStyle("#ccc");
+      force.link.add(pv.Line)
+          .lineWidth(function(d,p) (parseInt(2+p.linkValue)))
+          // .springConstant(function(d,p) (Math.max(nodeScale * .5, Math.sqrt(p.linkValue, 0.75))) )
+          .fillStyle("#ccc");
 
 
-  force.node.add(pv.Dot)
-      .size(function(d) {
-        return Math.pow(d.linkDegree, 0.75)*2 + nodeScale/4;
-      })
-      .fillStyle(function(d) {
-        return d.fix ? "brown" : colors(d.group);
-      })
-      .strokeStyle(function() {
-        return this.fillStyle().darker();
-      })
-      .lineWidth(1)
-      .title(function(d) {
-        return d.nodeName
-      })
-      .event("mousedown", pv.Behavior.drag())
-      .event("drag", force);
+      force.node.add(pv.Dot)
+          .size(function(d) {
+            return Math.pow(d.linkDegree, 0.75)*2 + nodeScale/4;
+          })
+          .fillStyle(function(d) {
+            return d.fix ? "brown" : colors(d.group);
+          })
+          .strokeStyle(function() {
+            return this.fillStyle().darker();
+          })
+          .lineWidth(1)
+          .title(function(d) {
+            return d.nodeName
+          })
+          .event("mousedown", pv.Behavior.drag())
+          .event("drag", force);
 
-force.label.add(pv.Label);
+      force.label.add(pv.Label);
 
-
-  try {
-    vis.render();
-  } catch (e) {
-    alert(e);
-  }
-</script>
+      try {
+        vis.render();
+      } catch (e) {
+        alert(e);
+      }
+    </script>
   </body>
 </html>

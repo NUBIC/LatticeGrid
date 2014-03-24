@@ -170,7 +170,7 @@ module LatticeGridHelper
             <a href='#'>by Year</a>
             #{build_year_menu}
           </li>
-          #{sub_menu_line_item('XXX by Department', build_menu(sorted_head_node_children(@head_node), Department) { |id| org_path(id) })}
+          #{sub_menu_line_item('by Department', build_menu(sorted_head_node_children(@head_node), Department) { |id| org_path(id) })}
           #{sub_menu_line_item('by Center', build_menu(sorted_head_node_children(@head_node), Center) { |id| org_path(id) })}
           <li>
             #{link_to('High Impact', high_impact_by_month_abstracts_path, title: 'Recent high-impact publications')}

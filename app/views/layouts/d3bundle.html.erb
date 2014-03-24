@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title><%= LatticeGridHelper.page_title %>: <%= controller.action_name %> Diagram</title>
-    <% @javascripts ||= [ 'd3/d3.js', 'd3/d3.layout.js', 'd3/package.js' ] %>
+    <% @javascripts ||= [ 'd3/d3', 'd3/d3.layout', 'd3/package' ] %>
     <!-- include JIT Library File -->
     <% @javascripts.each do |js| %>
       <%= javascript_include_tag js %>
