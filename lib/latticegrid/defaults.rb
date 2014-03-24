@@ -11,6 +11,10 @@ require 'link_helper'
 # #{Rails.root}/config/application.rb
 module LatticeGridHelper
   # class methods
+  def self.version
+    '2.0.0'
+  end
+
   def self.page_title
     'LatticeGrid Publications'
   end

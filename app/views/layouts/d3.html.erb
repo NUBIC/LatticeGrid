@@ -49,14 +49,7 @@
       <div id="maincontent">
         <%= yield  %>
       </div> <!-- end of maincontent -->
-      <div id='banner'>
-        <div id='last_load_date'>
-          Last updated from PubMed on <%= session[:last_load_date].strftime("%A, %B %d, %Y") %>
-        </div>
-        <a href="<%= LatticeGridHelper.home_url %>" >
-          <%= image_tag "#{lattice_grid_instance}/pageheader.jpg", alt: LatticeGridHelper.header_title %>
-        </a>
-      </div>
+      <%= render 'shared/banner' %>
     </div> <!-- end of main -->
 
     <script type="text/javascript" language="JavaScript">
