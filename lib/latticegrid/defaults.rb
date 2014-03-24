@@ -12,7 +12,7 @@ require 'link_helper'
 module LatticeGridHelper
   # class methods
   def self.version
-    '2.0.0'
+    '2.0.1'
   end
 
   def self.page_title
