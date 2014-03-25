@@ -285,7 +285,7 @@ LatticeGrid::Application.routes.draw do
   match 'member_nodes/:id' => 'graphs#member_nodes', as: :member_nodes
   # match 'profiles_edit/:id' => 'profiles#edit', as: :profile_edit, via: [:get, :post]
   # match 'publications_edit/:id' => 'profiles#edit_pubs', as: :publications_edit, via: [:get, :post]
-  match '/profiles/admin_edit', to: 'profiles#admin_edit', via: :post # added psf for Rails upgrade - to replace two lines above
+  match '/profiles/admin_edit', to: 'profiles#admin_edit', as: :admin_profiles_edit, via: :post # added psf for Rails upgrade - to replace two lines above
   match 'member_protovis_data/:id' => 'cytoscape#member_protovis_data', as: :member_protovis_data
   match 'member_cytoscape_data/:id/:depth/:include_publications/:include_awards/:include_studies' => 'cytoscape#member_cytoscape_data', as: :member_cytoscape_data
   match 'org_cytoscape_data/:id/:depth/:include_publications/:include_awards/:include_studies' => 'cytoscape#org_cytoscape_data', as: :org_cytoscape_data
@@ -296,8 +296,8 @@ LatticeGrid::Application.routes.draw do
   match 'investigators_search/:id' => 'investigators#investigators_search', as: :investigators_search
   match 'investigators_search_all/:id' => 'investigators#search', as: :investigators_search_all
   # this will handle the main search - replacing 'investigators#investigators_search', 'investigators#search', & 'abstracts#search'
-  match 'welcome/search' => 'welcome#search', via: :get
-  match 'welcome/unauthorized' => 'welcome#unauthorized', via: :get
+  match 'welcome/search' => 'welcome#search', as: :welcome_search, via: :get
+  match 'welcome/unauthorized' => 'welcome#unauthorized', as: :welcome_unauthorized, via: :get
   match 'direct_search/:id' => 'investigators#direct_search', as: :direct_search, :format => 'xml'
   match 'proxy_googlechart/:id' => 'sparklines#proxy_googlechart', as: :proxy_googlechart
   match 'cytoscape/:id/:depth' => 'cytoscape#show', as: :cytoscape_member

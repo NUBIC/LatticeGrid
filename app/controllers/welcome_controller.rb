@@ -39,12 +39,11 @@ class WelcomeController < ApplicationController
   def search
     case params[:search_field]
     when 'AllByInvestigator'
-      redirect_to controller: 'investigators', action: 'search', id: params[:keywords], keywords: params[:keywords]
+      redirect_to investigators_search_all_path(id: params[:keywords], keywords: params[:keywords], search_field: params[:search_field])
     when 'Investigator'
-      redirect_to controller: 'investigators', action: 'investigators_search', id: params[:keywords], keywords: params[:keywords]
+      redirect_to investigators_search_investigator_path(id: params[:keywords], keywords: params[:keywords])
     else
-      redirect_to controller: 'abstracts', action: 'search', keywords: params[:keywords], search_field: params[:search_field]
+      redirect_to abstracts_search_path(keywords: params[:keywords], search_field: params[:search_field])
     end
   end
-
 end

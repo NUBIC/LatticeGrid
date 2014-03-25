@@ -4,7 +4,7 @@
       <%= link_to('Login', profiles_url) %>
     </span>
   <% end %>
-  <%= form_tag('/welcome/search', { :method => :get, :id => 'search_form2' }) do %>
+  <%= form_tag(welcome_search_path, { :method => :get, :id => 'search_form2' }) do %>
     <span id='search_text'>
       <%= text_field_tag(:keywords, params[:keywords],
                          :size => 45,
