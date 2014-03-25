@@ -50,7 +50,7 @@ module ProfilesHelper
     rescue NoMethodError => nme
       session[:user_id] = nil unless session[:user_id].blank?
       logger.error("ProfilesHelper#check_login - #{nme.message}")
-      redirect_to '/login'
+      redirect_to login_path
     end
   end
 

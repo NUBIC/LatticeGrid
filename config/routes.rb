@@ -311,6 +311,7 @@ LatticeGrid::Application.routes.draw do
   match 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:program.:format' => 'graphviz#send_graphviz_image', as: :send_graphviz_image_orig
   match 'get_graphviz/' => 'graphviz#get_graphviz', as: :restless_graphviz
   match '/logout' => 'access#logout', as: :logout
+  match '/login' => 'access#login', as: :login
   match ':controller/:id/:action/:page' => '#index'
   match ':controller/:id/:action' => '#index'
 end
