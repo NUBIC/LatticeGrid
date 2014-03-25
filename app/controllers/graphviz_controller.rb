@@ -14,14 +14,12 @@ class GraphvizController < ApplicationController
   include MeshHelper # for do_mesh_search
 
   def show_member
-    @javascripts_add = %w(prototype scriptaculous effects)
     @investigator = Investigator.find_by_username(params[:id])
     params[:analysis] = 'member'
     show_core
   end
 
   def show_member_awards
-    @javascripts_add = %w(prototype scriptaculous effects)
     @investigator = Investigator.find_by_username(params[:id])
     params[:analysis] = 'member_awards'
     show_core
@@ -70,14 +68,12 @@ class GraphvizController < ApplicationController
   end
 
   def show_member_mesh
-    @javascripts_add = ['prototype', 'scriptaculous', 'effects']
     @investigator = Investigator.find_by_username(params[:id])
     params[:analysis] = "member_mesh"
     show_core
   end
 
   def show_mesh
-    @javascripts_add = ['prototype', 'scriptaculous', 'effects']
     mesh_terms = MeshHelper.do_mesh_search(params[:id])
     @name = mesh_terms.collect(&:name).join(', ')
     params[:analysis] = "mesh"
@@ -85,21 +81,18 @@ class GraphvizController < ApplicationController
   end
 
   def show_org
-    @javascripts_add = ['prototype', 'scriptaculous', 'effects']
     @name = get_org_name(params[:id])
     params[:analysis] = "org"
     show_core
    end
 
   def show_org_org
-    @javascripts_add = ['prototype', 'scriptaculous', 'effects']
     @name = get_org_name(params[:id])
     params[:analysis] = "org_org"
     show_core
   end
 
   def show_org_mesh
-    @javascripts_add = ['prototype', 'scriptaculous', 'effects']
     @name = get_org_name(params[:id])
     params[:analysis] = "org_mesh"
     show_core

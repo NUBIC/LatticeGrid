@@ -29,7 +29,7 @@ class AwardsController < ApplicationController
   end
 
   def listing
-    @javascripts_add = ['jquery-1.8.3', 'jquery.tablesorter.min', 'jquery.fixheadertable.min']
+    @javascripts_add = %w(jquery.tablesorter.min jquery.fixheadertable.min)
     @investigators = Investigator.proposal_totals
     @css =  '#main {width:1900px;}'
     respond_to do |format|
@@ -62,7 +62,7 @@ class AwardsController < ApplicationController
   end
 
   def investigator
-    @javascripts_add = ['jquery-ui.min']
+    @javascripts_add = %w(jquery-ui.min)
     @stylesheets = ['publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui', 'ddsmoothmenu', 'ddsmoothmenu-v']
     if params[:id].nil?
       redirect_to current_abstracts_url
@@ -103,7 +103,7 @@ class AwardsController < ApplicationController
     if params[:start_date].nil? || params[:end_date].nil?
       redirect_to current_abstracts_url
     else
-      @javascripts_add = ['jquery-1.8.3', 'jquery.tablesorter.min', 'jquery.fixheadertable.min', 'jquery-ui.min']
+      @javascripts_add = %w(jquery.tablesorter.min jquery.fixheadertable.min jquery-ui.min)
       @stylesheets = ['publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui', 'ddsmoothmenu', 'ddsmoothmenu-v']
       @awards = Proposal.recents_by_type(params[:funding_types], params[:start_date], params[:end_date])
       previous = nil
@@ -155,7 +155,7 @@ class AwardsController < ApplicationController
     if params[:start_date].nil? || params[:end_date].nil?
       redirect_to current_abstracts_url
     else
-      @javascripts_add = ['jquery-1.8.3', 'jquery.tablesorter.min', 'jquery.fixheadertable.min', 'jquery-ui.min']
+      @javascripts_add = %w(jquery.tablesorter.min jquery.fixheadertable.min jquery-ui.min)
       @stylesheets = ['publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui', 'ddsmoothmenu', 'ddsmoothmenu-v']
 
       @faculty = Investigator.find_investigators_in_list(params[:investigator_ids]).sort do |x, y|
@@ -204,7 +204,7 @@ class AwardsController < ApplicationController
   end
 
   def org
-    @javascripts_add = ['jquery-ui.min']
+    @javascripts_add = %w(jquery-ui.min)
     @stylesheets = ['publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui', 'ddsmoothmenu', 'ddsmoothmenu-v']
     if params[:id].nil?
       redirect_to current_abstracts_url

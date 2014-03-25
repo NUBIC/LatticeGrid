@@ -41,7 +41,7 @@ class ProfilesController < ApplicationController
 
   def list_summaries
     if is_admin?
-      @javascripts_add = ['jquery.tablesorter.min']
+      @javascripts_add = %w(jquery.tablesorter.min)
       @approvals_after = LatticeGridHelper.logs_after
       @investigators = Investigator.by_name
       render
@@ -94,7 +94,7 @@ class ProfilesController < ApplicationController
 
   def list_summaries_by_program
     if is_admin?
-      @javascripts_add = ['jquery.tablesorter.min']
+      @javascripts_add = %w(jquery.tablesorter.min)
       @approvals_after = LatticeGridHelper.logs_after
       @program = find_unit_by_id_or_name(params[:id])
       @investigators = @program.all_members.sort { |a, b| a.sort_name.downcase <=> b.sort_name.downcase }
@@ -379,7 +379,7 @@ class ProfilesController < ApplicationController
   end
 
   def edit_investigators
-    @javascripts_add = ['prototype', 'scriptaculous', 'effects', 'jquery-1.8.3']
+    @javascripts_add = %w(effects)
     @investigators = Investigator.includes([:home_department, :appointments]).order('last_name, first_name').to_a
     respond_to do |format|
       format.html { render }

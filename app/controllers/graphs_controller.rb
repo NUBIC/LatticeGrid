@@ -12,12 +12,10 @@ class GraphsController < ApplicationController
   end
 
   def show_org
-    @javascripts_add = %w(prototype scriptaculous effects)
     redirect_to show_org_graph_url(1) if params[:id].blank?
   end
 
   def show_member
-    @javascripts_add = %w(prototype scriptaculous effects)
     if params[:id].blank?
       redirect_to show_org_graph_url(1)
     else
