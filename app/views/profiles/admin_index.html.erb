@@ -6,7 +6,7 @@
 </p>
 
 <div id="select_investigator">
-  <%= form_tag '/profiles/admin_edit', :method => :post, :class => "p", :id => 'edit_profile' do |form| %>
+  <%= form_tag admin_profiles_edit_path, :method => :post, :class => "p", :id => 'edit_profile' do |form| %>
   	<p>
       <%= collection_select '', 'investigator_id', @investigators, :username, :sort_name, {}, :size=>"30"  %> Select investigator name
     </p>
