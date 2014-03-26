@@ -7,13 +7,13 @@ describe AbstractsController do
     describe 'GET index' do
       it 'redirects to abstracts_by_year' do
         get :index
-        response.should redirect_to(abstracts_by_year_path(:id => year, :page => '1'))
+        response.should redirect_to(abstracts_by_year_path(id: year, page: '1'))
       end
     end
     describe 'GET year_list' do
       it 'redirects to abstracts_by_year' do
-        get :year_list, { :id => year }
-        response.should redirect_to(abstracts_by_year_path(:id => year, :page => '1'))
+        get :year_list, id: year
+        response.should redirect_to(abstracts_by_year_path(id: year, page: '1'))
       end
     end
   end
@@ -29,7 +29,7 @@ describe AbstractsController do
     let(:journal) { FactoryGirl.create(:journal) }
     describe 'GET year_list' do
       it 'renders template and assigns variables' do
-        get :year_list, { :id => year, :page => '1' }
+        get :year_list, id: year, page: '1'
         response.should render_template('year_list')
         assigns[:abstracts].should_not be_nil
       end
@@ -37,7 +37,7 @@ describe AbstractsController do
     describe 'GET current' do
       it 'redirects to abstracts_by_year' do
         get :current
-        response.should redirect_to(abstracts_by_year_path(:id => year, :page => '1'))
+        response.should redirect_to(abstracts_by_year_path(id: year, page: '1'))
       end
     end
     describe 'GET show' do
@@ -64,7 +64,7 @@ describe AbstractsController do
     end
     describe 'GET impact_factor' do
       it 'renders template and assigns variables' do
-        get :impact_factor, :id => Time.now.year.to_s
+        get :impact_factor, id: Time.now.year.to_s
         response.should render_template('impact_factor')
         assigns[:journals].should_not be_nil
         assigns[:missing_journals].should_not be_nil
@@ -74,20 +74,20 @@ describe AbstractsController do
     end
     describe 'GET year_list' do
       it 'needs an id and page or it is redirected' do
-        get :year_list, { :id => year, :page => '1' }
+        get :year_list, id: year, page: '1'
         response.should render_template('year_list')
         assigns[:abstracts].should_not be_nil
 
-        get :year_list, { :id => '2007' }
-        response.should redirect_to(abstracts_by_year_path(:id => '2007', :page => '1'))
+        get :year_list, id: '2007'
+        response.should redirect_to(abstracts_by_year_path(id: '2007', page: '1'))
 
-        get :year_list, { :id => '2008' }
-        response.should redirect_to(abstracts_by_year_path(:id => '2008', :page => '1'))
+        get :year_list, id: '2008'
+        response.should redirect_to(abstracts_by_year_path(id: '2008', page: '1'))
       end
     end
     describe 'GET full_year_list' do
       it 'renders template and assigns variables' do
-        get :full_year_list, :id => '2009'
+        get :full_year_list, id: '2009'
         response.should render_template('year_list')
         assigns[:abstracts].should_not be_nil
       end
@@ -101,18 +101,21 @@ describe AbstractsController do
     end
     describe 'GET tagged_abstracts' do
       it 'renders template and assigns variables' do
-        get :tagged_abstracts, { :id => 'disease', :page => '1' }
+        get :tagged_abstracts,  id: 'disease', page: '1'
         response.should render_template('tag')
         assigns[:abstracts].should_not be_nil
+      end
+      it 'redirects to the tagged_abstracts_abstract_path' do
+        get :tagged_abstracts,  id: 'disease'
+        response.should redirect_to tagged_abstracts_abstract_path(id: 'disease', page: '1')
       end
     end
     describe 'GET full_tagged_abstracts' do
       it 'renders template and assigns variables' do
-        get :full_tagged_abstracts, { :id => 'disease', :page => '1' }
+        get :full_tagged_abstracts, id: 'disease', page: '1'
         response.should render_template('tag')
         assigns[:abstracts].should_not be_nil
       end
     end
   end
-
 end

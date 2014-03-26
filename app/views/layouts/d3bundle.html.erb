@@ -25,34 +25,21 @@
     </style>
   </head>
   <body>
+    <%= render 'shared/debug_section' %>
     <div id="main" class="autoclear">
-      <div id="banner">
-        <a href="<%= LatticeGridHelper.home_url %>">
-          <%= image_tag "#{lattice_grid_instance}/pageheader.jpg", options={:alt=>LatticeGridHelper.header_title} %>
-        </a>
-      </div>
       <div id="results" class="notice">
         <%= flash[:notice] %>
         <%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %>
       </div>
-      <div id="title">
-        <%= link_to( LatticeGridHelper.header_title.html_safe, current_abstracts_url) -%>
+      <div id='title'>
+        <%= link_to(image_tag('latticegrid.png', size: '65x93'), root_path) -%>
+        <%= link_to(LatticeGridHelper.header_title.html_safe, current_abstracts_url, id: 'title_link') -%>
       </div>
-      <div id="search">
-        <% if LatticeGridHelper.allow_profile_edits? %>
-          <span style="float:right;">
-            <%= link_to("login", profiles_url) %>
-          </span>
-        <% end %>
-        <span style="float:left; margin-left:-105px;">
-          <%= link_to("LatticeGrid Home", abstracts_url) %>
-        </span>
-        &nbsp;<br/>
-      </div>
-      <div id="niceline"></div>
+      <%= render 'shared/search' %>
       <div id="content">
         <%= yield  %>
       </div> <!-- end of content -->
+      <%= render 'shared/banner' %>
     </div> <!-- end of main -->
   </body>
 </html>

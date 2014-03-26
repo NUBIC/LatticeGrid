@@ -69,7 +69,7 @@ class StudiesController < ApplicationController
   end
 
   def org
-    @javascripts_add = ['jquery-ui.min']
+    @javascripts_add = %w(jquery-ui.min)
     @stylesheets = ['publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui', 'ddsmoothmenu', 'ddsmoothmenu-v']
     if params[:id].nil?
       redirect_to current_abstracts_url
@@ -109,7 +109,7 @@ class StudiesController < ApplicationController
   end
 
   def listing
-    @javascripts_add = ['jquery-1.8.3', 'jquery.tablesorter.min', 'jquery.fixheadertable.min']
+    @javascripts_add = %w(jquery.tablesorter.min jquery.fixheadertable.min)
     @investigators = Investigator.where('total_studies > 0').order('total_studies desc')
     @css =  '#main {width:1500px;}'
     respond_to do |format|
@@ -129,7 +129,7 @@ class StudiesController < ApplicationController
     if params[:start_date].nil? || params[:end_date].nil?
       redirect_to current_abstracts_url
     else
-      @javascripts_add = ['jquery-1.8.3', 'jquery.tablesorter.min', 'jquery.fixheadertable.min', 'jquery-ui.min']
+      @javascripts_add = %w(jquery.tablesorter.min jquery.fixheadertable.min jquery-ui.min)
       @stylesheets = ['publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui', 'ddsmoothmenu', 'ddsmoothmenu-v']
 
       @faculty = Investigator.find_investigators_in_list(params[:investigator_ids]).sort { |x, y| x.last_name + ' ' + x.first_name <=> y.last_name + ' ' + y.first_name }

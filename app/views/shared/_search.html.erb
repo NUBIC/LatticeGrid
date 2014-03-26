@@ -1,10 +1,28 @@
 <div id="search">
   <% if LatticeGridHelper.allow_profile_edits? %>
-    <span style="float:right;">
-      <%= link_to('Login', profiles_url) %>
-    </span>
+    <% if current_user.blank? %>
+      <span style="float:right;">
+        <%= link_to('Login', profiles_url) %>
+      </span>
+    <% else %>
+      <span style="float:right; z-index:3;">
+        <% if is_admin? %>
+          <%= link_to("Admin: Edit", profiles_url) %>
+          <%= link_to("Splash", splash_profiles_url) %>
+          <%= link_to("List All", list_investigators_profiles_url) %>
+          <%= link_to("Summaries", list_summaries_profiles_url) %>
+          <%= link_to("Edit", edit_investigators_profiles_url) %>
+        <% else %>
+          <%= link_to("Edit your research profile", current_user.blank? ? profiles_url : edit_profile_url(current_user.username)) %>
+          <%= link_to("Edit your publications", current_user.blank? ? profiles_url : edit_pubs_profile_url(current_user.username)) %>
+        <% end %>
+        <div style='text-align: right; margin-top: 1em;'>
+          <%= link_to("#{current_user.username}&nbsp;Logout".html_safe, logout_url) %>
+        </div>
+      </span>
+    <% end %>
   <% end %>
-  <%= form_tag('/welcome/search', { :method => :get, :id => 'search_form2' }) do %>
+  <%= form_tag(welcome_search_path, { :method => :get, :id => 'search_form2' }) do %>
     <span id='search_text'>
       <%= text_field_tag(:keywords, params[:keywords],
                          :size => 45,

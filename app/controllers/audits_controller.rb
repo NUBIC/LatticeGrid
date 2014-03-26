@@ -106,7 +106,7 @@ class AuditsController < ApplicationController
 
   def render_view_activities
     @without_entries = Investigator.complement_of_ids(@logs.map(&:investigator_id).compact.sort.uniq) unless defined?(@without_entries)
-    @javascripts_add = ['prototype', 'scriptaculous', 'jquery-1.8.3', 'swfobject', 'jquery.tablesorter.min']
+    @javascripts_add = %w(swfobject jquery.tablesorter.min)
     @include_params = true unless params[:params].blank?
     respond_to do |format|
       format.html { render :view_activities, layout: 'printable' }

@@ -95,13 +95,12 @@ class AbstractsController < ApplicationController
       year = handle_year
       redirect_to abstracts_by_year_url(id: year, page: '1')
     elsif page
-      redirect_to "/abstracts/#{params[:id]}/tagged_abstracts/?page=#{page}"
+      redirect_to tagged_abstracts_abstract_path(id: params[:id], page: page)
     else
       @do_pagination = '1'
       params[:id] = URI.unescape(params[:id])
       mesh_terms = MeshHelper.do_mesh_search(params[:id])
       mesh_names = mesh_terms.map(&:name)
-
       @abstracts = Abstract._paginate_tagged_with(mesh_names,
                                                   order: 'year DESC, authors ASC',
                                                   page: params[:page],
