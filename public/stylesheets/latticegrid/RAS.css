@@ -3,7 +3,7 @@ h1, h2, .h2, h3, .h3 {
     font-family: Arial, Helvetica, Geneva, Sans-serif;
     font-size: 13px;
     font-weight: bold;
-	color: #183470;
+	color: #111;
     line-height: 140%;
     padding-bottom: 0px;
     margin-bottom: 2px;
@@ -17,7 +17,7 @@ a:visited { color: #666; }
 	padding-top: 0.125em;
 	padding-bottom: 0px;
 	vertical-align:top;
-	color:        #183470;
+	color:        #222;
 	line-height: 14px;
 }
 
@@ -25,7 +25,7 @@ a:visited { color: #666; }
     font-family: Arial, Helvetica, Geneva, Sans-serif;
     font-size: 15px;
     font-weight: bold;
-    color: #183470;
+    color: #111;
     line-height: 140%;
     padding-bottom: 0px;
     margin-bottom: 2px;
@@ -33,38 +33,46 @@ a:visited { color: #666; }
     padding-top: 0px;
 }
 
+td.list-left, th.list-left {
+	color:        #222;
+}
+
 td.list-title-left {
 	padding-left: 1em;
-	color:        #183470;
+	color:        #CC330D;
 	font-weight:  bold;
+}
+
+#listing a {
+	color:        #222;
 }
 
 #listing .list-heading {
 	background-color: #CCC;
-	color:        #183470;
+	color:        #CC330D;
 	font-weight:  bold;
 }
 
 #listing .list-title {
-	color:        #183470;
+	color:        #CC330D;
 	font-weight:  bold;
 }
 
 #listing .list-title-center {
-	color:        #183470;
+	color:        #CC330D;
 	font-weight:  bold;
 	text-align: center;
 }
 
 #listing .list-title-right {
-	color:        #183470;
+	color:        #CC330D;
 	font-weight:  bold;
 	padding-right: 1em;
 	text-align: right;
 }
 
 #listing .list-title-right {
-	color:        #183470;
+	color:        #CC330D;
 	font-weight:  bold;
 	padding-right: 1em;
 	text-align: right;
@@ -72,23 +80,28 @@ td.list-title-left {
 
 /* --- HEADER --- */
 #banner {
-	border-bottom: 1px solid #183470;
+	border-bottom: 1px solid #CC330D;
 	margin-left:auto;
 	margin-right:auto;
-	width:1180px;
-	height:69px;
+	width:1200px;
+	height:70px;
 /*	background: url(../images/pageheader.jpg) ; */
 	vertical-align:bottom;
     text-align: center;
 	font-size:12px;
 	display: block;}
 
+#results {
+	margin: 0px;
+	padding: 0px;
+	display: block;}
+
 #main {
-	border: 1px #183470 solid;
+	border: 1px #CC330D solid;
 	margin-left: auto;
 	margin-right: auto;
 	padding: 0px;
-	width: 1180px;
+	width: 1200px;
 	height:auto;
 	vertical-align: top;
 	background-color: #FFFFFF;
@@ -101,24 +114,25 @@ td.list-title-left {
 	padding: 5px;
 	vertical-align: top;
 	width: 160px;
-	height: 790px;
+	height: 900px;
 	color: #000;
-	background-color: #CCC;
+	background-color: #FFF;
 }
 
 #title {
   margin: 0px;
-  padding: 5px;
+  height: 0px;
+  padding: 0px;
   padding-left: 20px;
-  padding-bottom: 10px;
-  font:  180% sans-serif;
-  color: #183470;
-  background-color: lightyellow;
+  padding-bottom: 0px;
+  font:  0px sans-serif;
+  color: #CC330D;
+  background-color: #CC330D;
 }
 
 #title a {
-  padding: 5px;
-  color: #183470;
+  padding: 0px;
+  color: #CC330D;
   text-decoration:none;
   background: none;
 }
@@ -127,25 +141,25 @@ td.list-title-left {
   padding: 3px;
   padding-left: 115px;
   margin: 0px;
-    color: #fff;
+    color: #FFF;
     font-size: 12px;
-    background-color: #09286B;
+    background-color: #CC330D;
 }
 
 #search a:hover { background-color: #CCC; }
 
 #niceline {
   padding-left: 50px;
-  height: 8px;
+  height: 0px;
   margin: 0px;
     color: #fff;
     font-size: 11px;
-    background-color: #CCC;
+    background-color: #FFF;
 }
 
 
 .ddsmoothmenu-v ul li a:link, .ddsmoothmenu-v ul li a:visited, .ddsmoothmenu-v ul li a:active{
-background: #09286B; /*background of menu items (default state)*/
+background: #CC330D; /*background of menu items (default state)*/
 color: white;
 }
 
@@ -161,5 +175,37 @@ color: white;
 }
 
 .ddsmoothmenu-v ul li ul li.current, .ddsmoothmenu-v ul li ul li.current a {
-	background-color: #09286B;
+	background-color: #CC330D;
 }
+
+/*** for DIGG style pagination  ***/
+.pagination {
+    padding: 3px;
+    margin: 3px;
+  }
+  .pagination a {
+    padding: 2px 5px 2px 5px;
+    margin: 2px;
+    border: 1px solid #CC330D;
+    text-decoration: none;
+    color: #CC330D;
+  }
+ .pagination a:hover, .pagination a:active {
+    border: 1px solid #CC330D;
+    color: #ddd;
+  }
+   .pagination span.current {
+    padding: 2px 5px 2px 5px;
+    margin: 2px;
+    border: 1px solid #CC330D;
+    font-weight: bold;
+    background-color: #CC330D;
+    color: #FFF;
+  }
+  .pagination span.disabled {
+    padding: 2px 5px 2px 5px;
+    margin: 2px;
+    border: 1px solid #eee;
+    color: #ddd;
+  }
+

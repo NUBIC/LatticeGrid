@@ -71,7 +71,7 @@ var svglinks = svg.append("g");
 var styles = svg.append("defs")
       .append("style")
       	.attr("type", "text/css")
-      	.text(".node circle {fill: #fff;  stroke: steelblue; stroke-width: 1.5px; } .node, .nodeText { font: 14px Arial Narrow, Arial,sans-serif;} .link {fill: none; stroke: #D0F5A9; stroke-width: 1.5px; }");
+      	.text(".node circle {fill: #fff;  stroke: steelblue; stroke-width: 1.5px; } .node, .nodeText { font: 14px Arial Narrow, Arial,sans-serif;} .link {fill: none; stroke: #B0DE7F; stroke-width: 1.5px; }");
 
 
 var div = d3.select("body").append("div")   
@@ -121,11 +121,11 @@ function showTooltip(d){
     
   var str = "<b>" + d.name + "</b><br/>";
   str += d.organization + "<br/>";
-  str += "Number of RAS publications: " + d.publications + "<br/>";
+  str += "Number of publications: " + d.publications + "<br/>";
   str += "Summary: " + d.summary + "<br/>";
   div.html(str)
     .style("left", (d3.event.pageX + 15) + "px")     
-    .style("top", 50 + "px");
+    .style("top", 200 + "px");
 }
 
 function update(root, graphtype){
