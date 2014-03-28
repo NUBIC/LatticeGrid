@@ -60,10 +60,10 @@ my_env = Rails.env
 my_env = 'home' if public_path =~ /Users/ 
 case 
   when my_env == 'home' then 'localhost:3000'
-  when my_env == 'development' then 'rails-staging2.nubic.northwestern.edu'
-  when my_env == 'staging' then 'rails-staging2.nubic.northwestern.edu'
-  when my_env == 'production' then 'latticegrid.aasurg.org'
-  else 'latticegrid.aasurg.org'
+  when my_env == 'development' then 'ras.ucsf.edu'
+  when my_env == 'staging' then 'ras.ucsf.edu'
+  when my_env == 'production' then 'ras.ucsf.edu'
+  else 'ras.ucsf.edu'
 end 
 end
 
@@ -71,11 +71,11 @@ def LatticeGridHelper.curl_protocol
 my_env = Rails.env
 my_env = 'home' if public_path =~ /Users/ 
 case 
-  when my_env == 'home' then 'http'
-  when my_env == 'development' then 'http'
-  when my_env == 'staging' then 'http'
-  when my_env == 'production' then 'http'
-  else 'http'
+  when my_env == 'home' then 'http:'
+  when my_env == 'development' then 'https'
+  when my_env == 'staging' then 'https'
+  when my_env == 'production' then 'https'
+  else 'https'
 end 
 end
 
