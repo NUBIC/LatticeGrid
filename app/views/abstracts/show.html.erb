@@ -1,66 +1,105 @@
 <div id="abstractcontent">
-<div id="publication">
-  <div id="authors">
-  <% if @publication.has_full %>
-    <%= highlight_investigator(@publication, false, false, @publication.full_authors).html_safe %>
-  <% else %>
-    <%= highlight_investigator(@publication).html_safe %>
-  <% end %>
-  </div>
-  <div id="title">
-    <%= @publication.title %>
-  </div>
-  <div id="journal">
-    <%= journal_volume_and_pages(@publication, false).html_safe %>
-  </div>
-  <div id="abstract">
-    <b>Abstract</b><br/>
-    <%= @publication.abstract %>
-  </div>
-  <div id="mesh">
-    <b>MeSH terms</b><br/>
-    <% @publication.tag_list.each do |tag| %>
-       <%= link_to tag, tagged_abstracts_abstract_url(URI.escape(tag)), :class => 'nube2' %>
+  <div id="publication">
+    <div id="authors" class='abstract_section'>
+      <% if @publication.has_full %>
+        <%= highlight_investigator(@publication, false, false, @publication.full_authors).html_safe %>
+      <% else %>
+        <%= highlight_investigator(@publication).html_safe %>
+      <% end %>
+    </div>
+    <div id="title" class='abstract_section'>
+      <%= @publication.title %>
+    </div>
+    <div id="journal" class='abstract_section'>
+      <%= journal_volume_and_pages(@publication, false).html_safe %>
+    </div>
+    <div id="abstract" class='abstract_section'>
+      <dl>
+        <dt>Abstract</dt>
+        <dd>
+          <%= @publication.abstract %>
+        </dd>
+      </dl>
+    </div>
+    <div id="mesh" class='abstract_section'>
+      <dl>
+        <dt>MeSH terms</dt>
+        <dd>
+          <% @publication.tag_list.each do |tag| %>
+            <%= link_to tag, tagged_abstracts_abstract_url(URI.escape(tag)), :class => 'nube2' %>
+          <% end %>
+        </dd>
+      </dl>
+    </div>
+    <div id="import" class='abstract_section'>
+      <dl>
+        <dt>Note</dt>
+        <dd>
+          <div class='abstract_import_note'>
+            Automated medline import.
+          </div>
+          <div class='abstract_import_note'>
+            Electronic deposit: <%= @publication.deposited_date %>.
+          </div>
+          <div class='abstract_import_note'>
+            Electronic publication: <%= @publication.electronic_publication_date %>.
+          </div>
+          <div class='abstract_import_note'>
+            Publication Date: <%= @publication.publication_date %>.
+          </div>
+          <div class='abstract_import_note'>
+            Publication status: <%= @publication.publication_status %>.
+          </div>
+          <div class='abstract_import_note'>
+            Status: <%= @publication.status %>.
+          </div>
+        </dd>
+      </dl>
+    </div>
+    <div id="pmid" class='abstract_section'>
+      <dl>
+        <dt>PubMed ID</dt>
+        <dd>
+          <%= @publication.pubmed %>
+        </dd>
+      </dl>
+    </div>
+    <div id="pmcid" class='abstract_section'>
+      <dl>
+        <dt>PubMed Central ID</dt>
+        <dd>
+          <%= @publication.pubmedcentral.blank? ? "N/A" : @publication.pubmedcentral %>
+        </dd>
+      </dl>
+    </div>
+    <div id="doi" class='abstract_section'>
+      <dl>
+        <dt>Digital Object Identifier (DOI)</dt>
+        <dd>
+          <%= @publication.doi.blank? ? "N/A" : @publication.doi %>
+        </dd>
+      </dl>
+    </div>
+    <% unless @publication.pubmed.blank? %>
+      <div class="linkout" class='abstract_section'>
+        <%= link_to_pubmed('Go to PubMed entry', @publication) %>
+      </div>
     <% end %>
+    <% unless @publication.pubmedcentral.blank? %>
+      <div class="linkout" class='abstract_section'>
+        <%= link_to_pubmedcentral('Go to PubMedCentral entry', @publication) %>
+      </div>
+    <% end %>
+    <% unless @publication.doi.blank? %>
+      <div class="linkout" class='abstract_section'>
+        <%= link_to_doi('Go to DOI', @publication) %>
+      </div>
+    <% end %>
+    <div class="linkout" class='abstract_section'>
+      <%= link_to('View citation formatted for EndNote', endnote_abstract_url(@publication) ) %>
+    </div>
   </div>
-  <div id="import">
-    <b>Note</b><br/>
-    Automated medline import. Electronic deposit: <%= @publication.deposited_date %>.Electronic publication: <%= @publication.electronic_publication_date %>. Publication Date: <%= @publication.publication_date %>. Publication status: <%= @publication.publication_status %>. Status: <%= @publication.status %>. <br/>
+  <div class='links'>
+    <%= link_to "Abstracts for year #{@year}", abstracts_by_year_url(:id => @year, :page=> 1) %>
   </div>
-  <div id="pmid">
-    <b>PubMed ID</b><br/>
-    <%= @publication.pubmed %>
-  </div>
-  <div id="pmcid">
-    <b>PubMed Central ID</b><br/>
-    <%= @publication.pubmedcentral.blank? ? "N/A" : @publication.pubmedcentral %>
-  </div>
-  <div id="doi">
-    <b>Digital Object Identifier (DOI)</b><br/>
-    <%= @publication.doi.blank? ? "N/A" : @publication.doi %>
-  </div>
-  <% unless @publication.pubmed.blank? %>
-  <div id="linkout">
-    <%= link_to_pubmed('Go to PubMed entry', @publication) %>
-  </div>
-  <% end %>
-  <% unless @publication.pubmedcentral.blank? %>
-  <div id="linkout">
-    <%= link_to_pubmedcentral('Go to PubMedCentral entry', @publication) %>
-  </div>
-  <% end %>
-  <% unless @publication.doi.blank? %>
-  <div id="linkout">
-    <%= link_to_doi('Go to DOI', @publication) %>
-  </div>
-  <% end %>
-
-  <div id="linkout">
-    <%= link_to('View citation formatted for EndNote', endnote_abstract_url(@publication) ) %>
-  </div>
-</div>
-
-
-<%= link_to 'Back', abstracts_by_year_url(:id => @year, :page=> 1) %>
-
 </div>

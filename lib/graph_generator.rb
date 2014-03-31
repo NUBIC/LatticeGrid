@@ -53,10 +53,10 @@ def graph_exists?( path, file_name, output_format )
 end
 
 def graph_no_data (g, message)
-  main        = g.add_node( "main", 
-                    :label=> message, 
-                    :URL => abstracts_url(), 
-                    :target=>'_top', 
+  main        = g.add_node( "main",
+                    :label=> message,
+                    :URL => abstracts_url(),
+                    :target=>'_top',
                     :shape => 'box',
                     :color => LatticeGridHelper.white_fill_color,
                     :fillcolor => LatticeGridHelper.white_fill_color,
@@ -109,7 +109,7 @@ def graph_new(program, gopts={}, nopts={}, eopts={})
   g = GraphViz::new( :G, :type => :graph, :use=>program)
   g[:overlap] = gopts[:overlap] || "orthoxy"
   g[:rankdir] = gopts[:rankdir] || "LR"
-  
+
   # set global node options
   g.node[:color]    = nopts[:color]     || "#3d0d4c"
   g.node[:style]    = nopts[:style]     || "filled"
@@ -124,7 +124,7 @@ def graph_new(program, gopts={}, nopts={}, eopts={})
   g.node[:height]   = nopts[:height]    || "0.1"
   g.node[:shape]    = nopts[:shape]     ||  "ellipse"
   g.node[:margin]   = nopts[:margin]    || "0.05"
-  
+
   # set global edge options
   g.edge[:color]     = eopts[:color]     || "#999999"
   g.edge[:len]       = eopts[:len]       || "1"
@@ -133,14 +133,15 @@ def graph_new(program, gopts={}, nopts={}, eopts={})
   g.edge[:fontname]  = eopts[:fontname]  || "Verdana"
   g.edge[:dir]       = eopts[:dir]       || "forward"
   g.edge[:arrowsize] = eopts[:arrowsize] || "0.0"
-  
+
   return g
 end
 
 
 def node_investigator_label(node_object)
+  return '' if node_object.blank?
   "#{node_object.name}: " +
-  "Publications: #{node_object.total_publications}; " + 
+  "Publications: #{node_object.total_publications}; " +
   "First author pubs: #{node_object.num_first_pubs}; " +
   "Last author pubs: #{node_object.num_last_pubs}; " +
   "intra-unit collab: #{node_object.num_intraunit_collaborators}; " +
@@ -149,7 +150,7 @@ end
 
 def node_award_label(node_object)
   "#{node_object.title}: " +
-  "Amount: #{node_object.total_amount}; " + 
+  "Amount: #{node_object.total_amount}; " +
   "Sponsor: #{node_object.sponsor_name}; " +
   "Sponsor type: #{node_object.sponsor_type_name}; " +
   (node_object.investigator_proposals.blank? ? " " : "Collaborators: #{node_object.investigator_proposals.length}; " )
@@ -166,10 +167,10 @@ def update_node(node_object, opts)
 end
 
 def set_node_defaults_investigator(investigator, aopts)
-  aopts[:URL]       = aopts[:URL]       || show_investigator_url(investigator.username, 1)
+  aopts[:URL]       = aopts[:URL]       || investigator.nil? ? nil : show_investigator_url(investigator.username, 1)
   aopts[:target]    = aopts[:target]    || "_top"
   aopts[:tooltip]   = aopts[:tooltip]   || node_investigator_label(investigator)
-  aopts[:label]     = aopts[:label]     || investigator.name
+  aopts[:label]     = aopts[:label]     || investigator.try(:name)
   aopts[:fontcolor] = aopts[:fontcolor] || "#3d0d4c"
   aopts[:fillcolor] = aopts[:fillcolor] || LatticeGridHelper.root_fill_color
   aopts[:color]     = aopts[:color]     || "#904040"
@@ -178,12 +179,12 @@ def set_node_defaults_investigator(investigator, aopts)
 end
 
 def graph_addroot(graph, root, aopts={} )
-  root_node = graph.get_node( root.id.to_s )
-  if root_node.nil? 
-    root_node = graph.add_node( root.id.to_s)
+  root_node = graph.get_node( root.try(:id).to_s )
+  if root_node.nil?
+    root_node = graph.add_node( root.try(:id).to_s)
     aopts = set_node_defaults_investigator(root, aopts)
    end
-  update_node(root_node, aopts) 
+  update_node(root_node, aopts)
 end
 
 def graph_newroot(graph, root, opts={} )
@@ -202,9 +203,9 @@ def graph_secondaryroot(graph, root, opts={})
 end
 
 def graph_addleaf(graph, leaf, opts={} )
-  add_leaf = graph.get_node( leaf.id.to_s )
-  if add_leaf.nil? 
-    opts[:URL]       = opts[:URL]       || show_member_graphviz_url(leaf.username)
+  add_leaf = graph.get_node( leaf.try(:id).to_s )
+  if add_leaf.nil?
+    opts[:URL]       = opts[:URL]       || leaf.nil? ? nil : show_member_graphviz_url(leaf.username)
     opts[:fontcolor] = opts[:fontcolor] || "#47008F"
     opts[:fillcolor] = opts[:fillcolor] || LatticeGridHelper.first_degree_other_fill_color
     opts[:color]     = opts[:color]     || "#3d0d4c"
@@ -215,7 +216,7 @@ end
 
 def graph_addawardleaf(graph, leaf, opts={} )
   add_leaf = graph.get_node( leaf.id.to_s )
-  if add_leaf.nil? 
+  if add_leaf.nil?
     opts[:URL]       = opts[:URL]       || ""
     opts[:label]     = opts[:label]     || leaf.title
     opts[:tooltip]   = opts[:tooltip]   || node_award_label(leaf)
@@ -229,30 +230,30 @@ end
 
 def graph_addedge(graph, parent, child, url, tooltip, label, weight )
   gedge = graph.add_edge( parent, child,
-              :edgeURL => "#{url}", 
-              :edgetarget=>'_top', 
-              :edgetooltip => tooltip, 
+              :edgeURL => "#{url}",
+              :edgetarget=>'_top',
+              :edgetooltip => tooltip,
               :minlen => '0.15',
-              :label => "#{label}", 
-              :labelURL => url, 
-              :labeltarget=>'_top', 
-              :labeltooltip => tooltip, 
+              :label => "#{label}",
+              :labelURL => url,
+              :labeltarget=>'_top',
+              :labeltooltip => tooltip,
               :weight => "#{weight}"  )
 end
 
 def edge_label(connection, root, leaf)
-  "#{connection.publication_cnt} shared publications between #{leaf.name} and #{root.name}; " + 
-  "MeSH similarity score: #{connection.mesh_tags_ic.round}; " + 
+  "#{connection.publication_cnt} shared publications between #{leaf.name} and #{root.name}; " +
+  "MeSH similarity score: #{connection.mesh_tags_ic.round}; " +
   "tags: "+ trunc_and_join_array((root.tag_list & leaf.tag_list))
 end
 
 def edge_investigator_label(investigator, connection, root, leaf)
   if connection.blank?
-    "#{investigator.shared_publication_count} shared between #{leaf.name} and #{root.name}; " + 
+    "#{investigator.shared_publication_count} shared between #{leaf.name} and #{root.name}; " +
      "tags: "+ trunc_and_join_array((root.tag_list & leaf.tag_list))
   else
-    "#{investigator.shared_publication_count} shared, total of #{connection.publication_cnt} shared publications between #{leaf.name} and #{root.name}; " + 
-    "MeSH similarity score: #{connection.mesh_tags_ic.round}; " + 
+    "#{investigator.shared_publication_count} shared, total of #{connection.publication_cnt} shared publications between #{leaf.name} and #{root.name}; " +
+    "MeSH similarity score: #{connection.mesh_tags_ic.round}; " +
     "tags: "+ trunc_and_join_array((root.tag_list & leaf.tag_list))
   end
 end
@@ -262,7 +263,7 @@ def edge_award_label(leaf)
 end
 
 def org_edge_label(root, leaf, shared_pubs)
-  "#{shared_pubs.length} shared publications between #{leaf.name} and #{root.name}; " 
+  "#{shared_pubs.length} shared publications between #{leaf.name} and #{root.name}; "
 end
 
 def graph_add_org_node(program, g, root, leaf, shared_pubs, mesh_only=false, node_opts={}, edege_opts={} )
@@ -271,7 +272,7 @@ def graph_add_org_node(program, g, root, leaf, shared_pubs, mesh_only=false, nod
   return g if leaf.nil?
   root_node = g.get_node( root.id.to_s )
   return g if root_node.nil?
-  if ! @graph_edges.include?("#{root.id.to_s}_#{leaf.id.to_s}") 
+  if ! @graph_edges.include?("#{root.id.to_s}_#{leaf.id.to_s}")
     leaf_node = g.get_node( leaf.id.to_s )
     nopts = node_opts.dup
     leaf_node = graph_addleaf(g, leaf, nopts) if leaf_node.nil?  # leaf_node = graph_addleaf(g, leaf, node_opts)
@@ -286,18 +287,19 @@ def graph_add_org_node(program, g, root, leaf, shared_pubs, mesh_only=false, nod
 end
 
 def graph_add_node(program, g, root, root_node, connection, unit_list=[], mesh_only=false, node_opts={}, edege_opts={} )
-#    g.add_node(plant[0]).label = plant[1]+"\\n"+ plant[2]+", "+plant[3]+"\\n("+plant[0]+")"
   @graph_edges ||= {}
   return g if connection.nil?
   return g if root.id == connection.colleague_id
-  if ! @graph_edges.include?("#{root.id.to_s}_#{connection.colleague_id.to_s}") 
+  if !@graph_edges.include?("#{root.id.to_s}_#{connection.colleague_id.to_s}")
     leaf = connection.colleague
-    leaf_node = g.get_node( leaf.id.to_s )
-    if leaf_node.nil? then # leaf_node = graph_addleaf(g, leaf, node_opts) 
+    leaf_node = g.get_node( leaf.try(:id).to_s )
+    if leaf_node.nil? then # leaf_node = graph_addleaf(g, leaf, node_opts)
       nopts = node_opts.dup
-      intersection_unit_list = (unit_list & leaf.unit_list).compact
+      lists = unit_list
+      lists << leaf.unit_list if leaf
+      intersection_unit_list = lists.compact
       if intersection_unit_list.length == 0
-        nopts[:shape] = "doubleoctagon" 
+        nopts[:shape] = "doubleoctagon"
         if nopts[:fillcolor].blank? # first degree other
           nopts[:fillcolor] = LatticeGridHelper.first_degree_other_fill_color
         else #second degree member
@@ -310,10 +312,12 @@ def graph_add_node(program, g, root, root_node, connection, unit_list=[], mesh_o
           nopts[:fillcolor] = LatticeGridHelper.second_degree_fill_color
         end
       end
-      leaf_node = graph_addleaf(g, leaf, nopts) 
+      leaf_node = graph_addleaf(g, leaf, nopts)
     end
-    @graph_edges << "#{root.id.to_s}_#{leaf.id.to_s}"
-    @graph_edges << "#{leaf.id.to_s}_#{root.id.to_s}"
+    if root && leaf
+      @graph_edges << "#{root.id.to_s}_#{leaf.id.to_s}"
+      @graph_edges << "#{leaf.id.to_s}_#{root.id.to_s}"
+    end
     tooltiptext = edge_label(connection, root, leaf)
     label = connection.publication_cnt
     weight = (mesh_only or connection.publication_cnt == 0) ? 3000/(connection.mesh_tags_ic+500) : connection.publication_cnt
@@ -327,14 +331,14 @@ def graph_add_investigator_node(program, g, root, root_node, investigator, unit_
   @graph_edges ||= {}
   return g if investigator.nil?
   return g if root.id == investigator.id
-  if ! @graph_edges.include?("#{root.id.to_s}_#{investigator.id.to_s}") 
+  if ! @graph_edges.include?("#{root.id.to_s}_#{investigator.id.to_s}")
     leaf = investigator
     leaf_node = g.get_node( leaf.id.to_s )
-    if leaf_node.nil? then # leaf_node = graph_addleaf(g, leaf, node_opts) 
+    if leaf_node.nil? then # leaf_node = graph_addleaf(g, leaf, node_opts)
       nopts = node_opts.dup
       intersection_unit_list = (unit_list & leaf.unit_list).compact
       if intersection_unit_list.length == 0
-        nopts[:shape] = "doubleoctagon" 
+        nopts[:shape] = "doubleoctagon"
         if nopts[:fillcolor].blank? # first degree other
           nopts[:fillcolor] = LatticeGridHelper.first_degree_other_fill_color
         else #second degree member
@@ -347,13 +351,13 @@ def graph_add_investigator_node(program, g, root, root_node, investigator, unit_
           nopts[:fillcolor] = LatticeGridHelper.second_degree_fill_color
         end
       end
-      leaf_node = graph_addleaf(g, leaf, nopts) 
+      leaf_node = graph_addleaf(g, leaf, nopts)
     end
     @graph_edges << "#{root.id.to_s}_#{leaf.id.to_s}"
     @graph_edges << "#{leaf.id.to_s}_#{root.id.to_s}"
     connection = InvestigatorColleague.first(:conditions=>["investigator_colleagues.investigator_id = :investigator_id and investigator_colleagues.colleague_id = :colleague_id",
       {:investigator_id => investigator.id, :colleague_id => root.id}])
-      
+
     tooltiptext = edge_investigator_label(investigator, connection, root, leaf)
     label = investigator.shared_publication_count
     weight = investigator.shared_publication_count
@@ -412,11 +416,11 @@ def graph_add_award_node(program, g, root, root_node, award, mesh_only=false, no
 #    g.add_node(plant[0]).label = plant[1]+"\\n"+ plant[2]+", "+plant[3]+"\\n("+plant[0]+")"
   @graph_edges ||= {}
   return g if award.nil?
-  if ! @graph_edges.include?("#{root.id.to_s}_#{award.id.to_s}") 
+  if ! @graph_edges.include?("#{root.id.to_s}_#{award.id.to_s}")
     award_node = g.get_node( award.id.to_s )
-    if award_node.nil? then  
+    if award_node.nil? then
       nopts = node_opts.dup
-      award_node = graph_addawardleaf(g, award, nopts) 
+      award_node = graph_addawardleaf(g, award, nopts)
     end
     @graph_edges << "#{root.id.to_s}_#{award.id.to_s}"
     @graph_edges << "#{award.id.to_s}_#{root.id.to_s}"
@@ -433,11 +437,11 @@ def graph_add_award_investigator_node(program, g, root, root_node, investigator,
 #    g.add_node(plant[0]).label = plant[1]+"\\n"+ plant[2]+", "+plant[3]+"\\n("+plant[0]+")"
   @graph_edges ||= {}
   return g if investigator.nil?
-  if ! @graph_edges.include?("#{root.id.to_s}_#{investigator.id.to_s}") 
+  if ! @graph_edges.include?("#{root.id.to_s}_#{investigator.id.to_s}")
     leaf_node = g.get_node( investigator.id.to_s )
-    if leaf_node.nil? then # leaf_node = graph_addleaf(g, leaf, node_opts) 
+    if leaf_node.nil? then # leaf_node = graph_addleaf(g, leaf, node_opts)
       nopts = node_opts.dup
-      leaf_node = graph_addleaf(g, investigator, nopts) 
+      leaf_node = graph_addleaf(g, investigator, nopts)
     end
     @graph_edges << "#{root.id.to_s}_#{investigator.id.to_s}"
     @graph_edges << "#{investigator.id.to_s}_#{root.id.to_s}"

@@ -435,8 +435,8 @@ class CytoscapeController < ApplicationController
       words = WordFrequency.wordle_distribution(words)
     end
     respond_to do |format|
-      format.json { render layout: false, json: words.as_json }
-      format.js   { render layout: false, json: words.as_json }
+      format.json { render layout: false, json: words.flatten.as_json }
+      format.js   { render layout: false, json: words.flatten.as_json }
     end
   end
 

@@ -6,7 +6,7 @@
     <meta name="keywords" content="LatticeGrid social network analysis, pubmed, collaborations">
     <!-- for uEditor : @javascripts ||= [ "jquery.min","uEditor"] -->
     <!-- javascript files -->
-    <% @javascripts ||= %w(excanvas-r48 canvastext mootools-1.2.5-core-nc mootools-1.2-more moowheel ddsmoothmenu2) %>
+    <% @javascripts ||= %w(excanvas-r48 canvastext mootools-1.2.5-core-nc mootools-1.2-more moowheel jquery-1.8.3 ddsmoothmenu2) %>
     <% @javascripts += @javascripts_add if defined?(@javascripts_add) %>
     <% @javascripts.each do |js| %>
       <%= javascript_include_tag js %>
@@ -24,6 +24,7 @@
       </script>
     <% end %>
     <%= LatticeGridHelper.google_analytics.html_safe -%>
+    <%= render 'shared/menu_scripts', :menu_nodes => @menu_nodes %>
   </head>
   <body>
     <%= render 'shared/debug_section' %>

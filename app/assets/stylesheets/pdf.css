@@ -326,7 +326,7 @@ td.list-title-right {
   margin-top: 15px;
 }
 
-#linkout {
+.linkout {
   border: 1px indigo solid;
   padding: 3px;
   padding-left: 10px;
