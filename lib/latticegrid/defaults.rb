@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 require 'publication_utilities'
 require 'link_helper'
 
