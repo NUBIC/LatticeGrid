@@ -47,6 +47,18 @@ ol li {
     padding-bottom: 15px;
 }
 
+dl {
+  margin: 0;
+}
+
+dt {
+  font-weight: bold;
+}
+
+dd {
+  margin-left: 1em;
+}
+
 pre {
   background-color: #eee;
   padding: 10px;
@@ -549,9 +561,18 @@ input:-moz-placeholder {
   padding-left: 15px;
   padding-right: 5px;
   margin-right: 30px;
-  height:auto;
+  height: auto;
   vertical-align: top;
   background-color: #FFFFFF;
+}
+
+#abstractcontent #title {
+  padding: 0;
+  font-size: 1.25em;
+}
+
+.abstract_section {
+  padding-top: 0.5em !important;
 }
 
 #endnotecontent {
@@ -592,10 +613,13 @@ input:-moz-placeholder {
   margin-top: 15px;
 }
 
-#linkout {
+.links {
+  margin-top: 1em;
+}
+
+.linkout {
   border: 1px indigo solid;
-  padding: 3px;
-  padding-left: 10px;
+  padding: 0.5em 1em;
   margin-top: 15px;
 }
 
