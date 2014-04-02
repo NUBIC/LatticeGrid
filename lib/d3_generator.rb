@@ -49,7 +49,6 @@ def d3_all_investigators_graph(program=nil)
   return graph_array
 end
 
-
 def d3_master_investigator_graph(investigator)
   if investigator.blank?
     return ['']
@@ -169,7 +168,6 @@ def d3_unit_investigator_imports(unit, investigator, faculty_ids)
   return [''] if the_arry.blank?
   return the_arry
 end
-
 
 def d3_investigator_imports(investigator, coauthor_ids, primary_name)
   the_arry = []

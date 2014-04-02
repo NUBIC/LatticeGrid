@@ -179,11 +179,11 @@ def set_node_defaults_investigator(investigator, aopts)
 end
 
 def graph_addroot(graph, root, aopts={} )
-  root_node = graph.get_node( root.try(:id).to_s )
+  root_node = graph.get_node(root.try(:id).to_s)
   if root_node.nil?
-    root_node = graph.add_node( root.try(:id).to_s)
-    aopts = set_node_defaults_investigator(root, aopts)
-   end
+    root_node = graph.add_node(root.try(:id).to_s)
+    aopts = set_node_defaults_investigator(root, aopts) if root.is_a? Investigator
+  end
   update_node(root_node, aopts)
 end
 
