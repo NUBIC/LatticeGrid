@@ -21,6 +21,11 @@
   </script>
   <% end %>
   <%= LatticeGridHelper.google_analytics -%>
+  <% if lattice_grid_instance == 'RAS' %>
+  <script type="text/javascript" language="JavaScript">
+    document.domain = "nciphub.org";
+  </script>
+  <% end %>
 </head>
 <body>
 <div id="main" class="autoclear">

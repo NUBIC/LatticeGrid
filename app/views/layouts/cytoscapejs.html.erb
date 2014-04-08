@@ -12,6 +12,11 @@
 	<%= stylesheet_link_tag @stylesheets %>
 	<link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
   <%= LatticeGridHelper.google_analytics -%>
+  <% if lattice_grid_instance == 'RAS' %>
+  <script type="text/javascript" language="JavaScript">
+    document.domain = "nciphub.org";
+  </script>
+  <% end %>
 </head>
 <body>
 
@@ -42,6 +47,12 @@
 			<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://informatics.northwestern.edu/") %> 
 		 	<%= link_to( "Built by NUBIC", "http://informatics.northwestern.edu/") %>
 		</div>
+		<br/>
+		<% if lattice_grid_instance == 'RAS' %>
+		<div id="ti">
+		   <a href="http://ti.ucsf.edu/"><img alt="Ti-logo" height="56" src="/images/ti-logo.png" width="150" /></a>  <br/>
+		   <a href="http://ti.ucsf.edu/">Supported by Translational Informatics</a>
+		 </div>
 		<p></p>
 	</div> <!-- end of side -->
 	<div id="maincontent">
