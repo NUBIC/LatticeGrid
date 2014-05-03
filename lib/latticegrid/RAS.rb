@@ -52,7 +52,7 @@ def LatticeGridHelper.GetDefaultSchool()
 end
 
 def LatticeGridHelper.home_url
-  "http://www.cancer.gov/"
+  "https://nciphub.org/groups/rascentral"
 end
 
 def LatticeGridHelper.curl_host

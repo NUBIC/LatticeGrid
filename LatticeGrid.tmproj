@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>app/views/cytoscape/investigator_tree.html.erb</string>
+	<string>doc/latticegrid_QA_queries.txt</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -26,9 +26,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>38</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>22</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -93,15 +93,45 @@
 				<integer>87</integer>
 			</dict>
 		</dict>
+		<key>doc/latticegrid_QA_queries.txt</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>83</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>lib/tasks/studies.rake</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>49</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
 		<string>doc/example_loads.txt</string>
 		<string>app/views/cytoscape/investigator_tree.html.erb</string>
+		<string>lib/tasks/studies.rake</string>
+		<string>doc/latticegrid_QA_queries.txt</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{83, 0}, {1039, 878}}</string>
+	<string>{{76, 0}, {1039, 878}}</string>
 </dict>
 </plist>
