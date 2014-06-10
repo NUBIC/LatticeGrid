@@ -59,7 +59,7 @@ var Scriptaculous = {
     }).each(function(s) {
       var path = s.src.replace(js, ''),
       includes = s.src.match(/\?.*load=([a-z,]*)/);
-      (includes ? includes[1] : 'builder,effects,dragdrop,controls,slider,sound').split(',').each(
+      (includes ? includes[1] : 'effects,dragdrop').split(',').each(
        function(include) { Scriptaculous.require(path+include+'.js') });
     });
   }
