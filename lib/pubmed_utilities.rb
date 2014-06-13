@@ -88,17 +88,17 @@ def find_pubmed_ids(all_investigators, options, number_years, debug = false, sma
     perform_esearch = true
     keywords = build_pi_search(investigator, true)
     investigator['mark_pubs_as_valid'] = limit_to_institution(investigator)
-    while perform_esearch && repeatCnt < 3 && attempt < 4
+    while perform_esearch && repeat_cnt < 3 && attempt < 4
       begin
-        # puts "esearch keywords = #{keywords}; repeatCnt=#{repeatCnt}"
+        # puts "esearch keywords = #{keywords}; repeat_cnt=#{repeat_cnt}"
         entries = Bio::PubMed.esearch(keywords, options)
         # puts "esearch results: #{entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found"
         if entries.length < 1 && smart_filters && ! LatticeGridHelper.global_pubmed_search_full_first_name?
           keywords = build_pi_search(investigator, false)
-        elsif entries.length > (LatticeGridHelper.expected_max_pubs_per_year * number_years) && smart_filters && repeatCnt < 3 && !limit_pubmed_search_to_institution
+        elsif entries.length > (LatticeGridHelper.expected_max_pubs_per_year * number_years) && smart_filters && repeat_cnt < 3 && !limit_pubmed_search_to_institution
           keywords = limit_search_to_institution(keywords, investigator)
         else
-          investigator['mark_pubs_as_valid'] = true if LatticeGridHelper.mark_full_name_searches_as_valid? && repeatCnt == 0
+          investigator['mark_pubs_as_valid'] = true if LatticeGridHelper.mark_full_name_searches_as_valid? && repeat_cnt == 0
           perform_esearch = false
         end
        rescue Timeout::Error => exc
@@ -122,7 +122,7 @@ def find_pubmed_ids(all_investigators, options, number_years, debug = false, sma
     if entries.length < 1
       puts "No publications found for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords}" if debug
     elsif entries.length > (LatticeGridHelper.expected_max_pubs_per_year * number_years)
-      puts "Too many hits??: #{entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found. RepeatCnt = #{repeat_cnt}"
+      puts "Too many hits??: #{entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found. repeat_cnt = #{repeat_cnt}"
     elsif entries.length < number_years
       puts "Too few found: #{entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name} using the keywords #{keywords} were found" if debug
       investigator['entries'] = entries

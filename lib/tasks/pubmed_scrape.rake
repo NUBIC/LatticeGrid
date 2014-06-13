@@ -51,7 +51,17 @@ end
 def get_pubmed_ids
   block_timing("get_pubmed_ids") do
     options = build_search_options(@publication_years)
-    pubsFound = find_pubmed_ids(@all_investigators, options, @publication_years, LatticeGridHelper.debug?, LatticeGridHelper.smart_filters?)
+    importer = LatticeGrid::Importer.faculty_publication_importer
+    importer.attributes = { 
+      :all_investigators => @all_investigators, 
+      :search_options => options, 
+      :number_years => @publication_years, 
+      :debug => LatticeGridHelper.debug?, 
+      :smart_filter => LatticeGridHelper.smart_filters? 
+    }
+    faculty_publications = importer.faculty_publications
+    importer.associate_investigators_with_publications(@all_investigators, faculty_publications)
+    pubsFound = @all_investigators.map {|i| (i['entries'] || []).size }.sum
     puts "number of publications found for #{@publication_years} years: #{pubsFound}" if LatticeGridHelper.verbose?
   end
 end
