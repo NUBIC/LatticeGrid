@@ -23,7 +23,6 @@ gem 'rdoc'
 gem 'bcdatabase'
 gem 'prototype-rails'
 gem 'faraday'
-gem 'faraday_middleware'
 
 # ActionView::Template::Error (Could not find a JavaScript runtime.
 # See https://github.com/sstephenson/execjs for a list of available runtimes.
