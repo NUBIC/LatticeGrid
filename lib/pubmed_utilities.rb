@@ -139,7 +139,7 @@ end
 
 def get_pubs_for_investigators(investigators)
   investigators.each do |investigator|
-    if investigator.entries.length > 0
+    if (investigator.entries || []).length > 0
       fetchcnt = 0
       begin
         puts "looking up #{investigator.entries.length} pubs for investigator #{investigator.first_name} #{investigator.last_name}" if LatticeGridHelper.debug?
