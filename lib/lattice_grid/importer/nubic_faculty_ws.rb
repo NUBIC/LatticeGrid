@@ -14,18 +14,14 @@ module LatticeGrid
       def faculty_publications
         response = Faraday.get("#{self.class.base_url}/faculty_publications")
         if response.success?
-          faculty_publications = JSON.parse(response.body).map(&:symbolize_keys)
-          @faculty_publication_count = faculty_publications.size
+          JSON.parse(response.body).map(&:symbolize_keys)
         else
           raise RuntimeError.new("Failed to retreive faculty publications from '#{self.class.base_url}/faculty_publications': Status Code #{response.status}")
         end
-        faculty_publications
       end
 
 
       module LegacySupport
-        attr_reader :faculty_publication_count
-
         def attributes=(opts={}); end
 
         def associate_investigators_with_publications(investigators, faculty_publications)

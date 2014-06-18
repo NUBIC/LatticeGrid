@@ -58,9 +58,4 @@ describe LatticeGrid::Importer::PubMed do
         {:pmid => 333333, :netid => 'jstarren'}
       ]
   end
-
-  it 'keeps a counter of found publications (for legacy code)' do
-    subject.faculty_publications
-    subject.faculty_publication_count.should == 3
-  end
 end

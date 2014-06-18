@@ -3,8 +3,6 @@
 module LatticeGrid
   module Importer
     class PubMed
-      attr_reader :faculty_publication_count
-
       def attributes=(opts={})
         @all_investigators = opts[:all_investigators]
         @search_options = opts[:search_options]
@@ -14,7 +12,7 @@ module LatticeGrid
       end
 
       def faculty_publications
-        @faculty_publication_count = find_pubmed_ids(@all_investigators, @search_options, @number_years, @debug, @smart_filters)
+        find_pubmed_ids(@all_investigators, @search_options, @number_years, @debug, @smart_filters)
         @all_investigators.map do |investigator|
           netid = investigator.username
           pmids = investigator['entries']
