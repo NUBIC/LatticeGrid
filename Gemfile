@@ -1,3 +1,4 @@
+source 'https://rubygems.org'
 #source :gemcutter
 
 gem 'bundler'
