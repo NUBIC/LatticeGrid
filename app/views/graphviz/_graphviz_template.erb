@@ -67,7 +67,11 @@
 	
 </form>
  &nbsp; 
-<%= link_to( 'Download the SVG graph',
+<%#=
+    # This was temporarily disabled on 7/1/2014 because graph generating would
+    # eventualy hang the server and force a reboot.
+    
+    link_to( 'Download the SVG graph',
       send_graphviz_image_path(params[:id],params[:analysis],params[:distance],params[:stringency],params[:include_orphans],params[:start_date],params[:end_date],params[:program],params[:format] ),
       :id => 'download_graph', :target=>'_blank') %>
 

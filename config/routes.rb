@@ -92,9 +92,13 @@ ActionController::Routing::Routes.draw do |map|
   map.cytoscape_show_org "cytoscape/:id/show_org/:depth", :controller => 'cytoscape', :action => 'show_org'
   map.cytoscape_awards_org "cytoscape/:id/awards_org/:depth", :controller => 'cytoscape', :action => 'awards_org'
   map.cytoscape_publications_investigator "cytoscape/:id/d3_investigator_data", :controller => 'cytoscape', :action => 'd3_investigator_data'
-  map.send_graphviz_image 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:start_date/:end_date/:program.:format', :controller => 'graphviz', :action => 'send_graphviz_image'
-  map.send_graphviz_image_orig 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:program.:format', :controller => 'graphviz', :action => 'send_graphviz_image'
-  map.restless_graphviz 'get_graphviz/', :controller => 'graphviz', :action => 'get_graphviz'
+
+  # This was temporarily disabled on 7/1/2014 because graph generating would
+  # eventualy hang the server and force a reboot.
+  #
+  # map.send_graphviz_image 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:start_date/:end_date/:program.:format', :controller => 'graphviz', :action => 'send_graphviz_image'
+  # map.send_graphviz_image_orig 'send_graphviz_image/:id/:analysis/:distance/:stringency/:include_orphans/:program.:format', :controller => 'graphviz', :action => 'send_graphviz_image'
+  # map.restless_graphviz 'get_graphviz/', :controller => 'graphviz', :action => 'get_graphviz'
 
 #  map.graphviz 'graph/:id/graphviz/:distance/:stingency/:program.:format', :controller => 'graphviz', :action => 'graphviz'
   map.logout "/logout", :controller => 'access', :action => 'logout'
