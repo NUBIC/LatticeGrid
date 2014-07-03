@@ -261,11 +261,11 @@ def edge_award_label(leaf)
   "#{leaf.total_amount} dollars"
 end
 
-def org_edge_label(root, leaf, shared_pubs)
-  "#{shared_pubs.length} shared publications between #{leaf.name} and #{root.name}; " 
+def org_edge_label(root, leaf, shared_pubs_size)
+  "#{shared_pubs_size} shared publications between #{leaf.name} and #{root.name}; " 
 end
 
-def graph_add_org_node(program, g, root, leaf, shared_pubs, mesh_only=false, node_opts={}, edege_opts={} )
+def graph_add_org_node(program, g, root, leaf, shared_pubs_size, mesh_only=false, node_opts={}, edege_opts={} )
 #    g.add_node(plant[0]).label = plant[1]+"\\n"+ plant[2]+", "+plant[3]+"\\n("+plant[0]+")"
   @graph_edges ||= {}
   return g if leaf.nil?
@@ -277,9 +277,9 @@ def graph_add_org_node(program, g, root, leaf, shared_pubs, mesh_only=false, nod
     leaf_node = graph_addleaf(g, leaf, nopts) if leaf_node.nil?  # leaf_node = graph_addleaf(g, leaf, node_opts)
     @graph_edges << "#{root.id.to_s}_#{leaf.id.to_s}"
     @graph_edges << "#{leaf.id.to_s}_#{root.id.to_s}"
-    tooltiptext = org_edge_label(root, leaf, shared_pubs)
-    label = shared_pubs.length.to_s
-    weight = shared_pubs.length.to_s
+    tooltiptext = org_edge_label(root, leaf, shared_pubs_size)
+    label = shared_pubs_size.to_s
+    weight = shared_pubs_size.to_s
     this_edge = graph_addedge(g, root_node, leaf_node, show_org_org_graphviz_url(leaf.id), tooltiptext, label, weight )
   end
   return g

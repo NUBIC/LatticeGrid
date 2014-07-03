@@ -291,10 +291,10 @@ module GraphvizHelper
      else
        orgs.each do |org|
          all_orgs.each do |intersecting_org|
-           shared_pubs = org.abstracts_shared_with_org(intersecting_org)
+           shared_pubs = org.abstract_ids_shared_with_org(intersecting_org)
            if shared_pubs.length >= stringency.to_i
-             graph_secondaryroot(graph, org, {:URL=>show_org_graphviz_url(org.id), :tooltip=>"Total publications: #{org.organization_abstracts.length}; Faculty: #{org.all_faculty.length}, Members: #{org.all_members.length}" }) 
-             graph = graph_add_org_node(program, graph, org, intersecting_org, shared_pubs, false, {:URL=>show_org_org_graphviz_url(intersecting_org.id), :tooltip=>"Total publications: #{intersecting_org.organization_abstracts.length}; Faculty: #{intersecting_org.all_faculty.length}, Members: #{intersecting_org.all_members.length}"}) if shared_pubs.length > 0
+              graph_secondaryroot(graph, org, {:URL=>show_org_graphviz_url(org.id), :tooltip=>"Total publications: #{org.organization_abstracts.count}; Faculty: #{org.all_faculty_ids.count}, Members: #{org.all_members_ids.count}" }) 
+              graph = graph_add_org_node(program, graph, org, intersecting_org, shared_pubs.length, false, {:URL=>show_org_org_graphviz_url(intersecting_org.id), :tooltip=>"Total publications: #{intersecting_org.organization_abstracts.count}; Faculty: #{intersecting_org.all_faculty_ids.count}, Members: #{intersecting_org.all_members_ids.count}"}) if shared_pubs.length > 0
            end
          end
        end
