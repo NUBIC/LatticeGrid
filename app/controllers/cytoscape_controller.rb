@@ -1,13 +1,14 @@
 class CytoscapeController < ApplicationController
   before_filter :check_allowed, :only => [:awards, :studies, :show_all]
 
-  caches_page( :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :org_org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data, :investigator_edge_bundling, :d3_investigator_edge_data, :investigator_wordle, :d3_investigator_wordle_data, :simularity_wordle, :d3_investigators_wordle_data, :d3_investigator_chord_data, :show_all_orgs, :all_org_cytoscape_data, :d3_program_investigators_chord_data, :d3_all_investigators_chord_data) if LatticeGridHelper.CachePages()
+  caches_page( :d3_investigator_tree_data, :d3_investigator_force_data, :investigator_tree, :show_org, :jit, :protovis, :member_cytoscape_data, :org_cytoscape_data, :org_org_cytoscape_data, :member_protovis_data, :disallowed, :d3_data, :d3_date_data, :investigator_edge_bundling, :d3_investigator_edge_data, :investigator_wordle, :d3_investigator_wordle_data, :simularity_wordle, :d3_investigators_wordle_data, :d3_investigator_chord_data, :show_all_orgs, :all_org_cytoscape_data, :d3_program_investigators_chord_data, :d3_all_investigators_chord_data) if LatticeGridHelper.CachePages()
   caches_action( :listing, :investigator, :awards, :studies )  if LatticeGridHelper.CachePages()
   
   require 'cytoscape_config'
   require 'cytoscape_generator'
   require 'protovis_generator'
   require 'd3_generator'
+  require 'd3_generator_new'
   require 'infoviz_generator'
   include ApplicationHelper
   include CytoscapeHelper
@@ -239,6 +240,28 @@ class CytoscapeController < ApplicationController
   end
 
   #d3 methods
+  def investigator_tree
+   	@javascripts = ['prototype', 'ddsmoothmenu', 'd3/d3-3.4.1.min', 'jquery-1.10.2', 'jquery.sparkline.min', 'jquery-ui-1.10.4.min' ]
+  	@stylesheets = [ 'publications', "latticegrid/#{lattice_grid_instance}", 'jquery-ui-1.10.4.min' ]
+    @json_callback = "../cytoscape/d3_investigator_force_data.js"
+     @title = 'Tree Diagram showing co-publication relationships'
+    unless params[:id].blank?
+      @investigator=Investigator.find_by_username(params[:id])
+      if @investigator.blank?
+        flash[:notice] = "unable to find investigator #{params[:id]}"
+        params[:id] = nil
+      else
+        @json_callback = "../cytoscape/"+params[:id]+"/d3_investigator_graph_data.js"
+        @title = 'Force or Tree Diagram showing co-publication relationships for '+@investigator.name
+      end
+    end
+    respond_to do |format|
+      format.html { render 'investigator_tree', :layout => 'd3'  }
+      format.json{ render :layout=> false, :text => ""  }
+    end
+  end
+
+  #d3 methods
   def program_chord
     @json_callback = "../cytoscape/d3_data.js"
     @title = 'Chord Diagram showing programmatic connections'
@@ -399,7 +422,30 @@ class CytoscapeController < ApplicationController
       format.js{ render :layout => false, :json => graph.as_json()}
     end
   end
-    
+  
+  def d3_investigator_force_data
+    depth = params[:depth] || 2
+    if (params[:id])
+      investigator = Investigator.find_all_by_username(params[:id]).first
+      graph = d34_investigator_force_graph(investigator, depth.to_i)
+    end
+    respond_to do |format| 
+      format.json{ render :layout => false, :json => graph.as_json()}
+      format.js{ render :layout => false, :json => graph.as_json()}
+    end
+  end
+
+  def d3_investigator_tree_data
+    depth = params[:depth] || 2
+    if (params[:id])
+      investigator = Investigator.find_all_by_username(params[:id]).first
+      graph = d34_investigator_tree_graph(investigator, depth.to_i).first
+    end
+    respond_to do |format| 
+      format.json{ render :layout => false, :json => graph.as_json()}
+      format.js{ render :layout => false, :json => graph.as_json()}
+    end
+  end
 
 #!!!!
   def d3_all_investigators_chord_data

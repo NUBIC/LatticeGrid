@@ -1,0 +1,336 @@
+Albany Medical College
+Albert Einstein College of Medicine Yeshiva Univ
+Alfred I. Du Pont Hospital for Children
+Antoni Van Leeuwenhoekziekenhuis
+Arizona State University Tempe Campus
+Astra Zeneca
+Babraham Institute
+Battelle Pacific Northwest Laboratories
+Baylor College of Medicine
+Beatson Institute for Cancer Research
+Beth Israel Deaconess Medical Center
+Biostruxs
+Boston University
+Breakthrough Breast Cancer Research Unit
+Brentwood Biomedical Research Institute
+Brigham And Women's Hospital
+British Columbia Cancer Agency
+Broad Institute of MIT and Harvard
+Brooklyn College
+Brown University
+Buffalo State College
+Burnham Institute for Medical Research
+CNR
+California Institute of Technlogy
+California Pacific Medical Center
+Cambridge Research Institute
+Cambridge Research Institute (CRUK)
+Cancer Care Manitoba
+Cancer Research UK, London Research Institute
+Case Western Reserve University
+Cedars Sinai Medical Center
+Centre Alexis Vautrin
+Centre Antoine Lacassagne   Cnrs Umr 6543
+Centre Hospitalier Universitaire de Caen
+Centre Hospitalier Universitaire de Rouen   Hospital Charles Nicolle
+Centre Hospitalier Universitaire de Toulouse   Hospital Purpan
+Centre Leon Berard
+Centre Mediterranen de Mdecine Molculaire, Inserm U895
+Centre Paul Papin - Inserm U892
+Centro Nacional de Investigaciones Oncologicas
+Centro di Riferimento Oncologico (CRO) - National Cancer Institute
+Children's Hospital & Res Ctr at Oakland
+Children's Hospital Boston
+Children's Hospital Corporation
+Children's Hospital of Los Angeles
+Children's Hospital of Philadelphia
+Cincinnati Childrens Hospital Medical Center
+City College of New York
+City of Hope Beckman Research Institute
+Cleveland Clinic Lerner Com CWRU
+Cognosci, Inc.
+Cold Spring Harbor Laboratory
+Columbia University Health Sciences
+Commissariat L'nergie Atomique, Centre de Fontenay Aux Roses, Inserm Umr967
+Cornell University
+Creighton University
+Cross Cancer Institute (Alberta Cancer Board)
+Ctr for Molecular Medicine/Immunology
+Dalhousie University
+Dana Farber Cancer Institute
+Dartmouth College
+Dartmouth Medical School
+Duke University
+Duquesne University
+Eastern Virginia Medical School
+Ecole Normale Superieure   Laboratoire de Biologie Molculaire de La Cellule   Cnrs/Ensl/Ucb Umr 5239
+Emory University
+Erasmus MC
+Ferris State University
+Florida Atlantic University
+Florida State University
+Fondazione Santa Lucia
+Franklin W. Olin College of Engineering
+Fred Hutchinson Cancer Research Center
+Fudan University
+Genentech
+George Washington University
+Georgetown University
+German Cancer Research Center (DKFZ)
+Groupe Hospitalier Pitie Salpetriere   Aphp
+Guy's, King's And St Thomas' School of Medicine And Dentistry
+H. Lee Moffitt Cancer Ctr & Res Inst
+Harvard University
+Hebrew University of Jerusalem
+Hebrew, University Of, Jerusalem
+Henry M. Jackson Fdn for The Adv Mil/Med
+Hopital Avicenne   Aphp
+Hopital Europeen Georges Pompidou (HEGP)
+Hopital Saint Antoine - APHP
+Hopital Saint Louis - APHP
+Hopital Tenon - APHP
+Hospital for Sick Children, The
+Hubrecht Laboratorium/NIOB
+IFOM The FIRC Institute of Molecular Oncology Foundation
+Illinois Institute of Technology
+Immune Disease Institute, Inc.
+Imperial College of Science, Technology And Medicine
+Indiana Univ Purdue Univ at Indianapolis
+Inserm U 674   Hopital Saint Louis
+Inserm U1016 / Cnrs Umr8104 -  Institut Cochin
+Inserm U1052   Centre de Recherche en Cancerologie de Lyon   Centre Lon Brard
+Inserm U830   Institut Curie
+Institut Cochin, INSERM U567, CNRS UMR 8104
+Institut Gustave Roussy - IGR
+Institut Paoli-Calmettes
+Institut Pasteur de Paris
+Institut de Recherche en Immunologie et en Cancrologie (Iric)
+Institute for Biomedical Research
+Institute for Cancer Research/Fox Chase Cancer Center
+Institute of Cancer Research
+Istituto Europeo di Oncologia
+Jefferson Medical College
+Johns Hopkins University
+Kaiser Foundation Research Institute
+King's College School of Medicine
+Lankenau Institute for Medical Research
+Leidos
+Leids Universitair Medisch Centrum
+Louisiana State Univ A&M Col Baton Rouge
+Louisiana State Univ Hsc New Orleans
+Lovelace Biomedical & Environmental Res
+Loyola University Chicago
+M.D. Anderson Cancer Center, University of Texas
+M.D. Anderson Cancer Center, University of Texas 
+MRC Clinical Trials Unit
+MRC Laboratory of Molecular Biology
+Magee Women's Hospital
+Marie Curie Research Institute
+Massachusetts General Hospital
+Massachusetts Institute of Technology
+Max Planck Institute, Dortmund
+Mayo Clinic
+McGill University
+Medical College Of Georgia
+Medical College of Wisconsin
+Medical Research Council Centre - Cambridge
+Medical University of South Carolina
+Medstar Research Institute
+Meharry Medical College
+Melbourne Health
+Memorial Sloan Kettering Cancer Center
+Mercer University Macon
+Merck
+Michigan State University
+Missouri State University
+Montefiore Medical Center (Bronx, Ny)
+Mount Sinai School of Medicine
+National Cancer Institute
+Netherlands Cancer Institute
+Nevada Cancer Institute
+New York Medical College
+New York University School of Medicine
+North Carolina Central University
+North Carolina State University Raleigh
+Northeastern University
+Northern California Institute for Research And Education
+Northshore University Healthsystem
+Northwestern University
+Novartis
+Ohio State University
+Ontario Cancer Institute (Oci)
+Oregon Health & Science University
+Ottawa Hospital Research Institute (Ohri)
+Panorama Research, Inc.
+Paterson Institute for Cancer Research
+Pennsylvania State University
+Peter Mac Callum Cancer Centre
+Plexxikon, Inc.
+Ponce School of Medicine
+Princeton University
+Purdue University
+Queen Mary, University of London
+Queen's Medical Center
+Queen's University Belfast
+Queensland Institute of Medical Research
+Research Inst Nationwide Children's Hospital
+Rhode Island Hospital
+Rice University
+Rosalind Franklin Univ of Medicine & Sci
+Roswell Park Cancer Institute
+Royal Victoria Hospital -  McGill University Health Centre
+Rutgers The State Univ of Nj New Brunswick
+Rutgers The State Univ of Nj Newark
+SUNY Upstate Medical University
+Saint Louis University
+Salk Institute
+San Diego State University
+San Jose State University
+Sanford Burnham Medical Research Instit
+Scripps Research Institute
+Seoul National University
+Sibtech, Inc.
+Smith College
+Southern Illinois University
+Spanish National Cancer Center
+St James's University Hospital
+St. Joseph's Healthcare Hamilton
+Stanford University
+State University New York Stony Brook
+State University of New York at Buffalo
+Technical University Munich
+Temple University
+Texas A&M University Health Science Ctr
+Texas A&M University System
+Texas Tech University Health Sciences Center
+Thomas Jefferson University
+Tufts Medical Center
+Tufts University Boston
+Tulane University of Louisiana
+Tuskegee University
+U of L Imperial Col of Sci/Technlgy/Med
+Umc Nijmegen St. Radboud
+Universitair Medisch Centrum Groningen
+Universitair Medisch Centrum Utrecht
+Universiteit Leiden
+Universiteit Maastricht
+University College London
+University College London Cancer Institute
+University Health Network
+University Medical Center Utrecht
+University Medical Centre Utrecht
+University Of Houston
+University de Montreal
+University de Sherbrooke
+University of Alabama at Birmingham
+University of Alberta
+University of Arizona
+University of Arkansas for Medical Sciences
+University of Basel
+University of Birmingham
+University of British Columbia (Point Gray)
+University of Calgary
+University of California Berkeley
+University of California Davis
+University of California Irvine
+University of California Los Angeles
+University of California San Diego
+University of California San Francisco
+University of Cambridge
+University of Cardiff
+University of Central Florida
+University of Chicago
+University of Cincinnati
+University of Colorado Denver
+University of Colorado at Boulder
+University of Colorado, Denver
+University of Connecticut Sch of Med/Dnt
+University of Connecticut Storrs
+University of Dundee
+University of East Anglia
+University of Edinburgh
+University of Florida
+University of Glasgow
+University of Hawaii at Manoa
+University of Houston
+University of Illinois Urbana Champaign
+University of Illinois at Chicago
+University of Iowa
+University of Kansas Medical Center
+University of Kentucky
+University of Leeds
+University of Leicester
+University of Liverpool
+University of Louisville
+University of Manchester
+University of Manitoba
+University of Maryland Baltimore
+University of Massachusetts Amherst
+University of Massachusetts Medical School Worcester
+University of Melbourne
+University of Miami School of Medicine
+University of Michigan
+University of Minnesota
+University of Mississippi Medical Center
+University of Missouri Columbia
+University of Missouri St. Louis
+University of Montana
+University of Nebraska Medical Center
+University of New Jersey Robert Wood Johnson Medical School
+University of New Mexico
+University of New South Wales
+University of Newcastle Upon Tyne
+University of North Carolina Chapel Hill
+University of Nottingham
+University of Oklahoma Hlth Sciences Ctr
+University of Ottawa
+University of Oxford
+University of Pennsylvania
+University of Pittsburgh
+University of Rochester
+University of Sheffield
+University of South Alabama
+University of South Carolina at Columbia
+University of South Florida
+University of Southampton
+University of Southern California
+University of Tennessee Health Sci Ctr
+University of Tennessee Knoxville
+University of Texas Austin
+University of Texas Health Science Center at Houston
+University of Texas Health Science Center at San Antonio
+University of Texas Medical Br Galveston
+University of Texas Southwestern Medical Center
+University of Toledo
+University of Torino
+University of Toronto
+University of Utah
+University of Vienna
+University of Virginia
+University of Washington
+University of Wisconsin Madison
+Upstate Medical University
+Utah State University
+VA Medical Center, Washington, DC
+Van Andel Research Institute
+Vanderbilt University
+Velindre NHS Trust
+Veterans Medical Research Foundation/San Diego
+Virginia Commonwealth University
+Virginia Polytechnic Institute And State University
+Vivonetics, Inc.
+Vrije Universiteit
+Vu Medisch Centrum
+Wake Forest University Health Sciences
+Washington State University
+Washington University
+Wayne State University
+Weill Medical College of Cornell University
+Weizmann Institute of Science
+Wellcome Trust Sanger Institute
+West Virginia University
+Western General Hospital
+Whitehead Institute for Biomedical Research
+Wistar Institute
+Xavier University of Louisiana, New Orleans
+Yale University

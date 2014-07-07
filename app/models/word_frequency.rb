@@ -1,3 +1,16 @@
+# == Schema Information
+# Schema version: 20130327155943
+#
+# Table name: word_frequencies
+#
+#  created_at :timestamp
+#  frequency  :integer
+#  id         :integer          default(0), not null, primary key
+#  the_type   :string(255)
+#  updated_at :timestamp
+#  word       :string(255)
+#
+
 class WordFrequency < ActiveRecord::Base
 
   require 'utilities'
@@ -45,6 +58,7 @@ FILLER_WORDS = ["the", "of", "and", "as", "to", "a", "in", "that", "with", "for"
   end
   
   def self.save_investigator_frequency_map
+    # takes about 6 hours with Ruby 1.9 and Rails 2.3 for 66K unique words and 1.6M total words, 3K unique investigators
     all_words = get_investigator_words
     unique_words = all_words.sort.uniq
     puts "save_investigator_frequency_map:all_words: #{all_words.length}; unique_words: #{unique_words.length}"
@@ -52,6 +66,7 @@ FILLER_WORDS = ["the", "of", "and", "as", "to", "a", "in", "that", "with", "for"
   end
   
   def self.save_abstract_frequency_map
+    # takes about 3 hours with Ruby 1.9 and Rails 2.3 for 66K unique words and 1.6M total words, 40K unique publications
     all_words = get_abstract_words
     unique_words = all_words.sort.uniq
     puts "save_abstract_frequency_map:all_words: #{all_words.length}; unique_words: #{unique_words.length}"
@@ -92,22 +107,18 @@ FILLER_WORDS = ["the", "of", "and", "as", "to", "a", "in", "that", "with", "for"
   end
   
   def self.investigators_wordle_data(investigators)
-    shared_words =[]
+    shared_words =investigators.first.unique_abstract_words
     all_words =[]
     investigators.each do |investigator|
       all_words = all_words + investigator.abstract_words
-      if shared_words.blank?
-        shared_words = investigator.unique_abstract_words
-      else
-         shared_words = shared_words & investigator.unique_abstract_words
-       end
+      shared_words = shared_words & investigator.unique_abstract_words
     end
     frequency_map = generate_frequency_map(all_words, 'Abstract', high_freq_words, shared_words)
     return frequency_map.sort_by{|word| word[:frequency]}
   end
   
   def self.investigators_difference_wordle_data(investigators)
-    all_words = investigators[0].abstract_words
+    all_words = investigators.first.abstract_words
     uniq_words = all_words.uniq - investigators[1].unique_abstract_words
     frequency_map = generate_frequency_map(all_words, 'Abstract', high_freq_words, uniq_words)
     return frequency_map.sort_by{|word| word[:frequency]}

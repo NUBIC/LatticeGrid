@@ -1,3 +1,41 @@
+# == Schema Information
+# Schema version: 20130327155943
+#
+# Table name: studies
+#
+#  abstract             :text
+#  accrual_goal         :integer
+#  approved_date        :date
+#  closed_date          :date
+#  completed_date       :date
+#  created_at           :timestamp
+#  created_id           :integer
+#  created_ip           :string(255)
+#  deleted_at           :timestamp
+#  deleted_id           :integer
+#  deleted_ip           :string(255)
+#  enotis_study_id      :integer
+#  exclusion_criteria   :text
+#  had_import_errors    :boolean          default(FALSE)
+#  has_medical_services :boolean          default(FALSE), not null
+#  id                   :integer          default(0), not null, primary key
+#  inclusion_criteria   :text
+#  irb_study_number     :string(255)
+#  is_clinical_trial    :boolean          default(FALSE), not null
+#  nct_id               :string(255)
+#  next_review_date     :date
+#  proposal_id          :integer
+#  research_type        :string(255)
+#  review_type          :string(255)
+#  sponsor              :string(255)
+#  status               :string(255)
+#  title                :text
+#  updated_at           :timestamp
+#  updated_id           :integer
+#  updated_ip           :string(255)
+#  url                  :string(255)
+#
+
 class Study < ActiveRecord::Base
   has_many :investigator_studies
   has_many :investigators, :through => :investigator_studies

@@ -171,3 +171,40 @@ task :insertAllInstitutionalAbstracts => [:setAllYears, :insertInstitutionalAbst
   # dependencies do all the work
   puts "task insertAllInstitutionalAbstracts completed"
 end
+
+
+task :getMeSHPubmedIDs => :environment do
+  # get all pubmed IDs using the following keywords:
+  block_timing("getMeSHPubmedIDs") {
+    keywords = BuildSearchByMeSHterms()
+    options = BuildSearchOptions(@publication_years,50000)
+    if keywords.blank?
+      @all_entries = nil
+      puts "getMeSHPubmedIDs did not return a MeSH search string. No abstracts found"
+    else
+      @all_entries = Bio::PubMed.esearch(keywords, options) # returns an array of pubmed_ids
+      puts "task getMeSHPubmedIDs: number of publications found for #{@publication_years} years: #{@all_entries.length}" if LatticeGridHelper.verbose?
+    end
+  }
+end
+
+task :getMeSHPubmedIDsAbstracts => :getMeSHPubmedIDs do
+  #get the abstracts
+  block_timing("getMeSHPubmedIDsAbstracts") {
+    puts "looking up #{@all_entries.length} pubs" if LatticeGridHelper.debug?
+    @all_publications = FetchPublicationData(@all_entries) # takes an array of pubmed_ids and returns an array of pubmed records
+    puts "task getInstitutionalPubmedIDsAbstracts: number abstracts pulled: #{@all_publications.length}" if LatticeGridHelper.verbose?
+  }
+end
+
+task :insertMeSHAbstracts => :getMeSHPubmedIDsAbstracts do
+  # load the test data
+  block_timing("insertMeSHAbstracts") {
+    InsertPubmedRecords(@all_publications)
+  }
+end
+
+task :insertAllMeSHAbstracts => [:setAllYears, :insertMeSHAbstracts] do
+  # dependencies do all the work
+  puts "task insertAllMeSHAbstracts completed"
+end

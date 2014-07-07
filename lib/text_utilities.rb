@@ -31,10 +31,12 @@ def CleanNonUTFtext(the_text)
 end
 
 def to_ascii_iconv(text)
-  ic = Iconv.new('UTF-8//IGNORE', 'UTF-8')
-  new_text=ic.iconv(text + ' ')[0..-2]
-  converter = Iconv.new('ASCII//IGNORE//TRANSLIT', 'UTF-8') 
-  text = converter.iconv(new_text).unpack('U*').select{ |cp| cp < 127 }.pack('U*')
   text.gsub(/\022|\023|\024|\030|\031|\034|\035/,' ')
-  
+  text.encode("UTF-8", :invalid => :replace, :undef => :replace, :replace => "")
+  #ic = Iconv.new('UTF-8//IGNORE', 'UTF-8')
+  #new_text=ic.iconv(text + ' ')[0..-2]
+  #converter = Iconv.new('ASCII//IGNORE//TRANSLIT', 'UTF-8') 
+  #text = converter.iconv(new_text).unpack('U*').select{ |cp| cp < 127 }.pack('U*')
+  #text.gsub(/\022|\023|\024|\030|\031|\034|\035/,' ')
+  return text
 end

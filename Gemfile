@@ -1,4 +1,5 @@
-#source :gemcutter
+source 'https://rubygems.org'
+#source 'http://download.bioinformatics.northwestern.edu/gems'
 
 gem 'bundler'
 gem "rails", "~> 2.3", :require => nil
@@ -20,3 +21,10 @@ gem 'aker'
 gem 'rdoc', '3.12' # necessary for rails 2.3.12 and higher
 gem 'bcdatabase', '~> 1.0.6'
 #gem 'wordcram'
+
+group :development do
+  gem 'capistrano'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rails'
+  gem 'annotate', '~> 2.5.0'
+end

@@ -1,3 +1,61 @@
+# == Schema Information
+# Schema version: 20130327155943
+#
+# Table name: abstracts
+#
+#  abstract                     :text
+#  abstract_vector              :text
+#  author_affiliations          :text
+#  author_vector                :text
+#  authors                      :text
+#  citation_cnt                 :integer          default(0)
+#  citation_last_get_at         :timestamp
+#  citation_url                 :string(255)
+#  created_at                   :timestamp
+#  created_id                   :integer
+#  created_ip                   :string(255)
+#  deposited_date               :date
+#  doi                          :string(255)
+#  electronic_publication_date  :date
+#  endnote_citation             :text
+#  full_authors                 :text
+#  id                           :integer          default(0), not null, primary key
+#  is_cancer                    :boolean          default(TRUE), not null
+#  is_first_author_investigator :boolean          default(FALSE)
+#  is_last_author_investigator  :boolean          default(FALSE)
+#  is_valid                     :boolean          default(TRUE), not null
+#  isbn                         :string(255)
+#  issn                         :string(255)
+#  issue                        :string(255)
+#  journal                      :string(255)
+#  journal_abbreviation         :string(255)
+#  journal_vector               :text
+#  last_reviewed_at             :timestamp
+#  last_reviewed_id             :integer
+#  last_reviewed_ip             :string(255)
+#  mesh                         :text
+#  mesh_vector                  :text
+#  pages                        :string(255)
+#  publication_date             :date
+#  publication_status           :string(255)
+#  publication_type             :string(255)
+#  pubmed                       :string(255)
+#  pubmed_creation_date         :date
+#  pubmedcentral                :string(255)
+#  reviewed_at                  :timestamp
+#  reviewed_id                  :integer
+#  reviewed_ip                  :string(255)
+#  status                       :string(255)
+#  title                        :text
+#  updated_at                   :timestamp
+#  updated_id                   :integer
+#  updated_ip                   :string(255)
+#  url                          :string(255)
+#  vectors                      :text
+#  volume                       :string(255)
+#  year                         :string(255)
+#
+
 class Abstract < ActiveRecord::Base
   include MeshHelper
   acts_as_taggable  # for MeSH terms
@@ -366,12 +424,12 @@ class Abstract < ActiveRecord::Base
   end
 
   def self.display_data( year=2007, page=1)
-    paginate(:page => page,
-      :per_page => 20, 
-      :order => "abstracts.publication_date DESC, abstracts.electronic_publication_date DESC, abstracts.authors ASC",
-      :include => [:investigators],
-      :conditions => ['year = :year and investigator_abstracts.is_valid = true', 
-  		      {:year => year }])
+      paginate(:page => page,
+        :per_page => 20, 
+        :order => "abstracts.publication_date DESC, abstracts.electronic_publication_date DESC, abstracts.authors ASC",
+#        :include => [:investigators],
+        :conditions => ['abstracts.year = :year', 
+    		      {:year => year }])
   end
   
   def self.display_all_data( year=2008)
@@ -453,11 +511,10 @@ class Abstract < ActiveRecord::Base
     end
     if defined?(abstract_ids) and !abstract_ids.nil? then 
       abstracts = Abstract.paginate(:page => page,
-        :include => [:investigators],
         :per_page => 20, 
         :limit => limit,
         :order => "year DESC, authors ASC",
-        :conditions => ["abstracts.id IN (:abstract_ids) and investigator_abstracts.is_valid = true",
+        :conditions => ["abstracts.id IN (:abstract_ids)",
            {:abstract_ids => abstract_ids.collect(&:id)} ])
     end
     abstracts

@@ -1,0 +1,211 @@
+/* same as publications.css for now */
+h1, h2, .h2, h3, .h3 {
+    font-family: Arial, Helvetica, Geneva, Sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+	color: #111;
+    line-height: 140%;
+    padding-bottom: 0px;
+    margin-bottom: 2px;
+    margin-top: 8px;
+    padding-top: 0px;
+}
+
+a:visited { color: #666; }
+
+#biograph table tr td {
+	padding-top: 0.125em;
+	padding-bottom: 0px;
+	vertical-align:top;
+	color:        #222;
+	line-height: 14px;
+}
+
+#investigator_title_block #full_name, #investigator_title_block #page_title {
+    font-family: Arial, Helvetica, Geneva, Sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    color: #111;
+    line-height: 140%;
+    padding-bottom: 0px;
+    margin-bottom: 2px;
+    margin-top: 8px;
+    padding-top: 0px;
+}
+
+td.list-left, th.list-left {
+	color:        #222;
+}
+
+td.list-title-left {
+	padding-left: 1em;
+	color:        #CC330D;
+	font-weight:  bold;
+}
+
+#listing a {
+	color:        #222;
+}
+
+#listing .list-heading {
+	background-color: #CCC;
+	color:        #CC330D;
+	font-weight:  bold;
+}
+
+#listing .list-title {
+	color:        #CC330D;
+	font-weight:  bold;
+}
+
+#listing .list-title-center {
+	color:        #CC330D;
+	font-weight:  bold;
+	text-align: center;
+}
+
+#listing .list-title-right {
+	color:        #CC330D;
+	font-weight:  bold;
+	padding-right: 1em;
+	text-align: right;
+}
+
+#listing .list-title-right {
+	color:        #CC330D;
+	font-weight:  bold;
+	padding-right: 1em;
+	text-align: right;
+}
+
+/* --- HEADER --- */
+#banner {
+	border-bottom: 1px solid #CC330D;
+	margin-left:auto;
+	margin-right:auto;
+	width:1200px;
+	height:70px;
+/*	background: url(../images/pageheader.jpg) ; */
+	vertical-align:bottom;
+    text-align: center;
+	font-size:12px;
+	display: block;}
+
+#results {
+	margin: 0px;
+	padding: 0px;
+	display: block;}
+
+#main {
+	border: 1px #CC330D solid;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px;
+	width: 1200px;
+	height:auto;
+	vertical-align: top;
+	background-color: #FFFFFF;
+}
+
+#side {
+	float: left;  
+	margin-top: 0px;
+	margin-left: 0px;
+	padding: 5px;
+	vertical-align: top;
+	width: 160px;
+	height: 900px;
+	color: #000;
+	background-color: #FFF;
+}
+
+#title {
+  margin: 0px;
+  height: 0px;
+  padding: 0px;
+  padding-left: 20px;
+  padding-bottom: 0px;
+  font:  0px sans-serif;
+  color: #CC330D;
+  background-color: #CC330D;
+}
+
+#title a {
+  padding: 0px;
+  color: #CC330D;
+  text-decoration:none;
+  background: none;
+}
+
+#search {
+  padding: 3px;
+  padding-left: 115px;
+  margin: 0px;
+    color: #FFF;
+    font-size: 12px;
+    background-color: #CC330D;
+}
+
+#search a:hover { background-color: #CCC; }
+
+#niceline {
+  padding-left: 50px;
+  height: 0px;
+  margin: 0px;
+    color: #fff;
+    font-size: 11px;
+    background-color: #FFF;
+}
+
+
+.ddsmoothmenu-v ul li a:link, .ddsmoothmenu-v ul li a:visited, .ddsmoothmenu-v ul li a:active{
+background: #CC330D; /*background of menu items (default state)*/
+color: white;
+}
+
+
+.ddsmoothmenu-v ul li a.selected{ /*CSS class that's dynamically added to the currently active menu items' LI A element*/
+background: black; 
+color: white;
+}
+
+.ddsmoothmenu-v ul li a:hover{
+background: black; /*background of menu items during onmouseover (hover state)*/
+color: white;
+}
+
+.ddsmoothmenu-v ul li ul li.current, .ddsmoothmenu-v ul li ul li.current a {
+	background-color: #CC330D;
+}
+
+/*** for DIGG style pagination  ***/
+.pagination {
+    padding: 3px;
+    margin: 3px;
+  }
+  .pagination a {
+    padding: 2px 5px 2px 5px;
+    margin: 2px;
+    border: 1px solid #CC330D;
+    text-decoration: none;
+    color: #CC330D;
+  }
+ .pagination a:hover, .pagination a:active {
+    border: 1px solid #CC330D;
+    color: #ddd;
+  }
+   .pagination span.current {
+    padding: 2px 5px 2px 5px;
+    margin: 2px;
+    border: 1px solid #CC330D;
+    font-weight: bold;
+    background-color: #CC330D;
+    color: #FFF;
+  }
+  .pagination span.disabled {
+    padding: 2px 5px 2px 5px;
+    margin: 2px;
+    border: 1px solid #eee;
+    color: #ddd;
+  }
+

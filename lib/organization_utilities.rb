@@ -7,9 +7,10 @@ def CreateSchoolDepartmentFromHash(data_row)
 # APPT_ENTITY_NAME - Name of the department
 # APPT_ENTITY_SCHOOL - name of the owning school
   node_abbrev = data_row['APPT_ENTITY_ABBR'] || data_row['ENTITY_ABBR'] || data_row['ABBR'] || data_row['ABBR_NAME']
-  node_name = data_row['APPT_ENTITY_NAME'] || data_row['NODE_NAME'] || data_row['ENTITY_NAME'] 
-  node_search_name = data_row['APPT_SEARCH_NAME'] || data_row['SEARCH_NAME'] 
+  node_name = data_row['APPT_ENTITY_NAME'] || data_row['NODE_NAME'] || data_row['ENTITY_NAME']
+  node_search_name = data_row['APPT_SEARCH_NAME'] || data_row['SEARCH_NAME']
   node_label = data_row['LABEL_NAME'] || node_name
+  node_pubmed_search_name = data_row['PUBMED_NAME'] || data_row['PUBMED_SEARCH_NAME'] || data_row['SEARCH_NAME'] || node_name
   node_id = data_row['APPT_ENTITY_ID'] || data_row['ENTITY_ID'] || data_row['ID'] || data_row['NODE_ID'] || data_row['dept_id'] || data_row['department_id'] || data_row['DEPT_ID'] || data_row['DEPARTMENT_ID']
   root_name = data_row['APPT_ENTITY_SCHOOL'] || data_row['ROOT'] || data_row['ROOT_NAME']
   if root_name == node_abbrev || node_name =~ /school/i || node_name =~ /college/i
@@ -27,8 +28,10 @@ def CreateSchoolDepartmentFromHash(data_row)
   org.name = node_label
   org.abbreviation = node_abbrev
   org.search_name = node_search_name
+  org.pubmed_search_name = node_pubmed_search_name
   org.abbreviation.strip! unless org.abbreviation.blank?
   org.search_name.strip! unless org.search_name.blank?
+  org.pubmed_search_name.strip! unless org.pubmed_search_name.blank?
   org.name.strip! unless org.name.blank?
   if org.name.blank? then
     puts "org #{org.name} #{org.abbreviation}  does not have a name"
@@ -54,6 +57,7 @@ def CreateSchoolDepartmentFromHash(data_row)
       existing_org.move_to_child_of school_org if existing_org.parent_id.blank? && ! school_org.nil?
       existing_org.department_id = org.department_id if existing_org.department_id.blank?
       existing_org.name = org.name unless org.name.blank? or existing_org.name == org.name
+      existing_org.pubmed_search_name = org.pubmed_search_name unless org.pubmed_search_name.blank? or existing_org.pubmed_search_name == org.pubmed_search_name
       existing_org.abbreviation = org.abbreviation unless org.abbreviation.blank? or existing_org.abbreviation == org.abbreviation
       existing_org.save!
       org = existing_org
@@ -63,13 +67,13 @@ def CreateSchoolDepartmentFromHash(data_row)
 end
 
 def HandleSchool(school_name)
-  return nil if school_name.blank? 
+  return nil if school_name.blank?
   school = School.find_by_name(school_name) || School.find_by_abbreviation(school_name)
   if school.blank? then
     school = School.new
     if school_name =~ /school/i
       school.name = school_name
-    else 
+    else
       school.name = school_name
       school.abbreviation = school_name
     end
@@ -83,7 +87,7 @@ def ReorderByAbbreviation(node=nil)
   return ReorderByAbbreviation(OrganizationalUnit.root) if node.blank?
   child_nodes = node.children
   child_nodes.each do |unit|
-    right_sib = unit.right_sibling 
+    right_sib = unit.right_sibling
     if (!right_sib.blank? ) and unit.abbreviation > right_sib.abbreviation
       unit.move_right
       return ReorderByAbbreviation(node)
@@ -125,7 +129,7 @@ def CleanUpOrganizationData()
   all.each do |unit|
     if ! unit.nil? && ! unit.parent_id.blank? && unit.lft.nil?
       puts unit.name
-      parent = OrganizationalUnit.find(unit.parent_id) 
+      parent = OrganizationalUnit.find(unit.parent_id)
       unit.move_to_child_of parent if ! parent.nil?
     end
   end
@@ -159,11 +163,16 @@ def CreateOrganizationFromHash(data_row)
     org.organization_phone = data_row['DV_PHONE'] || data_row['PHONE'] || data_row['phone']
     org.organization_url = data_row['DV_URL'] || data_row['URL'] || data_row['dv_url']
     org.organization_classification = data_row['DV_TYPE'] || data_row['TYPE'] || data_row['dv_type'] #Research, Basic, Clinical, ??
+    org.pubmed_search_name = data_row['PUBMED_NAME'] || data_row['PUBMED_SEARCH_NAME'] || org.search_name
     org.abbreviation.strip! unless org.abbreviation.blank?
     org.search_name.strip! unless org.search_name.blank?
+    org.pubmed_search_name.strip! unless org.pubmed_search_name.blank?
     org.name.strip! unless org.name.blank?
     if org.name =~ /rollup/i
       return org
+    end
+    if org.name.blank? and org.division_id.blank?
+      return
     end
     if !data_row['CENTER_FLAG'].blank? && data_row['CENTER_FLAG'].to_i > 0
       org.type = "Center"
@@ -176,12 +185,12 @@ def CreateOrganizationFromHash(data_row)
     else
       org.type = 'Division'
     end
-    
+
     if org.name.blank?
       puts "org.name blank. data_row=#{data_row.inspect}, org=#{org.inspect}"
       return
     end
-    
+
     parent_org = GetParentOrg(org)
 
     if org.name.blank? then
@@ -202,17 +211,18 @@ def CreateOrganizationFromHash(data_row)
         end
         existing_org.department_id = org.department_id if (existing_org.department_id.blank? || existing_org.department_id == 0) && org.department_id > 0
         existing_org.division_id = org.division_id if org.division_id > 0
-        existing_org.type = org.type if org.type != existing_org.type
+        existing_org.type = org.type if org.type != existing_org.type and existing_org.type != 'School'
         existing_org.name = org.name unless org.name.blank? or existing_org.name == org.name
         existing_org.abbreviation = org.abbreviation unless org.abbreviation.blank? or existing_org.abbreviation == org.abbreviation
         existing_org.organization_url = org.organization_url unless org.organization_url.blank? or existing_org.organization_url == org.organization_url
+        existing_org.pubmed_search_name = org.pubmed_search_name unless org.pubmed_search_name.blank? or existing_org.pubmed_search_name == org.pubmed_search_name
         existing_org.save!
         org = existing_org
   	  end
   	end
   	org
 end
-  
+
 def GetParentOrg(org)
   return HandleSchool(LatticeGridHelper.GetDefaultSchool()) if org.type == "Department"
   return HandleSchool(LatticeGridHelper.GetDefaultSchool()) if org.type == "Center" && (org.division_id.to_s =~ /010$/ || org.division_id.to_s =~ /510$/ )
@@ -224,11 +234,11 @@ def GetParentOrg(org)
 end
 
  def HasDepartment(datarow)
-   return true if ! datarow["department"].blank? 
-   return true if (! datarow["division_id"].blank? ) || (!datarow["DIVISION_ID"].blank?)
-   return true if (! datarow["dept_id"].blank?) || (! datarow["department_id"].blank?) || (! datarow["DEPT_ID"].blank?) || (! datarow["DEPARTMENT_ID"].blank?)
+  return true if ! datarow["department"].blank?
+  return true if (! datarow["division_id"].blank? ) || (!datarow["DIVISION_ID"].blank?)
+  return true if (! datarow["dept_id"].blank?) || (! datarow["department_id"].blank?) || (! datarow["DEPT_ID"].blank?) || (! datarow["DEPARTMENT_ID"].blank?)
 
-   return false
+  return false
  end
 
 # process the somewhat arbitrary syntax of the way home departments, secondary appointments, and department divisions are handled.
@@ -236,7 +246,10 @@ end
 def SetDepartment(pi, datarow)
   # dept_id || department_id
   # division_id
-  return HandleDepartment(pi,datarow) if ! datarow["department"].blank? 
+  if datarow["department"].blank? 
+    datarow["department"] = datarow["institution"] unless datarow["institution"].blank?
+  end
+  return HandleDepartment(pi,datarow) if ! datarow["department"].blank?
   division_id = datarow["division_id"] || datarow["DIVISION_ID"]
   department_id=datarow["dept_id"] || datarow["department_id"] || datarow["DEPT_ID"] || datarow["DEPARTMENT_ID"]
   org = FindAppointingUnit(department_id,division_id)
@@ -246,7 +259,7 @@ end
 
 def HandleDepartment(pi, datarow)
   # department
-  return pi if datarow["department"].blank? 
+  return pi if datarow["department"].blank?
   department=datarow["department"]
   # put in the string handler too
   pi.home_department_name = department
@@ -255,13 +268,13 @@ def HandleDepartment(pi, datarow)
   temp, joint = joint.split("=") if ! joint.blank?
   # this needs to be rewritten to use home_department_id
   home_department = nil
-  if !division.blank? 
-    home_department = OrganizationalUnit.find_by_name(division) 
+  if !division.blank?
+    home_department = OrganizationalUnit.find_by_name(division)
     home_department = OrganizationalUnit.find_by_search_name(division) if home_department.blank?
     home_department = OrganizationalUnit.find_by_abbreviation(division)  if home_department.blank?
   end
   if !department.blank? and home_department.blank?
-    home_department = OrganizationalUnit.find_by_name(department) 
+    home_department = OrganizationalUnit.find_by_name(department)
     home_department = OrganizationalUnit.find_by_search_name(department) if home_department.blank?
     home_department = OrganizationalUnit.find_by_abbreviation(department)  if home_department.blank?
   end
@@ -273,29 +286,29 @@ def HandleDepartment(pi, datarow)
 end
 
 def FindCenter(department_id)
-  Center.find_by_department_id(department_id) if !department_id.blank? 
+  Center.find_by_department_id(department_id) if !department_id.blank?
 end
 
 def FindProgram(department_id)
-  Program.find_by_department_id(department_id) if !department_id.blank? 
+  Program.find_by_department_id(department_id) if !department_id.blank?
 end
 
 def FindOrg(department_id)
-  return nil if department_id.blank? 
-  the_org = OrganizationalUnit.find_by_division_id(department_id, :order => 'id') 
-  the_org = OrganizationalUnit.find_by_department_id(department_id, :order => 'id') if the_org.blank? 
+  return nil if department_id.blank?
+  the_org = OrganizationalUnit.find_by_division_id(department_id, :order => 'id')
+  the_org = OrganizationalUnit.find_by_department_id(department_id, :order => 'id') if the_org.blank?
   return the_org
 end
 
 def FindAppointingUnit(department_id,division_id)
-  return OrganizationalUnit.find_by_division_id(division_id) if !division_id.blank? 
-  return OrganizationalUnit.find_by_department_id(department_id) if !department_id.blank? 
+  return OrganizationalUnit.find_by_division_id(division_id) if !division_id.blank?
+  return OrganizationalUnit.find_by_department_id(department_id) if !department_id.blank?
   nil
 end
 
 def FindDepartment(department_id,division_id)
-  return Department.find_by_division_id(division_id) if !division_id.blank? 
-  return Department.find_by_department_id(department_id) if !department_id.blank? 
+  return Department.find_by_division_id(division_id) if !division_id.blank?
+  return Department.find_by_department_id(department_id) if !department_id.blank?
   nil
 end
 
@@ -312,7 +325,7 @@ def CreateProgramFromName(department)
       puts "Could not find program #{department}" if  theProgram.blank?
       if theProgram.blank? && !department.blank? then
         max_program_number_q = Program.maximum(:sort_order)
-        if max_program_number_q.blank? 
+        if max_program_number_q.blank?
           max_program_number = 0
         else
           max_program_number = max_program_number_q
@@ -352,6 +365,5 @@ def deleteUnupdatedOrganizations(orgs_to_delete)
       OrganizationalUnit.delete(org.id)
     end
   end
-end    
-    
-    
+end
+

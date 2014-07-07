@@ -3,12 +3,13 @@
   bcdb = Bcdatabase.load
 %>
 
-<% 
+<%
   require 'latticegrid'
   the_database = case LatticeGrid.the_instance
     when 'RHLCCC' then "rhlccc_latticegrid"
     when 'Feinberg' then "fsm_latticegrid"
     when 'CCNE' then "ccne_latticegrid"
+    when 'RAS' then "ras_latticegrid"
     when 'UCSF' then "ucsf_latticegrid"
     when 'LLS' then "lls_latticegrid"
     when 'UWCCC' then "uwisc_latticegrid"

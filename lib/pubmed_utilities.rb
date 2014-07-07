@@ -58,14 +58,30 @@ def BuildPISearch(pi, full_first_name=true)
   if limit_to_institution(pi) then
     result = LimitSearchToInstitution(result, pi)
   end
+  result= LimitSearchToMeSHterms(result)
   result
+end
+
+def BuildSearchByMeSHterms()
+  if LatticeGridHelper.limit_to_MeSH_terms? 
+    return LatticeGridHelper.MeSH_terms_string
+  end
+  return ""
+end
+
+def LimitSearchToMeSHterms(phrase_to_limit)
+  terms = BuildSearchByMeSHterms()
+  unless terms.blank?
+    return "(#{phrase_to_limit}) AND (#{terms})"
+  end
+  return phrase_to_limit
 end
 
 def LimitSearchToInstitution(term, pi)
   # temporarily reverse logic limit by institution
   # term + " NOT " + LatticeGridHelper.institutional_limit_search_string()
   if LatticeGridHelper.build_institution_search_string_from_department?
-    "(" + term + ") AND (" + BuildAffiliationLimitString(pi.home_department_name) +")"
+    "(" + term + ") AND (" + BuildAffiliationLimitString(pi) +")"
   else
     "(" + term + ") AND (" + LatticeGridHelper.institutional_limit_search_string() + ")"
   end
@@ -80,14 +96,22 @@ def BuildSearchOptions (number_years, max_num_records=500)
   }
 end
 
-def BuildAffiliationLimitString(str)
+def BuildAffiliationLimitString(pi)
+  str = pi.home_department_name
+  unless pi.home_department.blank? or pi.home_department.pubmed_search_name.blank?
+    str = pi.home_department.pubmed_search_name
+  end
   return "" if str.blank?
+  if str =~ /[\(\)]/
+    return str
+  end
   str_arr = str.split(" ")
   out_arr = []
   str_arr.each do |txt|
-    next if txt.length < 3
+    next if txt.length < 4
     out_arr << txt+"[affil]"
   end
+  out_arr << str+"[affil]" if out_arr.blank?
   out_arr.join(" AND ")
 end
 
@@ -100,7 +124,7 @@ def FindPubMedIDs (all_investigators, options, number_years, debug=false, smart_
     repeatCnt=0
     entries = nil
     perform_esearch=true
-    keywords = BuildPISearch(investigator, true)
+    keywords = BuildPISearch(investigator, LatticeGridHelper.global_pubmed_search_full_first_name?() )
     investigator["mark_pubs_as_valid"]= limit_to_institution(investigator) 
     while perform_esearch && repeatCnt < 3 && attempt < 4
       begin

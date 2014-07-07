@@ -1,4 +1,147 @@
+#Stanford December 2013 / January 2014 loads
+# on staging run this:
+export RAILS_ENV=staging 
+
+
+bundle exec rake db:migrate
+
+bundle exec rake importDepartments file=db/imports/Stanford/department_lookup.txt
+bundle exec rake importOrganizations file=db/imports/Stanford/division_lookup_20131212.txt 
+bundle exec rake cleanUpOrganizations
+bundle exec rake getAllOrganizationsNotUpdated
+bundle exec rake purgeUnupdatedOrganizations
+bundle exec rake getAllOrganizationsNotUpdated
+
+bundle exec rake importJournalImpact file=db/imports/jcr_recs.txt
+bundle exec rake importJournalImpact file=db/imports/jcr_recs_2009.txt
+bundle exec rake importJournalImpact file=db/imports/jcr_recs_2010.txt
+bundle exec rake importJournalImpact file=db/imports/jcr_recs_2011.txt
+bundle exec rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+
+
+
+bundle exec rake importInvestigators file=db/imports/Stanford/stanford_membership_20131212.txt
+bundle exec rake cleanup:countFacultyUpdates
+bundle exec rake cleanup:purgeUnupdatedFaculty
+
+bundle exec rake log:clear
+bundle exec rake getAllMembers  
+bundle exec rake checkForInvestigatorsWithNoPrograms
+bundle exec rake deleteInvestigatorsWithNoPrograms
+
+bundle exec rake db:vacuum
+bundle exec rake cleanup:email
+bundle exec rake cleanup:cleanInvestigatorsUsername
+
+rake insertAllAbstracts 
+rake nightlyBuild # repeat a few times a week
+rake cleanup:find_duplicate_tags
+rake cleanup:resolve_duplicate_tags
+rake cleanup:resolve_misformed_tags
+rake monthlyBuild # repeat weekly or monthly - updates the mesh stats
+rake setup:wordle
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+bundle exec rake updateJournalISSNsFromPubmed
+bundle exec rake cleanJournalISSNentries
+bundle exec rake findAbstractswithoutJCRentries
+bundle exec rake findAbstractswithJCRentries
+bundle exec rake updateJournalISSNsFromPubmed
+bundle exec rake setPreferredHighImpact
+
+bundle exec rake db:vacuum  #added a custom rake method for this
+bundle exec rake log:clear
+
+
+# RAS Initiative November 2013
+
+rake db:vacuum 
+rake log:clear
+rake importRoot file=db/imports/RAS/root_lookup.txt 
+rake importOrganizations file=db/imports/RAS/institution_lookup.txt 
+rake cleanUpOrganizations
+rake log:clear
+rake importInvestigators file=db/imports/RAS/ras_faculty.txt 
+rake cleanup:countFacultyUpdates
+rake cleanup:email
+rake cleanup:cleanInvestigatorsUsername
+
+bundle exec rake importJournalImpact file=db/imports/jcr_recs_2011.txt
+bundle exec rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+bundle exec rake updateJournalISSNsFromPubmed
+bundle exec rake cleanJournalISSNentries
+bundle exec rake findAbstractswithoutJCRentries
+bundle exec rake findAbstractswithJCRentries
+bundle exec rake updateJournalISSNsFromPubmed
+bundle exec rake setPreferredHighImpact
+
+rake insertAllAbstracts 
+rake nightlyBuild # repeat a few times a week
+rake cleanup:find_duplicate_tags
+rake cleanup:resolve_duplicate_tags
+rake cleanup:resolve_misformed_tags
+rake monthlyBuild # repeat weekly or monthly - updates the mesh stats
+rake setup:wordle
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+# Oct 2013 loads, RHLCCC
+
+# on production run this:
+export RAILS_ENV=production 
+
+bundle exec rake db:migrate
+
+bundle exec rake importInvestigators file=db/imports/RHLCCC/new_faculty_Sept2013.txt
+bundle exec rake importInvestigators file=db/imports/RHLCCC/new_faculty_Feb2013.txt
+bundle exec rake importInvestigators file=db/imports/RHLCCC/new_faculty_Dec2012.txt
+bundle exec rake importProgramMembership  file=db/imports/RHLCCC/RHLCCCProgramMembershipsSept2013.txt
+bundle exec rake getAllMembers  
+bundle exec rake checkForInvestigatorsWithNoPrograms
+bundle exec rake deleteInvestigatorsWithNoPrograms
+
+bundle exec rake cleanup:update_titles_and_home_from_ldap
+
+bundle exec rake importInvestigatorPubmedIDs file=db/imports/Feinberg/pubmed_ids_Oct2013.txt 
+bundle exec rake checkValidAbstractsWithoutInvestigators
+bundle exec rake removeValidAbstractsWithoutInvestigators
+# added doi and author_affiliations
+bundle exec rake cleanup:updateAbstractsWithPMCIDs
+
+bundle exec rake insertAllAbstracts 
+bundle exec rake nightlyBuild
+bundle exec rake cleanup:find_duplicate_tags
+bundle exec rake cleanup:resolve_duplicate_tags
+bundle exec rake cleanup:resolve_misformed_tags
+bundle exec rake monthlyBuild
+bundle exec rake setup:wordle
+
+bundle exec rake db:vacuum  #added a custom rake method for this
+bundle exec rake cleanup:email
+bundle exec rake cleanup:cleanInvestigatorsUsername
+
+bundle exec rake importJournalImpact file=db/imports/jcr_recs_2011.txt
+bundle exec rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+bundle exec rake updateJournalISSNsFromPubmed
+bundle exec rake cleanJournalISSNentries
+bundle exec rake findAbstractswithoutJCRentries
+bundle exec rake findAbstractswithJCRentries
+bundle exec rake updateJournalISSNsFromPubmed
+bundle exec rake setPreferredHighImpact
+
+# bundle exec rake awards:clear
+bundle exec rake awards:importData file=db/imports/Feinberg/private/award_data_20131010.txt
+bundle exec rake awards:cleanPIassignments
+bundle exec rake awards:mergeData
+
+bundle exec rake db:vacuum  #added a custom rake method for this
+
+
 # Feinberg Oct 2013 loads
+
+# production run this:
+export RAILS_ENV=production 
 
 bundle exec rake db:migrate
 bundle exec rake importDepartments file=db/imports/Feinberg/department_lookup_Sep2013.txt 
@@ -36,6 +179,7 @@ bundle exec rake setPreferredHighImpact
 
 bundle exec rake awards:importData file=db/imports/Feinberg/private/award_data_20131010.txt
 bundle exec rake awards:cleanPIassignments
+bundle exec rake awards:mergeData
 
 bundle exec rake importStudies file=db/imports/Feinberg/private/studies_2012-10-17.csv
 bundle exec rake importStudyInvestigators file=db/imports/Feinberg/private/study_roles_2012-10-17.csv

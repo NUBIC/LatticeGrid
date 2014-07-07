@@ -38,25 +38,40 @@ module OrgsHelper
       out+= link_to( "Publications network", show_org_cytoscape_url(params[:id]) )
       out+= " &nbsp;  &nbsp; " 
     end
-    if not (controller.action_name == 'awards_org' and controller.controller_name == 'cytoscape')
-      out+= link_to( "Funding network", awards_org_cytoscape_url(params[:id]) )
+    if defined?(LatticeGridHelper.include_awards?) and LatticeGridHelper.include_awards?() then
+      if not (controller.action_name == 'awards_org' and controller.controller_name == 'cytoscape')
+        out+= link_to('Funding network', awards_org_cytoscape_url(params[:id]) ) 
+      else
+        out+= "<span class='disabled'>Funding network</span>"      
+      end
+      out+= " &nbsp;  &nbsp; " 
+      if not (controller.action_name == 'org' and controller.controller_name == 'awards')
+        out+= link_to('Funding report', org_award_url(:id=>params[:id], :page=>1) ) 
+        out+= " &nbsp;  &nbsp; " 
+      else
+        out+= "<span class='disabled'>Funding report</span>"      
+      end
       out+= " &nbsp;  &nbsp; " 
     end
-    if not (controller.action_name == 'org' and controller.controller_name == 'awards')
-      out+= link_to('Funding report', org_award_url(:id=>params[:id], :page=>1) ) 
-      out+= " &nbsp;  &nbsp; " 
+    if defined?(LatticeGridHelper.include_studies?) and LatticeGridHelper.include_studies?() then
+      if not (controller.action_name == 'studies_org' and controller.controller_name == 'cytoscape')
+        out+= link_to( "Studies network", studies_org_cytoscape_url(params[:id]) )
+        out+= " &nbsp;  &nbsp; " 
+      else
+        out+= "<span class='disabled'>Studies network</span>"      
+      end
+      if not (controller.action_name == 'org' and controller.controller_name == 'studies')
+        out+= link_to('Studies report', org_study_url(:id=>params[:id], :page=>1) ) 
+        out+= " &nbsp;  &nbsp; " 
+      else
+         out+= "<span class='disabled'>Studies report</span>"      
+      end
     end
-    if not (controller.action_name == 'studies_org' and controller.controller_name == 'cytoscape')
-      out+= link_to( "Studies network", studies_org_cytoscape_url(params[:id]) )
-      out+= " &nbsp;  &nbsp; " 
-    end
-    if not (controller.action_name == 'org' and controller.controller_name == 'studies')
-      out+= link_to('Studies report', org_study_url(:id=>params[:id], :page=>1) ) 
-      out+= " &nbsp;  &nbsp; " 
-    end
-    if not (controller.action_name == 'org_all' and controller.controller_name == 'cytoscape')
-      out+= link_to( "Combined network", org_all_cytoscape_url(params[:id]) )
-      out+= " &nbsp;  &nbsp; " 
+    if defined?(LatticeGridHelper.include_studies?) and LatticeGridHelper.include_studies?() and defined?(LatticeGridHelper.include_awards?) and LatticeGridHelper.include_awards?() then
+       if not (controller.action_name == 'org_all' and controller.controller_name == 'cytoscape')
+        out+= link_to( "Combined network", org_all_cytoscape_url(params[:id]) )
+        out+= " &nbsp;  &nbsp; " 
+      end
     end
     out+"</span>"
   end

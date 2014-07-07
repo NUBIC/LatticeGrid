@@ -13,6 +13,11 @@
   <%= javascript_include_tag :defaults %> 
 
   <%= LatticeGridHelper.google_analytics -%>
+  <% if lattice_grid_instance == 'RAS' %>
+  <script type="text/javascript" language="JavaScript">
+    document.domain = "nciphub.org";
+  </script>
+  <% end %>
 </head>
 <body>
 

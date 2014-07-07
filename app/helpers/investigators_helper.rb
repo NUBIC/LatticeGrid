@@ -125,6 +125,12 @@ module InvestigatorsHelper
       out+= "<span class='disabled'>Chord</span>"      
     end
     out+= " &nbsp;  &nbsp; " 
+    if not (controller.action_name == 'investigator_tree' and controller.controller_name == 'cytoscape')
+      out+= link_to("Tree", investigator_tree_cytoscape_url(params[:id]))
+    else
+      out+= "<span class='disabled'>Tree</span>"      
+    end
+    out+= " &nbsp;  &nbsp; " 
     if defined?(LatticeGridHelper.include_awards?) and LatticeGridHelper.include_awards?() then
       if not (controller.action_name == 'awards' and controller.controller_name == 'cytoscape')
         out+= link_to('Awards', awards_cytoscape_url(params[:id]) ) 

@@ -17,16 +17,21 @@
 	<link rel="shortcut icon" href='<%= image_path("#{lattice_grid_instance}/favicon.ico") -%>' />
   <% if @javascripts.join =~ /jquery/i %>
   <script type="text/javascript" language="JavaScript">
-   jQuery.noConflict();
+    jQuery.noConflict();
  	var $j = jQuery;
-  // Use jQuery via jQuery(...)
+    // Use jQuery via jQuery(...)
   </script>
   <% end %>
   <%= LatticeGridHelper.google_analytics -%>
+  <% if lattice_grid_instance == 'RAS' %>
+  <script type="text/javascript" language="JavaScript">
+    document.domain = "nciphub.org";
+  </script>
+  <% end %>
 </head>
 <body>
 
-<% if Rails.env == 'development' %>
+<% if Rails.env == 'development' and lattice_grid_instance != 'RAS' %>
     <div id="debug" style="margin: 5px 5px 5px 5px;">
         <a href="#" onclick="$j('#debug_info').toggle(); return false" style="text-decoration: none; color: #999;">Show Debug Info &#10162;</a>
         <div id="debug_info" style="display : none;">
@@ -53,6 +58,13 @@
 			<%= link_to( image_tag( 'nubic-logo.png', :size => "150x56" ), "http://informatics.northwestern.edu/") %> 
 		 	<%= link_to( "Built by NUBIC", "http://informatics.northwestern.edu/") %>
 		</div>
+		<br/>
+		<% if lattice_grid_instance == 'RAS' %>
+		<div id="ti">
+		   <a href="http://ti.ucsf.edu/"><img alt="Ti-logo" height="56" src="/images/ti-logo.png" width="150" /></a>  <br/>
+		   <a href="http://ti.ucsf.edu/">Supported by Translational Informatics</a>
+		 </div>
+		 <% end %>
 		<p></p>
 	</div> <!-- end of side -->
 	<div id="maincontent">

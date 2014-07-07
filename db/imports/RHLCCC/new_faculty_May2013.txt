@@ -1,0 +1,14 @@
+BASIS	CAMPUS	CATEGORY	DEGREE	DEPT_ID	DIVISION_ID	DV_ABBR	EMAIL	EMPLOYEE_ID	ERA_COMMONS_ID	FIRST_NAME	LAST_NAME	MIDDLE_NAME	NETID	RANK	TENURE
+FT	Chicago	Regular	MD/MBA	320000	320080	Surg-Transplant	mabecass@nmh.org	1021673	MABECASSIS	Michael	Abecassis	M I	mabecass	Professor	Tenured
+FT	Evanston	Regular	PhD				erik.andersen@northwestern.edu			Erik	Andersen		eca463	Asst Prof	Tenure eligible
+FT	Chicago	Regular	PhD	102000	102010	Micro-Immunology		1080886		Carol	Clayberger	Ann	cac164	Professor	Non-tenure eligible
+FT	Chicago	Regular	MD	316000	316010	Pediatrics		1063212		Jason	Fangusaro	R	jrf428	Assoc Prof	Non-tenure eligible
+FT	Chicago	Regular	MD/PhD	201000	201010	Pathology		2698270		Juehua	Gao		jga576	Asst Prof	Non-tenure eligible
+FT	Chicago	Regular	MD	307000	307130	Med-Hematology / Oncology		1082014		Francis	Giles	J	fjg198	Professor	Tenured
+FT	Chicago	Regular	MD	316000	316010	Pediatrics		1080422		Alan	Krensky	M	amk843	Professor	Non-tenure eligible
+FT	Chicago	Regular	MD/PhD	307000	307130	Med-Hematology / Oncology		1004322	HKWAAN	Hau	Kwaan	C	hck	Professor	Tenured
+FT	Off Campus	Regular	PhD	307000	307030	Med-Rheumatology		1032378	PERLMANH	Harris	Perlman	R	hrp164	Professor	Tenured
+FT	Chicago	Research	MD/PhD	310000	310110	Ob/Gyn-Reprod Biol Rsrch		1056940	WENANQIANG	Wenan	Qiang		wqi307	Res Asst Prof	Non-tenure eligible
+FT	Chicago	Regular	MD	308000	308010	Neurology		1022677	TEEPUS	Teepu	Siddique		teepu	Professor	Tenured
+FT	Chicago	Regular	MD	201000	201010	Pathology		1075730		Yanming	Zhang		yzz005	Assoc Prof	Non-tenure eligible
+FT	Off Campus	Research	MD/PhD	319000	319010	Radiology	zhuoli-zhang@northwestern.edu	1063304	ZHUOLIZHANG	Zhuoli	Zhang		zzh227	Res Assoc Prof	Non-tenure eligible
