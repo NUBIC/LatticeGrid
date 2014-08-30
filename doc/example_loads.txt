@@ -1,3 +1,59 @@
+#Stanford July 2014 loads
+# on staging run this:
+export RAILS_ENV=staging 
+
+
+bundle exec rake db:migrate
+
+bundle exec rake importDepartments file=db/imports/Stanford/department_lookup.txt
+bundle exec rake importOrganizations file=db/imports/Stanford/division_lookup_20140725.txt 
+bundle exec rake cleanUpOrganizations
+bundle exec rake getAllOrganizationsNotUpdated
+bundle exec rake purgeUnupdatedOrganizations
+bundle exec rake getAllOrganizationsNotUpdated
+
+bundle exec rake importJournalImpact file=db/imports/jcr_recs.txt
+bundle exec rake importJournalImpact file=db/imports/jcr_recs_2009.txt
+bundle exec rake importJournalImpact file=db/imports/jcr_recs_2010.txt
+bundle exec rake importJournalImpact file=db/imports/jcr_recs_2011.txt
+bundle exec rake importJournalISOnames file=db/imports/jcr_iso_titles.txt
+
+
+
+bundle exec rake importInvestigators file=db/imports/Stanford/stanford_membership_20140725.txt
+bundle exec rake cleanup:countFacultyUpdates
+bundle exec rake cleanup:purgeUnupdatedFaculty
+
+bundle exec rake log:clear
+bundle exec rake getAllMembers  
+bundle exec rake checkForInvestigatorsWithNoPrograms
+bundle exec rake deleteInvestigatorsWithNoPrograms
+
+bundle exec rake db:vacuum
+bundle exec rake cleanup:email
+bundle exec rake cleanup:cleanInvestigatorsUsername
+
+rake insertAllAbstracts 
+rake nightlyBuild # repeat a few times a week
+rake cleanup:find_duplicate_tags
+rake cleanup:resolve_duplicate_tags
+rake cleanup:resolve_misformed_tags
+rake monthlyBuild # repeat weekly or monthly - updates the mesh stats
+rake setup:wordle
+rake db:vacuum  #added a custom rake method for this
+rake log:clear
+
+bundle exec rake updateJournalISSNsFromPubmed
+bundle exec rake cleanJournalISSNentries
+bundle exec rake findAbstractswithoutJCRentries
+bundle exec rake findAbstractswithJCRentries
+bundle exec rake updateJournalISSNsFromPubmed
+bundle exec rake setPreferredHighImpact
+
+bundle exec rake db:vacuum  #added a custom rake method for this
+bundle exec rake log:clear
+
+
 #Stanford December 2013 / January 2014 loads
 # on staging run this:
 export RAILS_ENV=staging 

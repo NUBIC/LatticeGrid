@@ -56,12 +56,12 @@ ActiveRecord::Schema.define(:version => 20140124011303) do
     t.integer   "last_reviewed_id"
     t.string    "last_reviewed_ip"
     t.date      "pubmed_creation_date"
-    t.string    "doi"
-    t.text      "author_affiliations"
     t.text      "author_vector"
     t.text      "abstract_vector"
     t.text      "mesh_vector"
     t.text      "journal_vector"
+    t.string    "doi"
+    t.text      "author_affiliations"
   end
 
   add_index "abstracts", ["abstract_vector"], :name => "abstracts_fts_abstract_vector_index"
