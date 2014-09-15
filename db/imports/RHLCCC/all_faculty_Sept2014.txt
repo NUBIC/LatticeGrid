@@ -1,0 +1,8 @@
+BASIS	CAMPUS	CATEGORY	DEGREE	DEPT_ID	DIVISION_ID	DV_ABBR	EMPLOYEE_ID	FIRST_NAME	LAST_NAME	MIDDLE_NAME	NETID	RANK	TENURE
+FT	Chicago	Regular	MD/MPH/MBA	Med-Hematology / Oncology	young.chae@northwestern.edu	1086162		Young Kwang	Chae		ykc713	Asst Prof
+UNPD	Chicago	Health System Clinician/NMH	MD	Med-Cardiology		1057372		Sonal	Chandra		sch590	Health System Clinician
+FT	Chicago	Regular	MD/MS	Med-Hematology / Oncology		1086023		Sunandana	Chandra		scr973	Asst Prof
+FT	Chicago	Regular	MD/PhD	Neurological Surgery		1086419		Rintaro	Hashizume		rhv292	Asst Prof
+
+
+BASIS,CAMPUS,CATEGORY,DEGREE,DEPT_ID,DIVISION_ID,DV_ABBR,EMPLOYEE_ID,FIRST_NAME,LAST_NAME,MIDDLE_NAME,NETID,RANK,TENURE,EMAIL

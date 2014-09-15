@@ -1,0 +1,11 @@
+BASIS	CAMPUS	CATEGORY	DEGREE	DEPT_ID	DIVISION_ID	DV_ABBR	EMAIL	EMPLOYEE_ID	ERA_COMMONS_ID	FIRST_NAME	LAST_NAME	MIDDLE_NAME	NETID	RANK	TENURE
+FT	Chicago	Regular	PhD	202000	202020	PrevMed-Health&BiomedInfo	ramana.davuluri@northwestern.edu	1084753		Ramana	Davuluri	V	rvd118	Professor	Tenured
+FT	Chicago	Research	PhD	420000	420010	NUCATS	g-feng@northwestern.edu	1067664		Gang	Feng		gfc721	Res Asst Prof	Non-tenure eligible
+FT	Chicago	Regular	MD	307000	307130	Med-Hematology / Oncology	l-gordon@northwestern.edu	1012563	LEO_I_GORDON	Leo	Gordon	I	ligordon	Professor	Tenured
+FT	Chicago	Regular	MD	307000	307130	Med-Hematology / Oncology	sarika.jain@northwestern.edu	1080205		Sarika	Jain		sjy136	Asst Prof	Non-tenure eligible
+FT	Chicago	Research	PhD	319500	319510	Radiation Oncology	smi884@northwestern.edu	1019973	SMIRZOEVA	Salida	Mirzoeva		smi884	Res Asst Prof	Non-tenure eligible
+FT	Chicago	Regular	MD	302000	302010	Dermatology	apaller@northwestern.edu	1006032	AMYPALLER	Amy	Paller	S	apaller	Professor	Tenured
+FT	Chicago	Research	PhD	319500	319510	Radiation Oncology	tpaunesku@northwestern.edu	1051743	TPAUNESKU	Tatjana	Paunesku		tpa148	Res Assoc Prof	Non-tenure eligible
+FT	Chicago	Regular	PhD	307000	307130	Med-Hematology / Oncology	m-peter@northwestern.edu	1072982	MPETER	Marcus	Peter	Ernest	mep418	Professor	Tenured
+FT	Chicago	Regular	MD/PhD	401000	401010	Lurie Cancer Center	l-platanias@northwestern.edu	1051610	LPL530	Leonidas	Platanias	C	lpl530	Professor	Tenured
+FT	Off Campus	Research	MD/PhD	316000	316010	Pediatrics	x-wang1@northwestern.edu	1056042		Xiao	Wang		xwa964	Res Asst Prof	Non-tenure eligible

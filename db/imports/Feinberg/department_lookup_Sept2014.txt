@@ -1,0 +1,57 @@
+APPT_ENTITY_ABBR	APPT_ENTITY_CHAIR_FACULTY_ID	APPT_ENTITY_ID	APPT_ENTITY_NAME	APPT_ENTITY_SCHOOL
+Medical Social Sciences	600776	323000	Medical Social Sciences	FSM
+IPR		612000	Institute for Policy Research	IPR
+Asher Center	608025	411000	Asher Center for the Study and Treatment of Depressive Orders	FSM
+Inst. Women's Health Rsch	605984	421000	Institute for Women's Health Research	FSM
+NUCATS	602019	420000	Northwestern University Clinical and Translational Sciences Institute (NUCATS)	FSM
+Radiation Oncology	603765	319500	Radiation Oncology	FSM
+Medical Education	605794	502000	Medical Education	FSM
+Dental School		601000	Dental School	Dental
+Kellogg		602000	Kellogg School of Management	Kellogg
+Law School		603000	School of Law	Law
+Medill		604000	Medill School of Journalism	Medill
+MEAS		605000	McCormick School of Engineering	MEAS
+SESP		606000	School of Education and Social Policy	SESP
+Communication		607000	School of Communication	Communication
+WCAS		608000	Weinberg College of Arts and Sciences	WCAS
+SCS		609000	School of Continuing Studies	SCS
+Provost's Office		610000	Provost's Office	Provost's Office
+Anesthesiology	605314	301000	Anesthesiology	FSM
+CM Biology	601894	101000	Cell and Molecular Biology	FSM
+Ctr for Genetic Medicine	602909	402000	Center for Genetic Medicine	FSM
+Dermatology	604139	302000	Dermatology	FSM
+Family Medicine		304000	Family and Community Medicine	FSM
+Feinberg Cardio Rsch	607417	305000	Feinberg Cardiovascular Research Institute	FSM
+Medicine	608119	307000	Medicine	FSM
+Micro-Immunology	603022	102000	Microbiology-Immunology	FSM
+Ob/Gyn	606312	310000	Obstetrics and Gynecology	FSM
+NUIN	603849	409000	Northwestern University Institute of Neuroscience (NUIN)	FSM
+IBNAM	605354	410000	Institute for Bioengineering and Nanoscience in Advanced Medicine (IBNAM)	FSM
+Pharmacology	605063	103000	Pharmacology	FSM
+CNADC	603665	403000	Cognitive Neurology and Alzheimer's Disease Center	FSM
+Orthopaedic Surgery	604831	313000	Orthopaedic Surgery	FSM
+Neurology	602761	308000	Ken and Ruth Davee Department of Neurology	FSM
+Physical Therapy	601227	317000	Physical Therapy and Human Movement Sciences	FSM
+Psychiatry	608025	318000	Psychiatry and Behavioral Sciences	FSM
+Lurie Cancer Center	604638	401000	Robert H. Lurie Comprehensive Cancer Center	FSM
+Neurological Surgery	604092	309000	Neurological Surgery	FSM
+Ophthalmology	609032	312000	Ophthalmology	FSM
+Otolaryngology	602752	314000	Otolaryngology - Head and Neck Surgery	FSM
+Pathology	607695	201000	Pathology	FSM
+Pediatrics	602011	316000	Pediatrics	FSM
+P M & R	604676	315000	Physical Medicine and Rehabilitation	FSM
+Physiology	605395	104000	Physiology	FSM
+Preventive Medicine	606511	202000	Preventive Medicine	FSM
+Radiology	604722	319000	Radiology	FSM
+Surgery	606501	320000	Surgery	FSM
+Urology	604830	321000	Urology	FSM
+Administration	601079	504000	Administration	FSM
+Emergency Medicine	600016	303000	Emergency Medicine	FSM
+Center for Bioethics	606128	419000	Center for Bioethics, Science and Society	FSM
+NCCO	603037	422000	Northwestern University Comprehensive Center on Obesity	FSM
+Comprehensive Transplant	600001	423000	Comprehensive Transplant Center	FSM
+Center for AIDS Research	605968	412000	Center for AIDS Research	FSM
+Immunobiology Center	603739	408000	Interdepartmental Immunobiology Center	FMS
+CMRC	606523	413000	Children's Memorial Research Center (CMRC)	FSM
+Biochemistry		105000	Biochemistry and Molecular Genetics	FSM
+IPHAM		404000	Institute for Public Health and Medicine (IPHAM)	FSM

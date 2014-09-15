@@ -1,0 +1,3 @@
+BASIS	CAMPUS	CATEGORY	DEGREE	DV_ABBR	EMAIL	EMPLOYEE_ID	ERA_COMMONS_ID	FIRST_NAME	LAST_NAME	MIDDLE_NAME	NETID	RANK
+FT	Off Campus	Research	MD/PhD	Neurological Surgery		2573125		Simone	Sredni	Trieger	ssj873	Res Asst Prof
+FT	Chicago	Regular	PhD	Neurological Surgery		1085247		C David	James		cdj641	Professor

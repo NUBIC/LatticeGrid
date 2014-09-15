@@ -1,0 +1,5 @@
+BASIS	CAMPUS	CATEGORY	DEGREE	DEPT_ID	DIVISION_ID	DV_ABBR	EMAIL	EMPLOYEE_ID	ERA_COMMONS_ID	FIRST_NAME	LAST_NAME	MIDDLE_NAME	NETID	RANK	TENURE
+FT	Chicago	Regular	MD/PhD	321000	321010	Urology	sarki.abdulkadir@northwestern.edu	1083989		Sarki	Abdulkadir	A	saa163	Professor	Tenured
+FT	Chicago	Regular	MD/PhD	307000	307080	Med-Endocrinology	j-bass@northwestern.edu	1042585	JOEBASS	Joseph	Bass	T	jtb205	Professor	Tenured
+FT	Chicago	Regular	PhD	202000	202020	PrevMed-Health&BiomedInfo	ramana.davuluri@northwestern.edu	1084753		Ramana	Davuluri	V	rvd118	Professor	Tenured
+FT	Chicago	Regular	PhD	323000	323010	Medical Social Sciences	betina.yanez@northwestern.edu	2700687		Betina	Yanez	R	bry377	Asst Prof	Tenure eligible
