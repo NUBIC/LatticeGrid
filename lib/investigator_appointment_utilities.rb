@@ -79,6 +79,7 @@ def GenerateNetIDReport(data_row)
 end
 
 def CreateInvestigatorFromHash(data_row)
+  # TODO: find Investigator and if not found then create new
   pi = Investigator.new
   pi = SetInvestigatorIdentity(pi, data_row)
   pi = HandleUsername(pi)

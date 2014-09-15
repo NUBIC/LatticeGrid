@@ -1,26 +1,37 @@
-def generate_cytoscape_schema()
+def generate_cytoscape_schema
 {
-    :nodes => [{:name => "label", :type => "string"}, {:name => "element_type", :type => "string"}, {:name => "tooltiptext", :type => "string"}, {:name => "weight", :type => "number"}, {:name => "depth", :type => "number"}, {:name => "mass", :type => "long"} ],
-    :edges => [{:name => "label", :type => "string"}, {:name => "element_type", :type => "string"}, {:name => "tooltiptext", :type => "string"}, {:name => "weight", :type => "long"}, {:name => "directed", :type => "boolean", :defValue => true} ]
+    :nodes => [
+      {:name => "label", :type => "string"},
+      {:name => "element_type", :type => "string"},
+      {:name => "tooltiptext", :type => "string"},
+      {:name => "weight", :type => "number"},
+      {:name => "depth", :type => "number"},
+      {:name => "mass", :type => "long"}
+    ],
+    :edges => [
+      {:name => "label", :type => "string"},
+      {:name => "element_type", :type => "string"},
+      {:name => "tooltiptext", :type => "string"},
+      {:name => "weight", :type => "long"},
+      {:name => "directed", :type => "boolean", :defValue => true}
+    ]
 }
 end
 
 def cytoscape_array_has_key?(head_array, key)
-  head_array.each { |element|
-    return true if element[:id].to_s == key.to_s
-  }
-  return false
+  head_array.each { |element| return true if element[:id].to_s == key.to_s }
+  false
 end
 
 def cytoscape_edge_array_has_key?(edge_array, idx1, idx2)
-  edge_array.each { |element|
-    return true if element[:source] == idx1 and element[:target] == idx2
-    return true if element[:source] == idx2 and element[:target] == idx1
-  }
-  return false
+  edge_array.each do |element|
+    return true if element[:source] == idx1 && element[:target] == idx2
+    return true if element[:source] == idx2 && element[:target] == idx1
+  end
+  false
 end
 
-def cytoscape_edge_hash(edge_index, source_index, target_index, label="edge", weight=1, tooltiptext="", element_type="Investigator")
+def cytoscape_edge_hash(edge_index, source_index, target_index, label = 'edge', weight = 1, tooltiptext = '', element_type = 'Investigator')
   {
     :id => edge_index.to_s,
     :label => "#{label}",
@@ -32,20 +43,20 @@ def cytoscape_edge_hash(edge_index, source_index, target_index, label="edge", we
   }
 end
 
-def cytoscape_investigator_node_hash(investigator, weight=10, depth=1,investigator_awards=nil, investigator_studies=nil)
- {
-   :id => investigator.id.to_s,
-   :element_type => "Investigator",
-   :label => investigator.name,
-   :weight => weight,
-   :mass => weight,
-   :depth => depth,
-   :tooltiptext => investigator_tooltip(investigator, depth, investigator_awards, investigator_studies)
- }
+def cytoscape_investigator_node_hash(investigator, weight = 10, depth = 1, investigator_awards = nil, investigator_studies = nil)
+  {
+    :id => investigator.id.to_s,
+    :element_type => 'Investigator',
+    :label => investigator.name,
+    :weight => weight,
+    :mass => weight,
+    :depth => depth,
+    :tooltiptext => investigator_tooltip(investigator, depth, investigator_awards, investigator_studies)
+  }
 end
 
 def investigator_tooltip(investigator, depth, investigator_awards=nil, investigator_studies=nil)
-    "Publications: #{investigator.total_publications}; <br/>" + 
+    "Publications: #{investigator.total_publications}; <br/>" +
     "First author pubs: #{investigator.num_first_pubs}; <br/>" +
     "Last author pubs: #{investigator.num_last_pubs}; <br/>" +
     "intra-unit collab: #{investigator.num_intraunit_collaborators}; <br/>" +
@@ -53,13 +64,11 @@ def investigator_tooltip(investigator, depth, investigator_awards=nil, investiga
     "username: #{investigator.username}; <br/>" +
     "depth: #{depth}; <br/>" +
     (investigator_awards.blank? ? "" : "PI awards: $#{award_info(investigator_awards,'pd/pi')}; <br/>") +
-    (investigator_awards.blank? ? "" : "All awards: $#{award_info(investigator_awards)}; <br/>") + 
-    (investigator_studies.blank? ? "" : "Research studies: #{investigator_studies.length}; <br/>") + 
-    ((investigator.home_department.blank?) ? "" : "primary appointment: #{investigator.home_department.abbreviation || truncate_words(investigator.home_department.name,30)}; <br/>") + 
+    (investigator_awards.blank? ? "" : "All awards: $#{award_info(investigator_awards)}; <br/>") +
+    (investigator_studies.blank? ? "" : "Research studies: #{investigator_studies.length}; <br/>") +
+    ((investigator.home_department.blank?) ? "" : "primary appointment: #{investigator.home_department.abbreviation || truncate_words(investigator.home_department.name,30)}; <br/>") +
     ((investigator.memberships.blank?) ? "" : "memberships: #{investigator.memberships.collect{|org| org.abbreviation || truncate_words(org.name,30) }.join(', <br/>&nbsp; &nbsp; &nbsp; &nbsp; ')}")
 end
-
-
 
 def number_to_humanized(amount)
   case amount.to_i
