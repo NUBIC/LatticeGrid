@@ -72,7 +72,6 @@ class CytoscapeController < ApplicationController
     @org = find_unit_by_id_or_name(params[:id])
     @title = "#{@org.name}: inter-unit ollaborations"
     @dataurl = org_org_cytoscape_data_url(params[:id], params[:depth], params[:include_publications], params[:include_awards], params[:include_studies])
-
     show
   end
 

@@ -10,6 +10,7 @@ FactoryGirl.define do
   factory :center, :class => 'Center' do
     name 'center'
     type 'Center'
+    abbreviation 'cen'
     department_id 612000
     division_id 612010
   end

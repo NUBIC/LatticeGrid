@@ -1,5 +1,5 @@
 def generate_cytoscape_schema
-{
+  {
     :nodes => [
       {:name => "label", :type => "string"},
       {:name => "element_type", :type => "string"},
@@ -15,7 +15,7 @@ def generate_cytoscape_schema
       {:name => "weight", :type => "long"},
       {:name => "directed", :type => "boolean", :defValue => true}
     ]
-}
+  }
 end
 
 def cytoscape_array_has_key?(head_array, key)

@@ -63,8 +63,12 @@ def cytoscape_org_node_hash(org, weight = 10, depth = 1)
     :label => org.name,
     :weight => weight,
     :depth => depth,
-    :tooltiptext => org.abbreviation+"\nPublications: #{weight}\nFaculty: #{org.all_primary_or_member_faculty_count}"
+    :tooltiptext => org_node_tooltip(org, weight)
   }
+end
+
+def org_node_tooltip(org, weight)
+  "#{org.abbreviation}\nPublications: #{weight}\nFaculty: #{org.all_primary_or_member_faculty_count}"
 end
 
 def cytoscape_publication_node_hash(investigator_colleague, weight=10, depth=1)
@@ -107,10 +111,10 @@ def generate_cytoscape_publication_edges(investigator, depth, node_array, edge_a
   edge_array
 end
 
- def investigator_colleague_edge_tooltip(connection, root, leaf)
-   return "root doesn't exist" if root.blank?
-   return "leaf doesn't exist" if leaf.blank?
-   "#{connection.publication_cnt} shared publications between #{leaf.name} and #{root.name};<br/> " +
-   "MeSH similarity score: #{connection.mesh_tags_ic.round};" + " "
-   #"<br/> tags: "+ trunc_and_join_array(root.tag_list & leaf.tag_list, 16, ", ", 4)
- end
+def investigator_colleague_edge_tooltip(connection, root, leaf)
+  return "root doesn't exist" if root.blank?
+  return "leaf doesn't exist" if leaf.blank?
+  "#{connection.publication_cnt} shared publications between #{leaf.name} and #{root.name};<br/> " +
+  "MeSH similarity score: #{connection.mesh_tags_ic.round};" + " "
+  #"<br/> tags: "+ trunc_and_join_array(root.tag_list & leaf.tag_list, 16, ", ", 4)
+end

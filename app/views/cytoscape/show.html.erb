@@ -30,7 +30,7 @@
 
         <script type='text/javascript' language='javascript'>
         var request = jQuery.ajax({
-            url: '<%= barchart_org_path( @org.id ) %>',
+          url: '<%= barchart_org_path( @org.id ) %>',
           type: 'GET',
           dataType: 'script'
         });
@@ -39,11 +39,11 @@
       <% if @include_graph_link %>
         <p><%= org_nav_heading.html_safe %></p>
       <% end %>
-    <% elsif ! @investigator.blank? %>
+    <% elsif !@investigator.blank? %>
       <% all_abstracts = @all_abstracts || nil -%>
       <% title = @title || nil -%>
       <%= investigator_bio_heading(@investigator, all_abstracts, title, false).html_safe %>
-    <% elsif ! @title.blank? %>
+    <% elsif !@title.blank? %>
       <h1><%= @title %></h1>
     <% end %>
   </div>
@@ -155,7 +155,7 @@
     jQuery("input[name='layout']").parent().css({border:"1px darkblue solid", padding: "5px"});
 
     function refreshEdges() {
-          var the_val = jQuery( "#slider" ).slider( "value" );
+      var the_val = jQuery( "#slider" ).slider( "value" );
       var show_award = getItemCheckStatus("#showAwardEdgeCheckbox");
       var show_abstract = getItemCheckStatus("#showAbstractEdgeCheckbox");
       if (show_award) {show_award=true;}else{show_award=false}
@@ -173,21 +173,21 @@
         };
         return result;
       }, true);
-          jQuery( "#amount" ).val( the_val );
-      }
-      jQuery(function() {
-          jQuery( "#slider" ).slider({
-              orientation: "horizontal",
-              range: "min",
-              min: 0,
-              max: 100,
-              value: 10,
-              step: 2,
-              slide: refreshEdges,
-              change: refreshEdges
-          });
-          jQuery( "#amount" ).val( jQuery( "#slider" ).slider( "value" ) );
+      jQuery( "#amount" ).val( the_val );
+    }
+    jQuery(function() {
+      jQuery( "#slider" ).slider({
+        orientation: "horizontal",
+        range: "min",
+        min: 0,
+        max: 100,
+        value: 10,
+        step: 2,
+        slide: refreshEdges,
+        change: refreshEdges
       });
+      jQuery( "#amount" ).val( jQuery( "#slider" ).slider( "value" ) );
+    });
 
     function changeCytoscapeLayout(layout_name) {
       vis.layout({name: layout_name, options: LAYOUTS[layout_name]});
@@ -204,18 +204,18 @@
     function setSelectedLayout(title) {
       jQuery("input[name='layout']").each(
         function() {
-        if(jQuery(this).val() == title) {
-          jQuery(this).attr("checked","checked");
-        } else if(jQuery(this).is(':checked')) {
-               jQuery(this).removeAttr("checked");
-        }
+          if(jQuery(this).val() == title) {
+            jQuery(this).attr("checked","checked");
+          } else if(jQuery(this).is(':checked')) {
+            jQuery(this).removeAttr("checked");
+          }
         }
       )
     }
     function doExportNetwork() {
-           vis.exportNetwork("pdf", "export");
-           return this;
-       }
+      vis.exportNetwork("pdf", "export");
+      return this;
+    }
     // from Karthik Singh, July 2011
 
     function jumpto(x){
