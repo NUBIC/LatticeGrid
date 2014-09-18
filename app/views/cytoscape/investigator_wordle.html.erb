@@ -10,7 +10,7 @@
   var fill = d3.scale.category20b();
 
   d3.json('<%= image_path(@json_callback).split('?').first -%>', function(words) {
-  var fontSize = d3.scale.log().range([1, 40]);
+    var fontSize = d3.scale.log().range([1, 40]);
 
     d3.layout.cloud().size([960, 620])
       .words(words.map(function(d) {
