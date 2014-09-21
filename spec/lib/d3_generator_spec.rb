@@ -7,18 +7,20 @@ require 'mesh_utilities'
 include ApplicationHelper
 
 describe 'd3Generator' do
-
+  # create two Investigators (PI)
   let!(:pi) { FactoryGirl.create(:investigator, username: 'pi', first_name: 'Principal', last_name: 'Investigator') }
   let!(:co) { FactoryGirl.create(:investigator, username: 'co', first_name: 'Co', last_name: 'Author') }
+  # and a hierarchy of OrganizationalUnits (OU) - school has two departments
   let!(:school) { FactoryGirl.create(:school, name: 'school', department_id: '100000', division_id: '100010') }
   let!(:dept1) { FactoryGirl.create(:department, name: 'dept1', department_id: '101000', division_id: '101010', abbreviation: 'dept1') }
   let!(:dept2) { FactoryGirl.create(:department, name: 'dept2', department_id: '102000', division_id: '102010', abbreviation: 'dept2') }
-
+  # then associate each PI with the sub-OU
   let!(:pi_appt) { FactoryGirl.create(:primary_member, investigator: pi, organizational_unit: dept1) }
   let!(:co_appt) { FactoryGirl.create(:primary_member, investigator: co, organizational_unit: dept2) }
-
+  # create some words for the investigator wordle 
   let(:abstract_text) { 'Mixed cultures of astrocytes and oligodendrocytes derived from cerebral hemispheres of 18-19 day old rat fetuses were studied with the freeze-fracture technique. The plasma membranes of cultured astrocytes and oligodendrocytes differ substantially in their intramembrane particle profiles, and they can be positively identified consistently. Orthogonal small particle assemblies and numerous isolated globular particles characterize astrocytic plasma membranes, whereas the plasma membranes of oligodendrocytes show numerous elongated particles and fewer large and small globular particles similar to those seen in situ. Using these distinct differential features, we can identify partners of glial cell junctions. We can identify numerous interastrocytic gap junctions, as well as heterologous astrocyte-to-oligodendrocyte gap junctions. The plasma membranes of adjacent oligodendrocytes form numerous tight junctions consisting of linear P face strands and/or rows of particles interrupted by short segments of grooves, the complementary features on the E face. \"Reflexive\" type tight junctions seen in situ are also observed. In addition to intercellular junctions, glial cells develop special plasma membrane structural domains. Astrocytic plasma membranes often contain groups of plasmalemmal vesicles (caveolae), a distinctive feature of astrocytes in situ. Oligodendrocytes form flattened velate processes with cytoplasm restricted to finger-like channels resembling myelin lamellae in situ. Cultured astrocytes and oligodendrocytes develop the entire range of plasma membrane structural specializations seen in situ in the absence of the normal brain tissue framework. Thus, primary glial cell cultures allow experimental study of many glial cell properties, including their plasma membrane specializations.' }
   let(:abstract_title) { 'Cell-cell junctional interactions and characteristic plasma membrane features of cultured rat glial cells.' }
+  # and put them in a publication
   let!(:ab) { FactoryGirl.create(:abstract, abstract: abstract_text, title: abstract_title) }
   let!(:aw) { FactoryGirl.create(:proposal, institution_award_number: 'institution_award_number') }
   let!(:st) { FactoryGirl.create(:study, irb_study_number: 'irb_study_number') }
@@ -50,6 +52,7 @@ describe 'd3Generator' do
     FactoryGirl.create(:investigator_study, investigator: pi, study: st, role: 'PI')
 
     # create the organization abstract records
+    # cf. lib/publication_utilities.rb#UpdateOrganizationAbstract
     [dept1, dept2].each do |unit|
       unit_id = unit.id
       investigators = OrganizationalUnit.find(unit_id).primary_faculty + OrganizationalUnit.find(unit_id).associated_faculty
@@ -109,6 +112,7 @@ describe 'd3Generator' do
 
     before do
       # setup the data like in rake task setup:wordle
+      # cf. lib/tasks/setup.rake
       WordFrequency.save_abstract_frequency_map
       WordFrequency.save_investigator_frequency_map
     end

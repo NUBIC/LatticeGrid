@@ -1,7 +1,23 @@
 cytoscapeweb -> cytoscapejs
 
+  http://cytoscape.github.io/cytoscape.js/
+
 Faculty associations through Publications, Awards, and Studies
 
 Current record can be an Investigator or an Organization
 
-(get URLS for )
+  http://cytoscapeweb.cytoscape.org
+  http://cytoscapeweb.cytoscape.org/tutorial
+
+
+d3
+- http://mbostock.github.io/protovis/
+- http://d3js.org
+
+wordle 
+- https://github.com/jasondavies/d3-cloud
+- https://github.com/jasondavies/d3-cloud/blob/master/examples/simple.html
+
+chord
+- http://bl.ocks.org/mbostock/4062006
+

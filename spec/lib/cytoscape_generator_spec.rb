@@ -10,15 +10,17 @@ include ApplicationHelper
 describe 'CytoscapeGenerator' do
 
   context 'for Organizational Units' do
+    # create two Investigators (PI)
     let!(:pi) { FactoryGirl.create(:investigator, username: 'pi', first_name: 'Principal', last_name: 'Investigator') }
     let!(:co) { FactoryGirl.create(:investigator, username: 'co', first_name: 'Co', last_name: 'Investigator') }
+    # and an OrganizationalUnit (OU)
     let!(:center) { FactoryGirl.create(:center) }
-
+    # then associate them with the OU
     let!(:pi_appt) { FactoryGirl.create(:investigator_appointment, investigator: pi, center: center) }
     let!(:co_appt) { FactoryGirl.create(:investigator_appointment, investigator: co, center: center) }
 
     describe '.generate_cytoscape_org_data' do
-      it 'outputs a hash' do
+      it 'outputs a hash of nodes and edges' do
         hsh = generate_cytoscape_org_data(center, 1, 1, 0, 0)
         nodes = hsh[:nodes]
         nodes.size.should eq 3 # the 1 ou + the 2 pis
@@ -37,15 +39,16 @@ describe 'CytoscapeGenerator' do
   end
 
   context 'for Investigators' do
+    # create two Investigators (PI)
     let!(:pi) { FactoryGirl.create(:investigator, username: 'pi', first_name: 'Principal', last_name: 'Investigator') }
     let!(:co) { FactoryGirl.create(:investigator, username: 'co', first_name: 'Co', last_name: 'Investigator') }
-
+    # and a publication, study, and award
     let!(:ab) { FactoryGirl.create(:abstract) }
     let!(:aw) { FactoryGirl.create(:proposal, institution_award_number: 'institution_award_number') }
     let!(:st) { FactoryGirl.create(:study, irb_study_number: 'irb_study_number') }
 
     before do
-      # set up publication associations
+      # set up publication associations so that both are authors on this abstract
       FactoryGirl.create(:investigator_abstract, investigator: pi, abstract: ab, is_valid: true)
       FactoryGirl.create(:investigator_abstract, investigator: co, abstract: ab, is_valid: true)
 
@@ -62,7 +65,7 @@ describe 'CytoscapeGenerator' do
     end
 
     describe '.generate_cytoscape_data' do
-      it 'outputs a hash' do
+      it 'outputs a hash of nodes and edges' do
         hsh = generate_cytoscape_data(pi, 1, 1, 0, 0) # does not include awards or studies
         nodes = hsh[:nodes]
         nodes.size.should eq 2
@@ -75,7 +78,7 @@ describe 'CytoscapeGenerator' do
     end
 
     describe '.generate_cytoscape_publication_nodes' do
-      it 'outputs an array of hashes' do
+      it 'outputs an array of publication node hashes' do
         pi.abstracts.size.should eq 1
         nodes = generate_cytoscape_publication_nodes(pi, 1)
         nodes.size.should eq 2
@@ -84,7 +87,7 @@ describe 'CytoscapeGenerator' do
     end
 
     describe '.generate_cytoscape_award_nodes' do
-      it 'outputs an array of hashes' do
+      it 'outputs an array of publication and award hashes' do
         pi.proposals.size.should eq 1
         arr = generate_cytoscape_award_nodes(pi, 1)
         arr.size.should eq 2
@@ -94,7 +97,7 @@ describe 'CytoscapeGenerator' do
     end
 
     describe '.generate_cytoscape_study_nodes' do
-      it 'outputs an array of hashes' do
+      it 'outputs an array of publication and study hashes' do
         pi.studies.size.should eq 1
         arr = generate_cytoscape_study_nodes(pi, 1)
         arr.size.should eq 2
