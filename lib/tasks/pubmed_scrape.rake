@@ -21,7 +21,7 @@ def do_insert_abstracts
         investigator.publications.each do |publication|
           abstract = InsertPublication(publication)
           unless abstract.blank? || abstract.id.blank? || abstract.id < 1
-            thePIPub = InsertInvestigatorPublication( abstract.id, investigator.id, (abstract.publication_date||abstract.electronic_publication_date||abstract.deposited_date), IsFirstAuthor(abstract,investigator), is_last_author?(abstract,investigator), (investigator.mark_pubs_as_valid || limit_pubmed_search_to_institution) )
+            thePIPub = InsertInvestigatorPublication( abstract.id, investigator.id, (abstract.publication_date||abstract.electronic_publication_date||abstract.deposited_date), is_first_author?(abstract,investigator), is_last_author?(abstract,investigator), (investigator.mark_pubs_as_valid || limit_pubmed_search_to_institution) )
             # check to see if we should set as valid if it has not been reviewed!
             if (investigator.mark_pubs_as_valid || limit_pubmed_search_to_institution) && !thePIPub.is_valid
               if (thePIPub.last_reviewed_at.blank? || thePIPub.last_reviewed_id == 0) && (thePIPub.last_reviewed_ip.blank? || thePIPub.last_reviewed_ip =~ /abstract|migration/i)
@@ -51,7 +51,17 @@ end
 def get_pubmed_ids
   block_timing("get_pubmed_ids") do
     options = build_search_options(@publication_years)
-    pubsFound = find_pubmed_ids(@all_investigators, options, @publication_years, LatticeGridHelper.debug?, LatticeGridHelper.smart_filters?)
+    importer = LatticeGrid::Importer.faculty_publication_importer
+    importer.attributes = { 
+      :all_investigators => @all_investigators, 
+      :search_options => options, 
+      :number_years => @publication_years, 
+      :debug => LatticeGridHelper.debug?, 
+      :smart_filter => LatticeGridHelper.smart_filters? 
+    }
+    faculty_publications = importer.faculty_publications
+    importer.associate_investigators_with_publications(@all_investigators, faculty_publications)
+    pubsFound = @all_investigators.map {|i| (i['entries'] || []).size }.sum
     puts "number of publications found for #{@publication_years} years: #{pubsFound}" if LatticeGridHelper.verbose?
   end
 end
@@ -97,7 +107,7 @@ task :associateAbstractsWithInvestigators => [:getAbstracts] do
         puts "found new investigators for abstract #{abstract.id}. new investigator ids: #{new_ids.join(',')}; old investigator ids: #{old_investigator_ids.join(',')}" if LatticeGridHelper.debug?
         new_ids.each do |investigator_id|
           investigator=Investigator.find(investigator_id)
-          InsertInvestigatorPublication(abstract.id, investigator_id, (abstract.publication_date||abstract.electronic_publication_date||abstract.deposited_date), IsFirstAuthor(abstract,investigator), is_last_author?(abstract,investigator), true)
+          InsertInvestigatorPublication(abstract.id, investigator_id, (abstract.publication_date||abstract.electronic_publication_date||abstract.deposited_date), is_first_author?(abstract,investigator), is_last_author?(abstract,investigator), true)
         end
         # this fails on the server but not on my laptop...
         # abstract.investigators = Abstract.find(abstract.id).investigators

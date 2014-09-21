@@ -47,4 +47,7 @@ LatticeGrid::Application.configure do
 
   # set the lattice_grid_instance for this env
   lattice_grid_instance
+
+  LatticeGrid::Importer::NubicFacultyWS.base_url = 'http://facultyws.test'
+    
 end
