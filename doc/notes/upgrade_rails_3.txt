@@ -1,0 +1,30 @@
+upgrade_rails_3.txt
+
+Following
+  http://railscasts.com/episodes/225-upgrading-to-rails-3-part-1?view=asciicast and
+  http://x-aeon.com/wp/2012/12/19/migrating-big-applications-from-rails-2-to-rails-3/#MRAFR2TR3_First
+
+
+updated files as described above and tried to start the rails app
+  ./script/rails server
+
+
+First issue:
+  Had to update the config/initializers/date_formats.rb file as
+  ActiveSupport::CoreExtensions has been removed. Not a big issue.
+
+
+First big hurdle:
+
+  NoMethodError: undefined method `money_precision='
+
+  Looks like the acts_as_tsearch plugin will not work with Rails 3.
+
+  https://rails.lighthouseapp.com/projects/8994/tickets/6383
+
+  https://github.com/pka/acts_as_tsearch
+  https://github.com/rails/rails/pull/197
+
+  To get past this I updated the postgresql_adapter.rb file as described in the lighthouseapp ticket above
+  ~/.rvm/gems/ruby-1.9.3-p327@lattice_grid/gems/activerecord-3.2.15/lib/active_record/connection_adapters/postgresql_adapter.rb
+

@@ -1,0 +1,150 @@
+
+Walk-through LatticeGrid
+
+- cancercenter
+- feinberg
+
+
+** Updating ccpers nucore **
+
+Joanne Kus email list - to get cancer center members
+
+
+fsm and rhlccc - rails-prod2
+oracle - gprod
+
+
+Deleting Faculty from Lattice Grid
+---
+medical school list - hard purge of faculty
+cancer center list  - marked as deleted
+
+
+(once the .txt faculty file has been )
+https://notis.nubic.northwestern.edu/SQLSubmit/Import/index.cfm
+
+Expire members not found in the upload file: Yes
+
+updated oracle tables used by ccpers to designate a cancer center member
+
+
+** Lattice Grid **
+
+https://latticegrid.cancer.northwestern.edu
+
+update_publications.sh runs every (Mon Wed Fri)
+
+https://github.com/NUBIC/LatticeGrid
+
+
+https://admin.nubic.northwestern.edu/SQLSubmit/Import/index.cfm (has access to HR data)
+
+run sql to get files needed
+cc_admin_bcprod (All award data for LatticeGrid)
+cc_pers_bcprod (All data for download for FSM Database)
+
+
+* cancercenter - incremental loads
+* fsm - destructive loads (drop and reimport database)
+
+
+Adding admins to latticegrid
+lib/latticegrid/defaults.rb
+
+
+deployments - checkout from github on server (git pull)
+
+
+(fsm - local import of db then pg_dump then scp dump to server (pprod2) then pg_restore)
+
+
+
+- some files come from enotis // lib/tasks/reports.rake "Dump studies" "Dump study_roles"
+
+
+
+Questions for WAK
+
+1) Faculty
+
+  a) Confirm faculty are added/updated via the importInvestigators rake task as described in #{Rails.root}/doc/orgs_and_people_setup.txt
+
+  b) How are those files generated? Do we create them or do we get them from someone>
+
+  c) How are faculty removed/deleted/expired in latticegrid?
+
+
+2) Publications
+
+  a) Confirm rake tasks 'nightlyBuild' and 'monthlyBuild' are used to import Publications? Are these manual or automated?
+
+  b) How are publications maintained for departed faculty?
+
+3) Maintenance
+
+  a) What is run manually? nightlyBuild? monthlyBuild?
+
+  b) How often are these manual tasks run?
+
+  c) deployment
+
+
+
+
+
+
+-- Original Message --
+
+I've got three questions about latticegrid.
+
+1) Importing new faculty
+2) Updating/Deleting existing faculty
+3) Importing/Updating publications
+
+
+1) Importing new faculty
+
+Not just yesterday I was looking into latticegrid for a question that came
+from Todd on how faculty are added to the cancer center instance.
+
+I saw the several files in the ${Rails.root}/db/imports directory and the
+rake task to importInvestigators
+
+rake environment RAILS_ENV=production importInvestigators
+file=db/imports/faculty.txt
+
+How are those text files generated? Do you get this data from more than
+one data source (i.e. one source for FSM and another for the cancer center
+members?)
+
+
+2) Updating/Deleting existing faculty
+
+Today Amit forwarded to me this message about faculty removal.
+
+I can see that there is an end_date on InvestigatorAppointment and also
+that there is are several deleted_* attributes on the Investigator.
+However, in the production data for FSM, there are no Investigator records
+that are marked deleted nor does any appointment have an end_date.
+
+How are records deleted in latticegrid? Have we ever deleted an
+Investigator previously? (it appears to be the case from the wording below
+- or is the 'monthly report' not from latticegrid?)
+
+
+3) Importing/Updating publications
+
+You had said in an email to Lorraine that
+"We no longer do pubmed scraping in LatticeGrid and rely on what the FSM
+faculty database gives us from NU Scholars."
+
+Can you guide me to the code where this is being done? I'm sorry, but all
+I could find about importing and updating publications is in the
+get_pubs_for_investigators or fetch_publication_data methods both of which call
+Bio::PubMed.efetch.
+
+
+Finally, I'd like to move latticegrid from subversion into git. I've been
+in talks with Luke about retiring the svn repository and I'll be soon
+speaking with Dong to see what projects are still active and are using
+subversion. Do you have any objections to this?

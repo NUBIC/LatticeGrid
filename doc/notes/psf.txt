@@ -1,0 +1,8 @@
+Steps taken to update latticegrid
+
+
+https://latticegrid.cancer.northwestern.edu/
+
+* create database dump
+pg_dump -h pprod2 -U latticegrid rhlccc_latticegrid > db/20131009_rhlccc_latticegrid.out
+

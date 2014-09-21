@@ -1,0 +1,125 @@
+These are the cronjobs currently running:
+30 0 * * 1,3,5 /home/wakibbe/bin/update_publications >> update_publications.log
+35 16 18 * *   /home/wakibbe/bin/weekly_build >> weekly_build.log
+5 0 * * 6 /home/wakibbe/bin/weekly_cancer >> weekly_cancer.log
+5 5 * * * /home/wakibbe/bin/nightlyColleagues.sh >> nightlyColleagues.log
+15 0 * * 3 /home/wakibbe/bin/monthlyColleagues.sh >> monthlyColleagues.log
+
+#####
+
+$ cat bin/update_publications
+date
+source /home/wakibbe/.bashrc
+source /etc/profile
+
+cd /home/wakibbe/apps/cancerpublications
+bundle exec rake RAILS_ENV=production nightlyBuild >> rake_results.txt
+bundle exec rake RAILS_ENV=production db:vacuum
+
+# monthly run this:
+# rake RAILS_ENV=production monthlyBuild >> monthly_rake_results.txt
+
+bundle exec rake RAILS_ENV=production tmp:cache:clear
+bundle exec rake RAILS_ENV=production cache:clear
+bundle exec rake RAILS_ENV=production cache:populate taskname=abstracts > buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigators >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=orgs >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_graphs >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_graphviz >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_awards >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=org_graphs >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=org_graphviz >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=awards >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=mesh >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_studies >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=studies >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_cytoscape >> buildCache.txt
+
+date
+
+#####
+
+$ cat bin/weekly_build
+date
+source /home/wakibbe/.bashrc
+source /etc/profile
+
+cd /home/wakibbe/apps/fsmpublications
+
+bundle exec rake RAILS_ENV=production insert_abstracts >> rake_build.txt
+bundle exec rake RAILS_ENV=production updateAbstractInvestigators >> rake_build.txt
+bundle exec rake RAILS_ENV=production buildCoauthors >> rake_build.txt
+bundle exec rake RAILS_ENV=production updateInvestigatorInformation >> rake_build.txt
+bundle exec rake RAILS_ENV=production updateOrganizationAbstractInformation >> rake_build.txt
+
+#bundle exec rake RAILS_ENV=production nightlyBuild >> rake_build.txt
+#rake RAILS_ENV=production monthlyBuild >> rake_monthly.txt
+
+bundle exec rake RAILS_ENV=production db:vacuum
+bundle exec rake RAILS_ENV=production tmp:cache:clear
+bundle exec rake RAILS_ENV=production cache:clear
+bundle exec rake RAILS_ENV=production cache:populate taskname=abstracts > buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigators >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=orgs >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_graphs >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_graphviz >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_awards >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=org_graphs >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=org_graphviz >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=awards >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=mesh >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_studies >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=studies >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_cytoscape >> buildCache.txt
+
+date
+
+#####
+
+$ cat bin/weekly_cancer
+date
+source /home/wakibbe/.bashrc
+source /etc/profile
+
+cd /home/wakibbe/apps/cancerpublications
+#rake --trace RAILS_ENV=production monthlyBuild >> rake_monthly.txt
+bundle exec rake --trace RAILS_ENV=production tagAbstractsWithMeshTerms >> rake_monthly.txt
+bundle exec rake --trace RAILS_ENV=production tagInvestigatorsWithMeshTerms >> rake_monthly.txt
+bundle exec rake --trace RAILS_ENV=production tagInvestigatorsWithKeywords >> rake_monthly.txt
+bundle exec rake --trace RAILS_ENV=production attachMeshInformationContent >> rake_monthly.txt
+bundle exec rake --trace RAILS_ENV=production buildInvestigatorColleaguesMesh >> rake_monthly.txt
+bundle exec rake --trace RAILS_ENV=production normalizeInvestigatorColleaguesMesh >> rake_monthly.txt
+
+bundle exec rake RAILS_ENV=production db:vacuum
+
+date
+
+#####
+
+$ cat bin/nightlyColleagues.sh
+date
+source /home/wakibbe/.bashrc
+source /etc/profile
+
+# moved this to cancer_weekly
+cd /home/wakibbe/apps/isb_colleagues
+bundle exec rake RAILS_ENV=production validate_standings
+bundle exec rake RAILS_ENV=production validate_paid
+
+date
+
+#####
+
+$ cat bin/monthlyColleagues.sh
+date
+source /home/wakibbe/.bashrc
+source /etc/profile
+
+# moved this to cancer_weekly
+cd /home/wakibbe/apps/isb_colleagues
+bundle exec rake RAILS_ENV=production validate_standings
+bundle exec rake RAILS_ENV=production validate_paid
+bundle exec rake RAILS_ENV=production notifications:createCurrentMembershipRecordsIncludingUpcoming
+bundle exec rake RAILS_ENV=production  notifications:sendRenewalEmail
+
+date

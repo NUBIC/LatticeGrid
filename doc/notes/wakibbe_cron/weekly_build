@@ -1,0 +1,34 @@
+[wakibbe@rails-prod2 ~]$ cat bin/weekly_build
+date
+source /home/wakibbe/.bashrc
+source /etc/profile
+
+cd /home/wakibbe/apps/fsmpublications
+
+bundle exec rake RAILS_ENV=production insertAbstracts >> rake_build.txt
+bundle exec rake RAILS_ENV=production updateAbstractInvestigators >> rake_build.txt
+bundle exec rake RAILS_ENV=production buildCoauthors >> rake_build.txt
+bundle exec rake RAILS_ENV=production updateInvestigatorInformation >> rake_build.txt
+bundle exec rake RAILS_ENV=production updateOrganizationAbstractInformation >> rake_build.txt
+
+#bundle exec rake RAILS_ENV=production nightlyBuild >> rake_build.txt
+#rake RAILS_ENV=production monthlyBuild >> rake_monthly.txt
+
+bundle exec rake RAILS_ENV=production db:vacuum
+bundle exec rake RAILS_ENV=production tmp:cache:clear
+bundle exec rake RAILS_ENV=production cache:clear
+bundle exec rake RAILS_ENV=production cache:populate taskname=abstracts > buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigators >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=orgs >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_graphs >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_graphviz >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_awards >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=org_graphs >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=org_graphviz >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=awards >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=mesh >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_studies >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=studies >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_cytoscape >> buildCache.txt
+
+date

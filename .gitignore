@@ -24,7 +24,6 @@ node_modules
 
 # Ignore private docs
 doc/private/
-doc/notes/
 
 # Ignore cached files
 public/cache

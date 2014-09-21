@@ -1,0 +1,17 @@
+[wakibbe@rails-prod2 ~]$ cat bin/weekly_cancer
+date
+source /home/wakibbe/.bashrc
+source /etc/profile
+
+cd /home/wakibbe/apps/cancerpublications
+#rake --trace RAILS_ENV=production monthlyBuild >> rake_monthly.txt
+bundle exec rake --trace RAILS_ENV=production tagAbstractsWithMeshTerms >> rake_monthly.txt
+bundle exec rake --trace RAILS_ENV=production tagInvestigatorsWithMeshTerms >> rake_monthly.txt
+bundle exec rake --trace RAILS_ENV=production tagInvestigatorsWithKeywords >> rake_monthly.txt
+bundle exec rake --trace RAILS_ENV=production attachMeshInformationContent >> rake_monthly.txt
+bundle exec rake --trace RAILS_ENV=production buildInvestigatorColleaguesMesh >> rake_monthly.txt
+bundle exec rake --trace RAILS_ENV=production normalizeInvestigatorColleaguesMesh >> rake_monthly.txt
+
+bundle exec rake RAILS_ENV=production db:vacuum
+
+date

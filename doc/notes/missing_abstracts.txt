@@ -1,0 +1,16 @@
+# There are several InvestigatorAbstract records which reference nil Abstract records
+
+imas = []
+Investigator.all.each do |pi|
+  ias = InvestigatorAbstract.find(:all, :conditions => "investigator_id = #{pi.id}")
+  ias.each do |ia|
+    if ia.abstract.blank?
+      imas << [ia.investigator_id, ia.abstract_id, ia.publication_date]
+    end
+  end
+end
+
+# >> imas.count
+# => 2690
+
+# How can this be?

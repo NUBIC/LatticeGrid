@@ -1,0 +1,12 @@
+[wakibbe@rails-prod2 ~]$ cat bin/monthlyColleagues.sh
+date
+source /home/wakibbe/.bashrc
+source /etc/profile
+
+# moved this to cancer_weekly
+cd /home/wakibbe/apps/isb_colleagues
+bundle exec rake RAILS_ENV=production validate_standings
+bundle exec rake RAILS_ENV=production validate_paid
+bundle exec rake RAILS_ENV=production notifications:createCurrentMembershipRecordsIncludingUpcoming
+bundle exec rake RAILS_ENV=production  notifications:sendRenewalEmail
+date

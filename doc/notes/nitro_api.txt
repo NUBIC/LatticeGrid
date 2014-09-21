@@ -1,0 +1,31 @@
+nitro_api.txt
+
+
+Proposals are Awards - data obtained from the cc_admin_holding_bcprod db
+
+Abstracts are Publications - data obtained through PubMed
+  - Bio::PubMed.esearch(keywords, options) - http://bioruby.org/rdoc/Bio/PubMed.html
+
+Study - data?
+
+Investigator - these are entered directly into the database - username is unique
+- potential change - add scope to uniqueness for username to accomodate different organizations (e.g. NU and UIC)
+
+
+Investigators have
+- Studies
+- Proposals/Awards
+- Abstracts/Publications
+- Colleagues
+
+
+
+Add to myNUCATS profile page:
+
+Affiliations (Dept, Div, School, Org)
+Publications
+Awards
+Research Profile/Interests
+
+- use the /investigators/:identifier/bio.json api call
+- look into SPARQL endpoint in NU Scholars

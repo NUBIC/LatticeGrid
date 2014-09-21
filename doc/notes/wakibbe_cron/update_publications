@@ -1,0 +1,29 @@
+[wakibbe@rails-prod2 ~]$ cat bin/update_publications
+date
+source /home/wakibbe/.bashrc
+source /etc/profile
+
+cd /home/wakibbe/apps/cancerpublications
+bundle exec rake RAILS_ENV=production nightlyBuild >> rake_results.txt
+bundle exec rake RAILS_ENV=production db:vacuum
+
+# monthly run this:
+# rake RAILS_ENV=production monthlyBuild >> monthly_rake_results.txt
+
+bundle exec rake RAILS_ENV=production tmp:cache:clear
+bundle exec rake RAILS_ENV=production cache:clear
+bundle exec rake RAILS_ENV=production cache:populate taskname=abstracts > buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigators >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=orgs >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_graphs >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_graphviz >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_awards >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=org_graphs >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=org_graphviz >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=awards >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=mesh >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_studies >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=studies >> buildCache.txt
+bundle exec rake RAILS_ENV=production cache:populate taskname=investigator_cytoscape >> buildCache.txt
+
+date

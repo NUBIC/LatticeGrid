@@ -1,0 +1,100 @@
+These are the steps taken to perform an incremental database update of
+Investigators and InvestigatorAppointments
+
+
+1) obtain the Membership Roster
+
+Joanne Kus creates a file entitled "Membership Roster MM-DD-YY.xlsx" and
+distributes it to a mailing list. There are two tabs in this spreadsheet
+Alpha and Programs.
+
+On both tabs on the top there is a list of Members Added and Removed in
+the month. The Members added is used to create the new_faculty_MMYYYY.txt
+tab delimited file used to import new Investigators into the application.
+
+On the Programs tab there is a list of Investigators and their Program
+association. This is used to create the RHLCCCProgramMembershipsMMYYYY.txt
+tab delimited file used to update the InvestigatorAppointments.
+
+This step is only necessary to collate the data to import but these files
+are not necessary to perform the import.
+
+
+
+2) create the new_faculty_MMYYYY.txt tab delimited file
+
+  a) get the data from the FSM Faculty Database
+
+    Using https://admin.nubic.northwestern.edu/SQLSubmit/SQLSubmit.cfm
+    set the Data Source to cc_pers_bcprod and look for the query with name
+    "All data for download from FSM database". Run this query and get the
+    Tabbed results.
+
+  b) copy lines into new file
+
+    Create a new file called "new_faculty_MMYYYY.txt" where MMYYYY is the
+    current month and year. For the first line use the following:
+
+BASIS CAMPUS  CATEGORY  DEGREE  DEPT_ID DIVISION_ID DV_ABBR EMPLOYEE_ID FIRST_NAME  LAST_NAME MIDDLE_NAME NETID RANK  TENURE
+
+    ensure that the text editor is using tabs so that the spaces between
+    these column headers are separated by tabs (it is a tab delimited file after all).
+
+    For each Investigator in the Membership Roster "Members Added" section
+    find that row in the Tabbed results file from step 2a and copy that
+    into this new file.
+
+  c) find non-FSM faculty
+
+    If an Investigator is not in the tabbed results from the FSM database
+    we need to take a few other steps:
+
+    i) Look up the person in LDAP (directory.northwestern.edu)
+
+    ii) Find Investigator in the awards file
+
+      downloaded from https://admin.nubic.northwestern.edu/SQLSubmit/SQLSubmit.cfm
+      using the cc_admin_bcprod DSN and the query titled
+      "All awards with investigator roles, totals and effort for LatticeGrid"
+
+      This is used to get the Employee ID.
+
+      Note that this is the same query run to create the award data file used in the
+        bundle exec rake awards:importData file=db/imports/Feinberg/private/award_data_20131010.txt
+      award import data task. cf. lib/award_utilities.rb file
+
+    iii) create the row entry by hand with the information from LDAP and the awards data
+
+  d) ensure tab delimited columns line up
+
+    at this point open the file in Excel (or some tab delimited reader) to
+    check that the data columns line up
+
+
+
+3) create the RHLCCCProgramMembershipsMMYYYY.txt file
+
+For this we simply take the Roster from step 1 on the Programs tab
+and insert two columns into the file so that we have the following columns:
+
+LastName  FirstName Program AppointmentType email
+
+The columns to add are Program and AppointmentType. Then we fill in the
+data for each. The Program Rosters are already split into Members by
+Program so all we need to do is enter the appropriate Program abbreviation
+into the Program column.
+
+AppointmentType is now only 'Member' and soon will be ignored. For now simply
+add 'Member' into this column value.
+
+
+
+4) run the rake tasks
+
+  Using the files created in steps 2 and 3, run the following tasks:
+
+  rake RAILS_ENV=production importInvestigators file=db/imports/RHLCCC/new_faculty_MMYYYY.txt
+  rake RAILS_ENV=production importProgramMembership file=db/imports/RHLCCC/RHLCCCProgramMembershipsMMYYYY.txt
+
+  Output from these rake tasks will let you know if the process ran successfully or not.
+  Most of the messages are self-explanatory.

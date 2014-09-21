@@ -1,0 +1,108 @@
+Notes on how LatticeGrid imports publications
+
+1. The nightlyBuild task is run via a cron job
+  task :nightlyBuild => [:insert_abstracts, :updateAbstractInvestigators, :buildCoauthors, :updateInvestigatorInformation, :updateOrganizationAbstractInformation]
+
+
+2. insert_abstracts -> pubmed_scrape.rake
+
+  task :insert_abstracts => :get_pi_abstracts_task => :get_pubmed_ids_task => :get_investigators (all these are run before we start)
+
+  get_investigators -> models.rake
+    @all_investigators = Investigator.find(:all, :order => 'id', :include => ["abstracts"])
+
+  (here we start building the 'investigator' hash)
+  get_pubmed_ids_task -> pubmed_scrape.rake
+    find_pubmed_ids -> pubmed_utilities.rb
+      entries = Bio::PubMed.esearch(keywords, options) # see Bio::PubMed.esearch notes below
+      investigator["entries"] = entries
+
+  get_pi_abstracts -> get_pubs_for_investigators(@all_investigators)
+    get_pubs_for_investigators -> pubmed_utilities.rb
+      pubs = Bio::PubMed.efetch(investigator.entries)
+      investigator["publications"] = pubs
+
+  do_insert_abstracts -> pubmed_scrape.rake
+    investigator.publications.each do |publication|
+      abstract = InsertPublication(publication) -> publication_utilities.rb
+        medline = Bio::MEDLINE.new(publication) # convert retrieved format into the medline format
+        (at this point we find or create the Abstract record)
+
+  InsertInvestigatorPublication -> pubmed_utilities.rb
+    (this creates the InvestigatorAbstract record with the Investigator and Abstract created above)
+
+3. updateAbstractInvestigators -> pubmed_scrape.rake
+
+  updateAbstractInvestigators => :associateAbstractsWithInvestigators => :getAbstracts
+
+    getAbstracts -> mnodels.rake
+      @all_abstracts = Abstract.find(:all, :order => 'id')
+
+    associateAbstractsWithInvestigators -> pubmed_scrape.rake
+
+      MatchInvestigatorsInCitation -> publication_utilities.rb
+        (gets all authors of publication and tries to get the Investigator.id from the pi in question cf. GetAuthor and GetInvestigatorIDfromAuthorRecord)
+
+      InsertInvestigatorPublication -> pubmed_utilities.rb
+        (finds or creates the InvestigatorAbstract record)
+
+    updateAbstractInvestigators
+      (for each abstract finds the first and last author then UpdateCitationInvestigatorInformation)
+
+      UpdateCitationInvestigatorInformation -> pubmed_utilities.rb
+        defers to UpdateInvestigatorPublication
+
+4. buildCoauthors -> pubmed_scrape.rake
+
+  task :buildCoauthors => [:get_investigators]
+    BuildCoauthors -> pubmed_utilities.rb
+      (finds the co-authors for the publication)
+
+    InsertUpdateInvestigatorColleague -> mesh_utilities.rb
+      (and associate those Investigators by creating or updating the InvestigatorColleague record)
+
+5. updateInvestigatorInformation -> pubmed_scrape.rake
+
+  task :updateInvestigatorInformation => [:get_investigators]
+    UpdateInvestigatorCitationInformation -> pubmed_utilities.rb
+    (simply updates the investigator information)
+
+6. updateOrganizationAbstractInformation -> models.rake
+
+  task :updateOrganizationAbstractInformation => [:getAllOrganizationsWithInvestigators]
+
+  getAllOrganizationsWithInvestigators
+    @all_investigator_associations = Investigator.distinct_all_appointments_and_memberships
+
+    UpdateOrganizationAbstract - publication_utilities.rb
+      (creates an OrganizationAbstract record)
+
+
+
+Bio::PubMed.esearch notes
+-------------------------
+
+find_pubmed_ids -> pubmed_utilities.rb
+  entries = Bio::PubMed.esearch(keywords, options)
+
+options are created in build_search_options cf. pubmed_utilities.rb
+  {
+    'reldate' => (365 * number_years).to_i, # number_year = LatticeGridHelper.default_number_years which is 1
+    'retmax' => max_num_records,            # defaults to 500 in method parameter list
+  }
+
+keywords are created in build_pi_search cf. pubmed_utilities
+  "#{pi.last_name}, #{pi.first_name} #{pi.middle_name[0, 1]} [auth]"
+
+def limit_search_to_institution(term, pi)
+  if LatticeGridHelper.build_institution_search_string_from_department?
+    "(#{term}) AND (#{build_affiliation_limit_string(pi.home_department_name)})"
+  else
+    "(#{term}) AND (#{LatticeGridHelper.institutional_limit_search_string})"
+  end
+end
+
+institutional_limit_search_string example:
+  '( "Northwestern University"[affil] OR "Feinberg School"[affil] OR "Robert H. Lurie Comprehensive Cancer Center"[affil] OR "Northwestern Healthcare"[affil] OR "Children''s Memorial"[affil] OR "Northwestern Memorial"[affil] OR "Northwestern Medical"[affil])'
+
+unfortunately pubmed does not allow search by era commons name
