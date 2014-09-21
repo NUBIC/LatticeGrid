@@ -1,0 +1,62 @@
+Show LatticeGrid
+
+the various visualizations
+
+and then the database schema 
+
+and the associations of the models
+
+* Investigator
+* OrganizationalUnit
+* Abstract
+* Proposal
+* Study
+* WordFrequency
+
+* InvestigatorAbstract
+* InvestigatorColleague
+* InvestigatorProposal
+* InvestigatorStudy
+* OrganizationAbstract
+
+and how the data is setup
+
+then let's look at the visualization libraries
+* cytoscapeweb/cytoscapejs
+* protovis/d3
+* graphviz
+* fusioncharts
+
+drill back into the cytoscape visualizations
+  that the flash player and js is handling the several  
+  different types of visualizations (force directed, radial, etc.)
+
+go to the examples page for cytoscapeweb 
+  and show the similarities to the front end in LatticeGrid
+
+then show the data source and how it is created from the models
+  simply call out to the json data source and then look 
+  quickly at the generator source to see what it is doing
+
+  look at the specs
+
+now let's do the same thing for the chord graph 
+  go to the examples page in d3 for the chord diagram
+  and show the similarties to the front end
+
+then show the data source and how it is created from the models
+  simply call out to the json data source and then look 
+  quickly at the generator source to see what it is doing
+
+  look at the specs
+
+and then the wordle
+  go to the examples page in d3 for the layout diagram
+  and show the similarties to the front end
+
+then show the data source and how it is created from the models
+  simply call out to the json data source and then look 
+  quickly at the generator source to see what it is doing
+
+  look at the specs
+  

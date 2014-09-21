@@ -1,0 +1,61 @@
+presentation_urls.txt
+
+UI
+  Investigator 
+
+    Radial1                 - http://latticegrid.feinberg.northwestern.edu/graphs/wakibbe/show_member
+    
+    Spring                  - http://latticegrid.feinberg.northwestern.edu/graphviz/wakibbe/show_member
+    Wheel                   - http://latticegrid.feinberg.northwestern.edu/graphviz/wakibbe/investigator_wheel
+    Member Mesh             - http://latticegrid.feinberg.northwestern.edu/graphviz/wakibbe/show_member_mesh
+
+    Word Cloud              - http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/investigator_wordle
+
+    Chord                   - http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/investigator_chord
+    Radial2                 - http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe
+    Awards                  - http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/awards
+    Studies                 - http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/studies
+    Show all                - http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/show_all
+
+  OrganizationalUnit
+
+    Co-authorship graph     - http://latticegrid.feinberg.northwestern.edu/graphs/51/show_org
+    
+    Co-authorship network   - http://latticegrid.feinberg.northwestern.edu/graphviz/51/show_org
+    Similarity network      - http://latticegrid.feinberg.northwestern.edu/graphviz/51/show_org_mesh
+    Unit-to-Unit network    - http://latticegrid.feinberg.northwestern.edu/graphviz/51/show_org_org
+
+    Chord diagram           - http://latticegrid.feinberg.northwestern.edu/cytoscape/51/program_chord
+    Unit-to-Unit Chord      - http://latticegrid.feinberg.northwestern.edu/cytoscape/chord
+
+    Radial Graphs: 
+    Publications network    - http://latticegrid.feinberg.northwestern.edu/cytoscape/51/show_org
+    Funding network         - http://latticegrid.feinberg.northwestern.edu/cytoscape/51/awards_org
+    Studies network         - http://latticegrid.feinberg.northwestern.edu/cytoscape/51/studies_org
+    Combined network        - http://latticegrid.feinberg.northwestern.edu/cytoscape/51/org_all
+
+
+Code
+  Views
+
+
+  Controllers
+
+  Models
+    Investigator            - https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator.rb
+    OrganizationalUnit      - https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/organizational_unit.rb
+    Abstract                - https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/abstract.rb
+    Proposal                - https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/proposal.rb
+    Study                   - https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/study.rb
+
+  Association Models
+    InvestigatorAbstract    - https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator_abstract.rb
+    InvestigatorAppointment - https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator_appointment.rb
+    InvestigatorColleague   - https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator_colleague.rb
+    InvestigatorProposal    - https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator_proposal.rb
+    InvestigatorStudy       - https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator_study.rb
+    OrganizationAbstract    - https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/organization_abstract.rb
+
+  Specs
+
+

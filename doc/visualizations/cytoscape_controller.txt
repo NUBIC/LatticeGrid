@@ -1,0 +1,7 @@
+cytoscapeweb -> cytoscapejs
+
+Faculty associations through Publications, Awards, and Studies
+
+Current record can be an Investigator or an Organization
+
+(get URLS for )
