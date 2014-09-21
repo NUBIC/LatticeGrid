@@ -37,9 +37,21 @@ UI
 
 Code
   Views
+    Cytoscape
+      Show                  - https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/show.html.erb
+      Chord                 - https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/chord.html.erb
+      Investigator Chord    - https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/investigator_chord.html.erb
+      Investigator Wordle   - https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/investigator_wordle.html.erb
+
+  Javascript
+    Cytoscape 
+      Chord Matrix          - https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/chord.html.erb#L13-L55
+      Investigator          - https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/investigator_chord.html.erb#L30-L64
+      Wordle                - https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/investigator_wordle.html.erb
 
 
   Controllers
+    CytoscapeController     - https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb
 
   Models
     Investigator            - https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator.rb
@@ -57,5 +69,22 @@ Code
     OrganizationAbstract    - https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/organization_abstract.rb
 
   Specs
+    Cytoscape
+      
+    d3
+
+
+  Library
+    Generators
+      Cytoscape
+
+      d3
+    Data Setup
+      pubmed_utilities
+        UpdateInvestigatorCitationInformation 
+          - https://github.com/NUBIC/LatticeGrid/blob/develop/lib/pubmed_utilities.rb#L212-L244
+      mesh_utilities
+        BuildInvestigatorColleague 
+          - https://github.com/NUBIC/LatticeGrid/blob/develop/lib/mesh_utilities.rb#L222-L252
 
 
