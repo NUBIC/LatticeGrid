@@ -1,0 +1,833 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <title>LatticeGrid Data Visualizations</title>
+    <style type="text/css">
+      .section {
+        margin: 0.5em;
+        padding: 0.5em;
+        border-bottom: 1px solid gray;
+        min-height: 60em;
+      }
+      .links,
+      .visualizations,
+      .controller,
+      .model,
+      .graph {
+        margin: 0.5em;
+        padding: 0.5em;
+        border: 1px solid lightblue;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='section'>
+      <b>LatticeGrid</b>
+      <div class='links'>
+        <dl>
+          <dt>Overview</dt>
+          <dd>
+            <a href='http://www.nucats.northwestern.edu/resources-services/lattice-grid.html'>
+              http://www.nucats.northwestern.edu/resources-services/lattice-grid.html
+            </a>
+          </dd>
+          <dt>Github</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/tree/develop'>
+              https://github.com/NUBIC/LatticeGrid/tree/develop
+            </a>
+          </dd>
+          <dt>Feinberg School of Medicine</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/'>
+              http://latticegrid.feinberg.northwestern.edu/
+            </a>
+          </dd>
+          <dt>Robert H. Lurie Comprehensive Cancer Center</dt>
+          <dd>
+            <a href='https://latticegrid.cancer.northwestern.edu/'>
+              https://latticegrid.cancer.northwestern.edu/
+            </a>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class='section'>
+      <p>
+        <b>Visualizations</b>
+      </p>
+      <div class='visualizations'>
+        <b>Investigator</b>
+        <dl>
+          <dt>Radial1</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/graphs/wakibbe/show_member'>
+              http://latticegrid.feinberg.northwestern.edu/graphs/wakibbe/show_member
+            </a>
+          </dd>
+
+          <dt>Spring</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/graphviz/wakibbe/show_member'>
+              http://latticegrid.feinberg.northwestern.edu/graphviz/wakibbe/show_member
+            </a>
+          </dd>
+          
+          <dt>Wheel</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/graphviz/wakibbe/investigator_wheel'>
+              http://latticegrid.feinberg.northwestern.edu/graphviz/wakibbe/investigator_wheel
+            </a>
+          </dd>
+
+          <dt>Member Mesh</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/graphviz/wakibbe/show_member_mesh'>
+              http://latticegrid.feinberg.northwestern.edu/graphviz/wakibbe/show_member_mesh
+            </a>
+          </dd>
+
+          <dt>Chord</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/investigator_chord'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/investigator_chord
+            </a>
+          </dd>
+
+          <dt>Radial2</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe
+            </a>
+          </dd>
+
+
+          <dt>Awards</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/awards'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/awards
+            </a>
+          </dd>
+
+          <dt>Studies</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/studies'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/studies
+            </a>
+          </dd>
+
+          <dt>Show all</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/show_all'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/show_all
+            </a>
+          </dd>
+
+          <dt>Word Cloud</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/investigator_wordle'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/investigator_wordle
+            </a>
+          </dd>
+        </dl>
+      </div>
+      <div class='visualizations'>
+        <b>Organizational Unit</b>
+        <dl>
+          <dt>Co-authorship graph</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/graphs/51/show_org'>
+              http://latticegrid.feinberg.northwestern.edu/graphs/51/show_org
+            </a>
+          </dd>
+
+          <dt>Co-authorship network</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/graphviz/51/show_org'>
+              http://latticegrid.feinberg.northwestern.edu/graphviz/51/show_org
+            </a>
+          </dd>
+          
+          <dt>Similarity network</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/graphviz/51/show_org_mesh'>
+              http://latticegrid.feinberg.northwestern.edu/graphviz/51/show_org_mesh
+            </a>
+          </dd>
+          
+          <dt>Unit-to-Unit network</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/graphviz/51/show_org_org'>
+              http://latticegrid.feinberg.northwestern.edu/graphviz/51/show_org_org
+            </a>
+          </dd>
+          
+          <dt>Chord diagram</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/51/program_chord'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/51/program_chord
+            </a>
+          </dd>
+          
+          <dt>Unit-to-Unit Chord</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/chord'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/chord
+            </a>
+          </dd>
+          
+          <dt>Publications network</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/51/show_org'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/51/show_org
+            </a>
+          </dd>
+          
+          <dt>Funding network</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/51/awards_org'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/51/awards_org
+            </a>
+          </dd>
+          
+          <dt>Studies network</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/51/studies_org'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/51/studies_org
+            </a>
+          </dd>
+          
+          <dt>Combined network</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/51/org_all'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/51/org_all
+            </a>
+          </dd>
+
+        </dl>
+      </div>
+    </div>
+
+    <div class='section'>
+      <p>
+        <b>Controllers and Visualization Libraries</b>
+      </p>
+
+      <div class='controller'>
+        <dl>
+          <dt><b>Graphs Controller</b></dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/graphs_controller.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/graphs_controller.rb
+            </a>
+          </dd>
+          <dt>Fusion Charts</dt>
+          <dd>
+            <a href='http://www.fusioncharts.com'>
+              http://www.fusioncharts.com
+            </a>
+          </dd>
+        </dl>
+      </div>
+
+      <div class='controller'>
+        <dl>
+          <dt><b>Graphviz Controller</b></dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/graphviz_controller.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/graphviz_controller.rb
+            </a>
+          </dd>
+          <dt>Graphviz</dt>
+          <dd>
+            <a href='http://www.graphviz.org'>
+              http://www.graphviz.org
+            </a>
+          </dd>
+          <dt>Ruby-Graphviz</dt>
+          <dd>
+            <a href='https://github.com/glejeune/Ruby-Graphviz/'>
+              https://github.com/glejeune/Ruby-Graphviz/
+            </a>
+          </dd>
+        </dl>
+      </div>
+
+      <div class='controller'>
+        <dl>
+          <dt><b>Cytoscape Controller</b></dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb
+            </a>
+          </dd>
+          <dt>Cytoscape Web</dt>
+          <dd>
+            <a href='http://cytoscapeweb.cytoscape.org/'>
+              http://cytoscapeweb.cytoscape.org/
+            </a>
+          </dd>
+          <dt>Cytoscape.js</dt>
+          <dd>
+            <a href='http://cytoscape.github.io/cytoscape.js/'>
+              http://cytoscape.github.io/cytoscape.js/
+            </a>
+          </dd>
+          <dt>Protoviz</dt>
+          <dd>
+            <a href='http://mbostock.github.io/protovis/'>
+              http://mbostock.github.io/protovis/
+            </a>
+          </dd>
+          <dt>d3js</dt>
+          <dd>
+            <a href='http://d3js.org'>
+              http://d3js.org
+            </a>
+          </dd>
+        </dl>
+      </div>
+
+    </div>
+
+    <div class='section'>
+      <b>Data Schema and Models</b>
+      <div class='model'>
+        <span>Models</span>
+        <dl>
+          <dt>Investigator</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator.rb
+            </a>
+          </dd>
+          <dt>OrganizationalUnit</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/organizational_unit.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/organizational_unit.rb
+            </a>
+          </dd>
+          <dt>Abstract</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/abstract.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/abstract.rb
+            </a>
+          </dd>
+          <dt>Proposal</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/proposal.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/proposal.rb
+            </a>
+          </dd>
+          <dt>Study</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/study.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/study.rb
+            </a>
+          </dd>
+          <dt>WordFrequency</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/word_frequency.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/word_frequency.rb
+            </a>
+          </dd>
+        </dl>
+      </div>
+
+      <div class='model'>
+        <span>Association Models</span>
+        <dl>
+          <dt>InvestigatorAbstract</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator.rb
+            </a>
+          </dd>
+          <dt>InvestigatorAppointment</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator_appointment.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator_appointment.rb
+            </a>
+          </dd>
+          <dt>InvestigatorColleague</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator_colleague.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator_colleague.rb
+            </a>
+          </dd>
+          <dt>InvestigatorProposal</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator_proposal.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator_proposal.rb
+            </a>
+          </dd>
+          <dt>InvestigatorStudy</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator_study.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator_study.rb
+            </a>
+          </dd>
+          <dt>OrganizationAbstract</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/organization_abstract.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/organization_abstract.rb
+            </a>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class='section'>
+      <b>Closer Look at Cytoscape Radial Graph</b>
+      <div class='graph'>
+        <dl>
+          <dt>Radial Graph for an Investigator</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe
+            </a>
+          </dd>
+          <dt>View</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L10-16'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L10-16
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L233-239'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L233-239
+            </a>
+            <br />
+            <a href='http://cytoscapeweb.cytoscape.org/tutorial'>
+              http://cytoscapeweb.cytoscape.org/tutorial
+            </a>
+          </dd>
+          <dt>Controller</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L29-39'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L29-39
+            </a>
+          </dd>
+          <dt>Callback</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L168-177'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L168-177
+            </a>
+          </dd>
+          <dt>Generator</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_generator.rb#L9-17'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_generator.rb#L9-17
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_publications.rb#L3-36'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_publications.rb#L3-36
+            </a>
+          </dd>
+          <dt>Spec</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L67-78'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L67-78
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L168-174'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L168-174
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L139-148'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L139-148
+            </a>
+          </dd>
+          <dt>Data</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/member_cytoscape_data/wakibbe/1/1/0/0'>
+              http://latticegrid.feinberg.northwestern.edu/member_cytoscape_data/wakibbe/1/1/0/0
+            </a>
+          </dd>
+          <dt>Data Setup</dt>
+          <dd>  
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L42-65'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L42-65
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/pubmed_utilities.rb#L212-224'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/pubmed_utilities.rb#L212-224
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/mesh_utilities.rb#L222-252'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/mesh_utilities.rb#L222-252
+            </a>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class='section'>
+      <b>Closer Look at Cytoscape Radial Graph Pt. II</b>
+      <div class='graph'>
+        <dl>
+          <dt>Radial Graph for an Organizational Unit</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/51/show_org'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/51/show_org
+            </a>
+          </dd>
+          <dt>Controller</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L58-66'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L58-66
+            </a>
+          </dd>
+          <dt>View</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L10-16'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L10-16
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L233-239'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L233-239
+            </a>
+          </dd>
+          <dt>Callback</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L179-188'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L179-188
+            </a>
+          </dd>
+          <dt>Generator</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_generator.rb#L35-42'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_generator.rb#L35-42
+            </a>
+          </dd>
+          <dt>Spec</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L12-39'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L12-39
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L168-175'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L168-175
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L159-166'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L159-166
+            </a>
+          </dd>
+          <dt>Data</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/org_cytoscape_data/51/1/1/0/0'>
+              http://latticegrid.feinberg.northwestern.edu/org_cytoscape_data/51/1/1/0/0
+            </a>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class='section'>
+      <b>Closer Look at Cytoscape Radial Graph Pt. III</b>
+      <div class='graph'>
+        <dl>
+          <dt>Radial Graph for an Investigator (Awards)</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/awards'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/awards
+            </a>
+          </dd>
+          <dt>View</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L10-16'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L10-16
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L233-239'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L233-239
+            </a>
+          </dd>
+          <dt>Controller</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L100-107'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L100-107
+            </a>
+          </dd>
+          <dt>Callback</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L168-177'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L168-177
+            </a>
+          </dd>
+          <dt>Generator</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_generator.rb#L9-17'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_generator.rb#L9-17
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_generator.rb#L29-56'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_generator.rb#L29-56
+            </a>
+          </dd>
+          <dt>Spec</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L89-97'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L89-97
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L168-175'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L168-175
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L177-184'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L177-184
+            </a>
+          </dd>
+          <dt>Data</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/member_cytoscape_data/wakibbe/1/0/1/0'>
+              http://latticegrid.feinberg.northwestern.edu/member_cytoscape_data/wakibbe/1/0/1/0
+            </a>
+          </dd>
+          <dt>Data Setup</dt>
+          <dd>  
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L42-65'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L42-65
+            </a>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class='section'>
+      <b>Closer Look at d3 Chord Graphs</b>
+      <div class='graph'>
+        <dl>
+          <dt>Chord Graph for an Investigator</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/investigator_chord'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/investigator_chord
+            </a>
+          </dd>
+          <dt>View</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/investigator_chord.html.erb#L29-147'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/investigator_chord.html.erb#L29-147
+            </a>
+            <br />
+            <a href='http://bl.ocks.org/mbostock/4062006'>
+              http://bl.ocks.org/mbostock/4062006
+            </a>
+            <br />
+            <a href='https://gist.github.com/pfriedman/435efe8d340bcf7d0af5'>
+              https://gist.github.com/pfriedman/435efe8d340bcf7d0af5
+            </a>
+          </dd>
+          <dt>Controller</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L259-275'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L259-275
+            </a>
+          </dd>
+          <dt>Callback</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L405-414'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L405-414
+            </a>
+            <br />
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/d3_investigator_chord_data.js'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/d3_investigator_chord_data.js
+            </a>
+          </dd>
+          <dt>Generator</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/d3_generator.rb#L48-61'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/d3_generator.rb#L48-61
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/d3_generator.rb#L114-120'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/d3_generator.rb#L114-120
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/d3_generator.rb#L166-175'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/d3_generator.rb#L166-175
+            </a>
+          </dd>
+          <dt>Spec</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L64-71'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L64-71
+            </a>
+          </dd>
+          <dt>Data Setup</dt>
+          <dd>  
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L10-62'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L10-62
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/publication_utilities.rb#L220-238'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/publication_utilities.rb#L220-238
+            </a>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class='section'>
+      <b>Closer Look at d3 Chord Graphs Pt. II</b>
+      <div class='graph'>
+        <dl>
+          <dt>Chord Graph for an Organizational Unit</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/51/program_chord'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/51/program_chord
+            </a>
+          </dd>
+          <dt>View</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/chord.html.erb#L12-162'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/chord.html.erb#L12-162
+            </a>
+            <br />
+            <a href='https://gist.github.com/pfriedman/677ceac58eca13dde3e2'>
+              https://gist.github.com/pfriedman/677ceac58eca13dde3e2
+            </a>
+          </dd>
+          <dt>Controller</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L240-257'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L240-257
+            </a>
+          </dd>
+          <dt>Callback</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L384-393'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L384-393
+            </a>
+            <br />
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/51/d3_program_investigators_chord_data.js'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/51/d3_program_investigators_chord_data.js
+            </a>
+          </dd>
+          <dt>Generator</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/d3_generator.rb#L33-46'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/d3_generator.rb#L33-46
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/d3_generator.rb#L114-120'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/d3_generator.rb#L114-120
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/d3_generator.rb#L166-175'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/d3_generator.rb#L166-175
+            </a>
+          </dd>
+          <dt>Spec</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L88-109'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L88-109
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L152-169'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L152-169
+            </a>
+          </dd>
+          <dt>Data Setup</dt>
+          <dd>  
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L10-62'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L10-62
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/publication_utilities.rb#L220-238'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/publication_utilities.rb#L220-238
+            </a>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class='section'>
+      <b>Closer Look at d3 Wordle</b>
+      <div class='graph'>
+        <dl>
+          <dt>Wordle for an Investigator</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/investigator_wordle'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/investigator_wordle
+            </a>
+          </dd>
+          <dt>View</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/investigator_wordle.html.erb#L9-56'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/chord.html.erb#L9-56
+            </a>
+            <br />
+            <a href='https://github.com/jasondavies/d3-cloud/blob/master/examples/simple.html'>
+              https://github.com/jasondavies/d3-cloud/blob/master/examples/simple.html
+            </a>
+          </dd>
+          <dt>Controller</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L298-314'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L298-314
+            </a>
+          </dd>
+          <dt>Callback</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L429-440'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/controllers/cytoscape_controller.rb#L429-440
+            </a>
+            <br />
+            <a href='http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/d3_investigator_wordle_data.js'>
+              http://latticegrid.feinberg.northwestern.edu/cytoscape/wakibbe/d3_investigator_wordle_data.js
+            </a>
+          </dd>
+          <dt>Generator</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/word_frequency.rb#96-100'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/word_frequency.rb#96-100
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/word_frequency.rb#77-87'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/word_frequency.rb#77-87
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/word_frequency.rb#124-130'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/word_frequency.rb#124-130
+            </a>
+          </dd>
+          <dt>Spec</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L111-139'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L111-139
+            </a>
+          </dd>
+          <dt>Data Setup</dt>
+          <dd>  
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/word_frequency.rb#45-75'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/word_frequency.rb#45-75
+            </a>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class='section'>
+      <b>Summary</b>
+    </div>
+
+  </body>
+</html>
+
+<!--
+  
+
+So what is the pattern? 
+
+* setup data 
+* include javascript libraries
+* create ui
+* point to data endpoints (json)
+* manipulate data (if necessary)
+
+-->
