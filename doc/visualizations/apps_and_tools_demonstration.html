@@ -11,11 +11,13 @@
         border-bottom: 1px solid gray;
         min-height: 60em;
       }
-      .links,
-      .visualizations,
-      .controller,
-      .model,
-      .graph {
+      dt {
+        margin-top: 0.75em;
+      }
+      .def {
+        font-style: italic;
+      }
+      .subsection {
         margin: 0.5em;
         padding: 0.5em;
         border: 1px solid lightblue;
@@ -24,8 +26,31 @@
   </head>
   <body>
     <div class='section'>
-      <b>LatticeGrid</b>
-      <div class='links'>
+      <h3>Data Visualizations in LatticeGrid</h3>
+      <div class='subsection'>
+        <b>Outline</b>
+        <ol>
+          <li>Quick overview of LatticeGrid</li>
+          <li>Some visualizations</li>
+          <li>The libraries we use</li>
+          <li>The data we have</li>
+          <li>
+            Process 
+            <ul>
+              <li>Choose a design - That looks nice. I wonder how they did that?</li>
+              <li>Google for an example - Hope for a tutorial</li>
+              <li>Can we do it with our data?</li>
+            </ul>
+          </li>
+          <li>What we've learned so far</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class='section'>
+      <h3>Quick overview</h3>
+      <div class='subsection'>
+        <b>LatticeGrid</b>
         <dl>
           <dt>Overview</dt>
           <dd>
@@ -56,12 +81,17 @@
     </div>
 
     <div class='section'>
-      <p>
-        <b>Visualizations</b>
-      </p>
-      <div class='visualizations'>
+      <h3>Visualizations</h3>
+      <div class='subsection'>
         <b>Investigator</b>
         <dl>
+          <dt>Profile</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/investigators/wakibbe/show'>
+              http://latticegrid.feinberg.northwestern.edu/investigators/wakibbe/show
+            </a>
+          </dd>
+
           <dt>Radial1</dt>
           <dd>
             <a href='http://latticegrid.feinberg.northwestern.edu/graphs/wakibbe/show_member'>
@@ -134,9 +164,15 @@
           </dd>
         </dl>
       </div>
-      <div class='visualizations'>
+      <div class='subsection'>
         <b>Organizational Unit</b>
         <dl>
+          <dt>Profile</dt>
+          <dd>
+            <a href='http://latticegrid.feinberg.northwestern.edu/orgs/51/show'>
+              http://latticegrid.feinberg.northwestern.edu/orgs/51/show
+            </a>
+          </dd>
           <dt>Co-authorship graph</dt>
           <dd>
             <a href='http://latticegrid.feinberg.northwestern.edu/graphs/51/show_org'>
@@ -146,15 +182,15 @@
 
           <dt>Co-authorship network</dt>
           <dd>
-            <a href='http://latticegrid.feinberg.northwestern.edu/graphviz/51/show_org'>
-              http://latticegrid.feinberg.northwestern.edu/graphviz/51/show_org
+            <a href='http://latticegrid.feinberg.northwestern.edu/graphviz/17/show_org'>
+              http://latticegrid.feinberg.northwestern.edu/graphviz/17/show_org
             </a>
           </dd>
           
           <dt>Similarity network</dt>
           <dd>
-            <a href='http://latticegrid.feinberg.northwestern.edu/graphviz/51/show_org_mesh'>
-              http://latticegrid.feinberg.northwestern.edu/graphviz/51/show_org_mesh
+            <a href='http://latticegrid.feinberg.northwestern.edu/graphviz/17/show_org_mesh'>
+              http://latticegrid.feinberg.northwestern.edu/graphviz/17/show_org_mesh
             </a>
           </dd>
           
@@ -212,11 +248,8 @@
     </div>
 
     <div class='section'>
-      <p>
-        <b>Controllers and Visualization Libraries</b>
-      </p>
-
-      <div class='controller'>
+      <h3>Libraries we use</h3>
+      <div class='subsection'>
         <dl>
           <dt><b>Graphs Controller</b></dt>
           <dd>
@@ -233,7 +266,7 @@
         </dl>
       </div>
 
-      <div class='controller'>
+      <div class='subsection'>
         <dl>
           <dt><b>Graphviz Controller</b></dt>
           <dd>
@@ -256,7 +289,7 @@
         </dl>
       </div>
 
-      <div class='controller'>
+      <div class='subsection'>
         <dl>
           <dt><b>Cytoscape Controller</b></dt>
           <dd>
@@ -294,9 +327,14 @@
     </div>
 
     <div class='section'>
-      <b>Data Schema and Models</b>
-      <div class='model'>
-        <span>Models</span>
+      <h3>Data we have</h3>
+      <div class='subsection'>
+        <p>
+          <b>Models</b>
+          <div class='def'>
+            Data we collect from various external data sources - Feinberg School of Medicine Faculty Database, PubMed (via BioRuby), IRB (via eNOTIS), &c. 
+          </div>
+        </p>
         <dl>
           <dt>Investigator</dt>
           <dd>
@@ -328,22 +366,21 @@
               https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/study.rb
             </a>
           </dd>
-          <dt>WordFrequency</dt>
-          <dd>
-            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/word_frequency.rb'>
-              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/word_frequency.rb
-            </a>
-          </dd>
         </dl>
       </div>
 
-      <div class='model'>
-        <span>Association Models</span>
+      <div class='subsection'>
+        <p>
+          <b>Association Models</b>
+          <div class='def'>
+            Data massaged by the application to make associations of the data above.
+          </div>
+        </p>
         <dl>
           <dt>InvestigatorAbstract</dt>
           <dd>
-            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator.rb'>
-              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator.rb
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator_abstract.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/investigator_abstract.rb
             </a>
           </dd>
           <dt>InvestigatorAppointment</dt>
@@ -376,13 +413,20 @@
               https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/organization_abstract.rb
             </a>
           </dd>
+          <dt>WordFrequency</dt>
+          <dd>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/word_frequency.rb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/models/word_frequency.rb
+            </a>
+          </dd>
         </dl>
       </div>
     </div>
 
     <div class='section'>
+      <h3>Process</h3>
       <b>Closer Look at Cytoscape Radial Graph</b>
-      <div class='graph'>
+      <div class='subsection'>
         <dl>
           <dt>Radial Graph for an Investigator</dt>
           <dd>
@@ -392,16 +436,24 @@
           </dd>
           <dt>View</dt>
           <dd>
+            <a href='http://cytoscapeweb.cytoscape.org/tutorial'>
+              http://cytoscapeweb.cytoscape.org/tutorial
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/layouts/cytoscape.html.erb#L8-15'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/layouts/cytoscape.html.erb#L8-15
+            </a>
+            <br />
             <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L10-16'>
               https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L10-16
             </a>
             <br />
-            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L233-239'>
-              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L233-239
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/assets/javascripts/cytoscape/home.js#L177-191'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/assets/javascripts/cytoscape/home.js#L177-191
             </a>
             <br />
-            <a href='http://cytoscapeweb.cytoscape.org/tutorial'>
-              http://cytoscapeweb.cytoscape.org/tutorial
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L233-239'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L233-239
             </a>
           </dd>
           <dt>Controller</dt>
@@ -452,8 +504,8 @@
               https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L42-65
             </a>
             <br />
-            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/pubmed_utilities.rb#L212-224'>
-              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/pubmed_utilities.rb#L212-224
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/pubmed_utilities.rb#L212-244'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/pubmed_utilities.rb#L212-244
             </a>
             <br />
             <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/mesh_utilities.rb#L222-252'>
@@ -465,8 +517,9 @@
     </div>
 
     <div class='section'>
+      <h3>Process</h3>
       <b>Closer Look at Cytoscape Radial Graph Pt. II</b>
-      <div class='graph'>
+      <div class='subsection'>
         <dl>
           <dt>Radial Graph for an Organizational Unit</dt>
           <dd>
@@ -484,6 +537,10 @@
           <dd>
             <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L10-16'>
               https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L10-16
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/assets/javascripts/cytoscape/home.js#L177-191'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/assets/javascripts/cytoscape/home.js#L177-191
             </a>
             <br />
             <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L233-239'>
@@ -527,8 +584,9 @@
     </div>
 
     <div class='section'>
+      <h3>Process</h3>
       <b>Closer Look at Cytoscape Radial Graph Pt. III</b>
-      <div class='graph'>
+      <div class='subsection'>
         <dl>
           <dt>Radial Graph for an Investigator (Awards)</dt>
           <dd>
@@ -540,6 +598,10 @@
           <dd>
             <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L10-16'>
               https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L10-16
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/assets/javascripts/cytoscape/home.js#L177-191'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/assets/javascripts/cytoscape/home.js#L177-191
             </a>
             <br />
             <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/show.html.erb#L233-239'>
@@ -560,12 +622,12 @@
           </dd>
           <dt>Generator</dt>
           <dd>
-            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_generator.rb#L9-17'>
-              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_generator.rb#L9-17
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_generator.rb#L19-25'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_generator.rb#L19-25
             </a>
             <br />
-            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_generator.rb#L29-56'>
-              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_generator.rb#L29-56
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_awards.rb#L29-56'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/lib/cytoscape_awards.rb#L29-56
             </a>
           </dd>
           <dt>Spec</dt>
@@ -590,8 +652,8 @@
           </dd>
           <dt>Data Setup</dt>
           <dd>  
-            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L42-65'>
-              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L42-65
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L41-65'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/cytoscape_generator_spec.rb#L41-65
             </a>
           </dd>
         </dl>
@@ -599,8 +661,9 @@
     </div>
 
     <div class='section'>
+      <h3>Process</h3>
       <b>Closer Look at d3 Chord Graphs</b>
-      <div class='graph'>
+      <div class='subsection'>
         <dl>
           <dt>Chord Graph for an Investigator</dt>
           <dd>
@@ -610,16 +673,16 @@
           </dd>
           <dt>View</dt>
           <dd>
-            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/investigator_chord.html.erb#L29-147'>
-              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/investigator_chord.html.erb#L29-147
-            </a>
-            <br />
             <a href='http://bl.ocks.org/mbostock/4062006'>
               http://bl.ocks.org/mbostock/4062006
             </a>
             <br />
-            <a href='https://gist.github.com/pfriedman/435efe8d340bcf7d0af5'>
-              https://gist.github.com/pfriedman/435efe8d340bcf7d0af5
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/layouts/cytoscape.html.erb'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/layouts/cytoscape.html.erb
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/investigator_chord.html.erb#L29-147'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/investigator_chord.html.erb#L29-147
             </a>
           </dd>
           <dt>Controller</dt>
@@ -652,10 +715,20 @@
               https://github.com/NUBIC/LatticeGrid/blob/develop/lib/d3_generator.rb#L166-175
             </a>
           </dd>
+          <dt>Chord Matrix</dt>
+          <dd>
+            <a href='https://gist.github.com/pfriedman/435efe8d340bcf7d0af5'>
+              https://gist.github.com/pfriedman/435efe8d340bcf7d0af5
+            </a>
+          </dd>
           <dt>Spec</dt>
           <dd>
             <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L64-71'>
               https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L64-71
+            </a>
+            <br />
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L152-169'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/spec/lib/d3_generator_spec.rb#L152-169
             </a>
           </dd>
           <dt>Data Setup</dt>
@@ -673,8 +746,9 @@
     </div>
 
     <div class='section'>
+      <h3>Process</h3>
       <b>Closer Look at d3 Chord Graphs Pt. II</b>
-      <div class='graph'>
+      <div class='subsection'>
         <dl>
           <dt>Chord Graph for an Organizational Unit</dt>
           <dd>
@@ -747,8 +821,9 @@
     </div>
 
     <div class='section'>
+      <h3>Process</h3>
       <b>Closer Look at d3 Wordle</b>
-      <div class='graph'>
+      <div class='subsection'>
         <dl>
           <dt>Wordle for an Investigator</dt>
           <dd>
@@ -758,12 +833,12 @@
           </dd>
           <dt>View</dt>
           <dd>
-            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/investigator_wordle.html.erb#L9-56'>
-              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/chord.html.erb#L9-56
-            </a>
-            <br />
             <a href='https://github.com/jasondavies/d3-cloud/blob/master/examples/simple.html'>
               https://github.com/jasondavies/d3-cloud/blob/master/examples/simple.html
+            </a>
+            <br/>
+            <a href='https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/investigator_wordle.html.erb#L9-56'>
+              https://github.com/NUBIC/LatticeGrid/blob/develop/app/views/cytoscape/chord.html.erb#L9-56
             </a>
           </dd>
           <dt>Controller</dt>
@@ -813,7 +888,12 @@
     </div>
 
     <div class='section'>
-      <b>Summary</b>
+      <h3>What we've learned</h3>
+      <ul>
+        <li>Choose designs that say something</li>
+        <li>Cache all the things!</li>
+        <li>Data Setup</li>
+      </ul>
     </div>
 
   </body>
