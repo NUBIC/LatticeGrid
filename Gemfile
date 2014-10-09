@@ -20,7 +20,7 @@ gem 'bio'
 gem 'aker-rails'
 gem 'aker'
 gem 'rdoc'
-gem 'bcdatabase'
+gem 'bcdatabase', :source => 'https://rubygems.org/'
 gem 'prototype-rails'
 
 # ActionView::Template::Error (Could not find a JavaScript runtime.

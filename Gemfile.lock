@@ -1,6 +1,6 @@
 GEM
-  remote: https://rubygems.org/
   remote: http://download.bioinformatics.northwestern.edu/gems/
+  remote: https://rubygems.org/
   specs:
     actionmailer (3.2.16)
       actionpack (= 3.2.16)
@@ -239,7 +239,7 @@ DEPENDENCIES
   aker-rails
   annotate (~> 2.5.0)
   awesome_nested_set
-  bcdatabase
+  bcdatabase!
   bio
   bundler
   capistrano
