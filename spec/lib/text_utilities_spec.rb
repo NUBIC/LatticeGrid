@@ -9,8 +9,8 @@ describe TextUtilities do
   describe '.clean_non_utf_text' do
     context 'given text that includes non-UTF characters' do
       it 'returns that text with those characters altered' do
-        txt = 'résumé'
-        TextUtilities.clean_non_utf_text(txt).should eq "r'esum'e"
+        txt = "Caf\xc3\xa9"
+        TextUtilities.clean_non_utf_text(txt).should eq 'Café'
       end
     end
 
