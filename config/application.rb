@@ -62,8 +62,8 @@ module LatticeGrid
       # commented out instance values to test
       # in development mode
       #
-      # 'defaults'
-      'Feinberg'
+      'defaults'
+      # 'Feinberg'
       # 'RHLCCC'
     else
       case "#{File.expand_path(Rails.root)}"
@@ -109,7 +109,7 @@ def lattice_grid_instance
   # LatticeGrid is defined above
   return @@lattice_grid_instance if defined?(@@lattice_grid_instance) && !@@lattice_grid_instance.blank?
 
-  @@lattice_grid_instance = 'defaults'
+  class_variable_set(:@@lattice_grid_instance, 'defaults')
   # determine which lattice grid instance using logic above
   the_instance = LatticeGrid.the_instance
   @@lattice_grid_instance = the_instance if defined?(LatticeGrid) && !LatticeGrid.blank? && !the_instance.blank?
