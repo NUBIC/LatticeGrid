@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20141010154909
 #
 # Table name: investigator_studies
 #
 #  approval_date   :date
 #  completion_date :date
 #  consent_role    :string(255)
-#  created_at      :datetime         not null
+#  created_at      :datetime
 #  id              :integer          not null, primary key
 #  investigator_id :integer          not null
 #  role            :string(255)
 #  status          :string(255)
 #  study_id        :integer          not null
-#  updated_at      :datetime         not null
+#  updated_at      :datetime
 #
 
 require 'spec_helper'

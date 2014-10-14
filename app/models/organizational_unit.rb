@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20141010154909
 #
 # Table name: organizational_units
 #
@@ -8,7 +8,7 @@
 #  appointment_count           :integer          default(0)
 #  campus                      :string(255)
 #  children_count              :integer          default(0)
-#  created_at                  :datetime         not null
+#  created_at                  :datetime
 #  department_id               :integer          default(0), not null
 #  depth                       :integer          default(0)
 #  division_id                 :integer          default(0)
@@ -26,7 +26,8 @@
 #  sort_order                  :integer          default(1)
 #  start_date                  :date
 #  type                        :string(255)      not null
-#  updated_at                  :datetime         not null
+#  updated_at                  :datetime
+#  uuid                        :string(255)
 #
 
 class OrganizationalUnit < ActiveRecord::Base
@@ -121,6 +122,15 @@ class OrganizationalUnit < ActiveRecord::Base
   scope :abstracts_by_date, lambda { |*dates|
     joins(:abstracts).where('abstracts.publication_date between :start_date and :end_date', { :start_date => dates.first, :end_date => dates.last })
   }
+
+  before_save :set_uuid
+
+  ##
+  # Set the uuid value to a unique UUID if not yet set
+  require 'uuidtools'
+  def set_uuid
+    self.uuid = UUIDTools::UUID.random_create.to_s if uuid.blank?
+  end
 
   # cache this query in a class instance
   @@all_units = nil

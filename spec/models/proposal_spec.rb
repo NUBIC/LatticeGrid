@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20141010154909
 #
 # Table name: proposals
 #
@@ -11,7 +11,7 @@
 #  award_mechanism                 :string(255)
 #  award_start_date                :date
 #  award_type                      :string(255)
-#  created_at                      :datetime         not null
+#  created_at                      :datetime
 #  created_id                      :integer
 #  created_ip                      :string(255)
 #  deleted_at                      :datetime
@@ -38,7 +38,7 @@
 #  submission_date                 :date
 #  title                           :string(255)
 #  total_amount                    :integer
-#  updated_at                      :datetime         not null
+#  updated_at                      :datetime
 #  updated_id                      :integer
 #  updated_ip                      :string(255)
 #  url                             :string(255)

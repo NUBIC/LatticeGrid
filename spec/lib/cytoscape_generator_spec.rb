@@ -23,6 +23,11 @@ describe 'CytoscapeGenerator' do
       it 'outputs a hash of nodes and edges' do
         hsh = generate_cytoscape_org_data(center, 1, 1, 0, 0)
         nodes = hsh[:nodes]
+
+        # TODO: this fails from time to time depending on order of specs when running the tests
+        #       when this does fail, check the state of the data
+        p nodes.inspect
+
         nodes.size.should eq 3 # the 1 ou + the 2 pis
         assert_ou_node(nodes[0])
         assert_publication_node(nodes[1], co, 1)

@@ -22,6 +22,7 @@ gem 'aker'
 gem 'rdoc'
 gem 'bcdatabase', :source => 'https://rubygems.org/'
 gem 'prototype-rails'
+gem 'uuidtools'
 
 # ActionView::Template::Error (Could not find a JavaScript runtime.
 # See https://github.com/sstephenson/execjs for a list of available runtimes.

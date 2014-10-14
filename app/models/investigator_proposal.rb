@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20141010154909
 #
 # Table name: investigator_proposals
 #
-#  created_at      :datetime         not null
+#  created_at      :datetime
 #  id              :integer          not null, primary key
 #  investigator_id :integer          not null
 #  is_main_pi      :boolean          default(FALSE), not null
 #  percent_effort  :integer          default(0)
 #  proposal_id     :integer          not null
 #  role            :string(255)
-#  updated_at      :datetime         not null
+#  updated_at      :datetime
 #
 
 class InvestigatorProposal < ActiveRecord::Base

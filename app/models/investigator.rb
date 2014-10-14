@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20140319212053
+# Schema version: 20141010154909
 #
 # Table name: investigators
 #
@@ -15,7 +15,7 @@
 #  city                                        :string(255)
 #  consecutive_login_failures                  :integer          default(0)
 #  country                                     :string(255)
-#  created_at                                  :datetime         not null
+#  created_at                                  :datetime
 #  created_id                                  :integer
 #  created_ip                                  :string(255)
 #  degrees                                     :string(255)
@@ -75,10 +75,11 @@
 #  total_publications_last_five_years          :integer          default(0)
 #  total_studies                               :integer          default(0), not null
 #  total_studies_collaborators                 :integer          default(0), not null
-#  updated_at                                  :datetime         not null
+#  updated_at                                  :datetime
 #  updated_id                                  :integer
 #  updated_ip                                  :string(255)
 #  username                                    :string(255)      not null
+#  uuid                                        :string(255)
 #  vectors                                     :text
 #  weekly_hours_min                            :integer          default(35)
 #
@@ -231,6 +232,15 @@ class Investigator < ActiveRecord::Base
   validates_presence_of :last_name
   validates_presence_of :username
   validates_uniqueness_of :username
+
+  before_save :set_uuid
+
+  ##
+  # Set the uuid value to a unique UUID if not yet set
+  require 'uuidtools'
+  def set_uuid
+    self.uuid = UUIDTools::UUID.random_create.to_s if uuid.blank?
+  end
 
   def self.abstract_words
     all.map(&:unique_abstract_words).flatten

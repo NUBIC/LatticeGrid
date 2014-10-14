@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20141010154909
 #
 # Table name: abstracts
 #
@@ -12,7 +12,7 @@
 #  citation_cnt                 :integer          default(0)
 #  citation_last_get_at         :datetime
 #  citation_url                 :string(255)
-#  created_at                   :datetime         not null
+#  created_at                   :datetime
 #  created_id                   :integer
 #  created_ip                   :string(255)
 #  deposited_date               :date
@@ -48,7 +48,7 @@
 #  reviewed_ip                  :string(255)
 #  status                       :string(255)
 #  title                        :text
-#  updated_at                   :datetime         not null
+#  updated_at                   :datetime
 #  updated_id                   :integer
 #  updated_ip                   :string(255)
 #  url                          :string(255)

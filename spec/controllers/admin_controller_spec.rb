@@ -5,7 +5,7 @@ describe AdminController do
   context 'without an authenticated user' do
     describe 'GET /index' do
       it 'redirects to the login page' do
-        LatticeGridHelper.stub!(:require_authentication).and_return(true)
+        LatticeGridHelper.stub(:require_authentication).and_return(true)
         get :index
         response.should be_redirect
       end

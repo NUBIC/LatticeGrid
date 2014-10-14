@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20141010154909
 #
 # Table name: logs
 #
 #  action_name     :string(255)
 #  activity        :string(255)
 #  controller_name :string(255)
-#  created_at      :datetime         not null
+#  created_at      :datetime
 #  created_ip      :string(255)
 #  id              :integer          not null, primary key
 #  investigator_id :integer
 #  params          :text
 #  program_id      :integer
-#  updated_at      :datetime         not null
+#  updated_at      :datetime
 #
 
 require 'spec_helper'

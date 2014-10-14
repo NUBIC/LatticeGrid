@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20141010154909
 #
 # Table name: investigator_appointments
 #
-#  created_at             :datetime         not null
+#  created_at             :datetime
 #  end_date               :date
 #  id                     :integer          not null, primary key
 #  investigator_id        :integer          not null
@@ -12,7 +12,8 @@
 #  research_summary       :text
 #  start_date             :date
 #  type                   :string(255)
-#  updated_at             :datetime         not null
+#  updated_at             :datetime
+#  uuid                   :string(255)
 #
 
 class InvestigatorAppointment < ActiveRecord::Base
@@ -25,7 +26,18 @@ class InvestigatorAppointment < ActiveRecord::Base
   scope :remove_deleted, where('investigator_appointments.end_date is null')
   scope :only_members, where("investigator_appointments.type = 'Member'")
 
-  def self.has_appointment(unit_id )
+  before_save :set_uuid
+
+  ##
+  # Set the uuid value to a unique UUID if not yet set
+  require 'uuidtools'
+  def set_uuid
+    self.uuid = UUIDTools::UUID.random_create.to_s if uuid.blank?
+  end
+
+
+  def self.has_appointment(unit_id)
+    p "unit_id = #{unit_id}"
     where('investigator_appointments.organizational_unit_id = :unit_id and
            investigator_appointments.end_date is null', { :unit_id => unit_id }).count > 0
   end

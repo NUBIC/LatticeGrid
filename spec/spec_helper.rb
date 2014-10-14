@@ -70,5 +70,12 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = 'random'
 
+  # cf. http://stackoverflow.com/questions/6296235/undefined-method-get-for-rspeccoreexamplegroupnested-10x00000106db51f
+  config.infer_spec_type_from_file_location!
+
+  config.expect_with :rspec do |c|
+    c.syntax = [:should, :expect]
+  end
+
   config.include TestLogins
 end

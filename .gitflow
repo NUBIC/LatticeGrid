@@ -1,5 +1,5 @@
 [gitflow "branch"]
-  master = release
+  master = releases
   develop = develop
 [gitflow "prefix"]
   feature = feature/

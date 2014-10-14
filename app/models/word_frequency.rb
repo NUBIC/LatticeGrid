@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20141010154909
 #
 # Table name: word_frequencies
 #
-#  created_at :datetime         not null
+#  created_at :datetime
 #  frequency  :integer
 #  id         :integer          not null, primary key
 #  the_type   :string(255)
-#  updated_at :datetime         not null
+#  updated_at :datetime
 #  word       :string(255)
 #
 

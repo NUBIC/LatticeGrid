@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20141010154909
 #
 # Table name: investigator_appointments
 #
-#  created_at             :datetime         not null
+#  created_at             :datetime
 #  end_date               :date
 #  id                     :integer          not null, primary key
 #  investigator_id        :integer          not null
@@ -12,7 +12,8 @@
 #  research_summary       :text
 #  start_date             :date
 #  type                   :string(255)
-#  updated_at             :datetime         not null
+#  updated_at             :datetime
+#  uuid                   :string(255)
 #
 
 require 'spec_helper'
@@ -30,16 +31,16 @@ describe InvestigatorAppointment do
 
   describe '.has_appointment' do
     let(:ou) { FactoryGirl.create(:organizational_unit) }
-    let!(:ia) { FactoryGirl.create(:investigator_appointment, organizational_unit: ou) }
+    let!(:ia) { FactoryGirl.create(:investigator_appointment, organizational_unit: ou, end_date: nil) }
     describe 'when investigator appointment organizational_unit id matches parameter' do
       it 'returns true' do
-        InvestigatorAppointment.has_appointment(ou.id).should be_true
+        InvestigatorAppointment.has_appointment(ou.id).should be_truthy
       end
     end
 
     describe 'when investigator appointment organizational_unit id does not match parameter' do
       it 'returns false' do
-        InvestigatorAppointment.has_appointment(666).should be_false
+        InvestigatorAppointment.has_appointment(666).should be_falsey
       end
     end
   end
