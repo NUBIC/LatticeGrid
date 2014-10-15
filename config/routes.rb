@@ -21,6 +21,9 @@ LatticeGrid::Application.routes.draw do
   match 'abstracts/:id/tag_cloud_by_year.js' => 'abstracts#tag_cloud_by_year', as: :tag_cloud_by_year_abstract, via: :get
   match '/investigators/:id/tag_cloud_list.json' => 'investigators#tag_cloud_list', as: :tag_cloud_list, via: :get
 
+  # For data obtained from the tasks in vivo.rake
+  match 'vivo/:id/d3_investigator_chord_data.js' => 'vivo#d3_investigator_chord_data', as: :vivo_d3_investigator_chord_data, via: :get
+
   resources :abstracts, only: [:index, :show] do
     collection do
       get :feed
@@ -144,6 +147,12 @@ LatticeGrid::Application.routes.draw do
       get :affiliations
     end
   end
+
+  resources :vivo, only: [:index, :show] do
+    member do
+      get :investigator_chord
+    end
+  end 
 
   resources :cytoscape, only: [:index, :show] do
     collection do

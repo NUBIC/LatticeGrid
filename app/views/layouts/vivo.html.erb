@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>VIVO Data Diagram</title>
+     <% @javascripts ||= ['prototype', 'jquery-1.8.3', 'jquery_ujs', 'jquery.sparkline.min', 'ddsmoothmenu2',
+                          'd3/d3.js', 'd3/d3.layout.js', 'd3/package.js', 'd3/d3.layout.cloud.js',
+                          'd3/jsonp.js', 'd3/highlight.min.js'] %>
+    <% @javascripts += @javascripts_add if defined?(@javascripts_add) %>
+    
+    <!-- include JIT Library File -->
+    <% @javascripts.each do |js| %>
+      <%= javascript_include_tag js %>
+    <% end %>
+    
+    <%# = render "shared/menu_scripts", menu_nodes: @menu_nodes %>
+
+    <link rel="shortcut icon" href='<%= "/assets/#{lattice_grid_instance}/favicon.ico" -%>' />
+
+    <!-- CSS Files -->
+    <% @stylesheets ||= ['publications', "latticegrid/#{lattice_grid_instance}", 'd3/bundle', 'ddsmoothmenu', 'ddsmoothmenu-v'] %>
+    <% @stylesheets.each do |ss| %>
+      <%= stylesheet_link_tag ss %>
+    <% end %>
+    <style type="text/css">
+      path.chord {
+        fill-opacity: .67;
+      }
+    </style>
+    <% if @javascripts.join =~ /jquery/i %>
+      <script type="text/javascript" language="JavaScript">
+        jQuery.noConflict();
+        var $j = jQuery;
+        // Use jQuery via jQuery(...)
+      </script>
+    <% end %>
+  </head>
+  <body>
+    <%= render 'shared/debug_section' %>
+    <div id="main" class="autoclear">
+      <div id="results" class="notice">
+        <%= flash[:notice] %>
+        <%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %>
+      </div>
+      <!--
+      <div id='title'>
+        <%# = link_to(image_tag('latticegrid.png', size: '65x93'), root_path) -%>
+        <%# = link_to(LatticeGridHelper.header_title.html_safe, current_abstracts_url, id: 'title_link') -%>
+      </div>
+      <%# = render 'shared/search' %>
+      <%# = render 'shared/side' %>
+      --> 
+      <div id="maincontent">
+        <%= yield  %>
+      </div> <!-- end of maincontent -->
+      <%# = render 'shared/banner' %>
+    </div> <!-- end of main -->
+
+    <script type="text/javascript" language="JavaScript">
+      var html = d3.select("svg")
+                  .node().parentNode.innerHTML;
+                 d3.select("body").append("div")
+                  .attr("id", "download")
+                  .html("Right-click on this preview and choose Save as<br />Left-Click to dismiss<br />")
+                  .append("img")
+                  .attr("src", "data:image/svg+xml;base64,"+ btoa(html));
+    </script>
+  </body>
+</html>
