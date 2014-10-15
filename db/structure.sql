@@ -1547,4 +1547,138 @@ INSERT INTO schema_migrations (version) VALUES ('20131121210426');
 
 INSERT INTO schema_migrations (version) VALUES ('20140319212053');
 
+INSERT INTO schema_migrations (version) VALUES ('20141010154909');SET search_path TO "$user",public;
+
+INSERT INTO schema_migrations (version) VALUES ('20080908');
+
+INSERT INTO schema_migrations (version) VALUES ('20080909');
+
+INSERT INTO schema_migrations (version) VALUES ('20080910');
+
+INSERT INTO schema_migrations (version) VALUES ('20080911');
+
+INSERT INTO schema_migrations (version) VALUES ('20080912');
+
+INSERT INTO schema_migrations (version) VALUES ('20080914');
+
+INSERT INTO schema_migrations (version) VALUES ('20080915');
+
+INSERT INTO schema_migrations (version) VALUES ('20080916');
+
+INSERT INTO schema_migrations (version) VALUES ('20090225213932');
+
+INSERT INTO schema_migrations (version) VALUES ('20090225213947');
+
+INSERT INTO schema_migrations (version) VALUES ('20090225213959');
+
+INSERT INTO schema_migrations (version) VALUES ('20090225214009');
+
+INSERT INTO schema_migrations (version) VALUES ('20090225214105');
+
+INSERT INTO schema_migrations (version) VALUES ('20090708162318');
+
+INSERT INTO schema_migrations (version) VALUES ('20090714021145');
+
+INSERT INTO schema_migrations (version) VALUES ('20100901042417');
+
+INSERT INTO schema_migrations (version) VALUES ('20101003170716');
+
+INSERT INTO schema_migrations (version) VALUES ('20101206225809');
+
+INSERT INTO schema_migrations (version) VALUES ('20110203133338');
+
+INSERT INTO schema_migrations (version) VALUES ('20110205035911');
+
+INSERT INTO schema_migrations (version) VALUES ('20110404215324');
+
+INSERT INTO schema_migrations (version) VALUES ('20110417160106');
+
+INSERT INTO schema_migrations (version) VALUES ('20110804191522');
+
+INSERT INTO schema_migrations (version) VALUES ('20110818121950');
+
+INSERT INTO schema_migrations (version) VALUES ('20110913212242');
+
+INSERT INTO schema_migrations (version) VALUES ('20110922214737');
+
+INSERT INTO schema_migrations (version) VALUES ('20120117140721');
+
+INSERT INTO schema_migrations (version) VALUES ('20120426214617');
+
+INSERT INTO schema_migrations (version) VALUES ('20120826035935');
+
+INSERT INTO schema_migrations (version) VALUES ('20121214042329');
+
+INSERT INTO schema_migrations (version) VALUES ('20130327155943');
+
+INSERT INTO schema_migrations (version) VALUES ('20131121210426');
+
+INSERT INTO schema_migrations (version) VALUES ('20140319212053');SET search_path TO "$user",public;
+
+INSERT INTO schema_migrations (version) VALUES ('20080908');
+
+INSERT INTO schema_migrations (version) VALUES ('20080909');
+
+INSERT INTO schema_migrations (version) VALUES ('20080910');
+
+INSERT INTO schema_migrations (version) VALUES ('20080911');
+
+INSERT INTO schema_migrations (version) VALUES ('20080912');
+
+INSERT INTO schema_migrations (version) VALUES ('20080914');
+
+INSERT INTO schema_migrations (version) VALUES ('20080915');
+
+INSERT INTO schema_migrations (version) VALUES ('20080916');
+
+INSERT INTO schema_migrations (version) VALUES ('20090225213932');
+
+INSERT INTO schema_migrations (version) VALUES ('20090225213947');
+
+INSERT INTO schema_migrations (version) VALUES ('20090225213959');
+
+INSERT INTO schema_migrations (version) VALUES ('20090225214009');
+
+INSERT INTO schema_migrations (version) VALUES ('20090225214105');
+
+INSERT INTO schema_migrations (version) VALUES ('20090708162318');
+
+INSERT INTO schema_migrations (version) VALUES ('20090714021145');
+
+INSERT INTO schema_migrations (version) VALUES ('20100901042417');
+
+INSERT INTO schema_migrations (version) VALUES ('20101003170716');
+
+INSERT INTO schema_migrations (version) VALUES ('20101206225809');
+
+INSERT INTO schema_migrations (version) VALUES ('20110203133338');
+
+INSERT INTO schema_migrations (version) VALUES ('20110205035911');
+
+INSERT INTO schema_migrations (version) VALUES ('20110404215324');
+
+INSERT INTO schema_migrations (version) VALUES ('20110417160106');
+
+INSERT INTO schema_migrations (version) VALUES ('20110804191522');
+
+INSERT INTO schema_migrations (version) VALUES ('20110818121950');
+
+INSERT INTO schema_migrations (version) VALUES ('20110913212242');
+
+INSERT INTO schema_migrations (version) VALUES ('20110922214737');
+
+INSERT INTO schema_migrations (version) VALUES ('20120117140721');
+
+INSERT INTO schema_migrations (version) VALUES ('20120426214617');
+
+INSERT INTO schema_migrations (version) VALUES ('20120826035935');
+
+INSERT INTO schema_migrations (version) VALUES ('20121214042329');
+
+INSERT INTO schema_migrations (version) VALUES ('20130327155943');
+
+INSERT INTO schema_migrations (version) VALUES ('20131121210426');
+
+INSERT INTO schema_migrations (version) VALUES ('20140319212053');
+
 INSERT INTO schema_migrations (version) VALUES ('20141010154909');

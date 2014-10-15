@@ -52,6 +52,7 @@
 #  updated_id                   :integer
 #  updated_ip                   :string(255)
 #  url                          :string(255)
+#  uuid                         :string(255)
 #  vectors                      :text
 #  volume                       :string(255)
 #  year                         :string(255)
@@ -139,6 +140,15 @@ class Abstract < ActiveRecord::Base
   }
 
   default_scope conditions: 'abstracts.is_valid = true'
+
+  before_save :set_uuid
+
+  ##
+  # Set the uuid value to a unique UUID if not yet set
+  require 'uuidtools'
+  def set_uuid
+    self.uuid = UUIDTools::UUID.random_create.to_s if uuid.blank?
+  end
 
   def check_pubmed_doi_blank?
     doi.blank? and pubmed.blank?

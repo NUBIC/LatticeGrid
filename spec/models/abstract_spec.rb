@@ -52,6 +52,7 @@
 #  updated_id                   :integer
 #  updated_ip                   :string(255)
 #  url                          :string(255)
+#  uuid                         :string(255)
 #  vectors                      :text
 #  volume                       :string(255)
 #  year                         :string(255)

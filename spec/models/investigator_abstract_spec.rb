@@ -19,6 +19,7 @@
 #  reviewed_id      :integer
 #  reviewed_ip      :string(255)
 #  updated_at       :datetime
+#  uuid             :string(255)
 #
 
 require 'spec_helper'

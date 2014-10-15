@@ -19,6 +19,7 @@
 #  reviewed_id      :integer
 #  reviewed_ip      :string(255)
 #  updated_at       :datetime
+#  uuid             :string(255)
 #
 
 class InvestigatorAbstract < ActiveRecord::Base
@@ -61,4 +62,22 @@ class InvestigatorAbstract < ActiveRecord::Base
     end
     pis
   end
+
+  before_save :set_uuid
+
+  ##
+  # Set the uuid value to a unique UUID if not yet set
+  require 'uuidtools'
+  def set_uuid
+    self.uuid = UUIDTools::UUID.random_create.to_s if uuid.blank?
+  end
+
+  def investigator_uuid 
+    investigator.uuid
+  end
+
+  def abstract_uuid
+    abstract.uuid
+  end
+
 end

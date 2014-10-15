@@ -41,4 +41,12 @@ class InvestigatorAppointment < ActiveRecord::Base
     where('investigator_appointments.organizational_unit_id = :unit_id and
            investigator_appointments.end_date is null', { :unit_id => unit_id }).count > 0
   end
+
+  def investigator_uuid
+    investigator.uuid
+  end
+
+  def organizational_unit_uuid
+    organizational_unit.uuid
+  end
 end
