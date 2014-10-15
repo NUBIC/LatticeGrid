@@ -242,6 +242,67 @@ class Investigator < ActiveRecord::Base
     self.uuid = UUIDTools::UUID.random_create.to_s if uuid.blank?
   end
 
+  def vivo_namespace
+    'http://vivo.northwestern.edu/individual/'
+  end
+
+  ##
+  # The uri for this investigator record in VIVO
+  def vivo_uri
+    "#{vivo_namespace}#{uuid}"
+  end
+
+  ##
+  # Strip the vivo_namespace from the given uri param
+  def uuid_from_uri(uri)
+    uri.gsub(vivo_namespace, '')
+  end
+
+  def rdf_prefices
+"PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX vitro:    <http://vitro.mannlib.cornell.edu/ns/vitro/0.7#>
+PREFIX bibo:     <http://purl.org/ontology/bibo/>
+PREFIX foaf:     <http://xmlns.com/foaf/0.1/>
+PREFIX vcard:    <http://www.w3.org/2006/vcard/ns#>
+PREFIX vivo:     <http://vivoweb.org/ontology/core#>"
+  end
+
+  ##
+  # SPARQL query to get the Coauthor URI, Coauthor Name, and PI Name 
+  def coauthor_sparql(uri = nil)
+    uri = vivo_uri if uri.blank?
+"query=#{rdf_prefices} SELECT distinct ?Coauthor ?Coauthor_name ?PI_name 
+WHERE{
+?Authorship1 rdf:type vivo:Authorship .
+?Authorship1 vivo:relates <#{uri}> .
+?Authorship1 vivo:relates ?Document1 .
+?Document1 rdf:type bibo:Document .
+?Document1 vivo:relatedBy ?Authorship2 .
+?Authorship2 rdf:type vivo:Authorship .
+?Coauthor rdf:type vivo:FacultyMember .
+?Coauthor vivo:relatedBy ?Authorship2 .
+?Coauthor rdfs:label ?Coauthor_name .
+<#{uri}> rdfs:label ?PI_name .
+FILTER (!(?Authorship1=?Authorship2))
+}"
+  end
+
+  ##
+  # Get the number of publications for this person in VIVO
+  def publication_count_sparql(uri = nil)
+    uri = vivo_uri if uri.blank?
+"query=#{rdf_prefices} SELECT (count(?Authorship1) as ?cnt)
+WHERE{
+?Authorship1 rdf:type vivo:Authorship .
+?Authorship1 vivo:relates <#{uri}>
+}"
+  end
+
+  def link_to_vivo
+    "http://localhost:8080/vivo/individual?uri=#{vivo_uri}"
+  end
+
   def self.abstract_words
     all.map(&:unique_abstract_words).flatten
   end
