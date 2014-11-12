@@ -8,28 +8,51 @@ namespace :export do
     end
   end
 
-  task :abstracts => :environment do 
-    cols = %w(id uuid title)
-    CSV.open("#{Rails.root}/tmp/abstracts.csv", 'wb', :col_sep => ',') do |csv|
-      csv << cols
-      Abstract.all.each do |a|
-        arr = []
-        cols.each { |col| arr << a.send(col.to_sym) }
-        csv << arr.map(&:to_s)
+  def create_abstracts_csv(csv, records)
+    cols = %w(id uuid abstract title pubmed pubmedcentral full_authors isbn)
+    csv << cols
+    records.each do |abstract|
+      arr = []
+      cols.each do |col| 
+        val = abstract.send(col.to_sym)
+        val = val.gsub(/\n/, '; ') if col == 'full_authors'
+        arr << val
       end
+      csv << arr.map(&:to_s)
+    end
+  end
+
+  task :documents => :environment do 
+    CSV.open("#{Rails.root}/tmp/documents.csv", 'wb', :col_sep => ',') do |csv|
+      create_abstracts_csv(csv, Abstract.all)
+    end
+  end
+
+  task :articles => :environment do
+    CSV.open("#{Rails.root}/tmp/articles.csv", 'wb', :col_sep => ',') do |csv|
+      create_abstracts_csv(csv, Abstract.where("publication_type LIKE '%Article%'").to_a)
+    end
+  end
+
+  task :abstracts => :environment do
+    CSV.open("#{Rails.root}/tmp/abstracts.csv", 'wb', :col_sep => ',') do |csv|
+      create_abstracts_csv(csv, Abstract.where("publication_type NOT LIKE '%Article%'").to_a)
+    end
+  end
+
+  def create_investigator_abstracts_csv(csv, records)
+    cols = %w(id uuid investigator_uuid abstract_uuid)
+    csv << cols
+    records.each do |ia|
+      arr = []
+      cols.each { |col| arr << abstract.send(col.to_sym) }
+      csv << arr.map(&:to_s)
     end
   end
 
   task :investigator_abstracts => :environment do 
-    cols = %w(id uuid investigator_uuid abstract_uuid)
     CSV.open("#{Rails.root}/tmp/investigator_abstracts.csv", 'wb', :col_sep => ',') do |csv|
-      csv << cols
-      InvestigatorAbstract.all.each do |ia|
-        next if ia.investigator.blank? || ia.abstract.blank?
-        arr = []
-        cols.each { |col| arr << ia.send(col.to_sym) }
-        csv << arr.map(&:to_s)
-      end
+      create_abstracts_csv(csv, InvestigatorAbstract.all)
     end
   end
 

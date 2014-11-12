@@ -4,15 +4,6 @@
 # Controller for data visualizations with data retrieved from VIVO
 class VivoController < ApplicationController
 
-  require 'd3_generator'
-  include ApplicationHelper
-  include CytoscapeHelper
-  include InvestigatorsHelper
-  include OrgsHelper
-
-  def index
-  end
-
   def investigator_chord
     @title = '[VIVO] Chord Diagram showing publications between various investigators'
     unless params[:id].blank?
