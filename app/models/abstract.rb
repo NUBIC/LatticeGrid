@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20141010154909
 #
 # Table name: abstracts
 #
@@ -12,7 +12,7 @@
 #  citation_cnt                 :integer          default(0)
 #  citation_last_get_at         :datetime
 #  citation_url                 :string(255)
-#  created_at                   :datetime         not null
+#  created_at                   :datetime
 #  created_id                   :integer
 #  created_ip                   :string(255)
 #  deposited_date               :date
@@ -48,10 +48,11 @@
 #  reviewed_ip                  :string(255)
 #  status                       :string(255)
 #  title                        :text
-#  updated_at                   :datetime         not null
+#  updated_at                   :datetime
 #  updated_id                   :integer
 #  updated_ip                   :string(255)
 #  url                          :string(255)
+#  uuid                         :string(255)
 #  vectors                      :text
 #  volume                       :string(255)
 #  year                         :string(255)
@@ -139,6 +140,15 @@ class Abstract < ActiveRecord::Base
   }
 
   default_scope conditions: 'abstracts.is_valid = true'
+
+  before_save :set_uuid
+
+  ##
+  # Set the uuid value to a unique UUID if not yet set
+  require 'securerandom'
+  def set_uuid
+    self.uuid = SecureRandom.hex(5) if uuid.blank?
+  end
 
   def check_pubmed_doi_blank?
     doi.blank? and pubmed.blank?

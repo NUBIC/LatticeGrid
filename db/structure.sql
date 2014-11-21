@@ -66,8 +66,8 @@ CREATE TABLE abstracts (
     created_ip character varying(255),
     updated_id integer,
     updated_ip character varying(255),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
     is_cancer boolean DEFAULT true NOT NULL,
     pubmedcentral character varying(255),
     vectors tsvector,
@@ -79,8 +79,13 @@ CREATE TABLE abstracts (
     last_reviewed_id integer,
     last_reviewed_ip character varying(255),
     pubmed_creation_date date,
+    author_vector tsvector,
+    abstract_vector tsvector,
+    mesh_vector tsvector,
+    journal_vector tsvector,
     doi character varying(255),
-    author_affiliations text
+    author_affiliations text,
+    uuid character varying(255)
 );
 
 
@@ -113,8 +118,8 @@ CREATE TABLE investigator_abstracts (
     investigator_id integer NOT NULL,
     is_first_author boolean DEFAULT false NOT NULL,
     is_last_author boolean DEFAULT false NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
     is_valid boolean DEFAULT false NOT NULL,
     reviewed_at timestamp without time zone,
     reviewed_id integer,
@@ -122,7 +127,8 @@ CREATE TABLE investigator_abstracts (
     last_reviewed_at timestamp without time zone,
     last_reviewed_id integer,
     last_reviewed_ip character varying(255),
-    publication_date date
+    publication_date date,
+    uuid character varying(255)
 );
 
 
@@ -156,9 +162,10 @@ CREATE TABLE investigator_appointments (
     type character varying(255),
     start_date date,
     end_date date,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    research_summary text
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    research_summary text,
+    uuid character varying(255)
 );
 
 
@@ -199,8 +206,8 @@ CREATE TABLE investigator_colleagues (
     proposal_list text,
     study_cnt integer DEFAULT 0,
     study_list text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -230,8 +237,8 @@ ALTER SEQUENCE investigator_colleagues_id_seq OWNED BY investigator_colleagues.i
 CREATE TABLE investigator_proposals (
     id integer NOT NULL,
     role character varying(255),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
     investigator_id integer NOT NULL,
     proposal_id integer NOT NULL,
     percent_effort integer DEFAULT 0,
@@ -268,8 +275,8 @@ CREATE TABLE investigator_studies (
     approval_date date,
     completion_date date,
     role character varying(255),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
     investigator_id integer NOT NULL,
     study_id integer NOT NULL,
     consent_role character varying(255)
@@ -361,8 +368,8 @@ CREATE TABLE investigators (
     deleted_at timestamp without time zone,
     deleted_id integer,
     deleted_ip character varying(255),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
     faculty_keywords text,
     faculty_research_summary text,
     faculty_interests text,
@@ -376,7 +383,8 @@ CREATE TABLE investigators (
     total_pi_awards integer DEFAULT 0 NOT NULL,
     total_pi_awards_collaborators integer DEFAULT 0 NOT NULL,
     home_department_name character varying(255),
-    era_commons_name character varying(255)
+    era_commons_name character varying(255),
+    uuid character varying(255)
 );
 
 
@@ -417,8 +425,8 @@ CREATE TABLE journals (
     total_articles integer,
     eigenfactor_score double precision,
     article_influence_score double precision,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
     include_as_high_impact boolean DEFAULT false NOT NULL
 );
 
@@ -449,8 +457,8 @@ ALTER SEQUENCE journals_id_seq OWNED BY journals.id;
 CREATE TABLE load_dates (
     id integer NOT NULL,
     load_date timestamp without time zone,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -486,8 +494,8 @@ CREATE TABLE logs (
     action_name character varying(255),
     params text,
     created_ip character varying(255),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -520,8 +528,8 @@ CREATE TABLE organization_abstracts (
     abstract_id integer NOT NULL,
     start_date date,
     end_date date,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -570,8 +578,9 @@ CREATE TABLE organizational_units (
     depth integer DEFAULT 0,
     start_date date,
     end_date date,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    uuid character varying(255)
 );
 
 
@@ -623,8 +632,8 @@ CREATE TABLE proposals (
     deleted_at timestamp without time zone,
     deleted_id integer,
     deleted_ip character varying(255),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
     award_start_date date,
     award_end_date date,
     direct_amount integer,
@@ -691,8 +700,8 @@ CREATE TABLE studies (
     deleted_at timestamp without time zone,
     deleted_id integer,
     deleted_ip character varying(255),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
     enotis_study_id integer,
     irb_study_number character varying(255),
     research_type character varying(255),
@@ -797,8 +806,8 @@ CREATE TABLE word_frequencies (
     frequency integer,
     word character varying(255),
     the_type character varying(255),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -1077,6 +1086,34 @@ ALTER TABLE ONLY word_frequencies
 
 
 --
+-- Name: abstracts_fts_abstract_vector_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX abstracts_fts_abstract_vector_index ON abstracts USING gist (abstract_vector);
+
+
+--
+-- Name: abstracts_fts_author_vector_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX abstracts_fts_author_vector_index ON abstracts USING gist (author_vector);
+
+
+--
+-- Name: abstracts_fts_journal_vector_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX abstracts_fts_journal_vector_index ON abstracts USING gist (journal_vector);
+
+
+--
+-- Name: abstracts_fts_mesh_vector_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX abstracts_fts_mesh_vector_index ON abstracts USING gist (mesh_vector);
+
+
+--
 -- Name: abstracts_fts_vectors_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1161,10 +1198,38 @@ CREATE UNIQUE INDEX by_word_type_unique ON word_frequencies USING btree (word, t
 
 
 --
+-- Name: index_abstracts_on_uuid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_abstracts_on_uuid ON abstracts USING btree (uuid);
+
+
+--
+-- Name: index_investigator_abstracts_on_uuid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_investigator_abstracts_on_uuid ON investigator_abstracts USING btree (uuid);
+
+
+--
+-- Name: index_investigator_appointments_on_uuid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_investigator_appointments_on_uuid ON investigator_appointments USING btree (uuid);
+
+
+--
 -- Name: index_investigators_on_username; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE UNIQUE INDEX index_investigators_on_username ON investigators USING btree (username);
+
+
+--
+-- Name: index_investigators_on_uuid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_investigators_on_uuid ON investigators USING btree (uuid);
 
 
 --
@@ -1186,6 +1251,13 @@ CREATE UNIQUE INDEX index_load_dates_on_load_date ON load_dates USING btree (loa
 --
 
 CREATE UNIQUE INDEX index_organizational_units_on_department_id_and_division_id ON organizational_units USING btree (department_id, division_id);
+
+
+--
+-- Name: index_organizational_units_on_uuid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_organizational_units_on_uuid ON organizational_units USING btree (uuid);
 
 
 --
@@ -1412,3 +1484,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130327155943');
 INSERT INTO schema_migrations (version) VALUES ('20131121210426');
 
 INSERT INTO schema_migrations (version) VALUES ('20140319212053');
+
+INSERT INTO schema_migrations (version) VALUES ('20141010154909');

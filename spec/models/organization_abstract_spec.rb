@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20141010154909
 #
 # Table name: organization_abstracts
 #
 #  abstract_id            :integer          not null
-#  created_at             :datetime         not null
+#  created_at             :datetime
 #  end_date               :date
 #  id                     :integer          not null, primary key
 #  organizational_unit_id :integer          not null
 #  start_date             :date
-#  updated_at             :datetime         not null
+#  updated_at             :datetime
 #
 
 require 'spec_helper'

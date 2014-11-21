@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20141010154909
 #
 # Table name: investigator_abstracts
 #
 #  abstract_id      :integer          not null
-#  created_at       :datetime         not null
+#  created_at       :datetime
 #  id               :integer          not null, primary key
 #  investigator_id  :integer          not null
 #  is_first_author  :boolean          default(FALSE), not null
@@ -18,7 +18,8 @@
 #  reviewed_at      :datetime
 #  reviewed_id      :integer
 #  reviewed_ip      :string(255)
-#  updated_at       :datetime         not null
+#  updated_at       :datetime
+#  uuid             :string(255)
 #
 
 class InvestigatorAbstract < ActiveRecord::Base
@@ -61,4 +62,23 @@ class InvestigatorAbstract < ActiveRecord::Base
     end
     pis
   end
+
+  before_save :set_uuid
+
+  ##
+  # Set the uuid value to a unique UUID if not yet set
+  require 'securerandom'
+  def set_uuid
+    self.uuid = SecureRandom.hex(5) if uuid.blank?
+  end
+
+  def investigator_uuid 
+    investigator.uuid
+  end
+
+  def abstract_uuid
+    abstract.uuid
+  end
+
+
 end

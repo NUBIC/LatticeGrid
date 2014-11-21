@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20141010154909
 #
 # Table name: studies
 #
@@ -9,7 +9,7 @@
 #  approved_date        :date
 #  closed_date          :date
 #  completed_date       :date
-#  created_at           :datetime         not null
+#  created_at           :datetime
 #  created_id           :integer
 #  created_ip           :string(255)
 #  deleted_at           :datetime
@@ -31,7 +31,7 @@
 #  sponsor              :string(255)
 #  status               :string(255)
 #  title                :text
-#  updated_at           :datetime         not null
+#  updated_at           :datetime
 #  updated_id           :integer
 #  updated_ip           :string(255)
 #  url                  :string(255)

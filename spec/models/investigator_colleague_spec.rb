@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20141010154909
 #
 # Table name: investigator_colleagues
 #
 #  colleague_id     :integer
-#  created_at       :datetime         not null
+#  created_at       :datetime
 #  id               :integer          not null, primary key
 #  in_same_program  :boolean          default(FALSE)
 #  investigator_id  :integer
@@ -18,7 +18,7 @@
 #  study_cnt        :integer          default(0)
 #  study_list       :text
 #  tag_list         :text
-#  updated_at       :datetime         not null
+#  updated_at       :datetime
 #
 
 require 'spec_helper'

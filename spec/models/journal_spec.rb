@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # == Schema Information
-# Schema version: 20131121210426
+# Schema version: 20141010154909
 #
 # Table name: journals
 #
 #  article_influence_score  :float
-#  created_at               :datetime         not null
+#  created_at               :datetime
 #  eigenfactor_score        :float
 #  id                       :integer          not null, primary key
 #  immediacy_index          :float
@@ -19,7 +19,7 @@
 #  score_year               :integer
 #  total_articles           :integer
 #  total_cites              :integer
-#  updated_at               :datetime         not null
+#  updated_at               :datetime
 #
 
 require 'spec_helper'
