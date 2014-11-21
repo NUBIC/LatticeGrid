@@ -24,6 +24,7 @@ node_modules
 
 # Ignore private docs
 doc/private/
+doc/notes/private/
 
 # Ignore cached files
 public/cache
@@ -40,3 +41,4 @@ lattice_grid.sublime-workspace
 /app/assets/old_javascripts/*
 
 /spike
+/vivo/
