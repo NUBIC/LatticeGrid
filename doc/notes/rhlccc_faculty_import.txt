@@ -30,12 +30,23 @@ are not necessary to perform the import.
     "All data for download from FSM database". Run this query and get the
     Tabbed results.
 
+select * from nubic_faculty_appointment@nubic_faculty_link.bioinformatics.northwestern.edu order by Last_name, First_name,netid;
+select * from nubic_joint@nubic_faculty_link.bioinformatics.northwestern.edu;
+select * from nubic_secondary@nubic_faculty_link.bioinformatics.northwestern.edu;
+select * from nubic_centers@nubic_faculty_link.bioinformatics.northwestern.edu;
+select * from NUBIC_NUS_PMID@nubic_faculty_link.bioinformatics.northwestern.edu;
+select EMPLOYEE_ID, REPLACE(REPLACE(REPLACE(DESCRIPTION, CHR(13)),CHR(10)),CHR(9),' ') DESCRIPTION from nubic_descriptions@nubic_faculty_link.bioinformatics.northwestern.edu;
+select EMPLOYEE_ID, regexp_replace(DESCRIPTION,'([^[:graph:]|^[:blank:]]+)',' ') DESCRIPTION3 from nubic_descriptions@nubic_faculty_link.bioinformatics.northwestern.edu;
+select EMPLOYEE_ID, REPLACE(REPLACE(REPLACE(INTEREST, CHR(13)),CHR(10)),CHR(9),' ') INTEREST from nubic_interests@nubic_faculty_link.bioinformatics.northwestern.edu;
+select * from nubic_degree_lookup@nubic_faculty_link.bioinformatics.northwestern.edu;
+
+
   b) copy lines into new file
 
     Create a new file called "new_faculty_MMYYYY.txt" where MMYYYY is the
     current month and year. For the first line use the following:
 
-BASIS CAMPUS  CATEGORY  DEGREE  DEPT_ID DIVISION_ID DV_ABBR EMPLOYEE_ID FIRST_NAME  LAST_NAME MIDDLE_NAME NETID RANK  TENURE
+BASIS	CAMPUS	CATEGORY	DEGREE	DEPT_ID	DIVISION_ID	DV_ABBR	EMPLOYEE_ID	FIRST_NAME	LAST_NAME	MIDDLE_NAME	NETID	RANK	TENURE
 
     ensure that the text editor is using tabs so that the spaces between
     these column headers are separated by tabs (it is a tab delimited file after all).

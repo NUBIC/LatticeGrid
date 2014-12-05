@@ -20,7 +20,7 @@ namespace :export do
       filename = 'abstracts'
     end
 
-    cols = %w(id uuid title journal journal_abbreviation publication_date volume issue pages doi issn isbn pubmed pubmedcentral abstract)
+    cols = %w(id uuid title journal journal_abbreviation publication_date volume issue pages start_page end_page doi issn isbn pubmed pubmedcentral abstract)
     CSV.open("#{Rails.root}/vivo/#{filename}.csv", 'wb', :col_sep => ',') do |csv|
       csv << cols
       as.each do |a|

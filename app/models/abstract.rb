@@ -154,6 +154,22 @@ class Abstract < ActiveRecord::Base
     doi.blank? and pubmed.blank?
   end
 
+  def start_page
+    pages.blank? ? '' : split_pages(true).first
+  end
+
+  def end_page
+    pages.blank? ? '' : split_pages(false).last
+  end
+
+  def split_pages(force_include = true)
+    if pages.include?('-')
+      pages.split('-')
+    else
+      return force_include ? [pages] : ['']
+    end
+  end
+
   def self.abstract_words
     all.map(&:abstract_words).join(" ").split(/[ \t\r\n]+/)
   end
