@@ -1,0 +1,4 @@
+BASIS	CAMPUS	CAREER_TRACK	CATEGORY	DEGREE	DEPT_ID	DIVISION_ID	DV_ABBR	EMAIL	EMPLOYEE_ID	FIRST_NAME	LAST_NAME	MIDDLE_NAME	NETID	RANK
+FT	Chicago	Research	Research	MD			Medicine, Hematology Oncology Division	melissa-johnson@northwestern.edu	1074500	Melissa	Johnson	Lynne	mlj650	Assistant Professor
+FT	Chicago	Research	Research	MD			Medicine, Hematology Oncology Division	v-kaklamani@northwestern.edu		Virginia	Kaklamani	Georgia	vgk331	Assistant Professor
+FT	Evanston	Research	Research	PhD	323000	323010	Medical Social Sciences	a-statsuk@northwestern.edu		Alexander	Statsuk	V	avs847	Assistant Professor
