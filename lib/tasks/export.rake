@@ -20,7 +20,7 @@ namespace :export do
       filename = 'abstracts'
     end
 
-    cols = %w(id uuid title journal journal_abbreviation publication_date volume issue pages start_page end_page doi issn isbn pubmed pubmedcentral abstract)
+    cols = %w(id uuid title journal journal_abbreviation publication_date publication_status year volume issue pages start_page end_page doi issn isbn pubmed pubmedcentral abstract endnote_citation mesh)
     CSV.open("#{Rails.root}/vivo/#{filename}.csv", 'wb', :col_sep => ',') do |csv|
       csv << cols
       as.each do |a|
@@ -43,7 +43,7 @@ namespace :export do
       filename = 'investigator_abstracts'
     end
 
-    cols = %w(id uuid investigator_uuid abstract_uuid)
+    cols = %w(id uuid investigator_uuid abstract_uuid is_first_author is_last_author)
     CSV.open("#{Rails.root}/vivo/#{filename}.csv", 'wb', :col_sep => ',') do |csv|
       csv << cols
       ias.each do |ia|
@@ -94,7 +94,7 @@ namespace :export do
       filename = "investigators"
     end
 
-    cols = %w(id uuid appointment_basis appointment_type campus degrees email employee_id faculty_interests faculty_research_summary name display_name first_name last_name middle_name suffix title username)
+    cols = %w(id uuid appointment_basis appointment_type campus degrees email employee_id end_date era_commons_name faculty_interests faculty_research_summary name display_name first_name last_name middle_name suffix title username)
     CSV.open("#{Rails.root}/vivo/#{filename}.csv", 'wb', :col_sep => ',') do |csv|
       csv << cols
       pis.each do |pi|
