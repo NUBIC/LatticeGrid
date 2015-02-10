@@ -8,25 +8,86 @@ namespace :export do
     end
   end
 
+  def headers_and_attributes
+    {
+      'ID'                                => 'id',
+      'uuid'                              => 'uuid',
+      'Title'                             => 'title',
+      'Journal OR Published proceedings'  => 'journal',
+      'journal_abbreviation'              => 'journal_abbreviation',
+      'Publication Date1'                 => 'publication_date_csv',
+      'publication_status'                => 'publication_status',
+      'publication_type'                  => 'publication_type',
+      'year'                              => 'year',
+      'Volume'                            => 'volume',
+      'Issue'                             => 'issue',
+      'pages'                             => 'pages',
+      'Pagination (start page)'           => 'start_page',
+      'Pagination (end page)'             => 'end_page',
+      'DOI'                               => 'doi',
+      'ISSN'                              => 'issn',
+      'isbn'                              => 'isbn',
+      'pubmed'                            => 'pubmed',
+      'pubmedcentral'                     => 'pubmedcentral',
+      'abstract'                          => 'abstract',
+      'Full Authors'                      => 'full_authors_csv',
+      'Mesh Terms'                        => 'mesh_csv',
+    }
+  end
+
+  # "Retraction of Publication"
+  # "Technical Report"
+  def publication_types
+    {
+      'autobiography'       => "'Autobiography'",
+      'bibliography'        => "'Bibliography'",
+      'biography'           => "'Biography'",
+      'academic_article'    => "'Introductory Journal Article', 'Journal Article', 'JOURNAL ARTICLE', 'Classical Article', 'English Abstract', 'Historical Article', 'In Vitro', 'Meta-Analysis', 'Multicenter Study', 'Overall'",
+      'speech'              => "'Addresses'",
+      'presentation'        => "'Lectures'",
+      'clinical_trial'      => "'Clinical Trial', 'Clinical Trial, Phase I', 'Clinical Trial, Phase II', 'Clinical Trial, Phase III', 'Clinical Trial, Phase IV', 'Controlled Clinical Trial'",
+      'editorial_article'   => "'Editorial Article', 'EDITORIAL'",
+      'comment'             => "'Comment'",
+      'letter'              => "'Letter'",
+      'article'             => "'Clinical Conference', 'Congresses', 'Newspaper Article', 'Research Support, U.S. Gov''t, P.H.S.'",
+      'events'              => "'Consensus Development Conference', 'Consensus Development Conference, NIH'",
+      'directory'           => "'Directory'",
+      'comparative_study'   => "'Comparative Study'",
+      'evaluation_study'    => "'Evaluation Studies'",
+      'clinical_guideline'  => "'Clinical Guideline'",
+      'news_release'        => "'News'",
+      'erratum'             => "'Published Erratum'",
+      'review'              => "'REVIEW'",
+      'av_document'         => "'Video-Audio Media'",
+    }
+  end
+
   task :abstracts => :environment do 
+    publication_types.each do |k, v|
+      if ENV['NET_ID']
+        pi = Investigator.find_all_by_username(ENV['NET_ID']).first
+        abstracts = pi.abstracts.where("publication_type in (#{v})").to_a
+        filename = "#{ENV['NET_ID']}_#{k}_abstracts"
+      elsif ENV['NET_IDS']
+        pis = Investigator.where("username in (?)", ENV['NET_IDS'].split(',')).to_a
+        abstracts = [] 
+        pis.each { |pi| abstracts << pi.abstracts.where("publication_type in (#{v})").to_a } 
+        abstracts = abstracts.flatten
+        filename = "subset_#{k}_abstracts"
+      else
+        abstracts = Abstract.where("publication_type in (#{v})").to_a
+        filename = "#{k}_abstracts"
+      end
 
-    if ENV['NET_ID']
-      pi = Investigator.find_all_by_username(ENV['NET_ID']).first
-      pis = [pi]
-      as = pi.abstracts
-      filename = "#{ENV['NET_ID']}_abstracts"
-    else
-      as = Abstract.all
-      filename = 'abstracts'
-    end
-
-    cols = %w(id uuid title journal journal_abbreviation publication_date publication_status year volume issue pages start_page end_page doi issn isbn pubmed pubmedcentral abstract endnote_citation mesh)
-    CSV.open("#{Rails.root}/vivo/#{filename}.csv", 'wb', :col_sep => ',') do |csv|
-      csv << cols
-      as.each do |a|
-        arr = []
-        cols.each { |col| arr << a.send(col.to_sym) }
-        csv << arr.map(&:to_s)
+      next if abstracts.blank?
+      
+      CSV.open("#{Rails.root}/vivo/#{filename}.csv", 'wb', :col_sep => ',') do |csv|
+        csv << headers_and_attributes.keys
+        abstracts.each do |a|
+          arr = []
+          headers_and_attributes.values.each { |at| arr << a.send(at.to_sym) }
+          csv << arr.map(&:to_s)
+        end
       end
     end
   end
@@ -38,6 +99,12 @@ namespace :export do
       pis = [pi]
       ias = pi.investigator_abstracts
       filename = "#{ENV['NET_ID']}_investigator_abstracts"
+    elsif ENV['NET_IDS']
+      pis = Investigator.where("username in (?)", ENV['NET_IDS'].split(',')).to_a
+      ias = [] 
+      pis.each { |pi| ias << pi.investigator_abstracts } 
+      ias = ias.flatten
+      filename = "subset_investigator_abstracts"
     else
       ias = InvestigatorAbstract.all
       filename = 'investigator_abstracts'
@@ -89,6 +156,9 @@ namespace :export do
       pi = Investigator.find_all_by_username(ENV['NET_ID']).first
       pis = [pi]
       filename = "#{ENV['NET_ID']}_investigator"
+    elsif ENV['NET_IDS']
+      pis = Investigator.where("username in (?)", ENV['NET_IDS'].split(',')).to_a
+      filename = "subset_investigators"
     else
       pis = Investigator.all
       filename = "investigators"
@@ -112,6 +182,12 @@ namespace :export do
       pis = [pi]
       ias = pi.investigator_appointments
       filename = "#{ENV['NET_ID']}_investigator_appointments"
+    elsif ENV['NET_IDS']
+      pis = Investigator.where("username in (?)", ENV['NET_IDS'].split(',')).to_a
+      ias = [] 
+      pis.each { |pi| ias << pi.investigator_appointments } 
+      ias = ias.flatten
+      filename = "subset_investigator_appointments"
     else
       ias = InvestigatorAppointment.all
       pis = Investigator.all

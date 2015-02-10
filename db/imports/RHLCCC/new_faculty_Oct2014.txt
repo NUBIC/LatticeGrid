@@ -1,0 +1,7 @@
+BASIS	CAMPUS	CATEGORY	DEGREE	DEPT_ID	DIVISION_ID	DV_ABBR	EMAIL	EMPLOYEE_ID	ERA_COMMONS_ID	FIRST_NAME	LAST_NAME	MIDDLE_NAME	NETID	RANK	TENURE
+FT	Chicago	Regular	MD/PhD	102000	102010	Micro-Immunology	ahauser@northwestern.edu	1036119	ALANHAUSER	Alan	Hauser	R	aha006	Professor	Tenured
+FT	Chicago	Regular	PhD	201000	201010	Pathology	w-karpus@northwestern.edu	1018731	WILLIAMKARPUS	William	Karpus	J	wkarpus	Professor	Tenured
+FT	Chicago	Regular	PhD	202000	202010	Preventive Medicine	smphillips@northwestern.edu	1084965		Siobhan	Phillips	M	smp481	Asst Prof	Tenure eligible
+FT	Chicago	Regular	PhD	105000	105010	Biochemistry		1086404		Ali	Shilatifard		asq354	Professor	Tenured
+FT	Chicago	Regular	PhD	201000	201010	Pathology		1086605		Ronen	Sumagin		rso690	Asst Prof	Tenure eligible
+FT	Chicago	Research	MD	316000	316010	Pediatrics	xtan@northwestern.edu	1014980		Xiao-Di	Tan		xta644	Res Prof	Non-tenure eligible

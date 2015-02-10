@@ -170,6 +170,18 @@ class Abstract < ActiveRecord::Base
     end
   end
 
+  def full_authors_csv
+    full_authors.blank? ? '' : full_authors.to_s.gsub("\n", '; ')
+  end
+
+  def mesh_csv
+    mesh.blank? ? '' : mesh.to_s.gsub("\n", ' ')
+  end
+
+  def publication_date_csv
+    publication_date.blank? ? '' : publication_date.to_s + "T00:00:00"
+  end
+
   def self.abstract_words
     all.map(&:abstract_words).join(" ").split(/[ \t\r\n]+/)
   end
