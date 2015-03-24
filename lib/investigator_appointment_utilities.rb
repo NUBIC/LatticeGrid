@@ -203,9 +203,9 @@ def SetInvestigatorIdentity(pi, data_row)
   # email
   pi.username = data_row['NETID'] || data_row['USERNAME'] || data_row['netid'] || data_row['username']
   pi.employee_id = data_row['EMPLOYEE_ID'] || data_row['employee_id']
-  pi.first_name = data_row['FIRST_NAME'] || data_row['first_name']
+  pi.first_name = data_row['FIRST_NAME'] || data_row['first_name'] || data_row['FirstName']
   pi.middle_name = data_row['MI'] || data_row['MIDDLE_NAME'] || data_row['mi'] || data_row['middle_name']
-  pi.last_name = data_row['LAST_NAME'] || data_row['last_name']
+  pi.last_name = data_row['LAST_NAME'] || data_row['last_name'] || data_row['LastName']
   pi.email = data_row['EMAIL'] || data_row['email']
   pi.era_commons_name = data_row['ERA_COMMONS_ID'] || data_row['ERA_COMMONS_NAME']  || data_row['era_comons_name'] || data_row['era_comons_id']
 
