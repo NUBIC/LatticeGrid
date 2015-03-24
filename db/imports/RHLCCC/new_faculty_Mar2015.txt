@@ -1,0 +1,5 @@
+BASIS	CAMPUS	CATEGORY	DEGREE	DEPT_ID	DIVISION_ID	DV_ABBR	EMAIL	EMPLOYEE_ID	FIRST_NAME	LAST_NAME	MIDDLE_NAME	NETID	RANK	TENURE
+FT	Chicago	Regular	MD	307000	307030	Med-Rheumatology		1015471	Monique	Hinchcliff	E	mhi265	Asst Prof	Non-tenure eligible
+FT	Chicago	Regular	PhD	319500	319510	Radiation Oncology		1080649	Athanasios	Vasilopoulos		avz399	Asst Prof	Tenure eligible
+FT	Chicago	Regular	PhD	102000	102010	Micro-Immunology		1085528	Derek	Walsh	F	dfw654	Assoc Prof	Tenure eligible
+FT	Chicago	Regular	PhD	202000	202010	Preventive Medicine	wei.zhang1@northwestern.edu	1087660	Wei	Zhang		wzk258	Assoc Prof	Non-tenure eligible
