@@ -188,11 +188,28 @@ class OrganizationalUnit < ActiveRecord::Base
     end
 
     def all_abstracts
-      self.self_and_descendants.collect{|unit| unit.abstracts}.flatten.sort {|x,y| y.year+y.pubmed <=> x.year+x.pubmed }.uniq
+      Abstract.find(all_abstract_ids, :order => 'abstracts.year, abstracts.pubmed')
+    end
+
+    def all_abstract_ids
+      sd = self.self_and_descendants.map(&:id)
+      oabs = OrganizationAbstract.find(:all, 
+                :select => 'DISTINCT organization_abstracts.abstract_id', 
+                :conditions => ["organizational_unit_id IN (?)", sd])
+      oabs.map(&:abstract_id)
     end
 
     def all_members
-      self.self_and_descendants.collect{|unit| unit.members}.flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+      Member.find(all_members_ids).sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    end
+
+    def all_members_ids
+        org_ids = self.self_and_descendants
+        mems = Member.find(:all,
+          :select => 'investigator_appointments.id, investigators.id',
+          :include => [:investigator],
+          :conditions => ["organizational_unit_id IN (?)", org_ids])
+        mems.map {|m| m.investigator.id }.uniq
     end
 
     def all_any_members
@@ -208,7 +225,15 @@ class OrganizationalUnit < ActiveRecord::Base
     end
 
     def all_primary_faculty
-      self.self_and_descendants.collect(&:primary_faculty).flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+      Investigator.find(all_primary_faculty_ids).sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+    end
+
+    def all_primary_faculty_ids
+      org_ids = self.self_and_descendants.map(&:id)
+      invs = Investigator.find(:all, 
+        :select => 'id', 
+        :conditions => ["home_department_id IN (?)", org_ids])
+      invs.map(&:id)
     end
 
     def all_joint_faculty
@@ -221,7 +246,13 @@ class OrganizationalUnit < ActiveRecord::Base
     
     # associated_faculty includes joint, secondary and members
     def all_associated_faculty
-      self.self_and_descendants.collect(&:associated_faculty).flatten.sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+      Investigator.find(all_associated_faculty_ids).sort {|x,y| x.sort_name <=> y.sort_name }
+    end
+
+    def all_associated_faculty_ids
+      org_ids = self.self_and_descendants.map(&:id)
+      appts = InvestigatorAppointment.find(:all, :select => 'investigator_appointsments.id, investigators.id', :include => [:investigator], :conditions => ["organizational_unit_id IN (?)", org_ids])
+      appts.map {|a| a.investigator.id }.uniq
     end
 
     def primary_or_member_faculty
@@ -233,9 +264,13 @@ class OrganizationalUnit < ActiveRecord::Base
     end
 
     def all_faculty
-      (all_primary_faculty + all_associated_faculty).sort {|x,y| x.sort_name <=> y.sort_name }.uniq
+      Investigator.find(all_faculty_ids).sort {|x,y| x.sort_name <=> y.sort_name }
     end
-    
+
+    def all_faculty_ids
+      (all_primary_faculty_ids + all_associated_faculty_ids).uniq
+    end
+
     def all_primary_or_member_faculty_count
       all_primary_or_member_faculty.length
     end
@@ -278,6 +313,11 @@ class OrganizationalUnit < ActiveRecord::Base
     def abstracts_shared_with_org( org_id )
        abs = self.all_abstracts
        OrganizationalUnit.find(org_id).all_abstracts & abs
+    end
+
+    def abstract_ids_shared_with_org(org_id)
+      abs_ids = self.all_abstract_ids
+      OrganizationalUnit.find(org_id).all_abstract_ids & abs_ids
     end
     
     def abstract_ids_shared_with_org_obj( org )
