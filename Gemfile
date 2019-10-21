@@ -9,7 +9,7 @@ gem 'json', "1.6.6"
 #gem 'sparklines'
 gem 'fastercsv'
 gem 'pg'
-gem 'haml', '3.1.7'
+gem 'haml', '5.0.0'
 gem 'will_paginate', "~> 2.3"
 gem 'awesome_nested_set', "~> 1.4"
 #gem "acts_as_taggable_on_steroids", "~> 1.2"
