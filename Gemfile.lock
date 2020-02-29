@@ -58,7 +58,7 @@ GEM
       activeresource (= 2.3.18)
       activesupport (= 2.3.18)
       rake (>= 0.8.3)
-    rake (10.1.0)
+    rake (13.0.1)
     rdoc (3.12)
       json (~> 1.4)
     rmagick (2.13.2)
