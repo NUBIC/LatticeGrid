@@ -59,8 +59,7 @@ GEM
       activesupport (= 2.3.18)
       rake (>= 0.8.3)
     rake (10.1.0)
-    rdoc (3.12)
-      json (~> 1.4)
+    rdoc (6.3.1)
     rmagick (2.13.2)
     ruby-graphviz (1.0.9)
     rubytree (0.7.0)
@@ -96,7 +95,7 @@ DEPENDENCIES
   pg
   princely (~> 1.2.5)
   rails (~> 2.3)
-  rdoc (= 3.12)
+  rdoc (= 6.3.1)
   rmagick
   ruby-graphviz
   will_paginate (~> 2.3)

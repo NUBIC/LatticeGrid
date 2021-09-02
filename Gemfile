@@ -18,7 +18,7 @@ gem 'net-ldap'
 gem 'bio'
 gem 'aker-rails'
 gem 'aker'
-gem 'rdoc', '3.12' # necessary for rails 2.3.12 and higher
+gem 'rdoc', '6.3.1' # necessary for rails 2.3.12 and higher
 gem 'bcdatabase', '~> 1.0.6'
 #gem 'wordcram'
 
